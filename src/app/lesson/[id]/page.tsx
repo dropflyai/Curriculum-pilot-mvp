@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Lesson, Progress } from '@/lib/supabase'
-import { ArrowLeft, BookOpen, Code, Send, CheckCircle } from 'lucide-react'
+import { ArrowLeft, BookOpen, Code, Send, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import CodeEditor from '@/components/CodeEditor'
 import { type CodeExecutionResult } from '@/lib/pyodide'
@@ -77,19 +77,17 @@ export default function LessonViewer() {
     }
   }
 
-  const runCode = async () => {
-    setCodeOutput('Running code...')
+  const handleCodeExecution = (result: CodeExecutionResult) => {
+    setLastExecutionResult(result)
     
-    // For now, we'll simulate code execution
-    // In the full implementation, this would use Pyodide
-    setTimeout(() => {
-      setCodeOutput(`Code executed successfully!\n\nYour Magic 8-Ball is working! 🎱\n\nNext: Test it with different questions to see random answers.`)
+    // Update progress when code runs successfully
+    if (result.success) {
       updateProgress({ 
         status: 'in_progress',
         submitted_code: userCode,
-        started_at: new Date().toISOString()
+        started_at: progress?.started_at || new Date().toISOString()
       })
-    }, 1500)
+    }
   }
 
   const submitLesson = async () => {
@@ -103,10 +101,10 @@ export default function LessonViewer() {
         submitted_at: new Date().toISOString()
       })
       
-      setCodeOutput(prev => prev + '\n\n✅ Lesson submitted successfully!')
+      // Show success message and redirect
       setTimeout(() => {
         router.push('/dashboard')
-      }, 2000)
+      }, 1000)
     } catch (error) {
       console.error('Error submitting lesson:', error)
     } finally {
@@ -189,56 +187,42 @@ export default function LessonViewer() {
         )}
 
         {activeTab === 'code' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Code Editor */}
-            <div className="bg-white rounded-lg shadow-sm">
-              <div className="border-b px-6 py-4">
-                <h3 className="text-lg font-semibold">Code Editor</h3>
-                <p className="text-sm text-gray-600">Write your Python code here</p>
-              </div>
-              <div className="p-6">
-                <textarea
-                  value={userCode}
-                  onChange={(e) => setUserCode(e.target.value)}
-                  className="w-full h-64 font-mono text-sm border rounded-lg p-4 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="# Write your Python code here..."
-                />
-                <div className="mt-4 flex space-x-4">
-                  <button
-                    onClick={runCode}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                  >
-                    <Code className="h-4 w-4 mr-2" />
-                    Run Code
-                  </button>
-                  <button
-                    onClick={() => setUserCode(lesson.starter_code || '')}
-                    className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Output */}
-            <div className="bg-white rounded-lg shadow-sm">
-              <div className="border-b px-6 py-4">
-                <h3 className="text-lg font-semibold">Output</h3>
-                <p className="text-sm text-gray-600">Your program results</p>
-              </div>
-              <div className="p-6">
-                <pre className="w-full h-64 font-mono text-sm border rounded-lg p-4 bg-gray-900 text-green-400 overflow-auto">
-                  {codeOutput || 'Click "Run Code" to see output...'}
-                </pre>
-              </div>
-            </div>
-          </div>
+          <CodeEditor
+            initialCode={lesson.starter_code || ''}
+            testCode={lesson.tests_py}
+            onCodeChange={setUserCode}
+            onExecutionResult={handleCodeExecution}
+          />
         )}
 
         {activeTab === 'submit' && (
           <div className="bg-white rounded-lg shadow-sm p-8">
             <h3 className="text-lg font-semibold mb-4">Submit Your Work</h3>
+            
+            {/* Execution Status */}
+            {lastExecutionResult && (
+              <div className={`mb-6 p-4 rounded-lg border ${
+                lastExecutionResult.success 
+                  ? 'bg-green-50 border-green-200' 
+                  : 'bg-red-50 border-red-200'
+              }`}>
+                <div className="flex items-center">
+                  {lastExecutionResult.success ? (
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                  ) : (
+                    <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
+                  )}
+                  <span className={`font-medium ${
+                    lastExecutionResult.success ? 'text-green-800' : 'text-red-800'
+                  }`}>
+                    {lastExecutionResult.success 
+                      ? 'Code executed successfully!' 
+                      : 'Code has errors - please fix before submitting'
+                    }
+                  </span>
+                </div>
+              </div>
+            )}
             
             {/* Checklist */}
             <div className="mb-6">
