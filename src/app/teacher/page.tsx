@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { User, Lesson, Progress } from '@/lib/supabase'
-import { Users, BookOpen, CheckCircle, Clock, Download } from 'lucide-react'
+import { Users, BookOpen, CheckCircle, Clock, Download, Plus, Settings } from 'lucide-react'
+import Link from 'next/link'
 
 interface StudentProgress {
   user: User
@@ -107,10 +108,19 @@ export default function TeacherDashboard() {
               <h1 className="text-3xl font-bold text-gray-900">Teacher Dashboard</h1>
               <p className="mt-1 text-sm text-gray-500">9th Grade Computer Science</p>
             </div>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-              <Download className="h-4 w-4 mr-2" />
-              Download Reports
-            </button>
+            <div className="flex space-x-3">
+              <Link 
+                href="/teacher/manage"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Manage Lessons
+              </Link>
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <Download className="h-4 w-4 mr-2" />
+                Download Reports
+              </button>
+            </div>
           </div>
         </div>
       </div>
