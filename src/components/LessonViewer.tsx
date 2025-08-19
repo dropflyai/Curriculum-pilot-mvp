@@ -73,93 +73,122 @@ export default function LessonViewer({ title, description, sections, onLessonCom
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center mb-4">
-          <BookOpen className="h-8 w-8 text-blue-600 mr-3" />
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-            <p className="text-gray-600 mt-1">{description}</p>
+      <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
+        <div className="flex items-center mb-6">
+          <div className="relative">
+            <BookOpen className="h-12 w-12 text-blue-400 mr-4 animate-pulse" />
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-xs font-bold animate-bounce">✨
+            </div>
+          </div>
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">{title}</h1>
+            <p className="text-xl text-gray-300 font-medium">{description}</p>
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="bg-gray-200 rounded-full h-2 mb-4">
+        {/* Enhanced Progress Bar */}
+        <div className="bg-gray-700/50 rounded-full h-4 mb-4 border border-gray-600/50 overflow-hidden">
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-4 rounded-full transition-all duration-500 relative"
             style={{ width: `${progress}%` }}
-          />
+          >
+            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+          </div>
         </div>
-        <div className="text-sm text-gray-600">
-          {Object.keys(sectionProgress).length} of {sections.length} sections completed ({Math.round(progress)}%)
+        <div className="flex justify-between items-center">
+          <div className="text-lg text-gray-300 font-bold">
+            🎆 Progress: {Object.keys(sectionProgress).length} of {sections.length} sections completed
+          </div>
+          <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+            {Math.round(progress)}%
+          </div>
         </div>
       </div>
 
-      {/* Section Navigation */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* Enhanced Section Navigation */}
+      <div className="flex flex-wrap gap-4 mb-8">
         {sections.map((section, index) => (
           <button
             key={index}
             onClick={() => goToSection(index)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-6 py-4 rounded-xl text-sm font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
               index === currentSection
-                ? 'bg-blue-600 text-white'
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-blue-500/30'
                 : sectionProgress[index]
-                ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-500/30'
+                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
             }`}
           >
             <div className="flex items-center">
-              {sectionProgress[index] && <CheckCircle className="h-4 w-4 mr-1" />}
-              {section.type === 'content' && <BookOpen className="h-4 w-4 mr-1" />}
-              {section.type === 'code' && <Code className="h-4 w-4 mr-1" />}
-              {section.type === 'quiz' && <CheckCircle className="h-4 w-4 mr-1" />}
+              {sectionProgress[index] && <CheckCircle className="h-5 w-5 mr-2 animate-pulse" />}
+              {section.type === 'content' && <BookOpen className="h-5 w-5 mr-2" />}
+              {section.type === 'code' && <Code className="h-5 w-5 mr-2" />}
+              {section.type === 'quiz' && <CheckCircle className="h-5 w-5 mr-2" />}
               {index + 1}
             </div>
           </button>
         ))}
       </div>
 
-      {/* Current Section Content */}
-      <div className="bg-white rounded-lg shadow-lg">
-        {/* Section Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+      {/* Enhanced Section Content */}
+      <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-purple-500/30 overflow-hidden">
+        {/* Vibrant Section Header */}
+        <div className={`px-8 py-6 border-b border-purple-500/30 ${
+          currentSectionData.type === 'content' ? 'bg-gradient-to-r from-blue-900/50 to-indigo-900/50' :
+          currentSectionData.type === 'code' ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50' :
+          'bg-gradient-to-r from-purple-900/50 to-pink-900/50'
+        }`}>
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{currentSectionData.title}</h2>
-              <div className="flex items-center mt-1 text-sm text-gray-500">
-                {currentSectionData.type === 'content' && <><BookOpen className="h-4 w-4 mr-1" /> Reading</>}
-                {currentSectionData.type === 'code' && <><Code className="h-4 w-4 mr-1" /> Coding Challenge</>}
-                {currentSectionData.type === 'quiz' && <><CheckCircle className="h-4 w-4 mr-1" /> Quiz</>}
-                <span className="ml-2">Section {currentSection + 1} of {sections.length}</span>
+              <h2 className="text-3xl font-bold text-white mb-2">{currentSectionData.title}</h2>
+              <div className="flex items-center text-lg">
+                {currentSectionData.type === 'content' && (
+                  <><BookOpen className="h-6 w-6 mr-2 text-blue-400 animate-pulse" /> 
+                  <span className="text-blue-300 font-bold">📖 Reading & Learning</span></>
+                )}
+                {currentSectionData.type === 'code' && (
+                  <><Code className="h-6 w-6 mr-2 text-green-400 animate-pulse" /> 
+                  <span className="text-green-300 font-bold">💻 Hands-On Coding</span></>
+                )}
+                {currentSectionData.type === 'quiz' && (
+                  <><CheckCircle className="h-6 w-6 mr-2 text-purple-400 animate-pulse" /> 
+                  <span className="text-purple-300 font-bold">🧠 Knowledge Check</span></>
+                )}
+                <span className="ml-4 text-gray-300 bg-gray-700/50 px-3 py-1 rounded-full text-sm font-medium">
+                  Step {currentSection + 1} of {sections.length}
+                </span>
               </div>
             </div>
             {sectionProgress[currentSection] && (
-              <div className="flex items-center text-green-600">
-                <CheckCircle className="h-5 w-5 mr-1" />
-                <span className="text-sm font-medium">Completed</span>
+              <div className="flex items-center bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 rounded-full shadow-lg">
+                <CheckCircle className="h-6 w-6 mr-2 text-white animate-bounce" />
+                <span className="text-white font-bold">✅ Completed!</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Section Body */}
-        <div className="p-6">
-          {/* Content Section */}
+        <div className="p-8">
+          {/* Enhanced Content Section */}
           {currentSectionData.type === 'content' && (
             <div className="prose max-w-none">
-              <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                {currentSectionData.content}
+              <div className="whitespace-pre-wrap text-gray-200 leading-relaxed text-lg font-medium bg-gray-700/30 rounded-xl p-8 border border-gray-600/30">
+                <div className="content-with-highlights">
+                  {currentSectionData.content}
+                </div>
               </div>
               
               {!sectionProgress[currentSection] && (
-                <div className="mt-6 pt-4 border-t border-gray-200">
+                <div className="mt-8 pt-6 border-t border-purple-500/30">
                   <button
                     onClick={() => markSectionComplete(currentSection)}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center font-bold text-lg"
                   >
-                    Mark as Complete
+                    <CheckCircle className="h-6 w-6 mr-3 animate-pulse" />
+                    ✅ I&apos;ve Read This - Let&apos;s Continue!
                     <CheckCircle className="ml-2 h-4 w-4" />
                   </button>
                 </div>
@@ -213,25 +242,32 @@ export default function LessonViewer({ title, description, sections, onLessonCom
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between items-center mt-6">
+      {/* Enhanced Navigation */}
+      <div className="flex justify-between items-center mt-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
         <button
           onClick={previousSection}
           disabled={currentSection === 0}
-          className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center px-6 py-3 bg-gray-700/50 text-gray-300 rounded-xl hover:bg-gray-600/50 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-medium"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          ← Previous Step
         </button>
 
-        <div className="text-sm text-gray-500">
-          Section {currentSection + 1} of {sections.length}
+        <div className="text-center">
+          <div className="text-lg font-bold text-purple-300 mb-1">
+            Step {currentSection + 1} of {sections.length}
+          </div>
+          <div className="text-sm text-gray-400">
+            {currentSection === 0 ? 'Starting your journey! 🚀' :
+             currentSection === sections.length - 1 ? 'Almost done! 🎯' :
+             'Keep going! You&apos;re doing great! ⚡'}
+          </div>
         </div>
 
         <button
           onClick={nextSection}
           disabled={currentSection === sections.length - 1}
-          className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-xl disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 font-bold"
         >
           Next
           <ArrowRight className="h-4 w-4 ml-2" />

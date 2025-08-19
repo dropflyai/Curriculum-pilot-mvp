@@ -63,20 +63,29 @@ export default function LessonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       {/* Navigation Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center py-4">
+          <div className="flex items-center justify-between py-4">
             <Link
               href="/dashboard"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors mr-4"
+              className="flex items-center text-purple-300 hover:text-white transition-colors font-medium group"
             >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back to Dashboard
+              <ArrowLeft className="h-5 w-5 mr-2 group-hover:animate-pulse" />
+              ← Back to CodeFly Dashboard
             </Link>
-            <div className="text-sm text-gray-500">
-              Lesson • {lesson.difficulty} • {lesson.estimatedTime}
+            <div className="flex items-center space-x-4">
+              <span className={`px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg ${
+                lesson.difficulty === 'beginner' ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white' :
+                lesson.difficulty === 'intermediate' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
+                'bg-gradient-to-r from-red-400 to-pink-500 text-white'
+              }`}>
+                {lesson.difficulty} {lesson.difficulty === 'beginner' ? '🌱' : lesson.difficulty === 'intermediate' ? '🚀' : '🏆'}
+              </span>
+              <span className="text-sm text-purple-300 bg-purple-900/30 px-4 py-2 rounded-full font-medium border border-purple-500/30">
+                ⏱️ {lesson.estimatedTime}
+              </span>
             </div>
           </div>
         </div>

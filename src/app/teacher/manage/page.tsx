@@ -98,18 +98,39 @@ export default function ManageLessons() {
     }
   }
 
-  if (loading) return <div className="p-8">Loading lessons...</div>
-  if (error) return <div className="p-8 text-red-600">Error: {error}</div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-white text-lg">Loading CodeFly Lesson Manager... ✈️</p>
+        </div>
+      </div>
+    )
+  }
+  
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
+        <div className="bg-red-900/80 backdrop-blur-sm rounded-xl p-8 text-center border border-red-500/50">
+          <h2 className="text-xl font-bold text-white mb-2">Database Connection Error</h2>
+          <p className="text-red-200">Error: {error}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manage Lessons</h1>
-              <p className="text-gray-600">Create and edit curriculum content</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                CodeFly Lesson Manager ✈️📚
+              </h1>
+              <p className="text-purple-300 text-lg mt-1">Create and edit curriculum content for your students</p>
             </div>
             <div className="flex space-x-4">
               <Link 
