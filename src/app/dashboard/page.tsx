@@ -13,6 +13,7 @@ export default function Dashboard() {
   const router = useRouter()
   const [lessons] = useState<Lesson[]>(getAllLessons())
   const [userProgress] = useState<Record<string, number>>({})
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
 
   useEffect(() => {
     // TEMPORARY: Allow dashboard access for testing
@@ -38,6 +39,10 @@ export default function Dashboard() {
   const getProgressForLesson = (lessonId: string) => {
     return userProgress[lessonId] || 0
   }
+
+  const filteredLessons = selectedDifficulty === 'all' 
+    ? lessons 
+    : lessons.filter(lesson => lesson.difficulty === selectedDifficulty)
 
   if (loading) {
     return (
@@ -155,20 +160,41 @@ export default function Dashboard() {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-gray-900">Available Lessons</h3>
             <div className="flex space-x-2">
-              <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                All Lessons
+              <button 
+                onClick={() => setSelectedDifficulty('all')}
+                className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+                  selectedDifficulty === 'all' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All Lessons ({lessons.length})
               </button>
-              <button className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                Beginner
+              <button 
+                onClick={() => setSelectedDifficulty('beginner')}
+                className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+                  selectedDifficulty === 'beginner' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Beginner ({lessons.filter(l => l.difficulty === 'beginner').length})
               </button>
-              <button className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                Intermediate
+              <button 
+                onClick={() => setSelectedDifficulty('intermediate')}
+                className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+                  selectedDifficulty === 'intermediate' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Intermediate ({lessons.filter(l => l.difficulty === 'intermediate').length})
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {lessons.map((lesson) => {
+            {filteredLessons.map((lesson) => {
               const progress = getProgressForLesson(lesson.id)
               const isCompleted = progress === 100
               const isStarted = progress > 0
