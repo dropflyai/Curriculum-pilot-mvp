@@ -30,84 +30,101 @@ export interface Lesson {
 export const sampleLessons: Lesson[] = [
   {
     id: 'python-basics-variables',
-    title: 'Python Basics: Variables and Data Types',
-    description: 'Learn how to create and use variables in Python, and understand different data types.',
+    title: 'Python Basics: Variables and Input/Output',
+    description: 'Use variables and input/output to build interactive programs that respond to users.',
     difficulty: 'beginner',
-    estimatedTime: '30 minutes',
+    estimatedTime: '45 minutes',
     sections: [
       {
         type: 'content',
-        title: 'What are Variables?',
-        content: `Variables in Python are like containers that store data values. Think of them as labeled boxes where you can put different types of information.
+        title: 'Building Interactive Programs',
+        content: `Let's learn the building blocks of interactive programs! Every great app starts with these basics.
 
-In Python, you create a variable by simply giving it a name and assigning a value to it using the equals sign (=).
+🎯 **Your Mission**: Build programs that talk to users and respond intelligently.
 
-Here are some examples:
-• name = "Alice" (stores text/string)
-• age = 15 (stores a number/integer)
-• height = 5.6 (stores a decimal number/float)
-• is_student = True (stores a True/False value/boolean)
+**Key Concept #1: Variables**
+Variables are like labeled containers that hold information:
+• user_name = "Alex" (stores what the user tells us)
+• score = 95 (keeps track of numbers)
+• is_ready = True (remembers yes/no answers)
 
-Variable names should be descriptive and follow these rules:
-• Start with a letter or underscore
-• Can contain letters, numbers, and underscores
-• Cannot contain spaces or special characters
-• Cannot be Python keywords (like 'if', 'for', 'while', etc.)
+**Key Concept #2: Getting Input**
+Use input() to ask users questions:
+• question = input("What's your question? ")
+• name = input("Enter your name: ")
 
-Good variable names: student_name, total_score, is_complete
-Bad variable names: x, data, temp, 123name`
+**Key Concept #3: Showing Output**  
+Use print() to display responses:
+• print("Hello there!")
+• print(f"Hi {name}, nice to meet you!")
+
+**The Magic Formula**:
+1. ASK the user something → input()
+2. STORE their answer → variable  
+3. DO something with it → your code logic
+4. SHOW the result → print()
+
+This is how every interactive program works - from games to apps to websites!`
       },
       {
         type: 'code',
-        title: 'Practice: Creating Variables',
+        title: 'Practice: Interactive Name Program',
         codeChallenge: {
-          description: 'Create variables to store information about yourself. Create a variable for your name, age, favorite subject, and whether you like programming.',
-          startingCode: `# Create variables about yourself
-# Hint: Use descriptive names and appropriate data types
+          description: 'Build an interactive program that asks for the user\'s name and responds personally. Follow the test → fix → retest cycle to get it working!',
+          startingCode: `# Interactive Name Program
+# Step 1: Ask user for their name
+# Step 2: Store it in a variable  
+# Step 3: Print a personalized greeting
 
-# Your code here:`,
-          solution: `# Create variables about yourself
-my_name = "Student"
-my_age = 15
-favorite_subject = "Computer Science"
-likes_programming = True
+# TODO: Ask for user's name
+user_name = input("What's your name? ")
 
-print(f"Name: {my_name}")
-print(f"Age: {my_age}")
-print(f"Favorite Subject: {favorite_subject}")
-print(f"Likes Programming: {likes_programming}")`,
+# TODO: Print a greeting using their name
+print("Hello " + user_name + "!")
+
+# TEST IT: Run your code and see if it works!
+# FIX IT: If there are errors, read them carefully and fix
+# RETEST: Run again until it works perfectly`,
+          solution: `# Interactive Name Program
+user_name = input("What's your name? ")
+print(f"Hello {user_name}! Welcome to CodeFly!")
+
+# Bonus: Add more interaction
+favorite_color = input("What's your favorite color? ")
+print(f"Cool! {favorite_color} is a great color, {user_name}!")`,
           tests: [
-            'assert "my_name" in locals(), "Create a variable called my_name"',
-            'assert isinstance(my_name, str), "my_name should be a string"',
-            'assert "my_age" in locals(), "Create a variable called my_age"',
-            'assert isinstance(my_age, int), "my_age should be an integer"',
-            'assert "favorite_subject" in locals(), "Create a variable called favorite_subject"',
-            'assert isinstance(favorite_subject, str), "favorite_subject should be a string"',
-            'assert "likes_programming" in locals(), "Create a variable called likes_programming"',
-            'assert isinstance(likes_programming, bool), "likes_programming should be a boolean"'
+            'assert "input(" in code, "Must use input() to get user name"',
+            'assert "print(" in code, "Must use print() to show greeting"',
+            'assert "user_name" in code or "name" in code, "Store the name in a variable"'
           ]
         }
       },
       {
         type: 'quiz',
-        title: 'Variables Quiz',
+        title: 'Interactive Programming Quiz',
         quiz: [
           {
             type: 'mcq',
-            q: 'Which of the following is a valid variable name in Python?',
-            options: ['student_name', '2nd_place', 'class', 'student-name'],
-            answer: 'student_name'
+            q: 'What function do you use to ask a user for input in Python?',
+            options: ['input()', 'ask()', 'get()', 'prompt()'],
+            answer: 'input()'
           },
           {
             type: 'mcq',
-            q: 'What data type is the value True in Python?',
-            options: ['string', 'integer', 'boolean', 'float'],
-            answer: 'boolean'
+            q: 'What function displays text on the screen for users to see?',
+            options: ['show()', 'display()', 'print()', 'output()'],
+            answer: 'print()'
+          },
+          {
+            type: 'mcq',
+            q: 'In the test → fix → retest cycle, what should you do FIRST when your code has an error?',
+            options: ['Rewrite everything', 'Read the error message carefully', 'Ask for help immediately', 'Give up'],
+            answer: 'Read the error message carefully'
           },
           {
             type: 'short',
-            q: 'Explain in your own words what a variable is and why they are useful in programming.',
-            answer: 'A variable is a container that stores data values with a descriptive name, making code more readable and allowing us to reuse and modify values easily.'
+            q: 'Describe the 4-step process for building an interactive program (ASK → STORE → DO → SHOW).',
+            answer: 'ASK the user for input using input(), STORE their response in a variable, DO something with the data (process it), and SHOW the result using print().'
           }
         ]
       }
