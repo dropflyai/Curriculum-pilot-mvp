@@ -8,11 +8,11 @@ export interface CodeExecutionResult {
   executionTime: number
 }
 
-let pyodideInstance: any = null
+let pyodideInstance: unknown = null
 let isLoading = false
 
 // Browser-only Pyodide loader
-export async function initializePyodide(): Promise<any> {
+export async function initializePyodide(): Promise<unknown> {
   // Only run in browser
   if (typeof window === 'undefined') {
     throw new Error('Pyodide can only be loaded in the browser')
@@ -45,7 +45,7 @@ export async function initializePyodide(): Promise<any> {
       document.head.appendChild(pyodideScript)
     })
 
-    // @ts-ignore - Pyodide global will be available
+    // @ts-expect-error - Pyodide global will be available after CDN load
     pyodideInstance = await loadPyodide({
       indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
     })
@@ -64,7 +64,8 @@ export async function executeCode(code: string): Promise<CodeExecutionResult> {
   const startTime = Date.now()
 
   try {
-    const pyodide = await initializePyodide()
+    const pyodideRaw = await initializePyodide()
+    const pyodide = pyodideRaw as { runPython: (code: string) => unknown; globals: { get: (key: string) => unknown } }
     
     // Prepare execution environment
     pyodide.runPython(`
