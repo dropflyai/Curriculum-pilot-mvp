@@ -78,13 +78,13 @@ export default function Dashboard() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-purple-300">
                 <User className="h-4 w-4 mr-1" />
-{user?.full_name || user?.email || 'Test User'}
+                {user?.full_name || user?.email || 'Test User'}
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                className="flex items-center text-sm text-purple-300 hover:text-white transition-colors"
               >
                 <LogOut className="h-4 w-4 mr-1" />
                 Sign Out
