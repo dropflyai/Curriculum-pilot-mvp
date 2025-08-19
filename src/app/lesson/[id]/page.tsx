@@ -8,6 +8,14 @@ import { ArrowLeft, BookOpen, Code, Send, CheckCircle, AlertCircle } from 'lucid
 import Link from 'next/link'
 import CodeEditor from '@/components/CodeEditor'
 
+// Local type definition
+interface CodeExecutionResult {
+  success: boolean
+  output: string
+  error?: string
+  executionTime: number
+}
+
 export default function LessonViewer() {
   const params = useParams()
   const router = useRouter()

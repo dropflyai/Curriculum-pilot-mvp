@@ -130,18 +130,14 @@ export default function CodeEditor({
     onCodeChange(initialCode)
   }
 
-  // Initialize Pyodide on component mount
+  // Initialize mock Python environment
   useEffect(() => {
     setIsLoading(true)
-    import('@/lib/pyodide').then(({ getPyodide }) => {
-      getPyodide().then(() => {
-        setIsLoading(false)
-        setOutput('🐍 Python environment ready! Click "Run Code" to execute.\n')
-      }).catch(error => {
-        setIsLoading(false)
-        setOutput(`❌ Failed to initialize Python environment:\n${error.message}`)
-      })
-    })
+    // Simulate loading time
+    setTimeout(() => {
+      setIsLoading(false)
+      setOutput('🐍 Python environment ready! Click "Run Code" to execute.\n(Note: Using mock execution for deployment setup)')
+    }, 1500)
   }, [])
 
   return (
