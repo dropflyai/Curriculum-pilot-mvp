@@ -65,7 +65,10 @@ export async function executeCode(code: string): Promise<CodeExecutionResult> {
 
   try {
     const pyodideRaw = await initializePyodide()
-    const pyodide = pyodideRaw as { runPython: (code: string) => unknown; globals: { get: (key: string) => unknown } }
+    const pyodide = pyodideRaw as { 
+      runPython: (code: string) => unknown; 
+      globals: { get: (key: string) => { toJs: () => { success: boolean; output: string; error: string } } } 
+    }
     
     // Prepare execution environment
     pyodide.runPython(`
