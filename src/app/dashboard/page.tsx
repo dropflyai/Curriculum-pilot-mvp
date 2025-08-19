@@ -1,82 +1,56 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase'
-import { Lesson, Progress } from '@/lib/supabase'
-import { BookOpen, Clock, CheckCircle, PlayCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
+import { getAllLessons, Lesson } from '@/lib/lesson-data'
+import { BookOpen, Clock, Award, TrendingUp, User, LogOut } from 'lucide-react'
 import Link from 'next/link'
+import { signOut } from '@/lib/auth'
 
-export default function StudentDashboard() {
-  const [lessons, setLessons] = useState<Lesson[]>([])
-  const [progress, setProgress] = useState<Progress[]>([])
-  const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+export default function Dashboard() {
+  const { user, isAuthenticated, loading } = useAuth()
+  const router = useRouter()
+  const [lessons] = useState<Lesson[]>(getAllLessons())
+  const [userProgress] = useState<Record<string, number>>({})
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        // Fetch lessons
-        console.log('Fetching lessons from Supabase...')
-        const { data: lessonsData, error: lessonsError } = await supabase
-          .from('lessons')
-          .select('*')
-          .order('week', { ascending: true })
-
-        console.log('Lessons data:', lessonsData)
-        console.log('Lessons error:', lessonsError)
-
-        if (lessonsError) throw lessonsError
-
-        // Fetch user progress
-        const { data: progressData, error: progressError } = await supabase
-          .from('progress')
-          .select('*')
-
-        if (progressError) throw progressError
-
-        setLessons(lessonsData || [])
-        setProgress(progressData || [])
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
+    if (!loading && !isAuthenticated) {
+      router.push('/auth')
     }
+  }, [isAuthenticated, loading, router])
 
-    fetchData()
-  }, [supabase])
-
-  const getProgressForLesson = (lessonId: string): Progress | undefined => {
-    return progress.find(p => p.lesson_id === lessonId)
+  const handleSignOut = async () => {
+    await signOut()
+    router.push('/')
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed': return 'bg-green-500'
-      case 'submitted': return 'bg-blue-500'
-      case 'in_progress': return 'bg-yellow-500'
-      default: return 'bg-gray-300'
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner': return 'bg-green-100 text-green-800'
+      case 'intermediate': return 'bg-yellow-100 text-yellow-800'
+      case 'advanced': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed': return <CheckCircle className="h-5 w-5 text-green-600" />
-      case 'submitted': return <CheckCircle className="h-5 w-5 text-blue-600" />
-      case 'in_progress': return <PlayCircle className="h-5 w-5 text-yellow-600" />
-      default: return <BookOpen className="h-5 w-5 text-gray-600" />
-    }
+  const getProgressForLesson = (lessonId: string) => {
+    return userProgress[lessonId] || 0
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your lessons...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     )
+  }
+
+  if (!isAuthenticated) {
+    return null
   }
 
   return (
@@ -84,113 +58,210 @@ export default function StudentDashboard() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Coding Journey</h1>
-              <p className="mt-1 text-sm text-gray-500">9th Grade Computer Science</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
-                Progress: {progress.filter(p => p.status === 'completed').length} / {lessons.length} lessons
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <BookOpen className="h-8 w-8 text-blue-600 mr-3" />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Coding Academy</h1>
+                <p className="text-sm text-gray-600">Student Dashboard</p>
               </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center text-sm text-gray-600">
+                <User className="h-4 w-4 mr-1" />
+                {user?.full_name || user?.email}
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <LogOut className="h-4 w-4 mr-1" />
+                Sign Out
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-white mb-8">
-          <h2 className="text-2xl font-bold mb-2">Welcome Back! 👋</h2>
-          <p className="text-blue-100 mb-4">
-            Ready to continue your coding adventure? Each lesson builds on the last, 
-            so let&apos;s keep that momentum going!
-          </p>
-          <div className="flex items-center space-x-6">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}! 👋
+          </h2>
+          <p className="text-gray-600">Continue your coding journey with Python programming.</p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <CheckCircle className="h-5 w-5 mr-2" />
-              <span>Completed: {progress.filter(p => p.status === 'completed').length}</span>
+              <div className="flex-shrink-0">
+                <BookOpen className="h-8 w-8 text-blue-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Lessons</p>
+                <p className="text-2xl font-bold text-gray-900">{lessons.length}</p>
+              </div>
             </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <PlayCircle className="h-5 w-5 mr-2" />
-              <span>In Progress: {progress.filter(p => p.status === 'in_progress').length}</span>
+              <div className="flex-shrink-0">
+                <TrendingUp className="h-8 w-8 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Completed</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {Object.values(userProgress).filter(p => p === 100).length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <Clock className="h-8 w-8 text-yellow-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">In Progress</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {Object.values(userProgress).filter(p => p > 0 && p < 100).length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <Award className="h-8 w-8 text-purple-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Avg Score</p>
+                <p className="text-2xl font-bold text-gray-900">--</p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Lessons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {lessons.map((lesson) => {
-            const lessonProgress = getProgressForLesson(lesson.id)
-            const status = lessonProgress?.status || 'not_started'
-            
-            return (
-              <Link 
-                key={lesson.id} 
-                href={`/lesson/${lesson.id}`}
-                className="group block"
-              >
-                <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-                  {/* Status Bar */}
-                  <div className={`h-2 ${getStatusColor(status)}`}></div>
-                  
-                  {/* Card Content */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-gray-900">Available Lessons</h3>
+            <div className="flex space-x-2">
+              <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                All Lessons
+              </button>
+              <button className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                Beginner
+              </button>
+              <button className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                Intermediate
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {lessons.map((lesson) => {
+              const progress = getProgressForLesson(lesson.id)
+              const isCompleted = progress === 100
+              const isStarted = progress > 0
+
+              return (
+                <div key={lesson.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
                   <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 mr-3">
-                          {getStatusIcon(status)}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-500">Week {lesson.week}</div>
-                          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {lesson.title}
-                          </h3>
-                        </div>
+                    {/* Lesson Header */}
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">{lesson.title}</h4>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{lesson.description}</p>
                       </div>
+                      {isCompleted && (
+                        <Award className="h-5 w-5 text-green-600 flex-shrink-0 ml-2" />
+                      )}
                     </div>
-                    
-                    {/* Objectives Preview */}
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-600">
-                        {lesson.objectives[0]}
-                      </p>
-                    </div>
-                    
-                    {/* Meta Info */}
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
+
+                    {/* Lesson Meta */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(lesson.difficulty)}`}>
+                        {lesson.difficulty}
+                      </span>
+                      <span className="text-sm text-gray-500 flex items-center">
                         <Clock className="h-4 w-4 mr-1" />
-                        {lesson.duration_minutes} min
-                      </div>
-                      <div className="capitalize px-2 py-1 rounded-full text-xs font-medium" 
-                           style={{
-                             backgroundColor: status === 'completed' ? '#dcfce7' : 
-                                           status === 'in_progress' ? '#fef3c7' : '#f3f4f6',
-                             color: status === 'completed' ? '#166534' : 
-                                   status === 'in_progress' ? '#92400e' : '#374151'
-                           }}>
-                        {status.replace('_', ' ')}
-                      </div>
+                        {lesson.estimatedTime}
+                      </span>
                     </div>
+
+                    {/* Progress Bar */}
+                    {isStarted && (
+                      <div className="mb-4">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-gray-600">Progress</span>
+                          <span className="text-xs text-gray-600">{Math.round(progress)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                              isCompleted ? 'bg-green-600' : 'bg-blue-600'
+                            }`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Button */}
+                    <Link
+                      href={`/lesson/${lesson.id}`}
+                      className={`w-full flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        isCompleted
+                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                          : isStarted
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'bg-gray-900 text-white hover:bg-gray-800'
+                      }`}
+                    >
+                      {isCompleted ? (
+                        <>
+                          <Award className="h-4 w-4 mr-2" />
+                          Review Lesson
+                        </>
+                      ) : isStarted ? (
+                        <>
+                          <TrendingUp className="h-4 w-4 mr-2" />
+                          Continue
+                        </>
+                      ) : (
+                        <>
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Start Lesson
+                        </>
+                      )}
+                    </Link>
                   </div>
                 </div>
-              </Link>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
 
-        {/* Empty State */}
-        {lessons.length === 0 && (
-          <div className="text-center py-12">
-            <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No lessons yet</h3>
-            <p className="text-gray-600">
-              Your lessons will appear here once your teacher sets up the curriculum.
-            </p>
+        {/* Recent Activity */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
           </div>
-        )}
+          <div className="p-6">
+            <div className="text-center py-8 text-gray-500">
+              <Clock className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+              <p>No recent activity yet.</p>
+              <p className="text-sm">Start a lesson to see your progress here!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
