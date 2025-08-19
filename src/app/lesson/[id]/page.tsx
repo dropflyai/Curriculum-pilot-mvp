@@ -13,7 +13,7 @@ export default function LessonPage() {
   const params = useParams()
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lesson, setLesson] = useState(getLessonById(params.id as string))
+  const [lesson] = useState(getLessonById(params.id as string))
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -47,7 +47,7 @@ export default function LessonPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Lesson Not Found</h1>
-          <p className="text-gray-600 mb-6">The lesson you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mb-6">The lesson you&apos;re looking for doesn&apos;t exist.</p>
           <Link
             href="/dashboard"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

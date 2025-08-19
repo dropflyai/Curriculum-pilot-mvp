@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function APITest() {
   const [results, setResults] = useState<string>('')
 
-  const testAPI = async (endpoint: string, method: string = 'GET', body?: any) => {
+  const testAPI = async (endpoint: string, method: string = 'GET', body?: unknown) => {
     try {
       const response = await fetch(endpoint, {
         method,
@@ -64,7 +65,7 @@ export default function APITest() {
         </div>
         
         <div className="mt-6">
-          <a href="/" className="text-blue-600 hover:underline">← Back to Home</a>
+          <Link href="/" className="text-blue-600 hover:underline">← Back to Home</Link>
         </div>
       </div>
     </div>

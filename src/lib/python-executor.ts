@@ -52,7 +52,7 @@ export async function initializePyodide(): Promise<any> {
     
     console.log('✅ Pyodide loaded successfully')
     return pyodideInstance
-  } catch (error) {
+  } catch {
     console.error('❌ Failed to load Pyodide:', error)
     throw error
   } finally {
@@ -116,7 +116,7 @@ except Exception as e:
       executionTime
     }
 
-  } catch (error) {
+  } catch {
     const executionTime = Date.now() - startTime
     return {
       success: false,
@@ -147,7 +147,7 @@ ${testCode}
       executionTime: Date.now() - startTime
     }
 
-  } catch (error) {
+  } catch {
     return {
       success: false,
       output: '',

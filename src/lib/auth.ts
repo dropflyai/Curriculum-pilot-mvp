@@ -1,6 +1,5 @@
 // Authentication utilities for Supabase Auth
 import { createClient } from '@/lib/supabase'
-import { User } from '@supabase/supabase-js'
 
 export interface AuthUser {
   id: string

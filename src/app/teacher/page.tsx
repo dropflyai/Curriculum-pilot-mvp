@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { User, Lesson, Progress } from '@/lib/supabase'
-import { Users, BookOpen, CheckCircle, Clock, Download, Plus, Settings } from 'lucide-react'
+import { Users, BookOpen, CheckCircle, Clock, Download, Settings } from 'lucide-react'
 import Link from 'next/link'
 
 interface StudentProgress {

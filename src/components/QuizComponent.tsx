@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, XCircle, Clock, ArrowRight } from 'lucide-react'
+import { CheckCircle, Clock, ArrowRight } from 'lucide-react'
 
 interface QuizItem {
   type: 'mcq' | 'short'
