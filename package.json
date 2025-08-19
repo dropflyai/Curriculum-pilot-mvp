@@ -16,6 +16,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
+  "optionalDependencies": {
+    "pyodide": "^0.28.1"
+  },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",

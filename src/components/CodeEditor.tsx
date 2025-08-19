@@ -10,26 +10,8 @@ interface CodeExecutionResult {
   executionTime: number
 }
 
-// Temporary mock functions for deployment
-const executeCode = async (code: string): Promise<CodeExecutionResult> => {
-  return {
-    success: true,
-    output: "Code execution temporarily disabled during deployment setup. Python execution will be enabled soon!",
-    executionTime: 0
-  }
-}
-
-const runTests = async (userCode: string, testCode: string): Promise<CodeExecutionResult> => {
-  return {
-    success: true,
-    output: "✅ Tests passed! (Test execution temporarily disabled during deployment setup)",
-    executionTime: 0
-  }
-}
-
-const validateCode = (code: string) => {
-  return { isValid: true, errors: [] }
-}
+// Real Python execution using browser-only Pyodide
+import { executeCode, runTests, validateCode } from '@/lib/python-executor'
 
 interface CodeEditorProps {
   initialCode: string
@@ -130,14 +112,26 @@ export default function CodeEditor({
     onCodeChange(initialCode)
   }
 
-  // Initialize mock Python environment
+  // Initialize Python environment
   useEffect(() => {
     setIsLoading(true)
-    // Simulate loading time
-    setTimeout(() => {
+    setOutput('🐍 Loading Python environment...')
+    
+    // Initialize Pyodide in the background
+    import('@/lib/python-executor').then(({ initializePyodide }) => {
+      initializePyodide()
+        .then(() => {
+          setIsLoading(false)
+          setOutput('✅ Python environment ready! Click "Run Code" to execute your Python code.')
+        })
+        .catch((error) => {
+          setIsLoading(false)
+          setOutput(`❌ Failed to load Python environment: ${error.message}\nFalling back to basic code editing.`)
+        })
+    }).catch(() => {
       setIsLoading(false)
-      setOutput('🐍 Python environment ready! Click "Run Code" to execute.\n(Note: Using mock execution for deployment setup)')
-    }, 1500)
+      setOutput('⚠️ Python execution not available. Code editing only.')
+    })
   }, [])
 
   return (
