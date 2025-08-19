@@ -52,9 +52,9 @@ export async function initializePyodide(): Promise<unknown> {
     
     console.log('✅ Pyodide loaded successfully')
     return pyodideInstance
-  } catch {
-    console.error('❌ Failed to load Pyodide:', error)
-    throw error
+  } catch (initError) {
+    console.error('❌ Failed to load Pyodide:', initError)
+    throw initError
   } finally {
     isLoading = false
   }
@@ -117,12 +117,12 @@ except Exception as e:
       executionTime
     }
 
-  } catch {
+  } catch (executionError) {
     const executionTime = Date.now() - startTime
     return {
       success: false,
       output: '',
-      error: `Python environment error: ${error instanceof Error ? error.message : String(error)}`,
+      error: `Python environment error: ${executionError instanceof Error ? executionError.message : String(executionError)}`,
       executionTime
     }
   }
@@ -148,11 +148,11 @@ ${testCode}
       executionTime: Date.now() - startTime
     }
 
-  } catch {
+  } catch (testError) {
     return {
       success: false,
       output: '',
-      error: `Test execution error: ${error instanceof Error ? error.message : String(error)}`,
+      error: `Test execution error: ${testError instanceof Error ? testError.message : String(testError)}`,
       executionTime: Date.now() - startTime
     }
   }
