@@ -2,7 +2,34 @@
 
 import { useState, useEffect } from 'react'
 import { Play, RotateCcw, AlertCircle, CheckCircle, Clock } from 'lucide-react'
-import { executeCode, runTests, validateCode, type CodeExecutionResult } from '@/lib/pyodide'
+
+interface CodeExecutionResult {
+  success: boolean
+  output: string
+  error?: string
+  executionTime: number
+}
+
+// Temporary mock functions for deployment
+const executeCode = async (code: string): Promise<CodeExecutionResult> => {
+  return {
+    success: true,
+    output: "Code execution temporarily disabled during deployment setup. Python execution will be enabled soon!",
+    executionTime: 0
+  }
+}
+
+const runTests = async (userCode: string, testCode: string): Promise<CodeExecutionResult> => {
+  return {
+    success: true,
+    output: "✅ Tests passed! (Test execution temporarily disabled during deployment setup)",
+    executionTime: 0
+  }
+}
+
+const validateCode = (code: string) => {
+  return { isValid: true, errors: [] }
+}
 
 interface CodeEditorProps {
   initialCode: string

@@ -1,10 +1,14 @@
 // Pyodide integration for running Python code in the browser
-import { loadPyodide, type PyodideInterface } from 'pyodide'
+// Dynamic import to prevent server-side loading issues
 
-let pyodideInstance: PyodideInterface | null = null
+let pyodideInstance: any = null
 let isLoading = false
 
-export async function getPyodide(): Promise<PyodideInterface> {
+export async function getPyodide(): Promise<any> {
+  if (typeof window === 'undefined') {
+    throw new Error('Pyodide can only be loaded in the browser')
+  }
+
   if (pyodideInstance) {
     return pyodideInstance
   }
@@ -20,6 +24,8 @@ export async function getPyodide(): Promise<PyodideInterface> {
   isLoading = true
   try {
     console.log('Loading Pyodide...')
+    // Dynamic import to avoid server-side issues
+    const { loadPyodide } = await import('pyodide')
     pyodideInstance = await loadPyodide({
       indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
     })
