@@ -61,9 +61,9 @@ export default function Dashboard() {
   // }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-blue-100">
+      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
@@ -100,7 +100,7 @@ export default function Dashboard() {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
             Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}! 👋
           </h2>
-          <p className="text-xl text-gray-700 font-medium">Ready to code? Let&apos;s make some programming magic happen! ✨</p>
+          <p className="text-xl text-gray-300 font-medium">Ready to code? Let&apos;s make some programming magic happen! ✨</p>
         </div>
 
         {/* Stats Cards */}
@@ -296,8 +296,8 @@ export default function Dashboard() {
                 <Clock className="h-16 w-16 mx-auto mb-4 text-indigo-300 animate-spin" />
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-pulse"></div>
               </div>
-              <p className="text-lg font-semibold text-gray-700 mb-2">Ready to start coding? \ud83d\ude80</p>
-              <p className="text-sm text-gray-600 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-lg inline-block">Pick a lesson above and let your coding adventure begin!</p>
+              <p className="text-lg font-semibold text-white mb-2">Ready to start coding? \ud83d\ude80</p>
+              <p className="text-sm text-gray-300 bg-gradient-to-r from-blue-900/50 to-purple-900/50 px-4 py-2 rounded-lg inline-block border border-purple-500/30">Pick a lesson above and let your coding adventure begin!</p>
             </div>
           </div>
         </div>

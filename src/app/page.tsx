@@ -5,9 +5,9 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
@@ -72,7 +72,7 @@ export default function Home() {
 
         {/* Features */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
+          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
             <div className="mb-6 relative">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
                 <Code className="h-8 w-8 text-white animate-pulse" />
@@ -80,12 +80,12 @@ export default function Home() {
               <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\u2728</div>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 text-center">Interactive Coding</h3>
-            <p className="text-gray-700 text-center font-medium">
+            <p className="text-gray-300 text-center font-medium">
               Write and run Python code directly in your browser. No setup required - just pure coding magic! \ud83d\udcbb
             </p>
           </div>
           
-          <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-100">
+          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-100">
             <div className="mb-6 relative">
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
                 <BookOpen className="h-8 w-8 text-white animate-pulse" />
@@ -93,12 +93,12 @@ export default function Home() {
               <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\ud83c\udf86</div>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4 text-center">Project-Based Learning</h3>
-            <p className="text-gray-700 text-center font-medium">
+            <p className="text-gray-300 text-center font-medium">
               Build real apps like Magic 8-Ball, calculators, and games while learning. Learning by doing! \ud83c\udfae
             </p>
           </div>
           
-          <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
+          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
             <div className="mb-6 relative">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
                 <Users className="h-8 w-8 text-white animate-pulse" />
@@ -106,7 +106,7 @@ export default function Home() {
               <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\ud83c\udfc6</div>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 text-center">Teacher Tools</h3>
-            <p className="text-gray-700 text-center font-medium">
+            <p className="text-gray-300 text-center font-medium">
               Track student progress, provide feedback, and manage assignments with ease. Teaching made simple! \ud83c\udf86
             </p>
           </div>
