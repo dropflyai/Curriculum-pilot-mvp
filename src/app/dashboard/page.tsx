@@ -16,10 +16,14 @@ export default function StudentDashboard() {
     async function fetchData() {
       try {
         // Fetch lessons
+        console.log('Fetching lessons from Supabase...')
         const { data: lessonsData, error: lessonsError } = await supabase
           .from('lessons')
           .select('*')
           .order('week', { ascending: true })
+
+        console.log('Lessons data:', lessonsData)
+        console.log('Lessons error:', lessonsError)
 
         if (lessonsError) throw lessonsError
 

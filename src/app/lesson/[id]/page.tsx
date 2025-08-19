@@ -7,7 +7,6 @@ import { Lesson, Progress } from '@/lib/supabase'
 import { ArrowLeft, BookOpen, Code, Send, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import CodeEditor from '@/components/CodeEditor'
-import { type CodeExecutionResult } from '@/lib/pyodide'
 
 export default function LessonViewer() {
   const params = useParams()
