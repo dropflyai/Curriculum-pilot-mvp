@@ -140,7 +140,7 @@ export default function TeacherDashboard() {
         )
         const completedCount = lessonProgress.filter(p => p.status === 'completed').length
         const strugglingCount = studentsWithProgress.filter(s => 
-          s.currentActivity?.lessonId === lesson.id && s.currentActivity.timeSpent > 20
+          s.currentActivity?.lessonId === lesson.id && s.currentActivity && s.currentActivity.timeSpent > 20
         ).length
 
         return {
