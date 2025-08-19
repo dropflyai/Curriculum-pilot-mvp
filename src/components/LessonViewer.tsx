@@ -177,9 +177,13 @@ export default function LessonViewer({ title, description, sections, onLessonCom
               
               <CodeEditor
                 initialCode={currentSectionData.codeChallenge.startingCode}
-                solution={currentSectionData.codeChallenge.solution}
-                tests={currentSectionData.codeChallenge.tests}
-                onSuccess={() => handleCodeChallengeComplete()}
+                testCode={currentSectionData.codeChallenge.tests.join('\n')}
+                onCodeChange={() => {}}
+                onExecutionResult={(result) => {
+                  if (result.success) {
+                    handleCodeChallengeComplete()
+                  }
+                }}
               />
             </div>
           )}
