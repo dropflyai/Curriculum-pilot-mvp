@@ -31,7 +31,7 @@ export const sampleLessons: Lesson[] = [
   {
     id: 'python-basics-variables',
     title: 'Python Basics: Variables and Input/Output',
-    description: 'Use variables and input/output to build interactive programs that respond to users.',
+    description: 'Use variables and input/output to build interactive programs that respond to users. Updated content!',
     difficulty: 'beginner',
     estimatedTime: '45 minutes',
     sections: [
