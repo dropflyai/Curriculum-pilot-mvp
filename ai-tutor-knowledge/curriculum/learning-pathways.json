@@ -1,0 +1,262 @@
+{
+  "learning_pathways": {
+    "prerequisite_chain": {
+      "lesson_1_foundation": {
+        "required_for": ["lesson_2", "lesson_3", "lesson_4", "lesson_5"],
+        "core_concepts": ["variables", "print", "input", "basic_syntax"],
+        "mastery_threshold": "70% quiz score + successful code challenges"
+      },
+      "lesson_2_project_skills": {
+        "builds_on": ["lesson_1"],
+        "required_for": ["lesson_3", "lesson_4", "lesson_5"],
+        "core_concepts": ["imports", "lists", "random_selection", "program_structure"]
+      },
+      "lesson_3_organization": {
+        "builds_on": ["lesson_1", "lesson_2"],
+        "required_for": ["lesson_4", "lesson_5"],
+        "core_concepts": ["functions", "parameters", "return_values", "scope"]
+      },
+      "lesson_4_automation": {
+        "builds_on": ["lesson_1", "lesson_2", "lesson_3"],
+        "required_for": ["lesson_5"],
+        "core_concepts": ["list_manipulation", "for_loops", "iteration", "data_processing"]
+      },
+      "lesson_5_persistence": {
+        "builds_on": ["lesson_1", "lesson_2", "lesson_3", "lesson_4"],
+        "capstone_skills": ["file_handling", "data_persistence", "error_handling"]
+      }
+    },
+    
+    "concept_dependencies": {
+      "variables": {
+        "prerequisite_concepts": [],
+        "enables": ["functions", "lists", "file_operations"],
+        "critical_understanding": "Must understand before any other programming concept"
+      },
+      "functions": {
+        "prerequisite_concepts": ["variables", "basic_syntax"],
+        "enables": ["advanced_program_structure", "code_reusability"],
+        "common_struggle": "Parameter vs argument confusion"
+      },
+      "lists": {
+        "prerequisite_concepts": ["variables"],
+        "enables": ["loops", "data_processing", "advanced_data_structures"],
+        "common_struggle": "Zero-based indexing concept"
+      },
+      "loops": {
+        "prerequisite_concepts": ["lists", "variables"],
+        "enables": ["data_processing", "automation", "algorithms"],
+        "common_struggle": "Indentation and loop variable scope"
+      },
+      "file_operations": {
+        "prerequisite_concepts": ["variables", "functions", "loops"],
+        "enables": ["data_persistence", "advanced_applications"],
+        "common_struggle": "File path understanding and error handling"
+      }
+    }
+  },
+  
+  "differentiated_learning_paths": {
+    "accelerated_track": {
+      "characteristics": "Students who complete lessons quickly with high comprehension",
+      "adaptations": [
+        "Additional challenge problems after each lesson",
+        "Creative project extensions beyond basic requirements",
+        "Early introduction to advanced concepts",
+        "Peer mentoring opportunities"
+      ],
+      "success_indicators": [
+        "90%+ quiz scores consistently",
+        "Completes lessons in <75% of allotted time",
+        "Demonstrates creative problem-solving",
+        "Helps other students effectively"
+      ]
+    },
+    
+    "standard_track": {
+      "characteristics": "Students progressing at expected pace with good understanding",
+      "adaptations": [
+        "Regular reinforcement activities",
+        "Standard project requirements with optional enhancements",
+        "Collaborative learning opportunities",
+        "Consistent progress celebration"
+      ],
+      "success_indicators": [
+        "70-89% quiz scores",
+        "Completes lessons within allotted timeframe",
+        "Shows steady improvement over time",
+        "Engages positively with content"
+      ]
+    },
+    
+    "supported_track": {
+      "characteristics": "Students needing additional scaffolding and support",
+      "adaptations": [
+        "Extended time for lesson completion",
+        "Additional practice exercises before assessments",
+        "Simplified initial projects with gradual complexity increase",
+        "Frequent check-ins and encouragement",
+        "Alternative explanation methods and analogies"
+      ],
+      "success_indicators": [
+        "60-75% quiz scores with improvement trend",
+        "Completes lessons with additional time",
+        "Demonstrates understanding through verbal explanation",
+        "Shows increased confidence over time"
+      ]
+    },
+    
+    "intensive_support": {
+      "characteristics": "Students struggling with foundational concepts",
+      "adaptations": [
+        "One-on-one teacher interventions",
+        "Prerequisite concept review before new material",
+        "Modified assessments focusing on core concepts",
+        "Peer buddy system for support",
+        "Alternative project formats (oral presentations, visual diagrams)"
+      ],
+      "success_indicators": [
+        "50%+ quiz scores with consistent effort",
+        "Demonstrates basic concept understanding",
+        "Shows engagement and willingness to try",
+        "Makes measurable progress from starting point"
+      ]
+    }
+  },
+  
+  "mastery_checkpoints": {
+    "checkpoint_1_basic_programming": {
+      "after_lesson": 1,
+      "required_skills": [
+        "Create variables with appropriate names",
+        "Use print() and input() functions correctly",
+        "Understand program flow from input to output",
+        "Debug basic syntax errors independently"
+      ],
+      "assessment_method": "Interactive coding challenge + short quiz",
+      "remediation_if_failed": [
+        "Additional practice with variable creation",
+        "Guided walkthrough of input/output pattern",
+        "Error identification exercises",
+        "Teacher conference for struggling students"
+      ]
+    },
+    
+    "checkpoint_2_program_structure": {
+      "after_lesson": 2,
+      "required_skills": [
+        "Import modules and use external code",
+        "Create and manipulate lists",
+        "Build complete interactive programs",
+        "Apply programming concepts to create functional projects"
+      ],
+      "assessment_method": "Magic 8-Ball project completion + concept quiz",
+      "remediation_if_failed": [
+        "Step-by-step project reconstruction",
+        "Module import practice exercises",
+        "List manipulation drill activities"
+      ]
+    },
+    
+    "checkpoint_3_code_organization": {
+      "after_lesson": 3,
+      "required_skills": [
+        "Define functions with parameters",
+        "Call functions with correct arguments", 
+        "Use return values appropriately",
+        "Organize code for reusability and clarity"
+      ],
+      "assessment_method": "Function creation project + parameter/argument quiz",
+      "remediation_if_failed": [
+        "Function definition practice",
+        "Parameter vs argument clarification exercises",
+        "Code organization workshops"
+      ]
+    },
+    
+    "checkpoint_4_data_processing": {
+      "after_lesson": 4,
+      "required_skills": [
+        "Access list elements by index",
+        "Use for loops to process data",
+        "Apply list methods for data manipulation",
+        "Combine multiple concepts in complex programs"
+      ],
+      "assessment_method": "Data processing project + loop/list quiz",
+      "remediation_if_failed": [
+        "Index counting exercises",
+        "Loop pattern practice",
+        "Step-by-step data processing walkthrough"
+      ]
+    },
+    
+    "checkpoint_5_complete_programmer": {
+      "after_lesson": 5,
+      "required_skills": [
+        "Handle file input and output operations",
+        "Create programs that persist data",
+        "Combine all learned concepts in comprehensive projects",
+        "Debug and troubleshoot complex programs independently"
+      ],
+      "assessment_method": "Capstone project incorporating all concepts",
+      "celebration": "Certificate of completion + showcase presentation"
+    }
+  },
+  
+  "conceptual_bridges": {
+    "real_world_to_programming": {
+      "variables_as_storage": {
+        "real_world": "Phone contacts, locker combinations, recipe ingredients",
+        "programming": "Memory locations that store data for later use",
+        "bridge_activity": "Create a digital address book using variables"
+      },
+      "functions_as_tools": {
+        "real_world": "Kitchen appliances, smartphone apps, tools in toolbox",
+        "programming": "Reusable code blocks that perform specific tasks",
+        "bridge_activity": "Design a 'toolbox' of functions for common calculations"
+      },
+      "loops_as_repetition": {
+        "real_world": "Morning routines, assembly lines, playlists",
+        "programming": "Automated repetition of actions on multiple items",
+        "bridge_activity": "Create a program that simulates a daily routine"
+      },
+      "lists_as_collections": {
+        "real_world": "Shopping lists, class rosters, music playlists",
+        "programming": "Ordered collections of related data items",
+        "bridge_activity": "Build a digital music playlist manager"
+      },
+      "files_as_permanent_storage": {
+        "real_world": "Notebooks, photo albums, filing cabinets",
+        "programming": "Permanent storage that survives after program ends",
+        "bridge_activity": "Create a digital diary that saves entries"
+      }
+    }
+  },
+  
+  "common_misconceptions": {
+    "variable_confusion": {
+      "misconception": "Variables are fixed and can't change",
+      "reality": "Variables are containers that can hold different values",
+      "correction_strategy": "Use analogy of changing phone contact names",
+      "practice_activity": "Variable reassignment exercises"
+    },
+    "function_mystery": {
+      "misconception": "Functions are magic black boxes",
+      "reality": "Functions are just labeled groups of instructions",
+      "correction_strategy": "Step-through function execution line by line",
+      "practice_activity": "Create simple functions and trace execution"
+    },
+    "loop_confusion": {
+      "misconception": "Loop variables are somehow special or magical",
+      "reality": "Loop variables are just regular variables that change each iteration",
+      "correction_strategy": "Manual tracing of loop execution with different values",
+      "practice_activity": "Loop tracing worksheets with concrete examples"
+    },
+    "list_indexing_confusion": {
+      "misconception": "Lists start counting at 1 like humans do",
+      "reality": "Programming lists start at 0 for technical reasons",
+      "correction_strategy": "Use apartment building analogy (ground floor = 0)",
+      "practice_activity": "Index counting games and visualization exercises"
+    }
+  }
+}

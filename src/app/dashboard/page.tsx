@@ -27,6 +27,7 @@ export default function Dashboard() {
   })
   const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
+  const [currentView, setCurrentView] = useState<'lessons' | 'achievements' | 'progress' | 'profile'>('lessons')
   
   // Gamification Data
   const [userXP] = useState(1250)
@@ -68,7 +69,7 @@ export default function Dashboard() {
   })
   
   // Course curriculum structure
-  const courseOutline = [
+  const [courseOutline] = useState([
     { 
       title: 'Python Fundamentals', 
       lessons: ['python-basics-variables', 'python-magic-8-ball'],
@@ -652,8 +653,13 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Detailed Learning Analytics Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          </div>
+        )}
+
+        {/* Gamified Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* XP/Level Card */}
+          <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
             <div className="flex items-center mb-3">
               <Star className="h-8 w-8 text-purple-100 animate-pulse" />
@@ -1064,7 +1070,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
+        </>
+        )}
+        </div>
       
       {/* Celebration Effect */}
       <CelebrationEffect 

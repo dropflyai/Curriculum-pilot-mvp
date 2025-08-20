@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-08-20",
+    "description": "AI tutor intervention templates based on student behavior and progress patterns"
+  },
+  "interventionTypes": {
+    "encouragement": {
+      "description": "Positive reinforcement when students are making progress",
+      "triggers": ["first_success", "improvement_detected", "milestone_reached"],
+      "templates": [
+        "🎉 Awesome! You just {achievement}! You're getting the hang of {concept}!",
+        "🌟 Nice work! That's exactly how {concept} works. Ready for the next challenge?",
+        "💪 You're building real programming skills! {specific_praise} shows you understand {concept}.",
+        "🚀 CodeFly pilot in training! You just {achievement} - that's programmer-level thinking!"
+      ],
+      "personalization": {
+        "achievement": ["fixed that error", "got the right output", "completed the exercise"],
+        "concept": "Dynamic based on current lesson section",
+        "specific_praise": ["Your variable naming", "Your problem-solving approach", "Your debugging skills"]
+      }
+    },
+    "gentle_guidance": {
+      "description": "Soft hints when students are stuck but not frustrated yet",
+      "triggers": ["no_progress_2min", "same_error_twice", "asking_for_help"],
+      "templates": [
+        "🤔 Hmm, let's think about this together. When we {context}, we need to {hint}. Want to try that?",
+        "💡 I notice you're working on {concept}. Remember, {analogy}. Does that spark any ideas?",
+        "🔍 Good question! For {concept}, think about {real_world_connection}. What would you try next?",
+        "🎯 You're on the right track! The key thing about {concept} is {core_principle}. Give it another shot!"
+      ],
+      "escalation": {
+        "nextLevel": "specific_hints",
+        "timeThreshold": "3 minutes",
+        "errorThreshold": 3
+      }
+    },
+    "specific_hints": {
+      "description": "Targeted technical help for specific problems",
+      "triggers": ["multiple_same_errors", "stuck_5min", "requested_hint"],
+      "templates": [
+        "🔧 Here's a specific tip: {technical_hint}. Try {suggested_action} and see what happens!",
+        "📝 For this {error_type}, you need to {solution_step}. Here's the pattern: {code_example}",
+        "🎪 Let's break this down step by step:\n1. {step1}\n2. {step2}\n3. {step3}\nTry step 1 first!",
+        "🔍 The error '{error_message}' means {plain_english_explanation}. To fix it: {fix_action}"
+      ],
+      "errorSpecific": {
+        "SyntaxError": "Check your punctuation! Look for missing colons (:), quotes, or parentheses on line {line_number}.",
+        "NameError": "Python doesn't recognize '{variable_name}'. Did you define it first? Check for typos!",
+        "TypeError": "You're mixing different types of data. Try converting with int() or str() first.",
+        "IndentationError": "Python needs consistent spacing. Make sure lines inside if/for blocks are indented exactly 4 spaces."
+      }
+    },
+    "step_by_step_help": {
+      "description": "Detailed walkthrough when students are significantly stuck",
+      "triggers": ["stuck_10min", "multiple_error_types", "frustration_detected"],
+      "templates": [
+        "🆘 No worries - let's solve this together! Here's exactly what to do:\n\n{detailed_steps}\n\nTry the first step and let me know how it goes!",
+        "🏗️ Let's build this piece by piece:\n\n{step_by_step_solution}\n\nDon't worry about understanding everything at once - focus on one step!",
+        "🎮 Game plan time! Here's our strategy:\n\n{strategy_breakdown}\n\nYou've got this! Start with step 1."
+      ],
+      "includeCode": true,
+      "escalation": {
+        "nextLevel": "teacher_alert",
+        "timeThreshold": "15 minutes"
+      }
+    },
+    "teacher_alert": {
+      "description": "When AI assistance isn't enough and human intervention is needed",
+      "triggers": ["stuck_15min", "emotional_indicators", "repeated_failures"],
+      "actions": [
+        "Alert teacher with student status and problem summary",
+        "Provide teacher with attempted solutions and student responses",
+        "Suggest specific intervention strategies"
+      ],
+      "studentMessage": "I've let your teacher know you might need some extra help with {concept}. Keep trying - learning to code takes practice, and you're doing great! 🌟",
+      "teacherAlert": {
+        "priority": "medium",
+        "summary": "Student {name} has been stuck on {concept} for {duration}. Attempted solutions: {attempted_solutions}. Suggested intervention: {intervention_type}."
+      }
+    }
+  },
+  "emotionalSupport": {
+    "frustration": {
+      "recognitionPatterns": ["repeated same mistake", "deleted all code", "inactive for long periods"],
+      "responses": [
+        "😤 I can tell this is frustrating! That's totally normal - every programmer feels this way sometimes. Want to take a different approach?",
+        "🧘‍♀️ Take a deep breath. Programming is like learning a new language, and you're doing amazing. Let's try breaking this into smaller pieces.",
+        "💪 Frustration means you're learning! Even professional programmers google things constantly. You're building real skills here."
+      ]
+    },
+    "confusion": {
+      "recognitionPatterns": ["random code changes", "asking basic questions", "going backwards in progress"],
+      "responses": [
+        "🤔 I see you're trying different things - that's good experimenting! Let's step back and make sure we understand {concept} first.",
+        "📚 No worries about being confused - {concept} is tricky! Let's review the basics: {simple_explanation}",
+        "🔄 Sometimes it helps to start fresh. Here's what {concept} is really about: {analogy}"
+      ]
+    },
+    "breakthrough": {
+      "recognitionPatterns": ["sudden progress", "multiple successes", "completing challenges quickly"],
+      "responses": [
+        "🎆 YES! You just had a programmer breakthrough! That moment when it 'clicks' is the best feeling!",
+        "🧠 Your brain just leveled up! You're thinking like a real programmer now. That's the power of practice!",
+        "⚡ You're on fire! This is what happens when programming concepts start connecting. Keep going!"
+      ]
+    }
+  },
+  "contextAwareness": {
+    "timeOfDay": {
+      "morning": "Good morning, CodeFly pilot! Ready to start coding? ☀️",
+      "afternoon": "Hope you're having a great day! Let's code something awesome! 🌤️",
+      "evening": "Evening coding session! Perfect time to build something cool! 🌙"
+    },
+    "sessionProgress": {
+      "justStarted": "Welcome back to CodeFly! Let's pick up where we left off. ✈️",
+      "midProgress": "You're making solid progress on {concept}! Keep it up! 💪",
+      "nearComplete": "You're almost done with {lesson}! Just a little more and you'll master {concept}! 🏁"
+    },
+    "streakAwareness": {
+      "onStreak": "Day {streak_count} of your coding streak! You're building an amazing habit! 🔥",
+      "brokenStreak": "No worries about yesterday - today is a fresh start! Let's code! 🌱",
+      "newStreak": "Starting a new coding adventure! Every expert was once a beginner! 🚀"
+    }
+  },
+  "adaptiveResponse": {
+    "learningStyle": {
+      "visual": "Let me show you a diagram of how {concept} works...",
+      "verbal": "Let's talk through {concept} step by step...",
+      "kinesthetic": "Try experimenting with {concept} by changing the code and seeing what happens..."
+    },
+    "pacePreference": {
+      "fast": "I can see you're ready for more! Here's the next challenge...",
+      "medium": "You're making steady progress! Ready for the next step?",
+      "slow": "Take your time - understanding is more important than speed. Let's make sure this is solid..."
+    }
+  }
+}

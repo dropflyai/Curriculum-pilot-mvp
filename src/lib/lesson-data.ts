@@ -40,21 +40,40 @@ export const sampleLessons: Lesson[] = [
       {
         type: 'content',
         title: 'Building Interactive Programs',
-        content: `Welcome to your first step in creating amazing interactive programs! 
+        content: `🎉 Welcome, future coder! I'm your AI instructor, and I'm SO excited to teach you programming!
 
-Think of programming like having a conversation with your computer. Today we'll learn how to make your computer ask questions, remember answers, and respond back - just like texting with a friend!
+Think of me as your personal coding coach. I'll guide you step-by-step, give you hints when you're stuck, and celebrate with you when you succeed! 
 
-🎯 Your Mission: Build programs that can chat with users and give smart responses.
+Today's adventure: We're going to transform you from a complete beginner into someone who can build programs that actually TALK to users! 🗣️
+
+🎯 **Your Mission (should you choose to accept it):** Build programs that can chat with users and give smart responses - just like the apps you use every day!
+
+**Here's how I'll teach you:**
+- 📖 I'll explain concepts with fun analogies you already know
+- 💻 You'll practice with interactive code examples (try changing things!)
+- 🧪 I'll give you challenges to test your skills
+- 🎉 We'll celebrate every victory together!
+
+Ready to begin this coding journey? Let's make some digital magic! ✨
 
 ---
 
 📦 CONCEPT #1: Variables (Your Computer's Memory Boxes)
 
-What are variables?
+**🤖 Teacher Says:** "Alright, let's start with the most important concept in programming - variables! I promise this will click once you see my analogy."
+
+**What are variables?**
 Variables are like labeled storage boxes in your computer's memory. Just like you might have different boxes in your room - one for games, one for clothes, one for school supplies - variables are containers that hold different types of information.
 
-Real-world analogy:
-Imagine your phone's contacts list. Each contact has a name (the label) and stores information like phone numbers, addresses, and photos. Variables work the same way!
+**My favorite real-world analogy:**
+🏠 Think of variables like your phone's contacts list! Each contact has:
+- A name (the label) like "Mom" or "Best Friend" 
+- Stored information like phone numbers, addresses, and photos
+- You can update the information anytime
+
+Variables work EXACTLY the same way! 📱✨
+
+**🎯 Key insight:** Every app you use (Instagram, TikTok, Snapchat) uses millions of variables to remember your username, posts, friends, and preferences!
 
 In Python, we create these "boxes" like this:
 - user_name = "Alex" (stores text someone types)
@@ -78,11 +97,20 @@ description: Modify the values and see how variables work!
 
 🎤 CONCEPT #2: Getting Input (Asking Questions)
 
-What is input?
-The input() function is like your program raising its hand and asking "What do you think?" It pauses and waits for the user to type something, just like when a teacher asks a question and waits for an answer.
+**🤖 Teacher Says:** "Now let's make your programs INTERACTIVE! This is where the magic happens - your program will actually talk to users!"
 
-Real-world analogy:
-Think of input() like a drive-thru speaker. The worker asks "What would you like to order?" and waits for you to respond. Your program does the same thing - it asks a question and waits for the user to type their answer.
+**What is input?**
+The input() function is like your program raising its hand and asking "What do you think?" It pauses everything and waits for the user to respond - just like when I ask you a question and wait for your answer! 
+
+**Perfect real-world analogy:**
+🚗 Think of input() like a drive-thru speaker at McDonald's:
+1. Worker: "Welcome! What would you like to order?" (the question)
+2. You: Think about what you want... then speak your order (user types)
+3. Worker: Hears your order and processes it (program gets the input)
+
+Your program does the EXACT same thing - it asks, waits, and listens! 🎧
+
+**🎯 Cool fact:** Every time you search on Google, log into Instagram, or text a friend, you're using input() functions!
 
 Examples:
 - question = input("What's your favorite color? ")
@@ -142,7 +170,7 @@ Ready to build your first interactive program? Let's go! 🚀`
         type: 'code',
         title: 'Practice: Interactive Name Program',
         codeChallenge: {
-          description: 'Build an interactive program that asks for the user\'s name and responds personally. Follow the test → fix → retest cycle to get it working!',
+          description: '🤖 **Your First Coding Challenge!** I\'m excited to see what you build! Create an interactive program that asks for someone\'s name and gives them a personalized greeting. Don\'t worry if you get errors - that\'s how we learn! Just follow my test → fix → retest approach and you\'ll get it working! 💪',
           startingCode: `# Interactive Name Program
 # Step 1: Ask user for their name
 # Step 2: Store it in a variable  
@@ -170,10 +198,11 @@ print(f"Cool! {favorite_color} is a great color, {user_name}!")`,
             'assert "user_name" in code or "name" in code, "Store the name in a variable"'
           ],
           hints: [
-            "Start by using input() to ask the user for their name. The syntax is: variable = input('question')",
-            "Store the user's response in a variable like 'user_name' or 'name'",
-            "Use print() to display a greeting. You can combine text with the variable using + or f-strings",
-            "Try using an f-string: print(f'Hello {user_name}!') - it's cleaner than using +"
+            "🤖 **Hint 1:** Start with input()! Use this pattern: variable = input('Your question here'). I believe in you!",
+            "🤖 **Hint 2:** Give your variable a clear name like 'user_name' or 'name' - this makes your code easier to read!",
+            "🤖 **Hint 3:** Now use print() to show a greeting! You can combine text with your variable using + or f-strings",
+            "🤖 **Pro Tip:** Try f-strings - they're my favorite! print(f'Hello {user_name}!') looks so much cleaner than using +",
+            "🤖 **Stuck?** Remember: ASK (input) → STORE (variable) → RESPOND (print). You've got this! 🚀"
           ]
         }
       },
@@ -570,9 +599,11 @@ print("Thanks for using the calculator!")  # Fixed: Added missing closing quote`
       {
         type: 'content',
         title: 'Project Overview',
-        content: `🎮 Welcome to your first complete Python project! 
+        content: `🎮 **OH MY GOSH, I'M SO EXCITED!** This is going to be your first COMPLETE Python project! 
 
-Imagine having a wise friend who always gives you interesting answers to your questions. That's exactly what we're building today - a digital Magic 8-Ball that will become your personal fortune teller!
+🤖 **Teacher Says:** "We're about to build something absolutely AMAZING together - a digital Magic 8-Ball! By the end of this lesson, you'll have created a real program that your friends and family can actually use. How cool is that?!"
+
+✨ Imagine having a wise digital friend who always gives you interesting answers to your questions. That's exactly what we're building today - your very own mystical fortune teller that lives inside your computer!
 
 ---
 

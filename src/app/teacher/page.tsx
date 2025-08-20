@@ -812,6 +812,13 @@ CodeFly Computer Science Teacher
                 <Settings className="h-4 w-4 mr-2" />
                 Manage Lessons 📚
               </Link>
+              <Link 
+                href="/teacher/knowledge-base"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                AI Tutor KB 🧠
+              </Link>
               <button 
                 onClick={() => setShowReportModal(true)}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"

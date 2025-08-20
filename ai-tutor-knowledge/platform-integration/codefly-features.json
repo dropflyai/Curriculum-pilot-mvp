@@ -1,0 +1,159 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-08-20",
+    "description": "CodeFly platform features and capabilities for AI tutor integration"
+  },
+  "platformCapabilities": {
+    "codeExecution": {
+      "technology": "Pyodide (browser-based Python)",
+      "limitations": [
+        "No file system access",
+        "Limited library support", 
+        "Client-side execution only",
+        "No persistent storage between sessions"
+      ],
+      "capabilities": [
+        "Real Python syntax and logic",
+        "Error messages and debugging",
+        "Variable inspection",
+        "Interactive console output"
+      ],
+      "tutorIntegration": {
+        "canAnalyze": ["Code syntax", "Logic flow", "Output results", "Error types"],
+        "canProvide": ["Syntax fixes", "Logic suggestions", "Error explanations", "Code examples"],
+        "cannotDo": ["File operations", "Network requests", "System-level debugging"]
+      }
+    },
+    "progressTracking": {
+      "database": "Supabase with real-time updates",
+      "tracked": [
+        "Lesson completion status",
+        "Time spent per section",
+        "Code attempts and submissions",
+        "Quiz scores and responses",
+        "Achievement unlocks",
+        "XP and level progression"
+      ],
+      "tutorAccess": {
+        "canRead": ["Current progress", "Historical performance", "Time patterns", "Difficulty areas"],
+        "canUpdate": ["Progress status", "XP rewards", "Achievement unlocks", "Intervention flags"],
+        "realTime": true
+      }
+    },
+    "userInterface": {
+      "theme": "CodeFly dark theme with cyan/blue gradients",
+      "components": [
+        "Interactive code editor with syntax highlighting",
+        "Multi-section lesson viewer (Learn/Code/Quiz)",
+        "Progress indicators and completion states",
+        "Achievement showcase and XP display",
+        "Real-time chat/help interface"
+      ],
+      "tutorIntegration": {
+        "helpModal": "Overlay help system with contextual guidance",
+        "hintSystem": "Progressive hint disclosure in code editor",
+        "celebrationEffects": "Canvas-confetti for achievements",
+        "statusIndicators": "Visual feedback for tutor presence/availability"
+      }
+    },
+    "teacherDashboard": {
+      "realTimeMonitoring": {
+        "studentStatus": ["Active", "Needs Help", "Stuck", "Completed"],
+        "interventionTriggers": ["Time thresholds", "Error patterns", "Help requests"],
+        "alertSystem": "Teacher notifications for urgent student needs"
+      },
+      "tutorCoordination": {
+        "escalation": "AI tutor can alert teachers when human help needed",
+        "handoff": "Seamless transition from AI to human support",
+        "reporting": "AI tutor activities logged for teacher review"
+      }
+    }
+  },
+  "integrationPoints": {
+    "authentication": {
+      "system": "Supabase Auth with role-based access",
+      "tutorAccess": "Service account with limited permissions",
+      "studentContext": "Full access to own progress and lesson data"
+    },
+    "dataFlow": {
+      "studentActions": "Code attempts, quiz responses, help requests",
+      "tutorResponses": "Hints, explanations, encouragement, escalation alerts",
+      "teacherOverride": "Teachers can modify or supplement tutor responses"
+    },
+    "apiEndpoints": {
+      "knowledge": "/api/ai-tutor/knowledge",
+      "student": "/api/ai-tutor/student/[id]",
+      "intervention": "/api/ai-tutor/intervention",
+      "analytics": "/api/ai-tutor/analytics"
+    }
+  },
+  "gamificationIntegration": {
+    "xpSystem": {
+      "sources": ["Lesson completion", "Code success", "Quiz performance", "Help others"],
+      "tutorRewards": ["Helpful responses", "Progress milestones", "Overcoming challenges"],
+      "levels": "Based on accumulated XP with themed progression"
+    },
+    "achievements": {
+      "categories": ["Learning", "Problem-solving", "Persistence", "Collaboration"],
+      "tutorTriggered": ["First successful debug", "Helped another student", "Asked great question"],
+      "display": "Real-time unlock animations with contextual messages"
+    },
+    "streaks": {
+      "daily": "Consecutive days with coding activity",
+      "success": "Consecutive successful code attempts",
+      "tutorSupport": "Maintain motivation during streak breaks"
+    }
+  },
+  "contentManagement": {
+    "lessonData": {
+      "source": "lesson-data.ts with structured curriculum content",
+      "format": "TypeScript interfaces with comprehensive lesson objects",
+      "tutorAccess": "Read-only access to lesson objectives, concepts, hints"
+    },
+    "dynamicContent": {
+      "hints": "Progressive hint systems with multiple explanation approaches",
+      "examples": "Interactive code examples with modifications",
+      "analogies": "Real-world comparisons for abstract programming concepts"
+    },
+    "personalization": {
+      "learningStyle": "Adapt explanations based on student response patterns",
+      "interests": "Customize examples using student preferences",
+      "pace": "Adjust intervention timing based on individual patterns"
+    }
+  },
+  "interventionWorkflow": {
+    "detection": {
+      "automatic": ["Error patterns", "Time thresholds", "Inactivity"],
+      "requested": ["Help button", "Chat messages", "Confusion indicators"],
+      "predictive": ["Pattern recognition", "Historical difficulties", "Context awareness"]
+    },
+    "response": {
+      "immediate": "Contextual hints and error explanations",
+      "progressive": "Escalating help levels with detailed guidance",
+      "collaborative": "Peer learning opportunities and teacher coordination"
+    },
+    "escalation": {
+      "criteria": ["Multiple failed interventions", "Extended struggle time", "Emotional indicators"],
+      "actions": ["Teacher alert", "Peer assistance", "Break recommendation"],
+      "handoff": "Smooth transition with context preservation"
+    }
+  },
+  "qualityAssurance": {
+    "responseValidation": {
+      "accuracy": "Technical correctness of programming advice",
+      "pedagogy": "Age-appropriate communication and encouragement",
+      "context": "Relevance to current lesson and student situation"
+    },
+    "continuousImprovement": {
+      "feedback": "Track effectiveness of tutor responses",
+      "iteration": "Update knowledge base based on student outcomes",
+      "teacherInput": "Incorporate teacher feedback and suggestions"
+    },
+    "safeguards": {
+      "escalation": "Always defer to human judgment for complex issues",
+      "boundaries": "Clear limits on tutor decision-making authority",
+      "monitoring": "Teacher oversight of all tutor interactions"
+    }
+  }
+}

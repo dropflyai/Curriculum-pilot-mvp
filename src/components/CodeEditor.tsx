@@ -74,10 +74,25 @@ export default function CodeEditor({
       setAttempts(prev => prev + 1)
       
       if (result.success) {
-        setOutput(`✅ Success! (${result.executionTime}ms)\n\n${result.output}`)
+        const teacherEncouragement = [
+          "🤖 Excellent! Your code ran perfectly!",
+          "🤖 Great job! I love seeing working code!",
+          "🤖 Awesome! You're getting the hang of this!",
+          "🤖 Perfect! You're becoming a real programmer!",
+          "🤖 Wonderful! Your logic is spot on!"
+        ][Math.floor(Math.random() * 5)]
+        setOutput(`✅ Success! (${result.executionTime}ms)\n\n${teacherEncouragement}\n\n${result.output}`)
       } else {
         const smartError = getSmartErrorMessage(result.error || 'Unknown error')
-        setOutput(`❌ Error! (${result.executionTime}ms)\n\n${smartError}`)
+        const teacherSupport = attempts < 3 ? 
+          "🤖 Don't worry! Errors are how we learn. Read the message below and try again!" :
+          "🤖 Still stuck? That's okay! Let me give you a hint to help you out."
+        setOutput(`❌ Error! (${result.executionTime}ms)\n\n${teacherSupport}\n\n${smartError}`)
+        
+        // Auto-show hints after 3 attempts
+        if (attempts >= 2 && hints.length > 0) {
+          setShowHints(true)
+        }
       }
 
       onExecutionResult?.(result)
@@ -109,9 +124,17 @@ export default function CodeEditor({
       setLastResult(result)
       
       if (result.success) {
-        setOutput(`✅ Tests completed! (${result.executionTime}ms)\n\n${result.output}`)
+        const testSuccess = [
+          "🤖 AMAZING! All tests passed! You've mastered this challenge!",
+          "🤖 Perfect! Your code works exactly as expected!",
+          "🤖 Brilliant! You solved it correctly!",
+          "🤖 Outstanding! Your solution is spot-on!",
+          "🤖 Excellent work! Ready for the next challenge!"
+        ][Math.floor(Math.random() * 5)]
+        setOutput(`✅ Tests completed! (${result.executionTime}ms)\n\n${testSuccess}\n\n${result.output}`)
       } else {
-        setOutput(`❌ Tests failed! (${result.executionTime}ms)\n\n${result.error || 'Test execution error'}`)
+        const testEncouragement = "🤖 Not quite there yet, but you're learning! Check the test feedback and try again!"
+        setOutput(`❌ Tests failed! (${result.executionTime}ms)\n\n${testEncouragement}\n\n${result.error || 'Test execution error'}`)
       }
 
       onExecutionResult?.(result)

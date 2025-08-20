@@ -101,7 +101,28 @@ export default function QuizComponent({ quizItems, onQuizComplete }: QuizCompone
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Quiz Complete!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Quiz Complete! 🎉</h2>
+          
+          {/* Teacher Feedback based on performance */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-4 border border-blue-200">
+            <div className="flex items-center justify-center mb-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center mr-3">
+                <span className="text-lg">🤖</span>
+              </div>
+              <h3 className="text-lg font-bold text-gray-800">Your AI Teacher Says:</h3>
+            </div>
+            <p className="text-gray-700 italic">
+              {results.score === results.totalQuestions ? 
+                '"Perfect score! I\'m absolutely amazed! You\'ve mastered this! 🌟"' :
+              results.score >= results.totalQuestions * 0.8 ? 
+                '"Excellent work! You clearly understand the concepts! 💪"' :
+              results.score >= results.totalQuestions * 0.6 ? 
+                '"Good job! You\'re on the right track! 🚀"' :
+                '"Great effort! Learning takes time. Let\'s review together! 📚"'
+              }
+            </p>
+          </div>
+
           <p className="text-gray-600">
             You scored {results.score} out of {results.totalQuestions} questions
           </p>

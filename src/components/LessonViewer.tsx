@@ -257,9 +257,14 @@ export default function LessonViewer({ title, description, sections, lessonId, o
               </div>
             </div>
             {sectionProgress[currentSection] && (
-              <div className="flex items-center bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 rounded-full shadow-lg">
-                <CheckCircle className="h-6 w-6 mr-2 text-white animate-bounce" />
-                <span className="text-white font-bold">✅ Completed!</span>
+              <div className="flex items-center bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 rounded-full shadow-lg border border-green-300">
+                <div className="flex items-center">
+                  <CheckCircle className="h-6 w-6 mr-2 text-white animate-bounce" />
+                  <div className="text-white">
+                    <div className="font-bold">🎉 Section Complete!</div>
+                    <div className="text-xs text-green-100">🤖 "Awesome work! You're really getting it!"</div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -276,12 +281,26 @@ export default function LessonViewer({ title, description, sections, lessonId, o
               
               {!sectionProgress[currentSection] && (
                 <div className="mt-8 pt-6 border-t border-purple-500/30">
+                  <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-4 border border-blue-500/30">
+                    <div className="flex items-center mb-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center mr-4">
+                        <span className="text-xl">🤖</span>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-white">Your AI Teacher Says:</h4>
+                        <p className="text-blue-200">"Great job reading through that section! Ready to move forward?"</p>
+                      </div>
+                    </div>
+                    <div className="text-gray-300 text-sm bg-gray-800/50 rounded-lg p-3 border-l-4 border-blue-400">
+                      💡 <strong>Learning Tip:</strong> Take your time to understand each concept. There's no rush - I'm here to guide you every step of the way!
+                    </div>
+                  </div>
                   <button
                     onClick={() => markSectionComplete(currentSection)}
                     className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center font-bold text-lg"
                   >
                     <CheckCircle className="h-6 w-6 mr-3 animate-pulse" />
-                    ✅ I&apos;ve Read This - Let&apos;s Continue!
+                    🎉 I Understanding This - Let's Continue Learning!
                     <CheckCircle className="ml-2 h-4 w-4" />
                   </button>
                 </div>
@@ -362,9 +381,11 @@ export default function LessonViewer({ title, description, sections, lessonId, o
             Step {currentSection + 1} of {sections.length}
           </div>
           <div className="text-sm text-gray-400">
-            {currentSection === 0 ? 'Starting your journey! 🚀' :
-             currentSection === sections.length - 1 ? 'Almost done! 🎯' :
-             'Keep going! You&apos;re doing great! ⚡'}
+            {currentSection === 0 ? '🤖 "Welcome to your first lesson! I\'m so excited to teach you!" 🚀' :
+             currentSection === sections.length - 1 ? '🤖 "You\'re almost finished! I\'m so proud of your progress!" 🎯' :
+             Math.floor(currentSection / sections.length * 100) < 30 ? '🤖 "Great start! You\'re building momentum!" ⚡' :
+             Math.floor(currentSection / sections.length * 100) < 70 ? '🤖 "You\'re really getting the hang of this!" 💪' :
+             '🤖 "Wow! You\'re crushing this lesson!" 🔥'}
           </div>
         </div>
 
