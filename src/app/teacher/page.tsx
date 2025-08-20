@@ -338,6 +338,58 @@ export default function TeacherDashboard() {
 
   const stats = getProgressStats()
 
+  // Communication System Functions
+  const sendMessage = async (student: StudentProgress, message: string) => {
+    setMessageSending(true)
+    try {
+      // TODO: Implement actual message sending to Supabase
+      // For now, simulate the action
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      console.log(`Message sent to ${student.user.full_name}: ${message}`)
+      
+      // Show success notification (you could add a toast notification here)
+      alert(`Message sent to ${student.user.full_name}!`)
+      
+      setShowMessageModal(false)
+      setMessageText('')
+      setMessageRecipient(null)
+    } catch (error) {
+      console.error('Error sending message:', error)
+      alert('Failed to send message. Please try again.')
+    } finally {
+      setMessageSending(false)
+    }
+  }
+
+  const sendAnnouncement = async (message: string) => {
+    setMessageSending(true)
+    try {
+      // TODO: Implement actual announcement sending to all students
+      // For now, simulate the action
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      console.log(`Announcement sent to all students: ${message}`)
+      
+      // Show success notification
+      alert(`Announcement sent to ${students.length} students!`)
+      
+      setShowAnnouncementModal(false)
+      setAnnouncementText('')
+    } catch (error) {
+      console.error('Error sending announcement:', error)
+      alert('Failed to send announcement. Please try again.')
+    } finally {
+      setMessageSending(false)
+    }
+  }
+
+  const openMessageModal = (student: StudentProgress) => {
+    setMessageRecipient(student)
+    setMessageText('')
+    setShowMessageModal(true)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
@@ -372,6 +424,13 @@ export default function TeacherDashboard() {
               >
                 <Zap className="h-4 w-4 mr-2" />
                 Live Updates {realTimeEnabled ? '🟢' : '⚫'}
+              </button>
+              <button
+                onClick={() => setShowAnnouncementModal(true)}
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+              >
+                <Volume2 className="h-4 w-4 mr-2" />
+                Send Announcement 📢
               </button>
               <Link 
                 href="/teacher/manage"
@@ -710,6 +769,7 @@ export default function TeacherDashboard() {
                           <button 
                             className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors"
                             title="Send message"
+                            onClick={() => openMessageModal(student)}
                           >
                             <MessageSquare className="h-4 w-4" />
                           </button>
@@ -717,6 +777,11 @@ export default function TeacherDashboard() {
                             <button 
                               className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors animate-pulse"
                               title="Provide help"
+                              onClick={() => {
+                                setMessageRecipient(student)
+                                setMessageText(`Hi ${student.user.full_name?.split(' ')[0]}, I noticed you've been working on this for a while. Do you need help with anything specific? 🤝`)
+                                setShowMessageModal(true)
+                              }}
                             >
                               <Lightbulb className="h-4 w-4" />
                             </button>
@@ -750,15 +815,30 @@ export default function TeacherDashboard() {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+              <button 
+                onClick={() => {
+                  setAnnouncementText(`📢 Class Update: I see some students are working hard on the current lesson. Remember, it's okay to take your time and ask for help if needed! 💪`)
+                  setShowAnnouncementModal(true)
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+              >
                 <MessageSquare className="h-5 w-5 mr-2" />
                 Send Group Message 📢
               </button>
-              <button className="bg-orange-600 hover:bg-orange-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+              <button 
+                onClick={() => {
+                  setAnnouncementText(`💡 Helpful Hint: If you're stuck on the coding challenge, remember to check your variable names for typos. Python is case-sensitive! Try using print() to debug your code step by step. 🐍`)
+                  setShowAnnouncementModal(true)
+                }}
+                className="bg-orange-600 hover:bg-orange-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+              >
                 <Lightbulb className="h-5 w-5 mr-2" />
                 Share Hint with Class 💡
               </button>
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+              <button 
+                onClick={() => alert('Screen sharing feature coming soon! 🖥️')}
+                className="bg-yellow-600 hover:bg-yellow-700 text-white p-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+              >
                 <Play className="h-5 w-5 mr-2" />
                 Start Screen Share 🖥️
               </button>
@@ -766,6 +846,122 @@ export default function TeacherDashboard() {
           </div>
         )}
       </div>
+
+      {/* Message Modal */}
+      {showMessageModal && messageRecipient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 border border-purple-500/30">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+              <MessageSquare className="h-5 w-5 mr-2 text-green-400" />
+              Send Message to {messageRecipient.user.full_name}
+            </h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-purple-300 mb-2">
+                Message
+              </label>
+              <textarea
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+                placeholder="Type your message to the student..."
+                className="w-full p-3 bg-gray-700 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowMessageModal(false)
+                  setMessageText('')
+                  setMessageRecipient(null)
+                }}
+                className="px-4 py-2 text-purple-300 hover:text-white transition-colors border border-purple-500/30 rounded-lg hover:bg-purple-700/50"
+                disabled={messageSending}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => sendMessage(messageRecipient, messageText)}
+                disabled={!messageText.trim() || messageSending}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {messageSending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send Message
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Announcement Modal */}
+      {showAnnouncementModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 border border-purple-500/30">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+              <Volume2 className="h-5 w-5 mr-2 text-blue-400" />
+              Send Announcement to All Students
+            </h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-purple-300 mb-2">
+                Announcement
+              </label>
+              <textarea
+                value={announcementText}
+                onChange={(e) => setAnnouncementText(e.target.value)}
+                placeholder="Type your announcement for all students..."
+                className="w-full p-3 bg-gray-700 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none"
+              />
+            </div>
+
+            <div className="bg-blue-900/50 rounded-lg p-3 mb-4">
+              <p className="text-blue-200 text-sm flex items-center">
+                <Bell className="h-4 w-4 mr-2" />
+                This will be sent to all {students.length} students immediately
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowAnnouncementModal(false)
+                  setAnnouncementText('')
+                }}
+                className="px-4 py-2 text-purple-300 hover:text-white transition-colors border border-purple-500/30 rounded-lg hover:bg-purple-700/50"
+                disabled={messageSending}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => sendAnnouncement(announcementText)}
+                disabled={!announcementText.trim() || messageSending}
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {messageSending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="h-4 w-4 mr-2" />
+                    Send Announcement
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
