@@ -399,14 +399,32 @@ export default function LessonViewer({ title, description, sections, lessonId, o
         </button>
       </div>
 
-      {/* Lesson Summary (if all sections completed) */}
+      {/* Enhanced Lesson Completion Celebration */}
       {Object.keys(sectionProgress).length === sections.length && (
-        <div className="mt-8 p-6 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex items-center mb-4">
-            <CheckCircle className="h-8 w-8 text-green-600 mr-3" />
-            <div>
-              <h3 className="text-xl font-semibold text-green-900">Lesson Complete!</h3>
-              <p className="text-green-700">Congratulations on completing this lesson.</p>
+        <div className="mt-8 p-8 bg-gradient-to-r from-green-100 via-blue-100 to-purple-100 rounded-2xl border-2 border-green-300 shadow-xl">
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mx-auto mb-4 animate-bounce">
+              <span className="text-3xl">🎉</span>
+            </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
+              LESSON COMPLETE! 🎓
+            </h2>
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-4 border border-blue-300">
+              <div className="flex items-center justify-center mb-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center mr-3 animate-pulse">
+                  <span className="text-xl">🤖</span>
+                </div>
+                <h3 className="text-xl font-bold text-white">Your AI Teacher Says:</h3>
+              </div>
+              <p className="text-white text-lg italic text-center">
+                "WOW! I am SO PROUD of you! You just completed an entire coding lesson! 
+                You're officially a programmer now! Keep this momentum going - you're amazing! 🌟✨"
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 text-lg">
+              <span className="bg-green-500 text-white px-4 py-2 rounded-full font-bold">✅ All Concepts Learned</span>
+              <span className="bg-blue-500 text-white px-4 py-2 rounded-full font-bold">💻 Code Challenges Completed</span>
+              <span className="bg-purple-500 text-white px-4 py-2 rounded-full font-bold">🧠 Quizzes Aced</span>
             </div>
           </div>
           
