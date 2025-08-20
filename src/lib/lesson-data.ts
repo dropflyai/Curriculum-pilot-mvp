@@ -1396,7 +1396,7 @@ print(calculate_grade(67))  # Should print D`,
     title: 'Lists and Loops',
     description: 'Master Python lists and learn to automate repetitive tasks with loops.',
     difficulty: 'intermediate',
-    estimatedTime: '50 minutes',
+    estimatedTime: '60 minutes',
     sections: [
       {
         type: 'content',
@@ -1498,6 +1498,100 @@ display_list()`,
         }
       },
       {
+        type: 'content',
+        title: 'Advanced List Techniques & Real-World Applications',
+        content: `🚀 **Level Up Your List Skills!**
+
+Now that you understand the basics, let's explore more powerful ways to work with lists that professional programmers use every day!
+
+**📦 ADVANCED CONCEPT #1: List Comprehensions**
+List comprehensions are a super-efficient way to create new lists. Think of them as "smart shortcuts"!
+
+<interactive-example>
+title: List Comprehension Magic
+description: See how we can create lists in one line!
+code:
+# Traditional way (longer)
+squares = []
+for i in range(1, 6):
+    squares.append(i ** 2)
+print("Traditional:", squares)
+
+# List comprehension way (shorter!)
+squares_fast = [i ** 2 for i in range(1, 6)]
+print("Comprehension:", squares_fast)
+
+# Even with conditions!
+even_squares = [i ** 2 for i in range(1, 11) if i % 2 == 0]
+print("Even squares:", even_squares)
+</interactive-example>
+
+**🔄 ADVANCED CONCEPT #2: Nested Loops for Complex Data**
+Sometimes we need loops inside loops - like organizing data in a grid!
+
+<interactive-example>
+title: Creating a Multiplication Table
+description: Build a times table using nested loops!
+code:
+print("📊 Multiplication Table (1-5)")
+print("   ", end="")
+for i in range(1, 6):
+    print(f"{i:4}", end="")
+print()
+
+for i in range(1, 6):
+    print(f"{i}: ", end="")
+    for j in range(1, 6):
+        print(f"{i*j:4}", end="")
+    print()
+</interactive-example>
+
+**🎯 PRACTICAL APPLICATION: Student Grade Tracker**
+Let's build something useful! A program that tracks student grades and calculates averages.
+
+<interactive-example>
+title: Grade Tracker System
+description: Real-world application of lists and loops!
+code:
+students = ["Alice", "Bob", "Charlie", "Diana"]
+grades = [
+    [95, 87, 91],  # Alice's grades
+    [88, 92, 85],  # Bob's grades
+    [78, 84, 89],  # Charlie's grades
+    [94, 96, 93]   # Diana's grades
+]
+
+print("🎓 CLASS GRADE REPORT")
+print("-" * 30)
+
+for i in range(len(students)):
+    student_avg = sum(grades[i]) / len(grades[i])
+    print(f"{students[i]}: {student_avg:.1f}% average")
+    
+    # Find their best and worst grades
+    best = max(grades[i])
+    worst = min(grades[i])
+    print(f"   Best: {best}%, Worst: {worst}%")
+    print()
+</interactive-example>
+
+**💡 PRO TIPS for Working with Lists:**
+
+1. **Use meaningful names**: \`student_names\` is better than \`list1\`
+2. **Check before accessing**: Always make sure your list has items before accessing them
+3. **Use built-in functions**: \`max()\`, \`min()\`, \`sum()\`, \`len()\` are your friends!
+4. **Remember indexing**: Lists start at 0, not 1!
+
+**🏆 CHALLENGE TIME!**
+Try modifying the grade tracker to:
+- Add a new student with their grades
+- Find the class average
+- Identify the top performer
+- Count how many students have an A average (90%+)
+
+You're becoming a real programmer now! These techniques are used in everything from video games to data analysis! 🌟`
+      },
+      {
         type: 'quiz',
         title: 'Lists and Loops Quiz',
         quiz: [
@@ -1527,7 +1621,7 @@ display_list()`,
     title: 'File Input and Output',
     description: 'Learn to read from and write to files, making your programs work with external data.',
     difficulty: 'intermediate',
-    estimatedTime: '40 minutes',
+    estimatedTime: '60 minutes',
     sections: [
       {
         type: 'content',
