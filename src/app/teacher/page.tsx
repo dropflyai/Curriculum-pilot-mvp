@@ -92,16 +92,57 @@ export default function TeacherDashboard() {
       if (progressError) throw progressError
 
       // Process enhanced student data
-      const studentsWithProgress = (usersData || []).map(user => {
+      const studentsWithProgress = (usersData || []).map((user, index) => {
         const userProgress = (progressData || []).filter(p => p.user_id === user.id)
         
-        // Calculate current activity (simulated for demo)
-        const currentActivity = userProgress.length > 0 ? {
-          lessonId: userProgress[0].lesson_id,
-          sectionType: 'code',
-          timeSpent: Math.floor(Math.random() * 45) + 5, // 5-50 minutes
-          lastSeen: new Date(Date.now() - Math.random() * 3600000).toISOString() // Last hour
-        } : undefined
+        // Calculate current activity (simulated for demo with varied states)
+        let currentActivity = undefined
+        if (userProgress.length > 0) {
+          // Create different scenarios for testing filters
+          const scenario = index % 5
+          switch (scenario) {
+            case 0: // Active student (recently active, normal time)
+              currentActivity = {
+                lessonId: userProgress[0].lesson_id,
+                sectionType: 'code',
+                timeSpent: Math.floor(Math.random() * 20) + 5, // 5-25 minutes
+                lastSeen: new Date(Date.now() - Math.random() * 180000).toISOString() // Last 3 minutes
+              }
+              break
+            case 1: // Needs help (stuck 25-35 minutes)
+              currentActivity = {
+                lessonId: userProgress[0].lesson_id,
+                sectionType: 'code',
+                timeSpent: Math.floor(Math.random() * 10) + 25, // 25-35 minutes
+                lastSeen: new Date(Date.now() - Math.random() * 300000).toISOString() // Last 5 minutes
+              }
+              break
+            case 2: // Stuck (over 35 minutes)
+              currentActivity = {
+                lessonId: userProgress[0].lesson_id,
+                sectionType: 'code',
+                timeSpent: Math.floor(Math.random() * 20) + 35, // 35-55 minutes
+                lastSeen: new Date(Date.now() - Math.random() * 600000).toISOString() // Last 10 minutes
+              }
+              break
+            case 3: // Working (active, moderate time)
+              currentActivity = {
+                lessonId: userProgress[0].lesson_id,
+                sectionType: 'quiz',
+                timeSpent: Math.floor(Math.random() * 15) + 10, // 10-25 minutes
+                lastSeen: new Date(Date.now() - Math.random() * 900000).toISOString() // Last 15 minutes
+              }
+              break
+            case 4: // Offline/inactive (no recent activity)
+              currentActivity = {
+                lessonId: userProgress[0].lesson_id,
+                sectionType: 'content',
+                timeSpent: Math.floor(Math.random() * 30) + 5, // 5-35 minutes
+                lastSeen: new Date(Date.now() - Math.random() * 7200000).toISOString() // Last 2 hours
+              }
+              break
+          }
+        }
 
         // Generate sample code submissions
         const codeSubmissions = userProgress.map(p => ({
@@ -120,6 +161,11 @@ export default function TeacherDashboard() {
           timeSpent: Math.floor(Math.random() * 10) + 3, // 3-13 minutes
           timestamp: p.updated_at
         }))
+
+        // For testing: randomly mark some students as having completed lessons
+        if (index % 3 === 0 && userProgress.length > 0) {
+          userProgress[0].status = 'completed'
+        }
 
         return {
           user,
@@ -180,6 +226,25 @@ export default function TeacherDashboard() {
     }
   }, [fetchData, realTimeEnabled])
 
+  // Helper function to get filter counts
+  const getFilterCounts = () => {
+    return {
+      all: students.length,
+      active: students.filter(s => 
+        s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000
+      ).length,
+      completed: students.filter(s => 
+        s.progress.some(p => p.status === 'completed')
+      ).length,
+      'needs-help': students.filter(s => 
+        s.currentActivity && s.currentActivity.timeSpent > 25 && s.currentActivity.timeSpent <= 35
+      ).length,
+      stuck: students.filter(s => 
+        s.currentActivity && s.currentActivity.timeSpent > 35
+      ).length
+    }
+  }
+
   // Filter students based on current filter and search
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -194,13 +259,15 @@ export default function TeacherDashboard() {
       case 'completed':
         return student.progress.some(p => p.status === 'completed')
       case 'needs-help':
-        return student.currentActivity && student.currentActivity.timeSpent > 25
+        return student.currentActivity && student.currentActivity.timeSpent > 25 && student.currentActivity.timeSpent <= 35
       case 'stuck':
         return student.currentActivity && student.currentActivity.timeSpent > 35
       default:
         return true
     }
   })
+
+  const filterCounts = getFilterCounts()
 
   const getProgressStats = () => {
     const totalStudents = students.length
@@ -366,11 +433,11 @@ export default function TeacherDashboard() {
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
                 >
-                  {filterType === 'all' && '👥 All'}
-                  {filterType === 'active' && '🟢 Active'}
-                  {filterType === 'completed' && '🏆 Completed'}
-                  {filterType === 'needs-help' && '⚠️ Need Help'}
-                  {filterType === 'stuck' && '🚨 Stuck'}
+                  {filterType === 'all' && `👥 All (${filterCounts.all})`}
+                  {filterType === 'active' && `🟢 Active (${filterCounts.active})`}
+                  {filterType === 'completed' && `🏆 Completed (${filterCounts.completed})`}
+                  {filterType === 'needs-help' && `⚠️ Need Help (${filterCounts['needs-help']})`}
+                  {filterType === 'stuck' && `🚨 Stuck (${filterCounts.stuck})`}
                 </button>
               ))}
             </div>
