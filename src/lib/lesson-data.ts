@@ -9,12 +9,14 @@ export interface LessonSection {
     startingCode: string
     solution: string
     tests: string[]
+    hints?: string[]
   }
   quiz?: {
     type: 'mcq' | 'short'
     q: string
     options?: string[]
     answer?: string
+    explanation?: string
   }[]
 }
 
@@ -132,6 +134,12 @@ print(f"Cool! {favorite_color} is a great color, {user_name}!")`,
             'assert "input(" in code, "Must use input() to get user name"',
             'assert "print(" in code, "Must use print() to show greeting"',
             'assert "user_name" in code or "name" in code, "Store the name in a variable"'
+          ],
+          hints: [
+            "Start by using input() to ask the user for their name. The syntax is: variable = input('question')",
+            "Store the user's response in a variable like 'user_name' or 'name'",
+            "Use print() to display a greeting. You can combine text with the variable using + or f-strings",
+            "Try using an f-string: print(f'Hello {user_name}!') - it's cleaner than using +"
           ]
         }
       },
@@ -143,24 +151,28 @@ print(f"Cool! {favorite_color} is a great color, {user_name}!")`,
             type: 'mcq',
             q: 'What function do you use to ask a user for input in Python?',
             options: ['input()', 'ask()', 'get()', 'prompt()'],
-            answer: 'input()'
+            answer: 'input()',
+            explanation: 'input() is Python\'s built-in function for getting user input. It pauses the program and waits for the user to type something, then returns what they typed as a string.'
           },
           {
             type: 'mcq',
             q: 'What function displays text on the screen for users to see?',
             options: ['show()', 'display()', 'print()', 'output()'],
-            answer: 'print()'
+            answer: 'print()',
+            explanation: 'print() is Python\'s way of displaying text on the screen. It\'s like the computer\'s voice - whatever you put inside print() gets shown to the user.'
           },
           {
             type: 'mcq',
             q: 'In the test → fix → retest cycle, what should you do FIRST when your code has an error?',
             options: ['Rewrite everything', 'Read the error message carefully', 'Ask for help immediately', 'Give up'],
-            answer: 'Read the error message carefully'
+            answer: 'Read the error message carefully',
+            explanation: 'Error messages are like clues from Python telling you exactly what went wrong. Reading them carefully helps you understand the problem and fix it faster than guessing or starting over.'
           },
           {
             type: 'short',
             q: 'Describe the 4-step process for building an interactive program (ASK → STORE → DO → SHOW).',
-            answer: 'ASK the user for input using input(), STORE their response in a variable, DO something with the data (process it), and SHOW the result using print().'
+            answer: 'ASK the user for input using input(), STORE their response in a variable, DO something with the data (process it), and SHOW the result using print().',
+            explanation: 'This is the fundamental pattern of interactive programming! Every app you use follows this cycle: Instagram asks for your photo (ASK), saves it (STORE), applies filters (DO), and shows it to friends (SHOW).'
           }
         ]
       }
@@ -327,6 +339,12 @@ while True:
             'assert "import random" in code or "from random import" in code, "Import the random module"',
             'assert "input(" in code, "Use input() to get user question"',
             'assert "random.choice" in code or "choice(" in code, "Use random.choice to select response"'
+          ],
+          hints: [
+            "Don't forget to import the random module at the top: import random",
+            "Use input() to ask the user for their question",
+            "Use random.choice(responses) to pick a random answer from your list",
+            "Make sure your while loop continues forever (while True:) so users can ask multiple questions"
           ]
         }
       },

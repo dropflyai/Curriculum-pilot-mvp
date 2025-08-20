@@ -8,7 +8,8 @@ import {
   AlertTriangle, Code, Play, Trophy, Filter, Search,
   Eye, MessageSquare, BarChart3, Zap,
   Timer, Star, Lightbulb, Send, Bell, Volume2,
-  BookOpen, CheckCircle, XCircle, Edit3, Award
+  BookOpen, CheckCircle, XCircle, Edit3, Award,
+  FileText, PieChart, TrendingUp, Calendar, Printer
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -74,6 +75,12 @@ export default function TeacherDashboard() {
   const [gradingStudent, setGradingStudent] = useState<StudentProgress | null>(null)
   const [showGradeBook, setShowGradeBook] = useState(false)
   const [gradeBookView, setGradeBookView] = useState<'overview' | 'detailed'>('overview')
+  
+  // Reporting System States
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [reportType, setReportType] = useState<'class-summary' | 'individual-student' | 'parent-report'>('class-summary')
+  const [selectedReportStudent, setSelectedReportStudent] = useState<StudentProgress | null>(null)
+  const [reportGenerating, setReportGenerating] = useState(false)
   
   const supabase = createClient()
 
@@ -397,6 +404,205 @@ export default function TeacherDashboard() {
     setShowMessageModal(true)
   }
 
+  // Reporting System Functions
+  const generateReport = async (type: string, student?: StudentProgress) => {
+    setReportGenerating(true)
+    try {
+      // Simulate report generation
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      const reportData = {
+        generatedAt: new Date().toISOString(),
+        type,
+        student: student?.user.full_name,
+        classSize: students.length,
+        analytics
+      }
+      
+      // In a real implementation, this would generate and download a PDF
+      console.log('Generated report:', reportData)
+      
+      // Simulate download
+      const reportContent = generateReportContent(type, student)
+      downloadReport(reportContent, `${type}-report-${new Date().toISOString().split('T')[0]}.txt`)
+      
+      alert(`${type.replace('-', ' ').toUpperCase()} report downloaded successfully!`)
+      setShowReportModal(false)
+    } catch (error) {
+      console.error('Error generating report:', error)
+      alert('Failed to generate report. Please try again.')
+    } finally {
+      setReportGenerating(false)
+    }
+  }
+
+  const generateReportContent = (type: string, student?: StudentProgress) => {
+    const timestamp = new Date().toLocaleString()
+    
+    switch (type) {
+      case 'class-summary':
+        return `CODEFLY CLASS SUMMARY REPORT
+Generated: ${timestamp}
+
+========================================
+CLASS OVERVIEW
+========================================
+Total Students: ${students.length}
+Active Students: ${students.filter(s => s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000).length}
+Completed Lessons: ${students.reduce((acc, s) => acc + s.progress.filter(p => p.status === 'completed').length, 0)}
+Average Class Performance: ${analytics.length > 0 ? analytics[0].completionRate.toFixed(1) : 'N/A'}%
+
+========================================
+STUDENT PERFORMANCE BREAKDOWN
+========================================
+${students.map(s => {
+  const completedLessons = s.progress.filter(p => p.status === 'completed').length
+  const averageScore = s.progress.filter(p => p.score).length > 0 
+    ? (s.progress.filter(p => p.score).reduce((sum, p) => sum + (p.score || 0), 0) / s.progress.filter(p => p.score).length * 100).toFixed(1)
+    : 'No grades'
+  return `${s.user.full_name}: ${completedLessons} lessons completed, Average: ${averageScore}%`
+}).join('\n')}
+
+========================================
+LESSON ANALYTICS
+========================================
+${analytics.map(a => `${a.title}: ${a.completionRate.toFixed(1)}% completion, ${a.strugglingStudents} students need help`).join('\n')}
+
+========================================
+RECOMMENDATIONS
+========================================
+- Students needing extra support: ${students.filter(s => s.currentActivity && s.currentActivity.timeSpent > 35).length}
+- Consider review sessions for challenging concepts
+- Celebrate high performers to maintain motivation
+`
+
+      case 'individual-student':
+        if (!student) return 'Error: No student selected'
+        const studentGrades = student.progress.filter(p => p.score).map(p => Math.round((p.score || 0) * 100))
+        const studentAverage = studentGrades.length > 0 ? (studentGrades.reduce((sum, grade) => sum + grade, 0) / studentGrades.length).toFixed(1) : 'No grades'
+        
+        return `CODEFLY INDIVIDUAL STUDENT REPORT
+Generated: ${timestamp}
+
+========================================
+STUDENT INFORMATION
+========================================
+Name: ${student.user.full_name}
+Email: ${student.user.email}
+Current Status: ${student.currentActivity ? 'Active' : 'Offline'}
+
+========================================
+ACADEMIC PERFORMANCE
+========================================
+Overall Average: ${studentAverage}%
+Lessons Completed: ${student.progress.filter(p => p.status === 'completed').length}/${lessons.length}
+Assignments Submitted: ${student.progress.filter(p => p.submitted_code).length}
+Quiz Performance: ${student.quizResults?.length || 0} quizzes completed
+
+========================================
+DETAILED PROGRESS
+========================================
+${student.progress.map(p => {
+  const lesson = lessons.find(l => l.id === p.lesson_id)
+  const score = p.score ? Math.round(p.score * 100) + '%' : 'Not graded'
+  return `${lesson?.title || 'Unknown Lesson'}: ${p.status} (Score: ${score})`
+}).join('\n')}
+
+========================================
+STRENGTHS & AREAS FOR IMPROVEMENT
+========================================
+Strengths:
+- Consistent lesson completion
+- Active participation in coding exercises
+- Good quiz performance
+
+Areas for Improvement:
+- Consider spending more time on challenging concepts
+- Practice debugging skills
+- Ask for help when stuck for extended periods
+
+========================================
+TEACHER COMMENTS
+========================================
+${student.progress.map(p => p.teacher_feedback).filter(f => f).join('\n') || 'No specific feedback recorded yet.'}
+`
+
+      case 'parent-report':
+        if (!student) return 'Error: No student selected'
+        const parentGrades = student.progress.filter(p => p.score).map(p => Math.round((p.score || 0) * 100))
+        const parentAverage = parentGrades.length > 0 ? (parentGrades.reduce((sum, grade) => sum + grade, 0) / parentGrades.length).toFixed(1) : 'No grades'
+        
+        return `CODEFLY PARENT PROGRESS REPORT
+Generated: ${timestamp}
+
+Dear Parent/Guardian,
+
+This report provides an overview of ${student.user.full_name}'s progress in our CodeFly Computer Science program.
+
+========================================
+SUMMARY OF PROGRESS
+========================================
+Your child is doing ${parentAverage >= '80' ? 'excellent' : parentAverage >= '70' ? 'good' : 'satisfactory'} work in computer science!
+
+Current Grade Average: ${parentAverage}%
+Lessons Completed: ${student.progress.filter(p => p.status === 'completed').length} out of ${lessons.length} available
+Participation Level: ${student.currentActivity ? 'Actively engaged' : 'Regular attendance'}
+
+========================================
+SKILLS DEVELOPMENT
+========================================
+✅ Programming Fundamentals: Understanding variables, input/output
+✅ Problem Solving: Working through coding challenges
+✅ Critical Thinking: Debugging and error resolution
+✅ Digital Literacy: Working with development tools
+
+========================================
+RECENT ACHIEVEMENTS
+========================================
+${student.progress.filter(p => p.status === 'completed').length > 0 
+  ? `- Successfully completed ${student.progress.filter(p => p.status === 'completed').length} programming lessons
+- Demonstrated understanding of Python basics
+- Active participation in class activities`
+  : '- Getting started with programming fundamentals\n- Learning development environment\n- Building foundational skills'}
+
+========================================
+HOW TO SUPPORT AT HOME
+========================================
+- Encourage daily practice with coding exercises
+- Ask about their favorite programming concepts
+- Celebrate small wins and problem-solving successes
+- Ensure they have a quiet space for online learning
+
+========================================
+NEXT STEPS
+========================================
+- Continue with upcoming lessons on ${lessons[student.progress.length]?.title || 'advanced topics'}
+- Focus on consistent practice and completion
+- Ask questions during class when concepts are unclear
+
+If you have any questions about your child's progress, please don't hesitate to contact me.
+
+Best regards,
+CodeFly Computer Science Teacher
+`
+
+      default:
+        return 'Unknown report type'
+    }
+  }
+
+  const downloadReport = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center">
@@ -453,9 +659,12 @@ export default function TeacherDashboard() {
                 <Settings className="h-4 w-4 mr-2" />
                 Manage Lessons 📚
               </Link>
-              <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center">
+              <button 
+                onClick={() => setShowReportModal(true)}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+              >
                 <Download className="h-4 w-4 mr-2" />
-                Download Reports 📊
+                Generate Reports 📊
               </button>
             </div>
           </div>
@@ -796,6 +1005,17 @@ export default function TeacherDashboard() {
                             }}
                           >
                             <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button 
+                            className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors"
+                            title="Generate student report"
+                            onClick={() => {
+                              setSelectedReportStudent(student)
+                              setReportType('individual-student')
+                              setShowReportModal(true)
+                            }}
+                          >
+                            <FileText className="h-4 w-4" />
                           </button>
                           {status.status === 'stuck' && (
                             <button 
@@ -1287,6 +1507,176 @@ export default function TeacherDashboard() {
                   </div>
                 )
               })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reports Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl max-w-2xl w-full mx-4 border border-purple-500/30">
+            <div className="p-6 border-b border-purple-500/30">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-white flex items-center">
+                  <FileText className="h-6 w-6 mr-2 text-purple-400" />
+                  Generate Reports 📊
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowReportModal(false)
+                    setSelectedReportStudent(null)
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <XCircle className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button
+                  onClick={() => setReportType('class-summary')}
+                  className={`p-6 rounded-lg border-2 transition-all duration-300 ${
+                    reportType === 'class-summary'
+                      ? 'border-purple-500 bg-purple-600/20'
+                      : 'border-gray-600 hover:border-purple-400'
+                  }`}
+                >
+                  <div className="text-center">
+                    <PieChart className={`h-8 w-8 mx-auto mb-3 ${
+                      reportType === 'class-summary' ? 'text-purple-400' : 'text-gray-400'
+                    }`} />
+                    <h4 className="font-semibold text-white mb-2">Class Summary</h4>
+                    <p className="text-sm text-gray-400">Overall class performance and analytics</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setReportType('individual-student')}
+                  className={`p-6 rounded-lg border-2 transition-all duration-300 ${
+                    reportType === 'individual-student'
+                      ? 'border-purple-500 bg-purple-600/20'
+                      : 'border-gray-600 hover:border-purple-400'
+                  }`}
+                >
+                  <div className="text-center">
+                    <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${
+                      reportType === 'individual-student' ? 'text-purple-400' : 'text-gray-400'
+                    }`} />
+                    <h4 className="font-semibold text-white mb-2">Student Report</h4>
+                    <p className="text-sm text-gray-400">Detailed individual progress report</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setReportType('parent-report')}
+                  className={`p-6 rounded-lg border-2 transition-all duration-300 ${
+                    reportType === 'parent-report'
+                      ? 'border-purple-500 bg-purple-600/20'
+                      : 'border-gray-600 hover:border-purple-400'
+                  }`}
+                >
+                  <div className="text-center">
+                    <Calendar className={`h-8 w-8 mx-auto mb-3 ${
+                      reportType === 'parent-report' ? 'text-purple-400' : 'text-gray-400'
+                    }`} />
+                    <h4 className="font-semibold text-white mb-2">Parent Report</h4>
+                    <p className="text-sm text-gray-400">Parent-friendly progress summary</p>
+                  </div>
+                </button>
+              </div>
+
+              {(reportType === 'individual-student' || reportType === 'parent-report') && (
+                <div>
+                  <label className="block text-sm font-medium text-purple-300 mb-3">
+                    Select Student:
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                    {students.map(student => (
+                      <button
+                        key={student.user.id}
+                        onClick={() => setSelectedReportStudent(student)}
+                        className={`p-3 rounded-lg text-left transition-all duration-300 ${
+                          selectedReportStudent?.user.id === student.user.id
+                            ? 'bg-purple-600/30 border border-purple-500'
+                            : 'bg-gray-700/50 hover:bg-gray-700 border border-transparent'
+                        }`}
+                      >
+                        <div className="text-white font-medium">{student.user.full_name}</div>
+                        <div className="text-gray-400 text-sm">{student.user.email}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-blue-900/20 rounded-lg p-4 border border-blue-500/30">
+                <h4 className="text-blue-200 font-medium mb-2 flex items-center">
+                  <Printer className="h-4 w-4 mr-2" />
+                  Report Details
+                </h4>
+                <div className="space-y-2 text-sm text-blue-100">
+                  {reportType === 'class-summary' && (
+                    <>
+                      <div>• Complete class performance overview</div>
+                      <div>• Individual student summaries</div>
+                      <div>• Lesson completion analytics</div>
+                      <div>• Recommendations for improvement</div>
+                    </>
+                  )}
+                  {reportType === 'individual-student' && (
+                    <>
+                      <div>• Detailed academic performance breakdown</div>
+                      <div>• Assignment and quiz results</div>
+                      <div>• Strengths and improvement areas</div>
+                      <div>• Teacher feedback and comments</div>
+                    </>
+                  )}
+                  {reportType === 'parent-report' && (
+                    <>
+                      <div>• Parent-friendly progress summary</div>
+                      <div>• Skills development overview</div>
+                      <div>• Home support recommendations</div>
+                      <div>• Next steps and goals</div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setShowReportModal(false)
+                    setSelectedReportStudent(null)
+                  }}
+                  className="px-6 py-2 text-purple-300 hover:text-white transition-colors border border-purple-500/30 rounded-lg hover:bg-purple-700/50"
+                  disabled={reportGenerating}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => generateReport(reportType, selectedReportStudent || undefined)}
+                  disabled={
+                    reportGenerating || 
+                    ((reportType === 'individual-student' || reportType === 'parent-report') && !selectedReportStudent)
+                  }
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-2 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {reportGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-4 w-4 mr-2" />
+                      Generate & Download
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>

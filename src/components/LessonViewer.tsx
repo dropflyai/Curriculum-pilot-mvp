@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BookOpen, Code, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react'
 import CodeEditor from './CodeEditor'
 import QuizComponent, { QuizResults } from './QuizComponent'
+import { saveLessonProgress, getLessonProgress } from '@/lib/progress-storage'
 
 interface LessonSection {
   type: 'content' | 'code' | 'quiz'
@@ -27,19 +28,38 @@ interface LessonViewerProps {
   title: string
   description: string
   sections: LessonSection[]
+  lessonId?: string
   onLessonComplete?: (progress: number) => void
 }
 
-export default function LessonViewer({ title, description, sections, onLessonComplete }: LessonViewerProps) {
+export default function LessonViewer({ title, description, sections, lessonId, onLessonComplete }: LessonViewerProps) {
   const [currentSection, setCurrentSection] = useState(0)
   const [sectionProgress, setSectionProgress] = useState<Record<number, boolean>>({})
   const [quizResults, setQuizResults] = useState<Record<number, QuizResults>>({})
+  const [codeAttempts, setCodeAttempts] = useState<Record<number, string>>({})
 
   const currentSectionData = sections[currentSection]
   const progress = (Object.keys(sectionProgress).length / sections.length) * 100
+  
+  // Load saved progress on component mount
+  useEffect(() => {
+    if (lessonId) {
+      const savedProgress = getLessonProgress(lessonId)
+      if (savedProgress) {
+        setSectionProgress(savedProgress.sectionProgress || {})
+        setQuizResults(savedProgress.quizResults || {})
+        setCodeAttempts(savedProgress.codeAttempts || {})
+      }
+    }
+  }, [lessonId])
 
-  const markSectionComplete = (sectionIndex: number) => {
+  const markSectionComplete = (sectionIndex: number, additionalData?: { quizResult?: QuizResults, codeAttempt?: string }) => {
     setSectionProgress(prev => ({ ...prev, [sectionIndex]: true }))
+    
+    // Save to localStorage
+    if (lessonId) {
+      saveLessonProgress(lessonId, sectionIndex, true, additionalData)
+    }
     
     const newProgress = ((Object.keys(sectionProgress).length + 1) / sections.length) * 100
     if (onLessonComplete) {
@@ -49,11 +69,14 @@ export default function LessonViewer({ title, description, sections, onLessonCom
 
   const handleQuizComplete = (results: QuizResults) => {
     setQuizResults(prev => ({ ...prev, [currentSection]: results }))
-    markSectionComplete(currentSection)
+    markSectionComplete(currentSection, { quizResult: results })
   }
 
-  const handleCodeChallengeComplete = () => {
-    markSectionComplete(currentSection)
+  const handleCodeChallengeComplete = (code?: string) => {
+    if (code) {
+      setCodeAttempts(prev => ({ ...prev, [currentSection]: code }))
+    }
+    markSectionComplete(currentSection, { codeAttempt: code })
   }
 
   const nextSection = () => {
@@ -223,10 +246,22 @@ export default function LessonViewer({ title, description, sections, onLessonCom
               <CodeEditor
                 initialCode={currentSectionData.codeChallenge.startingCode}
                 testCode={currentSectionData.codeChallenge.tests.join('\n')}
+                solution={currentSectionData.codeChallenge.solution}
+                hints={currentSectionData.codeChallenge.hints}
                 onCodeChange={() => {}}
                 onExecutionResult={(result) => {
                   if (result.success) {
                     handleCodeChallengeComplete()
+                  }
+                }}
+                onCodeChange={(code) => {
+                  // Auto-save code as user types (debounced)
+                  if (lessonId) {
+                    const timeoutId = setTimeout(() => {
+                      setCodeAttempts(prev => ({ ...prev, [currentSection]: code }))
+                      saveLessonProgress(lessonId, currentSection, sectionProgress[currentSection] || false, { codeAttempt: code })
+                    }, 1000)
+                    return () => clearTimeout(timeoutId)
                   }
                 }}
               />

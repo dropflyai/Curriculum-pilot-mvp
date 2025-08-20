@@ -96,7 +96,7 @@ export default function LessonPage() {
         <LessonViewer
           title={lesson.title}
           description={lesson.description}
-          sections={lesson.sections}
+          sections={lesson.sections}\n          lessonId={lesson.id}
           onLessonComplete={handleLessonComplete}
         />
       </div>

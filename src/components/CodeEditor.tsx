@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Play, RotateCcw, AlertCircle, CheckCircle, Clock } from 'lucide-react'
+import { Play, RotateCcw, AlertCircle, CheckCircle, Clock, Lightbulb, Eye, EyeOff } from 'lucide-react'
 
 interface CodeExecutionResult {
   success: boolean
@@ -16,6 +16,8 @@ import { executeCode, runTests, validateCode } from '@/lib/python-executor'
 interface CodeEditorProps {
   initialCode: string
   testCode?: string
+  solution?: string
+  hints?: string[]
   onCodeChange: (code: string) => void
   onExecutionResult?: (result: CodeExecutionResult) => void
 }
@@ -23,6 +25,8 @@ interface CodeEditorProps {
 export default function CodeEditor({ 
   initialCode, 
   testCode, 
+  solution,
+  hints = [],
   onCodeChange, 
   onExecutionResult 
 }: CodeEditorProps) {
@@ -31,13 +35,25 @@ export default function CodeEditor({
   const [isRunning, setIsRunning] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [lastResult, setLastResult] = useState<CodeExecutionResult | null>(null)
+  const [currentHint, setCurrentHint] = useState(0)
+  const [showHints, setShowHints] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
+  const [attempts, setAttempts] = useState(0)
+  const [lineNumbers, setLineNumbers] = useState<string[]>([])
 
   useEffect(() => {
     setCode(initialCode)
+    updateLineNumbers(initialCode)
   }, [initialCode])
+  
+  const updateLineNumbers = (codeText: string) => {
+    const lines = codeText.split('\n')
+    setLineNumbers(lines.map((_, i) => (i + 1).toString().padStart(2, ' ')))
+  }
 
   const handleCodeChange = (newCode: string) => {
     setCode(newCode)
+    updateLineNumbers(newCode)
     onCodeChange(newCode)
   }
 
@@ -55,11 +71,13 @@ export default function CodeEditor({
     try {
       const result = await executeCode(code)
       setLastResult(result)
+      setAttempts(prev => prev + 1)
       
       if (result.success) {
         setOutput(`✅ Success! (${result.executionTime}ms)\n\n${result.output}`)
       } else {
-        setOutput(`❌ Error! (${result.executionTime}ms)\n\n${result.error || 'Unknown error'}`)
+        const smartError = getSmartErrorMessage(result.error || 'Unknown error')
+        setOutput(`❌ Error! (${result.executionTime}ms)\n\n${smartError}`)
       }
 
       onExecutionResult?.(result)
@@ -109,7 +127,44 @@ export default function CodeEditor({
     setCode(initialCode)
     setOutput('')
     setLastResult(null)
+    setCurrentHint(0)
+    setShowHints(false)
+    setShowSolution(false)
+    setAttempts(0)
+    updateLineNumbers(initialCode)
     onCodeChange(initialCode)
+  }
+  
+  const getSmartErrorMessage = (error: string) => {
+    const errorHelp: Record<string, string> = {
+      'NameError': '💡 Hint: Check your variable names - make sure they\'re spelled correctly and defined before use!',
+      'SyntaxError': '💡 Hint: Check your syntax - missing quotes, parentheses, or colons?',
+      'IndentationError': '💡 Hint: Python is picky about spacing - make sure your indentation is consistent!',
+      'TypeError': '💡 Hint: Check your data types - are you mixing numbers and text incorrectly?',
+      'AttributeError': '💡 Hint: Check if you\'re calling the right method on your variable!'
+    }
+    
+    for (const [errorType, hint] of Object.entries(errorHelp)) {
+      if (error.includes(errorType)) {
+        return `${error}\n\n${hint}`
+      }
+    }
+    return error
+  }
+  
+  const getNextHint = () => {
+    if (currentHint < hints.length - 1) {
+      setCurrentHint(prev => prev + 1)
+    }
+    setShowHints(true)
+  }
+  
+  const shouldShowHintButton = () => {
+    return hints.length > 0 && (attempts >= 2 || (lastResult && !lastResult.success))
+  }
+  
+  const shouldShowSolutionButton = () => {
+    return solution && attempts >= 4
   }
 
   // Initialize Python environment
@@ -160,13 +215,23 @@ export default function CodeEditor({
         </div>
         
         <div className="p-6">
-          <textarea
-            value={code}
-            onChange={(e) => handleCodeChange(e.target.value)}
-            className="w-full h-80 font-mono text-sm border rounded-lg p-4 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
-            placeholder="# Write your Python code here..."
-            spellCheck={false}
-          />
+          <div className="relative">
+            {/* Line Numbers */}
+            <div className="absolute left-0 top-0 w-12 h-80 bg-gray-100 border-r border-gray-300 rounded-l-lg flex flex-col text-xs text-gray-500 font-mono pt-4 pl-2 overflow-hidden">
+              {lineNumbers.map((num, i) => (
+                <div key={i} className="leading-5 h-5">{num}</div>
+              ))}
+            </div>
+            
+            <textarea
+              value={code}
+              onChange={(e) => handleCodeChange(e.target.value)}
+              className="w-full h-80 font-mono text-sm border rounded-lg pl-16 pr-4 py-4 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+              placeholder="# Write your Python code here..."
+              spellCheck={false}
+              style={{ lineHeight: '1.25rem' }}
+            />
+          </div>
           
           <div className="mt-4 flex flex-wrap gap-3">
             <button
@@ -215,8 +280,63 @@ export default function CodeEditor({
               <RotateCcw className="h-4 w-4 mr-2" />
               Reset
             </button>
+            
+            {shouldShowHintButton() && (
+              <button
+                onClick={getNextHint}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors flex items-center"
+              >
+                <Lightbulb className="h-4 w-4 mr-2" />
+                {showHints ? `Hint ${currentHint + 1}/${hints.length}` : 'Get Hint'}
+              </button>
+            )}
+            
+            {shouldShowSolutionButton() && (
+              <button
+                onClick={() => setShowSolution(!showSolution)}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center"
+              >
+                {showSolution ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                {showSolution ? 'Hide Solution' : 'Show Solution'}
+              </button>
+            )}
           </div>
 
+          {/* Hints Section */}
+          {showHints && hints.length > 0 && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-start">
+                <Lightbulb className="h-5 w-5 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-yellow-800 mb-2">💡 Hint {currentHint + 1}:</h4>
+                  <p className="text-yellow-700">{hints[currentHint]}</p>
+                  {currentHint < hints.length - 1 && (
+                    <button
+                      onClick={getNextHint}
+                      className="mt-2 text-sm text-yellow-600 hover:text-yellow-800 underline"
+                    >
+                      Need another hint?
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Solution Section */}
+          {showSolution && solution && (
+            <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <div className="flex items-start">
+                <Eye className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <h4 className="font-semibold text-purple-800 mb-2">🎯 Solution:</h4>
+                  <pre className="text-sm text-purple-700 bg-purple-100 p-3 rounded font-mono overflow-x-auto">{solution}</pre>
+                  <p className="text-xs text-purple-600 mt-2">Try to understand how this solution works, then implement it yourself!</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {isLoading && (
             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-center text-blue-800">
@@ -246,9 +366,16 @@ export default function CodeEditor({
         </div>
         
         <div className="p-6">
-          <pre className="w-full h-80 font-mono text-sm border rounded-lg p-4 bg-gray-900 text-green-400 overflow-auto whitespace-pre-wrap">
-            {output || 'Click "Run Code" to see output...'}
-          </pre>
+          <div className="relative">
+            <pre className="w-full h-80 font-mono text-sm border rounded-lg p-4 bg-gray-900 text-green-400 overflow-auto whitespace-pre-wrap">
+              {output || 'Click "Run Code" to see output...'}
+            </pre>
+            
+            {/* Attempt Counter */}
+            <div className="absolute top-2 right-2 bg-gray-800/80 text-gray-400 text-xs px-2 py-1 rounded">
+              Attempts: {attempts}
+            </div>
+          </div>
         </div>
       </div>
     </div>

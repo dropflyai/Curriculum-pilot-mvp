@@ -8,6 +8,7 @@ interface QuizItem {
   q: string
   options?: string[]
   answer?: string
+  explanation?: string
 }
 
 interface QuizComponentProps {
@@ -124,15 +125,69 @@ export default function QuizComponent({ quizItems, onQuizComplete }: QuizCompone
           </div>
         </div>
 
-        {/* Feedback */}
+        {/* Enhanced Feedback with Explanations */}
         <div>
           <h3 className="font-semibold text-gray-900 mb-3">Detailed Feedback:</h3>
-          <div className="space-y-2">
-            {results.feedback.map((item, index) => (
-              <div key={index} className="text-sm p-2 bg-gray-50 rounded">
-                {item}
-              </div>
-            ))}
+          <div className="space-y-4">
+            {quizItems.map((item, index) => {
+              const userAnswer = results.answers[index]
+              const isCorrect = item.type === 'mcq' ? 
+                userAnswer?.toLowerCase().trim() === item.answer?.toLowerCase().trim() :
+                userAnswer && userAnswer.length > 10
+              
+              return (
+                <div key={index} className={`p-4 rounded-lg border-2 ${
+                  isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                }`}>
+                  <div className="flex items-start">
+                    <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 ${
+                      isCorrect ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                    }`}>
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900 mb-2">{item.q}</h4>
+                      
+                      {item.type === 'mcq' && (
+                        <div className="mb-3">
+                          <p className={`text-sm mb-1 ${
+                            isCorrect ? 'text-green-700' : 'text-red-700'
+                          }`}>
+                            Your answer: <span className="font-semibold">{userAnswer || 'No answer'}</span>
+                          </p>
+                          {!isCorrect && (
+                            <p className="text-sm text-green-700">
+                              Correct answer: <span className="font-semibold">{item.answer}</span>
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      
+                      {item.type === 'short' && (
+                        <div className="mb-3">
+                          <p className="text-sm text-gray-600">Your response:</p>
+                          <p className="text-sm bg-gray-100 p-2 rounded italic">
+                            {userAnswer || 'No response provided'}
+                          </p>
+                        </div>
+                      )}
+                      
+                      {item.explanation && (
+                        <div className="bg-blue-50 border border-blue-200 rounded p-3 mt-2">
+                          <div className="flex items-start">
+                            <div className="text-blue-500 mr-2 text-lg">💡</div>
+                            <div>
+                              <h5 className="font-medium text-blue-900 mb-1">Why this matters:</h5>
+                              <p className="text-sm text-blue-800">{item.explanation}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
