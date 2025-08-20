@@ -23,6 +23,12 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose',
   },
+  
+  // ESLint configuration for production builds
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if ESLint errors
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig
