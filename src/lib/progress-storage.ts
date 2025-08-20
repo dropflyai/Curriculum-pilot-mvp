@@ -3,7 +3,7 @@
 interface LessonProgress {
   lessonId: string
   sectionProgress: Record<number, boolean>
-  quizResults: Record<number, any>
+  quizResults: Record<number, unknown>
   codeAttempts: Record<number, string>
   lastAccessed: string
   completionPercentage: number
@@ -59,7 +59,7 @@ export const saveLessonProgress = (
   lessonId: string, 
   sectionIndex: number, 
   completed: boolean,
-  additionalData?: { quizResult?: any, codeAttempt?: string }
+  additionalData?: { quizResult?: unknown, codeAttempt?: string }
 ) => {
   const progress = getProgress()
   

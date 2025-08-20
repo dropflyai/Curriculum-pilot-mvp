@@ -47,7 +47,7 @@ export default function LessonViewer({ title, description, sections, lessonId, o
       const savedProgress = getLessonProgress(lessonId)
       if (savedProgress) {
         setSectionProgress(savedProgress.sectionProgress || {})
-        setQuizResults(savedProgress.quizResults || {})
+        setQuizResults(savedProgress.quizResults as Record<number, QuizResults> || {})
         setCodeAttempts(savedProgress.codeAttempts || {})
       }
     }
@@ -247,8 +247,7 @@ export default function LessonViewer({ title, description, sections, lessonId, o
                 initialCode={currentSectionData.codeChallenge.startingCode}
                 testCode={currentSectionData.codeChallenge.tests.join('\n')}
                 solution={currentSectionData.codeChallenge.solution}
-                hints={currentSectionData.codeChallenge.hints}
-                onCodeChange={() => {}}
+                hints={currentSectionData.codeChallenge.hints || []}
                 onExecutionResult={(result) => {
                   if (result.success) {
                     handleCodeChallengeComplete()
