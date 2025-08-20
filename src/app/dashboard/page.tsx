@@ -12,7 +12,19 @@ export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [lessons] = useState<Lesson[]>(getAllLessons())
-  const [userProgress] = useState<Record<string, number>>({})
+  const [userProgress] = useState<Record<string, number>>({
+    'python-basics-variables': 75,
+    'python-magic-8-ball': 100,
+    'python-functions': 0,
+    'python-lists-loops': 25,
+    'python-file-handling': 0
+  })
+  const [userScores] = useState<Record<string, number>>({
+    'python-basics-variables': 85,
+    'python-magic-8-ball': 92,
+    'python-lists-loops': 67
+  })
+  const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
 
   useEffect(() => {
@@ -40,9 +52,46 @@ export default function Dashboard() {
     return userProgress[lessonId] || 0
   }
 
-  const filteredLessons = selectedDifficulty === 'all' 
-    ? lessons 
-    : lessons.filter(lesson => lesson.difficulty === selectedDifficulty)
+  const getScoreForLesson = (lessonId: string) => {
+    return userScores[lessonId] || 0
+  }
+
+  const getAverageScore = () => {
+    const scores = Object.values(userScores)
+    if (scores.length === 0) return 0
+    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
+  }
+
+  const getLessonsByTab = () => {
+    let filteredLessons = lessons
+
+    // Filter by completion status
+    switch (selectedTab) {
+      case 'completed':
+        filteredLessons = lessons.filter(lesson => getProgressForLesson(lesson.id) === 100)
+        break
+      case 'in-progress':
+        filteredLessons = lessons.filter(lesson => {
+          const progress = getProgressForLesson(lesson.id)
+          return progress > 0 && progress < 100
+        })
+        break
+      case 'not-started':
+        filteredLessons = lessons.filter(lesson => getProgressForLesson(lesson.id) === 0)
+        break
+      default:
+        filteredLessons = lessons
+    }
+
+    // Then filter by difficulty
+    if (selectedDifficulty !== 'all') {
+      filteredLessons = filteredLessons.filter(lesson => lesson.difficulty === selectedDifficulty)
+    }
+
+    return filteredLessons
+  }
+
+  const filteredLessons = getLessonsByTab()
 
   if (loading) {
     return (
@@ -152,7 +201,7 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-purple-100">Avg Score</p>
-                <p className="text-3xl font-bold text-white">--</p>
+                <p className="text-3xl font-bold text-white">{getAverageScore()}%</p>
               </div>
             </div>
           </div>
@@ -160,8 +209,56 @@ export default function Dashboard() {
 
         {/* Lessons Grid */}
         <div className="mb-8">
+          <div className="mb-6">
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Your Learning Journey 📚</h3>
+            
+            {/* Progress Tabs */}
+            <div className="flex flex-wrap gap-3 mb-6">
+              <button 
+                onClick={() => setSelectedTab('all')}
+                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                  selectedTab === 'all' 
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                }`}
+              >
+                📋 All Lessons ({lessons.length})
+              </button>
+              <button 
+                onClick={() => setSelectedTab('completed')}
+                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                  selectedTab === 'completed' 
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                }`}
+              >
+                ✅ Completed ({lessons.filter(l => getProgressForLesson(l.id) === 100).length})
+              </button>
+              <button 
+                onClick={() => setSelectedTab('in-progress')}
+                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                  selectedTab === 'in-progress' 
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                }`}
+              >
+                ⚡ In Progress ({lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length})
+              </button>
+              <button 
+                onClick={() => setSelectedTab('not-started')}
+                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                  selectedTab === 'not-started' 
+                    ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                }`}
+              >
+                🎯 Not Started ({lessons.filter(l => getProgressForLesson(l.id) === 0).length})
+              </button>
+            </div>
+          </div>
+
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Available Lessons 📚</h3>
+            <h4 className="text-xl font-bold text-gray-300">Filter by Difficulty:</h4>
             <div className="flex space-x-2">
               <button 
                 onClick={() => setSelectedDifficulty('all')}
@@ -232,21 +329,34 @@ export default function Dashboard() {
                       </span>
                     </div>
 
-                    {/* Progress Bar */}
+                    {/* Progress Bar and Score */}
                     {isStarted && (
                       <div className="mb-4">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-gray-600">Progress</span>
-                          <span className="text-xs text-gray-600">{Math.round(progress)}%</span>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-white">Progress</span>
+                          <span className="text-sm font-bold text-white">{Math.round(progress)}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-600/50 rounded-full h-3 mb-3">
                           <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                              isCompleted ? 'bg-green-600' : 'bg-blue-600'
+                            className={`h-3 rounded-full transition-all duration-300 ${
+                              isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-blue-500 to-purple-600'
                             }`}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
+                        {getScoreForLesson(lesson.id) > 0 && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-purple-300">Quiz Score</span>
+                            <span className={`text-sm font-bold px-2 py-1 rounded-full ${
+                              getScoreForLesson(lesson.id) >= 90 ? 'bg-green-500 text-white' :
+                              getScoreForLesson(lesson.id) >= 80 ? 'bg-yellow-500 text-white' :
+                              getScoreForLesson(lesson.id) >= 70 ? 'bg-orange-500 text-white' :
+                              'bg-red-500 text-white'
+                            }`}>
+                              {getScoreForLesson(lesson.id)}%
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
 
