@@ -40,169 +40,196 @@ export const sampleLessons: Lesson[] = [
       {
         type: 'content',
         title: 'Building Interactive Programs',
-        content: `🎉 Welcome, future coder! I'm your AI instructor, and I'm SO excited to teach you programming!
+        content: `# 🚀 Welcome to Interactive Programming!
 
-Think of me as your personal coding coach. I'll guide you step-by-step, give you hints when you're stuck, and celebrate with you when you succeed! 
-
-Today's adventure: We're going to transform you from a complete beginner into someone who can build programs that actually TALK to users! 🗣️
-
-🎯 **Your Mission (should you choose to accept it):** Build programs that can chat with users and give smart responses - just like the apps you use every day!
-
-**Here's how I'll teach you:**
-- 📖 I'll explain concepts with fun analogies you already know
-- 💻 You'll practice with interactive code examples (try changing things!)
-- 🧪 I'll give you challenges to test your skills
-- 🎉 We'll celebrate every victory together!
-
-Ready to begin this coding journey? Let's make some digital magic! ✨
+## Your Mission Today
+Transform from complete beginner to someone who builds programs that **actually talk to users** - just like the apps you use every day!
 
 ---
 
-📦 CONCEPT #1: Variables (Your Computer's Memory Boxes)
+## 📦 Chapter 1: Variables (Digital Storage Boxes)
 
-**🤖 Teacher Says:** "Alright, let's start with the most important concept in programming - variables! I promise this will click once you see my analogy."
+### What are Variables?
+Variables are labeled containers that store information in your computer's memory.
 
-**What are variables?**
-Variables are like labeled storage boxes in your computer's memory. Just like you might have different boxes in your room - one for games, one for clothes, one for school supplies - variables are containers that hold different types of information.
+### 💡 Perfect Analogy: Your Phone's Contacts
+Think of variables exactly like your phone's contact list:
+- **Contact Name** = Variable name (like "Mom" or "Best Friend")
+- **Stored Info** = Variable value (phone number, address, photo)
+- **Can Update** = You can change the information anytime
 
-**My favorite real-world analogy:**
-🏠 Think of variables like your phone's contacts list! Each contact has:
-- A name (the label) like "Mom" or "Best Friend" 
-- Stored information like phone numbers, addresses, and photos
-- You can update the information anytime
+### Real-World Connection
+Every app uses millions of variables:
+- Instagram: remembers your username, photos, followers
+- TikTok: stores your preferences, watch history, favorites
+- Games: track your score, level, achievements
 
-Variables work EXACTLY the same way! 📱✨
-
-**🎯 Key insight:** Every app you use (Instagram, TikTok, Snapchat) uses millions of variables to remember your username, posts, friends, and preferences!
-
-In Python, we create these "boxes" like this:
-- user_name = "Alex" (stores text someone types)
-- score = 95 (stores numbers for games or grades)  
-- is_ready = True (stores yes/no decisions)
+### Python Syntax
+\`\`\`python
+user_name = "Alex"        # Text storage
+score = 95               # Number storage  
+is_ready = True          # True/False storage
+\`\`\`
 
 <interactive-example>
-code: # Try creating your own variables!
+title: Try Variables Yourself
+description: Modify these values and see what happens!
+code:
+# Create your own digital storage boxes
 user_name = "Alex"
-score = 95
-is_ready = True
+favorite_game = "Minecraft"
+level = 42
 
-print(f"Student: {user_name}")
-print(f"Score: {score}")
-print(f"Ready to learn: {is_ready}")
-title: Variable Creation Example
-description: Modify the values and see how variables work!
+print(f"Player: {user_name}")
+print(f"Favorite Game: {favorite_game}")
+print(f"Current Level: {level}")
+
+# Try changing the values above and run again!
 </interactive-example>
 
 ---
 
-🎤 CONCEPT #2: Getting Input (Asking Questions)
+## 🎤 Chapter 2: Getting Input (Program Conversations)
 
-**🤖 Teacher Says:** "Now let's make your programs INTERACTIVE! This is where the magic happens - your program will actually talk to users!"
+### What is Input?
+The `input()` function makes your program ask questions and wait for answers.
 
-**What is input?**
-The input() function is like your program raising its hand and asking "What do you think?" It pauses everything and waits for the user to respond - just like when I ask you a question and wait for your answer! 
+### 💡 Perfect Analogy: Drive-Through Experience
+1. **Speaker asks:** "Welcome! What would you like?" (your program asks)
+2. **You think & speak:** Your order (user types response)
+3. **Worker hears:** Takes your order (program receives input)
 
-**Perfect real-world analogy:**
-🚗 Think of input() like a drive-thru speaker at McDonald's:
-1. Worker: "Welcome! What would you like to order?" (the question)
-2. You: Think about what you want... then speak your order (user types)
-3. Worker: Hears your order and processes it (program gets the input)
+### Real-World Connection
+Every interactive moment uses input:
+- Google search box waits for your search
+- Login screens wait for username/password
+- Game menus wait for your selection
 
-Your program does the EXACT same thing - it asks, waits, and listens! 🎧
-
-**🎯 Cool fact:** Every time you search on Google, log into Instagram, or text a friend, you're using input() functions!
-
-Examples:
-- question = input("What's your favorite color? ")
-- name = input("What should I call you? ")
+### Python Syntax
+\`\`\`python
+user_answer = input("What's your name? ")
+favorite_color = input("Favorite color? ")
+\`\`\`
 
 <interactive-example>
-code: # Try different input questions!
-favorite_color = input("What's your favorite color? ")
-age = input("How old are you? ")
-print(f"Cool! {favorite_color} is a great color!")
-print(f"And {age} is a perfect age to learn coding!")
-title: Input Function Demo
-description: See how input() captures what users type
+title: Interactive Input Practice
+description: See how programs collect information from users
+code:
+# Your program having a conversation
+name = input("Hi! What should I call you? ")
+hobby = input("What's your favorite hobby? ")
+
+print(f"Nice to meet you, {name}!")
+print(f"I think {hobby} sounds really cool!")
+print("We're going to be great coding partners! 🤝")
 </interactive-example>
 
 ---
 
-📢 CONCEPT #3: Showing Output (Displaying Results)
+## 📱 Chapter 3: Showing Output (Program Responses)
 
-What is output?
-The print() function is how your program "speaks" back to the user. It's like your program's voice - it can share information, give responses, or show results.
+### What is Output?
+The `print()` function is your program's voice - how it communicates back to users.
 
-Real-world analogy:
-Think of print() like a text message you send to a friend. When they text you "What's up?", you text back "Just coding!" That's exactly what print() does - it sends a message to whoever is using your program.
+### 💡 Perfect Analogy: Text Messaging
+- Friend texts: "What's up?"
+- You text back: "Just coding!"
+- `print()` works the same way - your program "texts" back to the user
 
-Examples:
-- print("Hello there!")
-- print(f"Nice to meet you, {name}!")
+### Professional Output Techniques
+\`\`\`python
+print("Simple message")
+print(f"Hi {name}!")           # Include variables
+print("🎉 Fun with emojis!")   # Add visual appeal
+\`\`\`
 
 <interactive-example>
-code: # Try different print styles!
-name = "CodeFly Student"
-print("Hello there!")
-print("Nice to meet you, " + name + "!")
-print(f"Welcome to CodeFly, {name}!")
-print("🚀 Ready to code? Let's go!")
-title: Print Function Magic
-description: Experiment with different ways to display text
+title: Output Mastery
+description: Experiment with different ways to display information
+code:
+student_name = "CodeFly Learner"
+current_score = 85
+
+# Different output styles
+print("=== STUDENT REPORT ===")
+print(f"Student: {student_name}")
+print(f"Score: {current_score}%")
+
+# Add some personality!
+if current_score >= 80:
+    print("🌟 Excellent work!")
+else:
+    print("💪 Keep practicing!")
+    
+print("===================")
 </interactive-example>
 
 ---
 
-✨ THE MAGIC FORMULA: How All Programs Work
+## ⚡ The Universal Program Pattern
 
-Every interactive program follows this simple pattern:
+**Every interactive app follows this 4-step pattern:**
 
-1. ASK → Use input() to get information from the user
-2. STORE → Put that information in a variable (memory box)
-3. THINK → Your program processes the information 
-4. RESPOND → Use print() to show the result
+### 1. ASK 🤔
+Use `input()` to get information from the user
 
-This is the secret recipe behind every app you use! Instagram asks for your photo (ASK), stores it on their servers (STORE), applies filters (THINK), and shows it to your friends (RESPOND).
+### 2. STORE 📦  
+Put that information in variables (memory boxes)
 
-Ready to build your first interactive program? Let's go! 🚀`
+### 3. PROCESS 🧠
+Your program thinks about the information
+
+### 4. RESPOND 💬
+Use `print()` to show results
+
+### Real Examples:
+- **Instagram:** ASK for photo → STORE on servers → PROCESS with filters → RESPOND by showing to friends
+- **Calculator App:** ASK for numbers → STORE in variables → PROCESS with math → RESPOND with answer
+- **Your Magic 8-Ball:** ASK for question → STORE in variable → PROCESS with random choice → RESPOND with answer
+
+---
+
+## 🎯 Ready for Your First Challenge?
+Now that you understand the building blocks, let's put them together to create something amazing!`
       },
       {
         type: 'code',
         title: 'Practice: Interactive Name Program',
         codeChallenge: {
-          description: '🤖 **Your First Coding Challenge!** I\'m excited to see what you build! Create an interactive program that asks for someone\'s name and gives them a personalized greeting. Don\'t worry if you get errors - that\'s how we learn! Just follow my test → fix → retest approach and you\'ll get it working! 💪',
-          startingCode: `# Interactive Name Program
-# Step 1: Ask user for their name
-# Step 2: Store it in a variable  
-# Step 3: Print a personalized greeting
+          description: 'Build your first interactive program! Create a simple greeter that asks for someone\'s name and responds with a personalized message.',
+          startingCode: `# Interactive Greeter Program
+# Goal: Make your program have a conversation with the user
 
-# TODO: Ask for user's name
-user_name = input("What's your name? ")
+print("🤖 Hello! I'm your first Python program!")
 
-# TODO: Print a greeting using their name
-print("Hello " + user_name + "!")
+# Step 1: Ask for the user's name
+# TODO: Use input() to ask "What's your name?"
+# TODO: Store the answer in a variable called 'name'
 
-# TEST IT: Run your code and see if it works!
-# FIX IT: If there are errors, read them carefully and fix
-# RETEST: Run again until it works perfectly`,
-          solution: `# Interactive Name Program
-user_name = input("What's your name? ")
-print(f"Hello {user_name}! Welcome to CodeFly!")
+# Step 2: Create a personalized greeting  
+# TODO: Use print() and f-strings to say hello
 
-# Bonus: Add more interaction
-favorite_color = input("What's your favorite color? ")
-print(f"Cool! {favorite_color} is a great color, {user_name}!")`,
+print("Nice chatting with you! 👋")`,
+          solution: `# Interactive Greeter Program
+print("🤖 Hello! I'm your first Python program!")
+
+# Step 1: Ask for the user's name
+name = input("What's your name? ")
+
+# Step 2: Create a personalized greeting
+print(f"Hello {name}! Welcome to CodeFly! ✈️")
+print(f"I'm excited to teach you programming, {name}!")
+
+print("Nice chatting with you! 👋")`,
           tests: [
             'assert "input(" in code, "Must use input() to get user name"',
             'assert "print(" in code, "Must use print() to show greeting"',
-            'assert "user_name" in code or "name" in code, "Store the name in a variable"'
+            'assert "name" in code.lower(), "Store the name in a variable"'
           ],
           hints: [
-            "🤖 **Hint 1:** Start with input()! Use this pattern: variable = input('Your question here'). I believe in you!",
-            "🤖 **Hint 2:** Give your variable a clear name like 'user_name' or 'name' - this makes your code easier to read!",
-            "🤖 **Hint 3:** Now use print() to show a greeting! You can combine text with your variable using + or f-strings",
-            "🤖 **Pro Tip:** Try f-strings - they're my favorite! print(f'Hello {user_name}!') looks so much cleaner than using +",
-            "🤖 **Stuck?** Remember: ASK (input) → STORE (variable) → RESPOND (print). You've got this! 🚀"
+            "Start with: name = input('What\\'s your name? ')",
+            "Use f-strings for clean output: print(f'Hello {name}!')",
+            "Remember the pattern: ASK → STORE → RESPOND"
           ]
         }
       },
