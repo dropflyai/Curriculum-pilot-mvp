@@ -7,7 +7,8 @@ import {
   Users, Download, Settings, 
   AlertTriangle, Code, Play, Trophy, Filter, Search,
   Eye, MessageSquare, BarChart3, Zap,
-  Timer, Star, Lightbulb, Send, Bell, Volume2
+  Timer, Star, Lightbulb, Send, Bell, Volume2,
+  BookOpen, CheckCircle, XCircle, Edit3, Award
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -67,6 +68,12 @@ export default function TeacherDashboard() {
   const [showAnnouncementModal, setShowAnnouncementModal] = useState(false)
   const [announcementText, setAnnouncementText] = useState('')
   const [messageSending, setMessageSending] = useState(false)
+  
+  // Grade Book States
+  const [showGradeModal, setShowGradeModal] = useState(false)
+  const [gradingStudent, setGradingStudent] = useState<StudentProgress | null>(null)
+  const [showGradeBook, setShowGradeBook] = useState(false)
+  const [gradeBookView, setGradeBookView] = useState<'overview' | 'detailed'>('overview')
   
   const supabase = createClient()
 
@@ -432,6 +439,13 @@ export default function TeacherDashboard() {
                 <Volume2 className="h-4 w-4 mr-2" />
                 Send Announcement 📢
               </button>
+              <button
+                onClick={() => setShowGradeBook(true)}
+                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Grade Book 📚
+              </button>
               <Link 
                 href="/teacher/manage"
                 className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center"
@@ -773,6 +787,16 @@ export default function TeacherDashboard() {
                           >
                             <MessageSquare className="h-4 w-4" />
                           </button>
+                          <button 
+                            className="bg-orange-600 hover:bg-orange-700 text-white p-2 rounded-lg transition-colors"
+                            title="Grade student work"
+                            onClick={() => {
+                              setGradingStudent(student)
+                              setShowGradeModal(true)
+                            }}
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
                           {status.status === 'stuck' && (
                             <button 
                               className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors animate-pulse"
@@ -958,6 +982,311 @@ export default function TeacherDashboard() {
                   </>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Grade Book Modal */}
+      {showGradeBook && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-purple-500/30">
+            <div className="p-6 border-b border-purple-500/30 sticky top-0 bg-gray-800">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-white flex items-center">
+                  <BookOpen className="h-6 w-6 mr-2 text-orange-400" />
+                  CodeFly Grade Book 📚
+                </h3>
+                <div className="flex items-center space-x-4">
+                  <div className="flex bg-gray-700 rounded-lg p-1">
+                    <button
+                      onClick={() => setGradeBookView('overview')}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        gradeBookView === 'overview'
+                          ? 'bg-orange-600 text-white'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      Overview
+                    </button>
+                    <button
+                      onClick={() => setGradeBookView('detailed')}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        gradeBookView === 'detailed'
+                          ? 'bg-orange-600 text-white'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      Detailed
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setShowGradeBook(false)}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <XCircle className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {gradeBookView === 'overview' ? (
+                // Overview Grid
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-xl p-4 text-white">
+                      <h4 className="font-semibold mb-2">Class Average</h4>
+                      <div className="text-2xl font-bold">87.3%</div>
+                      <div className="text-green-100 text-sm">↗️ +2.1% from last week</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-600 to-cyan-700 rounded-xl p-4 text-white">
+                      <h4 className="font-semibold mb-2">Assignments Graded</h4>
+                      <div className="text-2xl font-bold">{students.filter(s => s.progress.some(p => p.score !== undefined)).length}/{students.length}</div>
+                      <div className="text-blue-100 text-sm">📝 Recent submissions</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-600 to-pink-700 rounded-xl p-4 text-white">
+                      <h4 className="font-semibold mb-2">Needs Review</h4>
+                      <div className="text-2xl font-bold">{students.filter(s => s.progress.some(p => p.status === 'submitted' && !p.score)).length}</div>
+                      <div className="text-purple-100 text-sm">⏳ Awaiting grading</div>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-900/50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-purple-300">Student</th>
+                          {lessons.map(lesson => (
+                            <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
+                              {lesson.title.split(':')[0]}
+                            </th>
+                          ))}
+                          <th className="px-4 py-3 text-center text-sm font-medium text-purple-300">Average</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-700">
+                        {students.map(student => {
+                          const studentGrades = lessons.map(lesson => {
+                            const progress = student.progress.find(p => p.lesson_id === lesson.id)
+                            return progress?.score ? Math.round(progress.score * 100) : null
+                          })
+                          const average = studentGrades.filter(g => g !== null).length > 0
+                            ? Math.round(studentGrades.filter(g => g !== null).reduce((sum, grade) => sum + (grade || 0), 0) / studentGrades.filter(g => g !== null).length)
+                            : null
+
+                          return (
+                            <tr key={student.user.id} className="hover:bg-gray-700/50">
+                              <td className="px-4 py-3">
+                                <div className="text-white font-medium">{student.user.full_name}</div>
+                                <div className="text-gray-400 text-sm">{student.user.email}</div>
+                              </td>
+                              {studentGrades.map((grade, index) => (
+                                <td key={index} className="px-4 py-3 text-center">
+                                  {grade !== null ? (
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                      grade >= 90 ? 'bg-green-800 text-green-200' :
+                                      grade >= 80 ? 'bg-blue-800 text-blue-200' :
+                                      grade >= 70 ? 'bg-yellow-800 text-yellow-200' :
+                                      grade >= 60 ? 'bg-orange-800 text-orange-200' :
+                                      'bg-red-800 text-red-200'
+                                    }`}>
+                                      {grade}%
+                                    </span>
+                                  ) : (
+                                    <span className="text-gray-500">-</span>
+                                  )}
+                                </td>
+                              ))}
+                              <td className="px-4 py-3 text-center">
+                                {average !== null ? (
+                                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                                    average >= 90 ? 'bg-green-700 text-green-100' :
+                                    average >= 80 ? 'bg-blue-700 text-blue-100' :
+                                    average >= 70 ? 'bg-yellow-700 text-yellow-100' :
+                                    average >= 60 ? 'bg-orange-700 text-orange-100' :
+                                    'bg-red-700 text-red-100'
+                                  }`}>
+                                    {average}%
+                                  </span>
+                                ) : (
+                                  <span className="text-gray-500">No grades</span>
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                // Detailed View
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h4 className="text-lg text-white mb-2">Select a student to view detailed grades</h4>
+                    <p className="text-gray-400">Individual assignment breakdown, feedback, and improvement suggestions</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {students.map(student => (
+                      <div
+                        key={student.user.id}
+                        className="bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer"
+                        onClick={() => {
+                          setGradingStudent(student)
+                          setShowGradeModal(true)
+                          setShowGradeBook(false)
+                        }}
+                      >
+                        <div className="text-white font-medium">{student.user.full_name}</div>
+                        <div className="text-gray-400 text-sm">{student.user.email}</div>
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="text-sm text-gray-300">
+                            {student.progress.filter(p => p.score !== undefined).length} graded
+                          </span>
+                          <Award className="h-4 w-4 text-yellow-400" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Individual Grading Modal */}
+      {showGradeModal && gradingStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-purple-500/30">
+            <div className="p-6 border-b border-purple-500/30">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white flex items-center">
+                  <Edit3 className="h-5 w-5 mr-2 text-orange-400" />
+                  Grading: {gradingStudent.user.full_name}
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowGradeModal(false)
+                    setGradingStudent(null)
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <XCircle className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {gradingStudent.progress.map(progress => {
+                const lesson = lessons.find(l => l.id === progress.lesson_id)
+                if (!lesson) return null
+
+                return (
+                  <div key={progress.id} className="bg-gray-700/50 rounded-lg p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h4 className="text-lg font-semibold text-white">{lesson.title}</h4>
+                        <p className="text-gray-400">Status: {progress.status}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        {progress.status === 'completed' && (
+                          <CheckCircle className="h-5 w-5 text-green-400" />
+                        )}
+                        {progress.score !== undefined && (
+                          <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                            (progress.score * 100) >= 90 ? 'bg-green-700 text-green-100' :
+                            (progress.score * 100) >= 80 ? 'bg-blue-700 text-blue-100' :
+                            (progress.score * 100) >= 70 ? 'bg-yellow-700 text-yellow-100' :
+                            'bg-red-700 text-red-100'
+                          }`}>
+                            {Math.round(progress.score * 100)}%
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {progress.submitted_code && (
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-purple-300 mb-2">Submitted Code:</h5>
+                        <pre className="bg-gray-800 p-3 rounded text-green-400 text-sm overflow-x-auto">
+                          {progress.submitted_code}
+                        </pre>
+                      </div>
+                    )}
+
+                    {progress.quiz_answers && Object.keys(progress.quiz_answers).length > 0 && (
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-purple-300 mb-2">Quiz Results:</h5>
+                        <div className="bg-gray-800 p-3 rounded">
+                          <div className="text-blue-200">
+                            Quiz completed with {gradingStudent.quizResults?.find(q => q.lessonId === lesson.id)?.score || 0}/
+                            {gradingStudent.quizResults?.find(q => q.lessonId === lesson.id)?.totalQuestions || 4} correct answers
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-purple-300 mb-2">
+                          Teacher Feedback
+                        </label>
+                        <textarea
+                          value={progress.teacher_feedback || ''}
+                          onChange={(e) => {
+                            // Update progress feedback (this would normally update database)
+                            console.log(`Updating feedback for ${gradingStudent.user.full_name}: ${e.target.value}`)
+                          }}
+                          placeholder="Enter feedback for the student..."
+                          className="w-full p-3 bg-gray-700 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 h-24 resize-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-purple-300 mb-2">
+                          Grade Override
+                        </label>
+                        <div className="space-y-2">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={progress.score ? Math.round(progress.score * 100) : ''}
+                            onChange={(e) => {
+                              const newScore = parseInt(e.target.value) / 100
+                              console.log(`Updating score for ${gradingStudent.user.full_name}: ${newScore}`)
+                            }}
+                            placeholder="Grade (0-100)"
+                            className="w-full p-3 bg-gray-700 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          />
+                          <div className="flex space-x-2">
+                            <button className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+                              A (90-100%)
+                            </button>
+                            <button className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                              B (80-89%)
+                            </button>
+                            <button className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm">
+                              C (70-79%)
+                            </button>
+                            <button className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
+                              F (&lt;70%)
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex justify-end">
+                      <button className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        Save Grade & Feedback
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
