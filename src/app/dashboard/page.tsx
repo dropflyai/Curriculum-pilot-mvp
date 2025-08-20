@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllLessons, Lesson } from '@/lib/lesson-data'
@@ -68,12 +68,59 @@ export default function Dashboard() {
     strengths: ['variables', 'input-output']
   })
 
+  // Celebration triggers - only for real achievements
+  const triggerCelebration = useCallback((message: string) => {
+    setCelebrationMessage(message)
+    setShowCelebration(true)
+  }, [])
+  
+  // Real celebration triggers (removed demo auto-trigger)
+  const handleLessonComplete = useCallback((lessonId: string) => {
+    // This would be called when returning from a completed lesson
+    const lesson = lessons.find(l => l.id === lessonId)
+    if (lesson) {
+      triggerCelebration(`🎉 Lesson Complete: ${lesson.title}!`)
+    }
+  }, [lessons, triggerCelebration])
+  
+  const handleQuizComplete = useCallback((score: number) => {
+    // This would be called when a quiz is completed with a good score
+    if (score >= 90) {
+      triggerCelebration('🏆 Perfect Score! You\'re on fire!')
+    } else if (score >= 80) {
+      triggerCelebration('🎯 Great Job! Keep it up!')
+    }
+  }, [triggerCelebration])
+  
+  const handleAchievementUnlock = useCallback((achievementName: string) => {
+    // This would be called when a new achievement is unlocked
+    triggerCelebration(`🏅 New Achievement: ${achievementName}!`)
+  }, [triggerCelebration])
+
   useEffect(() => {
     // TEMPORARY: Allow dashboard access for testing
     // if (!loading && !isAuthenticated) {
     //   router.push('/auth')
     // }
-  }, [isAuthenticated, loading, router])
+    
+    // Check for celebration triggers from URL parameters
+    const urlParams = new URLSearchParams(window.location.search)
+    const celebrationType = urlParams.get('celebrate')
+    const lessonId = urlParams.get('lesson')
+    const score = urlParams.get('score')
+    
+    if (celebrationType === 'lesson' && lessonId) {
+      handleLessonComplete(lessonId)
+      // Clean up URL parameters
+      const cleanUrl = window.location.pathname
+      window.history.replaceState({}, document.title, cleanUrl)
+    } else if (celebrationType === 'quiz' && score) {
+      handleQuizComplete(parseInt(score))
+      // Clean up URL parameters
+      const cleanUrl = window.location.pathname
+      window.history.replaceState({}, document.title, cleanUrl)
+    }
+  }, [isAuthenticated, loading, router, handleLessonComplete, handleQuizComplete])
 
   const handleSignOut = async () => {
     await signOut()
@@ -165,23 +212,6 @@ export default function Dashboard() {
   const nextLesson = getNextRecommendedLesson()
   const xpLevel = getXPLevel()
   const xpProgress = getXPProgress()
-  
-  // Celebration triggers
-  const triggerCelebration = (message: string) => {
-    setCelebrationMessage(message)
-    setShowCelebration(true)
-  }
-  
-  // Simulate celebration on level up or achievement unlock (for demo)
-  useEffect(() => {
-    // This would normally be triggered by actual events
-    if (unlockedAchievements.length >= 2 && !showCelebration) {
-      // Show celebration for having achievements
-      setTimeout(() => {
-        triggerCelebration('🎉 You\'re becoming a coding champion!')
-      }, 2000)
-    }
-  }, [unlockedAchievements.length, showCelebration])
 
   if (loading) {
     return (

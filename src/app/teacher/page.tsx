@@ -7,7 +7,7 @@ import {
   Users, Download, Settings, 
   AlertTriangle, Code, Play, Trophy, Filter, Search,
   Eye, MessageSquare, BarChart3, Zap,
-  Timer, Star, Lightbulb
+  Timer, Star, Lightbulb, Send, Bell, Volume2
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -59,6 +59,15 @@ export default function TeacherDashboard() {
   const [filter, setFilter] = useState<FilterType>('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [realTimeEnabled, setRealTimeEnabled] = useState(true)
+  
+  // Communication System States
+  const [showMessageModal, setShowMessageModal] = useState(false)
+  const [messageRecipient, setMessageRecipient] = useState<StudentProgress | null>(null)
+  const [messageText, setMessageText] = useState('')
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false)
+  const [announcementText, setAnnouncementText] = useState('')
+  const [messageSending, setMessageSending] = useState(false)
+  
   const supabase = createClient()
 
   // Real-time data fetching
