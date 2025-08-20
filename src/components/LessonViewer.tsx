@@ -16,6 +16,7 @@ interface LessonSection {
     startingCode: string
     solution: string
     tests: string[]
+    hints?: string[]
   }
   quiz?: {
     type: 'mcq' | 'short'
@@ -300,7 +301,7 @@ export default function LessonViewer({ title, description, sections, lessonId, o
                 initialCode={currentSectionData.codeChallenge.startingCode}
                 testCode={currentSectionData.codeChallenge.tests.join('\n')}
                 solution={currentSectionData.codeChallenge.solution}
-                hints={currentSectionData.codeChallenge.hints}
+                hints={currentSectionData.codeChallenge.hints || []}
                 onExecutionResult={(result) => {
                   if (result.success) {
                     handleCodeChallengeComplete()

@@ -51,22 +51,46 @@ export default function Dashboard() {
     { id: 'perfect-student', name: 'Perfect Student', description: 'Get 100% on 3 quizzes in a row', icon: '⭐', unlocked: false, xp: 400 }
   ])
   
-  // Learning Analytics
+  // Learning Analytics Data
   const [learningAnalytics] = useState({
-    timePerConcept: {
-      'variables': 12, // minutes
-      'loops': 18,
-      'functions': 15,
-      'input-output': 8
-    },
+    strengths: ['variables', 'input-output', 'basic syntax'],
+    weakSpots: ['loops', 'functions', 'conditionals'],
     commonErrors: [
-      { type: 'SyntaxError', count: 8, concept: 'print statements' },
-      { type: 'NameError', count: 5, concept: 'variable names' },
-      { type: 'IndentationError', count: 3, concept: 'code blocks' }
+      { type: 'SyntaxError', count: 8, concept: 'Variables' },
+      { type: 'NameError', count: 5, concept: 'Functions' },
+      { type: 'IndentationError', count: 3, concept: 'Loops' }
     ],
-    weakSpots: ['loops', 'functions'],
-    strengths: ['variables', 'input-output']
+    timePerConcept: {
+      'Variables': 12,
+      'Loops': 18,
+      'Functions': 15
+    }
   })
+  
+  // Course curriculum structure
+  const courseOutline = [
+    { 
+      title: 'Python Fundamentals', 
+      lessons: ['python-basics-variables', 'python-magic-8-ball'],
+      completedCount: 2,
+      totalCount: 2,
+      category: 'basics'
+    },
+    { 
+      title: 'Programming Logic', 
+      lessons: ['python-functions', 'python-lists-loops'],
+      completedCount: 0,
+      totalCount: 2,
+      category: 'intermediate'
+    },
+    { 
+      title: 'File & Data Handling', 
+      lessons: ['python-file-handling'],
+      completedCount: 0,
+      totalCount: 1,
+      category: 'advanced'
+    }
+  ])
 
   // Celebration triggers - only for real achievements
   const triggerCelebration = useCallback((message: string) => {
@@ -230,52 +254,406 @@ export default function Dashboard() {
   // }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      {/* Header */}
-      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <div className="relative">
-                <BookOpen className="h-8 w-8 text-blue-600 mr-3 animate-pulse" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">CodeFly ✈️</h1>
-                <p className="text-sm bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-medium">Student Dashboard - Where Coding Takes Flight! 🚀</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex">
+      {/* Left Sidebar Navigation */}
+      <div className="w-64 bg-gray-800/90 backdrop-blur-sm border-r border-purple-500/30 shadow-2xl flex flex-col">
+        {/* Logo Section */}
+        <div className="p-6 border-b border-purple-500/30">
+          <div className="flex items-center">
+            <div className="relative">
+              <BookOpen className="h-8 w-8 text-blue-400 mr-3 animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-xs font-bold animate-bounce">✨</div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-purple-300">
-                <User className="h-4 w-4 mr-1" />
-                {user?.full_name || user?.email || 'Test User'}
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center text-sm text-purple-300 hover:text-white transition-colors"
-              >
-                <LogOut className="h-4 w-4 mr-1" />
-                Sign Out
-              </button>
+            <div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">CodeFly ✈️</h1>
+              <p className="text-gray-400 text-sm">Where Coding Takes Flight!</p>
             </div>
           </div>
         </div>
+
+        {/* Navigation Menu */}
+        <nav className="flex-1 p-4">
+          <div className="space-y-2">
+            <button
+              onClick={() => setCurrentView('lessons')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-300 ${
+                currentView === 'lessons'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
+                  : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              <BookOpen className="h-5 w-5 mr-3" />
+              <span className="font-medium">Lessons</span>
+            </button>
+            
+            <button
+              onClick={() => setCurrentView('achievements')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-300 ${
+                currentView === 'achievements'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
+                  : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              <Trophy className="h-5 w-5 mr-3" />
+              <span className="font-medium">Achievements</span>
+            </button>
+            
+            <button
+              onClick={() => setCurrentView('progress')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-300 ${
+                currentView === 'progress'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
+                  : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              <TrendingUp className="h-5 w-5 mr-3" />
+              <span className="font-medium">Progress</span>
+            </button>
+            
+            <button
+              onClick={() => setCurrentView('profile')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-300 ${
+                currentView === 'profile'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
+                  : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              <User className="h-5 w-5 mr-3" />
+              <span className="font-medium">Profile</span>
+            </button>
+          </div>
+        </nav>
+
+        {/* User Info & Logout */}
+        <div className="p-4 border-t border-purple-500/30">
+          {/* XP and Level Display */}
+          <div className="flex items-center justify-center bg-gradient-to-r from-purple-600/50 to-pink-600/50 px-3 py-2 rounded-xl border border-purple-400/30 mb-3">
+            <Star className="h-4 w-4 text-yellow-400 mr-2 animate-pulse" />
+            <span className="font-bold text-sm">{userXP} XP</span>
+            <span className="text-purple-200 ml-2 text-sm">• Level {Math.floor(userXP / 500) + 1}</span>
+          </div>
+          
+          {/* User Email */}
+          <div className="text-center mb-3">
+            <p className="text-gray-300 text-sm truncate">{user?.full_name || user?.email || 'Test User'}</p>
+          </div>
+          
+          {/* Logout Button */}
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center bg-red-600/80 hover:bg-red-600 px-3 py-2 rounded-xl transition-colors border border-red-500/50 text-sm"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign Out
+          </button>
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
-            Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}! 👋
-          </h2>
-          <p className="text-xl text-gray-300 font-medium">Ready to code? Let&apos;s make some programming magic happen! ✨</p>
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto">
+        {/* Top Header with Current View */}
+        <div className="bg-gray-800/90 backdrop-blur-sm border-b border-purple-500/30 shadow-lg">
+          <div className="px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold text-white">
+                  {currentView === 'lessons' && '📚 Your Learning Journey'}
+                  {currentView === 'achievements' && '🏆 Achievements & Badges'}
+                  {currentView === 'progress' && '📊 Learning Analytics'}
+                  {currentView === 'profile' && '👤 Your Profile'}
+                </h2>
+                <p className="text-gray-300 mt-1 text-lg">
+                  {currentView === 'lessons' && `Welcome back, ${user?.full_name?.split(' ')[0] || 'Student'}! Ready to continue your coding adventure? ✨`}
+                  {currentView === 'achievements' && 'Track your coding milestones and celebrate your progress'}
+                  {currentView === 'progress' && 'See how far you\'ve come in your learning journey'}
+                  {currentView === 'profile' && 'Manage your learning preferences and account settings'}
+                </p>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="flex items-center space-x-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-400">{Object.values(userProgress).filter(p => p === 100).length}</div>
+                  <div className="text-xs text-gray-400">Completed</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-yellow-400">{currentStreak}</div>
+                  <div className="text-xs text-gray-400">Day Streak</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">{achievements.filter(a => a.unlocked).length}</div>
+                  <div className="text-xs text-gray-400">Badges</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Enhanced Stats Cards with Gamification */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* XP & Level Card */}
-          <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
+        <div className="p-8">
+        {/* Lessons View - Default */}
+        {currentView === 'lessons' && (
+          <>
+            {/* Achievement Showcase - Above Lessons */}
+            <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">🏆 Your Latest Achievements</h3>
+                <button
+                  onClick={() => setCurrentView('achievements')}
+                  className="text-sm text-gray-300 hover:text-white bg-gray-700/50 hover:bg-gray-600/50 px-3 py-1 rounded-full transition-colors"
+                >
+                  View All →
+                </button>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {achievements.slice(0, 6).map((achievement) => (
+                  <div 
+                    key={achievement.id}
+                    className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                      achievement.unlocked 
+                        ? 'bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border-yellow-400/50 text-white' 
+                        : 'bg-gray-700/50 border-gray-600/50 text-gray-400'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className={`text-3xl mb-2 ${achievement.unlocked ? 'animate-bounce' : 'grayscale'}`}>
+                        {achievement.icon}
+                      </div>
+                      <h4 className="text-sm font-bold mb-1">{achievement.name}</h4>
+                      <p className="text-xs opacity-75">{achievement.description}</p>
+                      {achievement.unlocked && (
+                        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                          +{achievement.xp} XP
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Lesson Filters */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-6">
+                <h4 className="text-xl font-bold text-white">📚 Your Lessons:</h4>
+                <div className="flex space-x-2">
+                  <button 
+                    onClick={() => setSelectedTab('all')}
+                    className={`px-4 py-2 text-sm rounded-xl font-medium transition-all duration-300 ${
+                      selectedTab === 'all' 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                    }`}
+                  >
+                    All ({lessons.length})
+                  </button>
+                  <button 
+                    onClick={() => setSelectedTab('in-progress')}
+                    className={`px-4 py-2 text-sm rounded-xl font-medium transition-all duration-300 ${
+                      selectedTab === 'in-progress' 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                    }`}
+                  >
+                    In Progress ({lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length})
+                  </button>
+                  <button 
+                    onClick={() => setSelectedTab('completed')}
+                    className={`px-4 py-2 text-sm rounded-xl font-medium transition-all duration-300 ${
+                      selectedTab === 'completed' 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                    }`}
+                  >
+                    Completed ({lessons.filter(l => getProgressForLesson(l.id) === 100).length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Lesson Cards - Main Focus */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredLessons.map((lesson) => {
+                  const progress = getProgressForLesson(lesson.id)
+                  const isCompleted = progress === 100
+                  const isStarted = progress > 0
+
+                  return (
+                    <div key={lesson.id} className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-500/30 overflow-hidden transform hover:scale-105">
+                      <div className="p-6 relative">
+                        {/* Lesson Header */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex-1">
+                            <h4 className="text-xl font-bold text-white mb-2">{lesson.title}</h4>
+                            <p className="text-sm text-gray-300 mb-3 line-clamp-2">{lesson.description}</p>
+                          </div>
+                          {isCompleted && (
+                            <div className="flex-shrink-0 ml-2">
+                              <Award className="h-6 w-6 text-yellow-400 animate-pulse" />
+                              <div className="text-xs text-yellow-400 font-bold mt-1">COMPLETE!</div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Lesson Meta */}
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${{
+                            'beginner': 'bg-green-500/20 text-green-400 border border-green-500/30',
+                            'intermediate': 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+                            'advanced': 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          }[lesson.difficulty]}`}>
+                            {lesson.difficulty} {lesson.difficulty === 'beginner' ? '🌱' : lesson.difficulty === 'intermediate' ? '🚀' : '🏆'}
+                          </span>
+                          <span className="text-sm text-gray-400 flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {lesson.estimatedTime}
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        {isStarted && (
+                          <div className="mb-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium text-gray-300">Progress</span>
+                              <span className="text-sm font-bold text-white">{Math.round(progress)}%</span>
+                            </div>
+                            <div className="w-full bg-gray-600/50 rounded-full h-2">
+                              <div 
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-blue-500 to-purple-600'
+                                }`}
+                                style={{ width: `${progress}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Action Button */}
+                        <Link href={`/lesson/${lesson.id}`}>
+                          <button className={`w-full py-3 px-4 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
+                            isCompleted 
+                              ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+                              : isStarted
+                              ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+                              : 'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white'
+                          }`}>
+                            {isCompleted ? '🎉 Review Lesson' : isStarted ? '⚡ Continue Learning' : '🚀 Start Adventure'}
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Achievements View */}
+        {currentView === 'achievements' && (
+          <div>
+            {/* All Achievements */}
+            <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mb-6">🏆 All Your Achievements</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {achievements.map((achievement) => (
+                  <div 
+                    key={achievement.id}
+                    className={`relative p-6 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                      achievement.unlocked 
+                        ? 'bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border-yellow-400/50 text-white' 
+                        : 'bg-gray-700/50 border-gray-600/50 text-gray-400'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className={`text-4xl mb-3 ${achievement.unlocked ? 'animate-bounce' : 'grayscale'}`}>
+                        {achievement.icon}
+                      </div>
+                      <h4 className="text-lg font-bold mb-2">{achievement.name}</h4>
+                      <p className="text-sm opacity-75 mb-3">{achievement.description}</p>
+                      {achievement.unlocked && (
+                        <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                          +{achievement.xp} XP
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Progress Analytics View */}
+        {currentView === 'progress' && (
+          <div>
+            {/* Detailed Learning Analytics */}
+            {/* Course Progress Overview */}
+            <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-6">📋 Course Outline & Progress</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {courseOutline.map((module, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => setCurrentView('lessons')}
+                    className="bg-gray-700/50 hover:bg-gray-600/50 rounded-xl p-6 border border-gray-600/30 cursor-pointer transition-all duration-300 transform hover:scale-105"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-bold text-white">{module.title}</h4>
+                      <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        module.category === 'basics' ? 'bg-green-500/20 text-green-400' :
+                        module.category === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {module.category.toUpperCase()}
+                      </div>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-gray-300">Progress</span>
+                        <span className="text-sm font-bold text-white">
+                          {module.completedCount}/{module.totalCount} lessons
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-600/50 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            module.completedCount === module.totalCount 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-600' 
+                              : 'bg-gradient-to-r from-blue-500 to-purple-600'
+                          }`}
+                          style={{ width: `${(module.completedCount / module.totalCount) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Status */}
+                    <div className="flex items-center justify-between">
+                      {module.completedCount === module.totalCount ? (
+                        <span className="flex items-center text-green-400 text-sm font-medium">
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Complete
+                        </span>
+                      ) : module.completedCount > 0 ? (
+                        <span className="flex items-center text-yellow-400 text-sm font-medium">
+                          <Clock className="h-4 w-4 mr-1" />
+                          In Progress
+                        </span>
+                      ) : (
+                        <span className="flex items-center text-gray-400 text-sm font-medium">
+                          <BookOpen className="h-4 w-4 mr-1" />
+                          Not Started
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-400">Click to view lessons</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Detailed Learning Analytics Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
             <div className="flex items-center mb-3">
               <Star className="h-8 w-8 text-purple-100 animate-pulse" />

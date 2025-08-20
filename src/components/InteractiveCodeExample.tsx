@@ -29,7 +29,7 @@ export default function InteractiveCodeExample({
     
     try {
       // Simulate code execution for common examples
-      let result = simulateExecution(currentCode)
+      const result = simulateExecution(currentCode)
       
       setTimeout(() => {
         setOutput(result)
@@ -53,7 +53,7 @@ export default function InteractiveCodeExample({
       if (trimmedLine.startsWith('print(')) {
         const match = trimmedLine.match(/print\((.*)\)/)
         if (match) {
-          let content = match[1]
+          const content = match[1]
           
           // Handle different print formats
           if (content.startsWith('"') && content.endsWith('"')) {
