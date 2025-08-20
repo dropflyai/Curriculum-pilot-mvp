@@ -61,6 +61,19 @@ In Python, we create these "boxes" like this:
 - score = 95 (stores numbers for games or grades)  
 - is_ready = True (stores yes/no decisions)
 
+<interactive-example>
+code: # Try creating your own variables!
+user_name = "Alex"
+score = 95
+is_ready = True
+
+print(f"Student: {user_name}")
+print(f"Score: {score}")
+print(f"Ready to learn: {is_ready}")
+title: Variable Creation Example
+description: Modify the values and see how variables work!
+</interactive-example>
+
 ---
 
 🎤 CONCEPT #2: Getting Input (Asking Questions)
@@ -75,6 +88,16 @@ Examples:
 - question = input("What's your favorite color? ")
 - name = input("What should I call you? ")
 
+<interactive-example>
+code: # Try different input questions!
+favorite_color = input("What's your favorite color? ")
+age = input("How old are you? ")
+print(f"Cool! {favorite_color} is a great color!")
+print(f"And {age} is a perfect age to learn coding!")
+title: Input Function Demo
+description: See how input() captures what users type
+</interactive-example>
+
 ---
 
 📢 CONCEPT #3: Showing Output (Displaying Results)
@@ -88,6 +111,17 @@ Think of print() like a text message you send to a friend. When they text you "W
 Examples:
 - print("Hello there!")
 - print(f"Nice to meet you, {name}!")
+
+<interactive-example>
+code: # Try different print styles!
+name = "CodeFly Student"
+print("Hello there!")
+print("Nice to meet you, " + name + "!")
+print(f"Welcome to CodeFly, {name}!")
+print("🚀 Ready to code? Let's go!")
+title: Print Function Magic
+description: Experiment with different ways to display text
+</interactive-example>
 
 ---
 

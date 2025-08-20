@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { BookOpen, Code, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react'
 import CodeEditor from './CodeEditor'
 import QuizComponent, { QuizResults } from './QuizComponent'
+import InteractiveCodeExample from './InteractiveCodeExample'
 import { saveLessonProgress, getLessonProgress } from '@/lib/progress-storage'
 
 interface LessonSection {
@@ -93,6 +94,76 @@ export default function LessonViewer({ title, description, sections, lessonId, o
 
   const goToSection = (index: number) => {
     setCurrentSection(index)
+  }
+  
+  const renderContentWithInteractiveExamples = (content: string) => {
+    // Split content by interactive examples
+    const parts = content.split(/<interactive-example>([\s\S]*?)<\/interactive-example>/g)
+    
+    return (
+      <div>
+        {parts.map((part, index) => {
+          if (index % 2 === 0) {
+            // Regular content
+            return (
+              <div 
+                key={index}
+                className="content-with-highlights"
+                dangerouslySetInnerHTML={{
+                  __html: part
+                    ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    ?.replace(/🎯 (.*?):/g, '<em>🎯 $1:</em>')
+                    ?.replace(/---/g, '<hr>')
+                    ?.replace(/(\d+\.\s.*?)(?=\n|$)/g, '<div class="formula-step">$1</div>')
+                    ?.replace(/- (.*?)(?=\n|$)/g, '<li>$1</li>')
+                    ?.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')
+                    ?.replace(/\n\n/g, '</p><p>')
+                    ?.replace(/^(.*)$/gm, '<p>$1</p>')
+                    ?.replace(/<p><\/p>/g, '')
+                    ?.replace(/<p>(<hr>)<\/p>/g, '$1')
+                    ?.replace(/<p>(<strong>.*?<\/strong>)<\/p>/g, '$1')
+                    ?.replace(/<p>(<em>.*?<\/em>)<\/p>/g, '$1')
+                    ?.replace(/`(.*?)`/g, '<code>$1</code>') || ''
+                }}
+              />
+            )
+          } else {
+            // Interactive example
+            const lines = part.trim().split('\n')
+            let code = ''
+            let title = 'Try this code:'
+            let description = ''
+            
+            let currentSection = 'code'
+            for (const line of lines) {
+              if (line.startsWith('title:')) {
+                title = line.replace('title:', '').trim()
+                currentSection = 'title'
+              } else if (line.startsWith('description:')) {
+                description = line.replace('description:', '').trim()
+                currentSection = 'description'
+              } else if (line.startsWith('code:')) {
+                code = line.replace('code:', '').trim()
+                currentSection = 'code'
+              } else if (currentSection === 'code') {
+                code += (code ? '\n' : '') + line
+              } else if (currentSection === 'description') {
+                description += (description ? ' ' : '') + line.trim()
+              }
+            }
+            
+            return (
+              <InteractiveCodeExample
+                key={index}
+                code={code}
+                title={title}
+                description={description}
+              />
+            )
+          }
+        })}
+      </div>
+    )
   }
 
   return (
@@ -199,25 +270,7 @@ export default function LessonViewer({ title, description, sections, lessonId, o
           {currentSectionData.type === 'content' && (
             <div className="prose max-w-none">
               <div className="text-gray-200 leading-relaxed text-lg font-medium bg-gray-700/30 rounded-xl p-8 border border-gray-600/30">
-                <div 
-                  className="content-with-highlights"
-                  dangerouslySetInnerHTML={{
-                    __html: currentSectionData.content
-                      ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      ?.replace(/🎯 (.*?):/g, '<em>🎯 $1:</em>')
-                      ?.replace(/---/g, '<hr>')
-                      ?.replace(/(\d+\.\s.*?)(?=\n|$)/g, '<div class="formula-step">$1</div>')
-                      ?.replace(/- (.*?)(?=\n|$)/g, '<li>$1</li>')
-                      ?.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')
-                      ?.replace(/\n\n/g, '</p><p>')
-                      ?.replace(/^(.*)$/gm, '<p>$1</p>')
-                      ?.replace(/<p><\/p>/g, '')
-                      ?.replace(/<p>(<hr>)<\/p>/g, '$1')
-                      ?.replace(/<p>(<strong>.*?<\/strong>)<\/p>/g, '$1')
-                      ?.replace(/<p>(<em>.*?<\/em>)<\/p>/g, '$1')
-                      ?.replace(/`(.*?)`/g, '<code>$1</code>') || ''
-                  }}
-                />
+                {renderContentWithInteractiveExamples(currentSectionData.content || '')}
               </div>
               
               {!sectionProgress[currentSection] && (
@@ -247,6 +300,7 @@ export default function LessonViewer({ title, description, sections, lessonId, o
                 initialCode={currentSectionData.codeChallenge.startingCode}
                 testCode={currentSectionData.codeChallenge.tests.join('\n')}
                 solution={currentSectionData.codeChallenge.solution}
+                hints={currentSectionData.codeChallenge.hints}
                 onExecutionResult={(result) => {
                   if (result.success) {
                     handleCodeChallengeComplete()
