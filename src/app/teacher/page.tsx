@@ -54,7 +54,7 @@ type FilterType = 'all' | 'active' | 'completed' | 'needs-help' | 'stuck'
 export default function TeacherDashboard() {
   const [students, setStudents] = useState<StudentProgress[]>([])
   const [lessons, setLessons] = useState<Lesson[]>([])
-  const [analytics] = useState<LessonAnalytics[]>([])
+  const [analytics, setAnalytics] = useState<LessonAnalytics[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('all')
   const [searchTerm, setSearchTerm] = useState('')
@@ -92,7 +92,7 @@ export default function TeacherDashboard() {
       if (progressError) throw progressError
 
       // Process enhanced student data
-      const studentsWithProgress = (usersData || []).map((user, index) => {
+      const studentsWithProgress = (usersData || []).map((user) => {
         const userProgress = (progressData || []).filter(p => p.user_id === user.id)
         
         // Calculate current activity based on real data
@@ -130,28 +130,38 @@ export default function TeacherDashboard() {
           }
         }
 
-        // Generate sample code submissions
-        const codeSubmissions = userProgress.map(p => ({
-          lessonId: p.lesson_id,
-          code: `# Student's code for ${p.lesson_id}\nuser_name = input("What's your name? ")\nprint(f"Hello {user_name}!")`,
-          result: (Math.random() > 0.3 ? 'success' : 'error') as 'success' | 'error',
-          timestamp: p.updated_at,
-          errorMessage: Math.random() > 0.7 ? 'NameError: name \'user_nam\' is not defined' : undefined
-        }))
+        // Extract real code submissions from progress data
+        const codeSubmissions = userProgress
+          .filter(p => p.submitted_code)
+          .map(p => ({
+            lessonId: p.lesson_id,
+            code: p.submitted_code || '',
+            result: (p.score && p.score > 0.7 ? 'success' : 'error') as 'success' | 'error',
+            timestamp: p.submitted_at || p.updated_at,
+            errorMessage: p.score && p.score < 0.3 ? 'Code execution failed - check syntax' : undefined
+          }))
 
-        // Generate sample quiz results
-        const quizResults = userProgress.map(p => ({
-          lessonId: p.lesson_id,
-          score: Math.floor(Math.random() * 4) + 1, // 1-4 out of 4
-          totalQuestions: 4,
-          timeSpent: Math.floor(Math.random() * 10) + 3, // 3-13 minutes
-          timestamp: p.updated_at
-        }))
-
-        // For testing: randomly mark some students as having completed lessons
-        if (index % 3 === 0 && userProgress.length > 0) {
-          userProgress[0].status = 'completed'
-        }
+        // Extract real quiz results from progress data
+        const quizResults = userProgress
+          .filter(p => p.quiz_answers && Object.keys(p.quiz_answers).length > 0)
+          .map(p => {
+            const answers = p.quiz_answers as Record<string, { correct?: boolean }>
+            const totalQuestions = Object.keys(answers).length
+            const correctAnswers = Object.values(answers).filter(answer => answer.correct).length
+            
+            // Calculate time spent from progress timing
+            const startTime = p.started_at ? new Date(p.started_at) : new Date(p.created_at)
+            const endTime = new Date(p.updated_at)
+            const timeSpentMinutes = Math.max(3, Math.round((endTime.getTime() - startTime.getTime()) / 60000))
+            
+            return {
+              lessonId: p.lesson_id,
+              score: correctAnswers,
+              totalQuestions,
+              timeSpent: timeSpentMinutes,
+              timestamp: p.updated_at
+            }
+          })
 
         return {
           user,
@@ -165,35 +175,63 @@ export default function TeacherDashboard() {
       setStudents(studentsWithProgress)
       setLessons(lessonsData || [])
 
-      // Calculate lesson analytics
+      // Calculate lesson analytics from real data
       const lessonAnalytics = (lessonsData || []).map(lesson => {
         const lessonProgress = studentsWithProgress.flatMap(s => 
           s.progress.filter(p => p.lesson_id === lesson.id)
         )
         const completedCount = lessonProgress.filter(p => p.status === 'completed').length
         const strugglingCount = studentsWithProgress.filter(s => 
-          s.currentActivity?.lessonId === lesson.id && s.currentActivity && s.currentActivity.timeSpent > 20
+          s.currentActivity?.lessonId === lesson.id && s.currentActivity && s.currentActivity.timeSpent > 25
         ).length
+
+        // Calculate average time spent from real data
+        const timesSpent = lessonProgress
+          .map(p => {
+            if (p.started_at && p.completed_at) {
+              return (new Date(p.completed_at).getTime() - new Date(p.started_at).getTime()) / 60000
+            }
+            return null
+          })
+          .filter(t => t !== null)
+        
+        const avgTimeSpent = timesSpent.length > 0 
+          ? Math.round(timesSpent.reduce((sum, time) => sum + time, 0) / timesSpent.length)
+          : 30 // Default estimate
+
+        // Extract common errors from code submissions
+        const allCodeSubmissions = studentsWithProgress.flatMap(s => s.codeSubmissions || [])
+        const errorMessages = allCodeSubmissions
+          .filter(sub => sub.result === 'error' && sub.errorMessage)
+          .map(sub => sub.errorMessage!)
+        
+        const commonErrors = errorMessages.length > 0 
+          ? [...new Set(errorMessages)].slice(0, 3)
+          : ['No errors recorded yet']
+
+        // Calculate quiz performance from real data
+        const allQuizResults = studentsWithProgress.flatMap(s => s.quizResults || [])
+        const lessonQuizResults = allQuizResults.filter(quiz => quiz.lessonId === lesson.id)
+        
+        const avgScore = lessonQuizResults.length > 0
+          ? lessonQuizResults.reduce((sum, quiz) => sum + (quiz.score / quiz.totalQuestions), 0) / lessonQuizResults.length
+          : 0
 
         return {
           lessonId: lesson.id,
           title: lesson.title,
-          avgTimeSpent: 25 + Math.floor(Math.random() * 20), // 25-45 minutes
+          avgTimeSpent,
           completionRate: studentsWithProgress.length > 0 ? (completedCount / studentsWithProgress.length) * 100 : 0,
           strugglingStudents: strugglingCount,
-          commonErrors: [
-            'NameError: name \'user_nam\' is not defined',
-            'SyntaxError: invalid syntax',
-            'IndentationError: expected an indented block'
-          ],
+          commonErrors,
           quizPerformance: {
-            avgScore: 2.8,
-            hardestQuestion: 'What function displays text on the screen?'
+            avgScore: Math.round(avgScore * 100) / 100,
+            hardestQuestion: lessonQuizResults.length > 0 ? 'Based on quiz data' : 'No quiz data yet'
           }
         }
       })
 
-      // setAnalytics(lessonAnalytics) // Analytics ready for future use
+      setAnalytics(lessonAnalytics)
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {
@@ -441,72 +479,112 @@ export default function TeacherDashboard() {
           </div>
         </div>
 
-        {/* Lesson 1 Performance Analytics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-blue-500/30">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-              <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
-              Lesson 1: Python Basics Analytics 📊
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="bg-blue-900/50 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-blue-200 font-medium">Average Time Spent</span>
-                  <span className="text-blue-100 font-bold">32 minutes</span>
-                </div>
-                <div className="w-full bg-blue-800 rounded-full h-2">
-                  <div className="bg-blue-400 h-2 rounded-full" style={{ width: '64%' }}></div>
-                </div>
-                <p className="text-blue-300 text-sm mt-1">Target: 50 minutes</p>
-              </div>
+        {/* Real-time Performance Analytics */}
+        {analytics.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-blue-500/30">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+                <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
+                {analytics[0]?.title || 'Lesson'} Analytics 📊
+              </h3>
               
-              <div className="bg-green-900/50 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-green-200 font-medium">Quiz Performance</span>
-                  <span className="text-green-100 font-bold">2.8/4.0 avg</span>
+              <div className="space-y-4">
+                <div className="bg-blue-900/50 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-blue-200 font-medium">Average Time Spent</span>
+                    <span className="text-blue-100 font-bold">{analytics[0]?.avgTimeSpent || 0} minutes</span>
+                  </div>
+                  <div className="w-full bg-blue-800 rounded-full h-2">
+                    <div 
+                      className="bg-blue-400 h-2 rounded-full" 
+                      style={{ width: `${Math.min(100, ((analytics[0]?.avgTimeSpent || 0) / 50) * 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-blue-300 text-sm mt-1">Target: 50 minutes</p>
                 </div>
-                <div className="w-full bg-green-800 rounded-full h-2">
-                  <div className="bg-green-400 h-2 rounded-full" style={{ width: '70%' }}></div>
+                
+                <div className="bg-green-900/50 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-green-200 font-medium">Quiz Performance</span>
+                    <span className="text-green-100 font-bold">
+                      {analytics[0]?.quizPerformance.avgScore.toFixed(1) || '0.0'}/4.0 avg
+                    </span>
+                  </div>
+                  <div className="w-full bg-green-800 rounded-full h-2">
+                    <div 
+                      className="bg-green-400 h-2 rounded-full" 
+                      style={{ width: `${((analytics[0]?.quizPerformance.avgScore || 0) / 4) * 100}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-green-300 text-sm mt-1">
+                    {analytics[0]?.quizPerformance.hardestQuestion || 'No quiz data'} 🤔
+                  </p>
                 </div>
-                <p className="text-green-300 text-sm mt-1">Hardest: &quot;What displays text?&quot; 🤔</p>
+                
+                <div className="bg-purple-900/50 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-purple-200 font-medium">Completion Rate</span>
+                    <span className="text-purple-100 font-bold">
+                      {analytics[0]?.completionRate.toFixed(1) || '0.0'}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-purple-800 rounded-full h-2">
+                    <div 
+                      className="bg-purple-400 h-2 rounded-full" 
+                      style={{ width: `${analytics[0]?.completionRate || 0}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-purple-300 text-sm mt-1">
+                    {analytics[0]?.strugglingStudents || 0} students need help
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-red-500/30">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-              <Code className="h-5 w-5 mr-2 text-red-400" />
-              Common Code Issues 🐛
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="bg-red-900/50 rounded-lg p-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-red-200 font-medium">NameError: &apos;user_nam&apos;</span>
-                  <span className="text-red-100 text-sm">8 students</span>
-                </div>
-                <p className="text-red-300 text-xs mt-1">💡 Typo in variable name</p>
-              </div>
+            <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-red-500/30">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+                <Code className="h-5 w-5 mr-2 text-red-400" />
+                Common Code Issues 🐛
+              </h3>
               
-              <div className="bg-orange-900/50 rounded-lg p-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-orange-200 font-medium">SyntaxError: invalid syntax</span>
-                  <span className="text-orange-100 text-sm">5 students</span>
-                </div>
-                <p className="text-orange-300 text-xs mt-1">💡 Missing quotes or parentheses</p>
-              </div>
-              
-              <div className="bg-yellow-900/50 rounded-lg p-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-yellow-200 font-medium">IndentationError</span>
-                  <span className="text-yellow-100 text-sm">3 students</span>
-                </div>
-                <p className="text-yellow-300 text-xs mt-1">💡 Python spacing rules</p>
+              <div className="space-y-3">
+                {analytics[0]?.commonErrors.slice(0, 3).map((error, index) => (
+                  <div key={index} className={`rounded-lg p-3 ${
+                    index === 0 ? 'bg-red-900/50' : 
+                    index === 1 ? 'bg-orange-900/50' : 'bg-yellow-900/50'
+                  }`}>
+                    <div className="flex justify-between items-center">
+                      <span className={`font-medium ${
+                        index === 0 ? 'text-red-200' : 
+                        index === 1 ? 'text-orange-200' : 'text-yellow-200'
+                      }`}>
+                        {error}
+                      </span>
+                      <span className={`text-sm ${
+                        index === 0 ? 'text-red-100' : 
+                        index === 1 ? 'text-orange-100' : 'text-yellow-100'
+                      }`}>
+                        Active issue
+                      </span>
+                    </div>
+                    <p className={`text-xs mt-1 ${
+                      index === 0 ? 'text-red-300' : 
+                      index === 1 ? 'text-orange-300' : 'text-yellow-300'
+                    }`}>
+                      💡 {index === 0 ? 'Check variable spelling' : 
+                           index === 1 ? 'Syntax check needed' : 'Review code structure'}
+                    </p>
+                  </div>
+                )) || (
+                  <div className="bg-green-900/50 rounded-lg p-3">
+                    <div className="text-green-200 font-medium">No errors recorded</div>
+                    <p className="text-green-300 text-xs mt-1">🎉 Students are doing great!</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Student Progress Table */}
         <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden border border-purple-500/30">
