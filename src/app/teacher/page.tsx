@@ -95,52 +95,38 @@ export default function TeacherDashboard() {
       const studentsWithProgress = (usersData || []).map((user, index) => {
         const userProgress = (progressData || []).filter(p => p.user_id === user.id)
         
-        // Calculate current activity (simulated for demo with varied states)
+        // Calculate current activity based on real data
         let currentActivity = undefined
         if (userProgress.length > 0) {
-          // Create different scenarios for testing filters
-          const scenario = index % 5
-          switch (scenario) {
-            case 0: // Active student (recently active, normal time)
-              currentActivity = {
-                lessonId: userProgress[0].lesson_id,
-                sectionType: 'code',
-                timeSpent: Math.floor(Math.random() * 20) + 5, // 5-25 minutes
-                lastSeen: new Date(Date.now() - Math.random() * 180000).toISOString() // Last 3 minutes
-              }
-              break
-            case 1: // Needs help (stuck 25-35 minutes)
-              currentActivity = {
-                lessonId: userProgress[0].lesson_id,
-                sectionType: 'code',
-                timeSpent: Math.floor(Math.random() * 10) + 25, // 25-35 minutes
-                lastSeen: new Date(Date.now() - Math.random() * 300000).toISOString() // Last 5 minutes
-              }
-              break
-            case 2: // Stuck (over 35 minutes)
-              currentActivity = {
-                lessonId: userProgress[0].lesson_id,
-                sectionType: 'code',
-                timeSpent: Math.floor(Math.random() * 20) + 35, // 35-55 minutes
-                lastSeen: new Date(Date.now() - Math.random() * 600000).toISOString() // Last 10 minutes
-              }
-              break
-            case 3: // Working (active, moderate time)
-              currentActivity = {
-                lessonId: userProgress[0].lesson_id,
-                sectionType: 'quiz',
-                timeSpent: Math.floor(Math.random() * 15) + 10, // 10-25 minutes
-                lastSeen: new Date(Date.now() - Math.random() * 900000).toISOString() // Last 15 minutes
-              }
-              break
-            case 4: // Offline/inactive (no recent activity)
-              currentActivity = {
-                lessonId: userProgress[0].lesson_id,
-                sectionType: 'content',
-                timeSpent: Math.floor(Math.random() * 30) + 5, // 5-35 minutes
-                lastSeen: new Date(Date.now() - Math.random() * 7200000).toISOString() // Last 2 hours
-              }
-              break
+          // Get the most recently updated progress record
+          const latestProgress = userProgress.reduce((latest, current) => 
+            new Date(current.updated_at) > new Date(latest.updated_at) ? current : latest
+          )
+
+          // Determine activity based on progress status and timing
+          const lastUpdate = new Date(latestProgress.updated_at)
+          const timeSinceUpdate = (Date.now() - lastUpdate.getTime()) / 60000 // minutes
+
+          // Only show as active if updated within last 2 hours and not completed
+          if (timeSinceUpdate < 120 && latestProgress.status !== 'completed') {
+            // Calculate time spent based on when they started vs last update
+            const startTime = new Date(latestProgress.started_at || latestProgress.created_at)
+            const timeSpentMinutes = Math.max(1, (lastUpdate.getTime() - startTime.getTime()) / 60000)
+
+            // Determine section type based on progress status
+            let sectionType = 'content'
+            if (latestProgress.submitted_code) {
+              sectionType = 'code'
+            } else if (latestProgress.quiz_answers && Object.keys(latestProgress.quiz_answers).length > 0) {
+              sectionType = 'quiz'
+            }
+
+            currentActivity = {
+              lessonId: latestProgress.lesson_id,
+              sectionType,
+              timeSpent: Math.round(timeSpentMinutes),
+              lastSeen: latestProgress.updated_at
+            }
           }
         }
 

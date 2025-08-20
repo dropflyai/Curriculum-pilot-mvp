@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllLessons, Lesson } from '@/lib/lesson-data'
-import { BookOpen, Clock, Award, TrendingUp, User, LogOut } from 'lucide-react'
+import { BookOpen, Clock, Award, TrendingUp, User, LogOut, Star, Target, Trophy, Flame, Brain, Timer, CheckCircle, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
+import CelebrationEffect from '@/components/CelebrationEffect'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -26,6 +27,46 @@ export default function Dashboard() {
   })
   const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
+  
+  // Gamification Data
+  const [userXP] = useState(1250)
+  const [currentStreak] = useState(5)
+  const [weeklyGoal] = useState({ target: 4, completed: 2 })
+  const [totalLearningTime] = useState(8.5) // hours this week
+  const [showCelebration, setShowCelebration] = useState(false)
+  const [celebrationMessage, setCelebrationMessage] = useState('')
+  const [recentActivity] = useState([
+    { action: 'Completed Magic 8-Ball Project', time: '2 hours ago', xp: 150, type: 'lesson' },
+    { action: 'Earned Quiz Champion badge', time: '1 day ago', xp: 100, type: 'achievement' },
+    { action: 'Started Variables lesson', time: '2 days ago', xp: 50, type: 'lesson' }
+  ])
+  
+  // Achievement System
+  const [achievements] = useState([
+    { id: 'first-lesson', name: 'First Steps', description: 'Complete your first lesson', icon: '🎯', unlocked: true, xp: 100 },
+    { id: 'quiz-champion', name: 'Quiz Champion', description: 'Score 90% or higher on a quiz', icon: '🧠', unlocked: true, xp: 150 },
+    { id: 'speed-coder', name: 'Speed Coder', description: 'Complete a coding challenge in under 5 minutes', icon: '⚡', unlocked: false, xp: 200 },
+    { id: 'python-master', name: 'Python Master', description: 'Complete 5 Python lessons', icon: '🐍', unlocked: false, xp: 300 },
+    { id: 'streak-warrior', name: 'Streak Warrior', description: 'Maintain a 7-day learning streak', icon: '🔥', unlocked: false, xp: 250 },
+    { id: 'perfect-student', name: 'Perfect Student', description: 'Get 100% on 3 quizzes in a row', icon: '⭐', unlocked: false, xp: 400 }
+  ])
+  
+  // Learning Analytics
+  const [learningAnalytics] = useState({
+    timePerConcept: {
+      'variables': 12, // minutes
+      'loops': 18,
+      'functions': 15,
+      'input-output': 8
+    },
+    commonErrors: [
+      { type: 'SyntaxError', count: 8, concept: 'print statements' },
+      { type: 'NameError', count: 5, concept: 'variable names' },
+      { type: 'IndentationError', count: 3, concept: 'code blocks' }
+    ],
+    weakSpots: ['loops', 'functions'],
+    strengths: ['variables', 'input-output']
+  })
 
   useEffect(() => {
     // TEMPORARY: Allow dashboard access for testing
@@ -61,6 +102,34 @@ export default function Dashboard() {
     if (scores.length === 0) return 0
     return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
   }
+  
+  // Gamification Helper Functions
+  const getXPLevel = () => {
+    return Math.floor(userXP / 500) + 1
+  }
+  
+  const getXPProgress = () => {
+    const currentLevel = getXPLevel()
+    const xpForCurrentLevel = (currentLevel - 1) * 500
+    const xpForNextLevel = currentLevel * 500
+    const progressInLevel = userXP - xpForCurrentLevel
+    const totalXPNeededForLevel = xpForNextLevel - xpForCurrentLevel
+    return (progressInLevel / totalXPNeededForLevel) * 100
+  }
+  
+  const getUnlockedAchievements = () => {
+    return achievements.filter(a => a.unlocked)
+  }
+  
+  const getNextRecommendedLesson = () => {
+    // Find first lesson that's not completed
+    const incompleteLesson = lessons.find(lesson => getProgressForLesson(lesson.id) < 100)
+    return incompleteLesson || lessons[0]
+  }
+  
+  const getWeeklyGoalProgress = () => {
+    return (weeklyGoal.completed / weeklyGoal.target) * 100
+  }
 
   const getLessonsByTab = () => {
     let filteredLessons = lessons
@@ -92,6 +161,27 @@ export default function Dashboard() {
   }
 
   const filteredLessons = getLessonsByTab()
+  const unlockedAchievements = getUnlockedAchievements()
+  const nextLesson = getNextRecommendedLesson()
+  const xpLevel = getXPLevel()
+  const xpProgress = getXPProgress()
+  
+  // Celebration triggers
+  const triggerCelebration = (message: string) => {
+    setCelebrationMessage(message)
+    setShowCelebration(true)
+  }
+  
+  // Simulate celebration on level up or achievement unlock (for demo)
+  useEffect(() => {
+    // This would normally be triggered by actual events
+    if (unlockedAchievements.length >= 2 && !showCelebration) {
+      // Show celebration for having achievements
+      setTimeout(() => {
+        triggerCelebration('🎉 You\'re becoming a coding champion!')
+      }, 2000)
+    }
+  }, [unlockedAchievements.length, showCelebration])
 
   if (loading) {
     return (
@@ -152,56 +242,202 @@ export default function Dashboard() {
           <p className="text-xl text-gray-300 font-medium">Ready to code? Let&apos;s make some programming magic happen! ✨</p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BookOpen className="h-8 w-8 text-blue-100 animate-pulse" />
-              </div>
+        {/* Enhanced Stats Cards with Gamification */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* XP & Level Card */}
+          <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
+            <div className="flex items-center mb-3">
+              <Star className="h-8 w-8 text-purple-100 animate-pulse" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-blue-100">Total Lessons</p>
-                <p className="text-3xl font-bold text-white">{lessons.length}</p>
+                <p className="text-sm font-medium text-purple-100">Level {xpLevel}</p>
+                <p className="text-3xl font-bold text-white">{userXP.toLocaleString()} XP</p>
+              </div>
+            </div>
+            <div className="w-full bg-purple-400/30 rounded-full h-2">
+              <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: `${xpProgress}%` }}></div>
+            </div>
+            <p className="text-xs text-purple-100 mt-1">{Math.round(500 - (userXP % 500))} XP to next level</p>
+          </div>
+
+          {/* Learning Streak Card */}
+          <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center">
+              <Flame className="h-8 w-8 text-orange-100 animate-bounce" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-orange-100">Learning Streak</p>
+                <p className="text-3xl font-bold text-white">{currentStreak} days</p>
+                <p className="text-xs text-orange-100">🔥 Keep it going!</p>
               </div>
             </div>
           </div>
 
+          {/* Weekly Goal Card */}
           <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <TrendingUp className="h-8 w-8 text-green-100 animate-bounce" />
-              </div>
+            <div className="flex items-center mb-3">
+              <Target className="h-8 w-8 text-green-100 animate-pulse" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-green-100">Completed</p>
-                <p className="text-3xl font-bold text-white">
-                  {Object.values(userProgress).filter(p => p === 100).length}
-                </p>
+                <p className="text-sm font-medium text-green-100">Weekly Goal</p>
+                <p className="text-3xl font-bold text-white">{weeklyGoal.completed}/{weeklyGoal.target}</p>
+              </div>
+            </div>
+            <div className="w-full bg-green-400/30 rounded-full h-2">
+              <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: `${getWeeklyGoalProgress()}%` }}></div>
+            </div>
+            <p className="text-xs text-green-100 mt-1">{weeklyGoal.target - weeklyGoal.completed} lessons to go</p>
+          </div>
+
+          {/* Learning Time Card */}
+          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center">
+              <Timer className="h-8 w-8 text-blue-100 animate-spin" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-blue-100">This Week</p>
+                <p className="text-3xl font-bold text-white">{totalLearningTime}h</p>
+                <p className="text-xs text-blue-100">📚 Learning time</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Achievement Showcase */}
+        <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">🏆 Your Achievements</h3>
+            <div className="text-sm text-gray-300 bg-gray-700/50 px-3 py-1 rounded-full">
+              {unlockedAchievements.length} of {achievements.length} unlocked
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {achievements.map((achievement) => (
+              <div 
+                key={achievement.id}
+                className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                  achievement.unlocked 
+                    ? 'bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border-yellow-400/50 text-white' 
+                    : 'bg-gray-700/50 border-gray-600/50 text-gray-400'
+                }`}
+              >
+                <div className="text-center">
+                  <div className={`text-3xl mb-2 ${achievement.unlocked ? 'animate-bounce' : 'grayscale'}`}>
+                    {achievement.icon}
+                  </div>
+                  <h4 className="text-sm font-bold mb-1">{achievement.name}</h4>
+                  <p className="text-xs opacity-75">{achievement.description}</p>
+                  {achievement.unlocked && (
+                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                      +{achievement.xp}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Actions & Recommendations */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Next Recommended Lesson */}
+          <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+            <h3 className="text-xl font-bold text-purple-300 mb-4 flex items-center">
+              <Sparkles className="h-6 w-6 mr-2 animate-pulse" />
+              🎯 Recommended Next
+            </h3>
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-4 border border-blue-500/30">
+              <h4 className="text-lg font-bold text-white mb-2">{nextLesson.title}</h4>
+              <p className="text-gray-300 mb-3">{nextLesson.description}</p>
+              <div className="flex items-center justify-between">
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${getDifficultyColor(nextLesson.difficulty)}`}>
+                  {nextLesson.difficulty}
+                </span>
+                <Link
+                  href={`/lesson/${nextLesson.id}`}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-bold text-sm"
+                >
+                  Continue Learning! 🚀
+                </Link>
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Clock className="h-8 w-8 text-yellow-100 animate-spin" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-yellow-100">In Progress</p>
-                <p className="text-3xl font-bold text-white">
-                  {Object.values(userProgress).filter(p => p > 0 && p < 100).length}
-                </p>
-              </div>
+          {/* Recent Activity Feed */}
+          <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+            <h3 className="text-xl font-bold text-green-300 mb-4 flex items-center">
+              <Clock className="h-6 w-6 mr-2 animate-pulse" />
+              📈 Recent Activity
+            </h3>
+            <div className="space-y-3">
+              {recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-700/50 rounded-lg p-3 border border-gray-600/30">
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 rounded-full mr-3 ${
+                      activity.type === 'lesson' ? 'bg-blue-500' :
+                      activity.type === 'achievement' ? 'bg-yellow-500' : 'bg-green-500'
+                    } animate-pulse`}></div>
+                    <div>
+                      <p className="text-white font-medium text-sm">{activity.action}</p>
+                      <p className="text-gray-400 text-xs">{activity.time}</p>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    +{activity.xp} XP
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
 
-          <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Award className="h-8 w-8 text-purple-100 animate-pulse" />
+        {/* Learning Analytics */}
+        <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6 flex items-center">
+            <Brain className="h-7 w-7 mr-3 text-blue-400 animate-pulse" />
+            🧠 Your Learning Insights
+          </h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Strengths & Weak Spots */}
+            <div>
+              <h4 className="text-lg font-bold text-green-300 mb-3">💪 Your Strengths</h4>
+              <div className="space-y-2 mb-4">
+                {learningAnalytics.strengths.map((strength, index) => (
+                  <div key={index} className="bg-green-900/30 border border-green-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-300 font-medium capitalize">{strength}</span>
+                      <CheckCircle className="h-5 w-5 text-green-400" />
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-purple-100">Avg Score</p>
-                <p className="text-3xl font-bold text-white">{getAverageScore()}%</p>
+              
+              <h4 className="text-lg font-bold text-orange-300 mb-3">⚠️ Areas to Practice</h4>
+              <div className="space-y-2">
+                {learningAnalytics.weakSpots.map((weakness, index) => (
+                  <div key={index} className="bg-orange-900/30 border border-orange-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-orange-300 font-medium capitalize">{weakness}</span>
+                      <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-3 py-1 rounded-full hover:shadow-lg transition-all duration-300 font-bold">
+                        Practice More 💪
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Common Errors */}
+            <div>
+              <h4 className="text-lg font-bold text-red-300 mb-3">🐛 Common Errors to Watch</h4>
+              <div className="space-y-2">
+                {learningAnalytics.commonErrors.map((error, index) => (
+                  <div key={index} className="bg-red-900/30 border border-red-500/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-red-300 font-medium">{error.type}</span>
+                      <span className="text-red-400 text-sm">{error.count} times</span>
+                    </div>
+                    <p className="text-gray-400 text-sm">in {error.concept}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -395,23 +631,39 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Recent Activity \ud83d\udcc8</h3>
+        {/* Motivational Footer */}
+        <div className="bg-gradient-to-r from-purple-900/90 to-pink-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-purple-500/30">
+          <div className="px-6 py-4 border-b border-purple-500/30">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent flex items-center">
+              <Trophy className="h-6 w-6 mr-2 text-yellow-400 animate-bounce" />
+              🌟 Keep Up the Amazing Work!
+            </h3>
           </div>
           <div className="p-6">
-            <div className="text-center py-8">
-              <div className="relative inline-block">
-                <Clock className="h-16 w-16 mx-auto mb-4 text-indigo-300 animate-spin" />
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-pulse"></div>
+            <div className="text-center">
+              <div className="relative inline-block mb-4">
+                <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                  <span className="text-3xl">🚀</span>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-bounce">
+                  <span className="text-sm">✨</span>
+                </div>
               </div>
-              <p className="text-lg font-semibold text-white mb-2">Ready to start coding? \ud83d\ude80</p>
-              <p className="text-sm text-gray-300 bg-gradient-to-r from-blue-900/50 to-purple-900/50 px-4 py-2 rounded-lg inline-block border border-purple-500/30">Pick a lesson above and let your coding adventure begin!</p>
+              <p className="text-lg font-semibold text-white mb-2">You&apos;re on fire! Level {xpLevel} coder! 🔥</p>
+              <p className="text-sm text-purple-200 bg-gradient-to-r from-purple-900/50 to-pink-900/50 px-4 py-2 rounded-lg inline-block border border-purple-500/30">
+                {currentStreak} day streak • {userXP.toLocaleString()} XP earned • {unlockedAchievements.length} achievements unlocked
+              </p>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Celebration Effect */}
+      <CelebrationEffect 
+        trigger={showCelebration} 
+        message={celebrationMessage}
+        onComplete={() => setShowCelebration(false)}
+      />
     </div>
   )
 }
