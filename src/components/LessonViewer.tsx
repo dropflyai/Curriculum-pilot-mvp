@@ -5,6 +5,9 @@ import { BookOpen, Code, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react
 import CodeEditor from './CodeEditor'
 import QuizComponent, { QuizResults } from './QuizComponent'
 import InteractiveCodeExample from './InteractiveCodeExample'
+import AITeacherChat from './AITeacherChat'
+import InteractiveCodingPlayground from './InteractiveCodingPlayground'
+import AdaptiveLearningEngine from './AdaptiveLearningEngine'
 import { saveLessonProgress, getLessonProgress } from '@/lib/progress-storage'
 
 interface LessonSection {
@@ -39,6 +42,8 @@ export default function LessonViewer({ title, description, sections, lessonId, o
   const [sectionProgress, setSectionProgress] = useState<Record<number, boolean>>({})
   const [quizResults, setQuizResults] = useState<Record<number, QuizResults>>({})
   const [codeAttempts, setCodeAttempts] = useState<Record<number, string>>({})
+  const [showPremiumFeatures, setShowPremiumFeatures] = useState(false)
+  const [currentCode, setCurrentCode] = useState('')
 
   const currentSectionData = sections[currentSection]
   const progress = (Object.keys(sectionProgress).length / sections.length) * 100
@@ -310,33 +315,72 @@ export default function LessonViewer({ title, description, sections, lessonId, o
 
           {/* Code Challenge Section */}
           {currentSectionData.type === 'code' && currentSectionData.codeChallenge && (
-            <div>
-              <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2">Challenge:</h3>
-                <p className="text-blue-800">{currentSectionData.codeChallenge.description}</p>
+            <div className="space-y-6">
+              {/* Enhanced Premium Toggle */}
+              <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-6 border border-purple-500/30">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">🚀 Premium Interactive Experience</h3>
+                  <p className="text-purple-200">Unlock AI-powered coding with real-time assistance and adaptive learning</p>
+                </div>
+                <button
+                  onClick={() => setShowPremiumFeatures(!showPremiumFeatures)}
+                  className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
+                    showPremiumFeatures 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-500/30'
+                      : 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-purple-500/30'
+                  }`}
+                >
+                  {showPremiumFeatures ? '✨ Premium Active' : '🔓 Activate Premium'}
+                </button>
               </div>
-              
-              <CodeEditor
-                initialCode={currentSectionData.codeChallenge.startingCode}
-                testCode={currentSectionData.codeChallenge.tests.join('\n')}
-                solution={currentSectionData.codeChallenge.solution}
-                hints={currentSectionData.codeChallenge.hints || []}
-                onExecutionResult={(result) => {
-                  if (result.success) {
-                    handleCodeChallengeComplete()
-                  }
-                }}
-                onCodeChange={(code) => {
-                  // Auto-save code as user types (debounced)
-                  if (lessonId) {
-                    const timeoutId = setTimeout(() => {
-                      setCodeAttempts(prev => ({ ...prev, [currentSection]: code }))
-                      saveLessonProgress(lessonId, currentSection, sectionProgress[currentSection] || false, { codeAttempt: code })
-                    }, 1000)
-                    return () => clearTimeout(timeoutId)
-                  }
-                }}
-              />
+
+              {showPremiumFeatures ? (
+                /* Premium Interactive Coding Playground */
+                <InteractiveCodingPlayground
+                  initialChallenge={{
+                    title: currentSectionData.title,
+                    description: currentSectionData.codeChallenge.description,
+                    startingCode: currentSectionData.codeChallenge.startingCode,
+                    goal: `Complete this challenge: ${currentSectionData.codeChallenge.description}`,
+                    hints: currentSectionData.codeChallenge.hints || []
+                  }}
+                  onComplete={(code, attempts) => {
+                    setCurrentCode(code)
+                    handleCodeChallengeComplete(code)
+                  }}
+                />
+              ) : (
+                /* Standard Code Editor */
+                <div>
+                  <div className="mb-4 p-4 bg-gradient-to-r from-blue-900/50 to-indigo-900/50 rounded-lg border border-blue-500/30">
+                    <h3 className="font-semibold text-blue-200 mb-2">Challenge:</h3>
+                    <p className="text-blue-100">{currentSectionData.codeChallenge.description}</p>
+                  </div>
+                  
+                  <CodeEditor
+                    initialCode={currentSectionData.codeChallenge.startingCode}
+                    testCode={currentSectionData.codeChallenge.tests.join('\n')}
+                    solution={currentSectionData.codeChallenge.solution}
+                    hints={currentSectionData.codeChallenge.hints || []}
+                    onExecutionResult={(result) => {
+                      if (result.success) {
+                        handleCodeChallengeComplete()
+                      }
+                    }}
+                    onCodeChange={(code) => {
+                      setCurrentCode(code)
+                      // Auto-save code as user types (debounced)
+                      if (lessonId) {
+                        const timeoutId = setTimeout(() => {
+                          setCodeAttempts(prev => ({ ...prev, [currentSection]: code }))
+                          saveLessonProgress(lessonId, currentSection, sectionProgress[currentSection] || false, { codeAttempt: code })
+                        }, 1000)
+                        return () => clearTimeout(timeoutId)
+                      }
+                    }}
+                  />
+                </div>
+              )}
             </div>
           )}
 
@@ -399,6 +443,18 @@ export default function LessonViewer({ title, description, sections, lessonId, o
         </button>
       </div>
 
+      {/* Adaptive Learning Engine - Always Visible */}
+      <div className="mt-8">
+        <AdaptiveLearningEngine
+          studentId="demo-student"
+          currentLesson={lessonId || 'lesson-1'}
+          onRecommendation={(recommendation) => {
+            console.log('AI Recommendation:', recommendation)
+            // Could trigger specific actions based on recommendation type
+          }}
+        />
+      </div>
+
       {/* Enhanced Lesson Completion Celebration */}
       {Object.keys(sectionProgress).length === sections.length && (
         <div className="mt-8 p-8 bg-gradient-to-r from-green-100 via-blue-100 to-purple-100 rounded-2xl border-2 border-green-300 shadow-xl">
@@ -444,6 +500,17 @@ export default function LessonViewer({ title, description, sections, lessonId, o
           )}
         </div>
       )}
+
+      {/* AI Teacher Chat - Fixed Position */}
+      <AITeacherChat
+        lessonContext={`${title}: ${description}`}
+        currentCode={currentCode}
+        onCodeSuggestion={(code) => {
+          setCurrentCode(code)
+          console.log('AI suggested code:', code)
+        }}
+        studentProgress={Math.round(progress)}
+      />
     </div>
   )
 }
