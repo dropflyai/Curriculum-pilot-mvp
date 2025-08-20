@@ -88,26 +88,65 @@ body {
 }
 
 /* Educational Content Styling */
+.content-with-highlights {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: 1.1em;
+  color: #E5E7EB;
+}
+
+/* Paragraph spacing */
+.content-with-highlights p {
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+/* Section dividers */
+.content-with-highlights hr {
+  border: none;
+  border-top: 2px solid rgba(147, 51, 234, 0.3);
+  margin: 24px 0;
+  border-radius: 2px;
+}
+
+/* Concept headers with emojis */
 .content-with-highlights strong {
   background: linear-gradient(45deg, #60A5FA, #A78BFA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 800;
-  font-size: 1.1em;
+  font-size: 1.2em;
+  display: block;
+  margin: 20px 0 12px 0;
 }
 
+/* Mission statements and key points */
 .content-with-highlights em {
   color: #34D399;
   font-style: normal;
   font-weight: 600;
   background: rgba(52, 211, 153, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: 1px solid rgba(52, 211, 153, 0.3);
+  display: block;
+  margin: 16px 0;
 }
 
-/* Key concepts highlighting */
+/* Example code snippets */
+.content-with-highlights code {
+  background: linear-gradient(45deg, #1F2937, #374151);
+  color: #10B981;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 0.95em;
+}
+
+/* Question prompts and examples */
 .content-with-highlights ul {
   background: rgba(59, 130, 246, 0.1);
   border-left: 4px solid #3B82F6;
@@ -119,26 +158,48 @@ body {
 .content-with-highlights ul li {
   color: #E5E7EB;
   margin: 8px 0;
-  font-size: 1.1em;
+  font-size: 1.05em;
   line-height: 1.6;
 }
 
-/* Code snippets in content */
-.content-with-highlights code {
-  background: linear-gradient(45deg, #1F2937, #374151);
-  color: #10B981;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-  font-weight: 600;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-/* Learning objectives styling */
+/* Learning objectives and section headers */
 .content-with-highlights h3 {
   color: #F59E0B;
   font-size: 1.4em;
   font-weight: 700;
   margin: 24px 0 12px 0;
   text-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Analogy boxes */
+.content-with-highlights blockquote {
+  background: rgba(168, 85, 247, 0.1);
+  border-left: 4px solid #A855F7;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 8px;
+  font-style: italic;
+  color: #D8B4FE;
+}
+
+/* Formula steps styling */
+.content-with-highlights .formula-step {
+  background: linear-gradient(45deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1));
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #BBF7D0;
+}
+
+/* Better paragraph spacing */
+.content-with-highlights p {
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.content-with-highlights p:empty {
+  display: none;
 }

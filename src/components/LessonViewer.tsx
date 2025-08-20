@@ -175,10 +175,26 @@ export default function LessonViewer({ title, description, sections, onLessonCom
           {/* Enhanced Content Section */}
           {currentSectionData.type === 'content' && (
             <div className="prose max-w-none">
-              <div className="whitespace-pre-wrap text-gray-200 leading-relaxed text-lg font-medium bg-gray-700/30 rounded-xl p-8 border border-gray-600/30">
-                <div className="content-with-highlights">
-                  {currentSectionData.content}
-                </div>
+              <div className="text-gray-200 leading-relaxed text-lg font-medium bg-gray-700/30 rounded-xl p-8 border border-gray-600/30">
+                <div 
+                  className="content-with-highlights"
+                  dangerouslySetInnerHTML={{
+                    __html: currentSectionData.content
+                      ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      ?.replace(/🎯 (.*?):/g, '<em>🎯 $1:</em>')
+                      ?.replace(/---/g, '<hr>')
+                      ?.replace(/(\d+\.\s.*?)(?=\n|$)/g, '<div class="formula-step">$1</div>')
+                      ?.replace(/- (.*?)(?=\n|$)/g, '<li>$1</li>')
+                      ?.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')
+                      ?.replace(/\n\n/g, '</p><p>')
+                      ?.replace(/^(.*)$/gm, '<p>$1</p>')
+                      ?.replace(/<p><\/p>/g, '')
+                      ?.replace(/<p>(<hr>)<\/p>/g, '$1')
+                      ?.replace(/<p>(<strong>.*?<\/strong>)<\/p>/g, '$1')
+                      ?.replace(/<p>(<em>.*?<\/em>)<\/p>/g, '$1')
+                      ?.replace(/`(.*?)`/g, '<code>$1</code>') || ''
+                  }}
+                />
               </div>
               
               {!sectionProgress[currentSection] && (
