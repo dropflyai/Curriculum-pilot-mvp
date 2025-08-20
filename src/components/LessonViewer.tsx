@@ -459,16 +459,18 @@ export default function LessonViewer({ title, description, sections, lessonId, o
       </div>
 
       {/* Adaptive Learning Engine - Always Visible */}
-      <div className="mt-8">
-        <AdaptiveLearningEngine
-          studentId="demo-student"
-          currentLesson={lessonId || 'lesson-1'}
-          onRecommendation={(recommendation) => {
-            console.log('AI Recommendation:', recommendation)
-            // Could trigger specific actions based on recommendation type
-          }}
-        />
-      </div>
+      {showPremiumFeatures && (
+        <div className="mt-8">
+          <AdaptiveLearningEngine
+            studentId="demo-student"
+            currentLesson={lessonId || 'lesson-1'}
+            onRecommendation={(recommendation) => {
+              console.log('AI Recommendation:', recommendation)
+              // Could trigger specific actions based on recommendation type
+            }}
+          />
+        </div>
+      )}
 
       {/* Enhanced Lesson Completion Celebration */}
       {Object.keys(sectionProgress).length === sections.length && (
@@ -517,15 +519,17 @@ export default function LessonViewer({ title, description, sections, lessonId, o
       )}
 
       {/* AI Teacher Chat - Fixed Position */}
-      <AITeacherChat
-        lessonContext={`${title}: ${description}`}
-        currentCode={currentCode}
-        onCodeSuggestion={(code) => {
-          setCurrentCode(code)
-          console.log('AI suggested code:', code)
-        }}
-        studentProgress={Math.round(progress)}
-      />
+      {showPremiumFeatures && (
+        <AITeacherChat
+          lessonContext={`${title}: ${description}`}
+          currentCode={currentCode}
+          onCodeSuggestion={(code) => {
+            setCurrentCode(code)
+            console.log('AI suggested code:', code)
+          }}
+          studentProgress={Math.round(progress)}
+        />
+      )}
     </div>
   )
 }
