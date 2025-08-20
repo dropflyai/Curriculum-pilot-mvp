@@ -351,6 +351,7 @@ export default function InteractiveCodingPlayground({
                 <span className="text-purple-300">
                   {new Set(
                     codeLines
+                      .map(line => line.content)
                       .join('\n')
                       .match(/\b[a-zA-Z_][a-zA-Z0-9_]*\s*=/g)?.map(v => v.split('=')[0].trim()) || []
                   ).size}
@@ -359,7 +360,7 @@ export default function InteractiveCodingPlayground({
               <div className="flex justify-between">
                 <span>Functions called:</span>
                 <span className="text-purple-300">
-                  {(codeLines.join('\n').match(/\b\w+\(/g) || []).length}
+                  {(codeLines.map(line => line.content).join('\n').match(/\b\w+\(/g) || []).length}
                 </span>
               </div>
             </div>

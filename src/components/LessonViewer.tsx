@@ -5,10 +5,25 @@ import { BookOpen, Code, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react
 import CodeEditor from './CodeEditor'
 import QuizComponent, { QuizResults } from './QuizComponent'
 import InteractiveCodeExample from './InteractiveCodeExample'
-import AITeacherChat from './AITeacherChat'
-import InteractiveCodingPlayground from './InteractiveCodingPlayground'
-import AdaptiveLearningEngine from './AdaptiveLearningEngine'
 import { saveLessonProgress, getLessonProgress } from '@/lib/progress-storage'
+
+// Dynamic imports for premium components to avoid build issues
+import dynamic from 'next/dynamic'
+
+const AITeacherChat = dynamic(() => import('./AITeacherChat'), { 
+  ssr: false,
+  loading: () => <div className="fixed bottom-4 right-4 w-16 h-16 bg-blue-500 rounded-full animate-pulse" />
+})
+
+const InteractiveCodingPlayground = dynamic(() => import('./InteractiveCodingPlayground'), { 
+  ssr: false,
+  loading: () => <div className="p-8 bg-gray-800 rounded-xl animate-pulse">Loading Interactive Playground...</div>
+})
+
+const AdaptiveLearningEngine = dynamic(() => import('./AdaptiveLearningEngine'), { 
+  ssr: false,
+  loading: () => <div className="p-8 bg-gray-800 rounded-xl animate-pulse">Loading Adaptive Learning...</div>
+})
 
 interface LessonSection {
   type: 'content' | 'code' | 'quiz'
