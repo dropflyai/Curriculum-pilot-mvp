@@ -319,6 +319,14 @@ export default function Dashboard() {
         </div>
 
 
+        {/* 🚨 HOMEWORK VISIBILITY TEST - CAN YOU SEE THIS RED BOX? 🚨 */}
+        <div className="mb-8 bg-red-600 border-8 border-yellow-400 p-4 rounded-lg">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-white mb-2">🚨 HOMEWORK TEST - CAN YOU SEE THIS? 🚨</h2>
+            <p className="text-white text-xl">If you see this red box, the homework section location is working!</p>
+          </div>
+        </div>
+
         {/* Section 1 Homework */}
         <div className="mb-8">
           <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30">
