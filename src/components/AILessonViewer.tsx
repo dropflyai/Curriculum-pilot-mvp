@@ -876,6 +876,51 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     onReturnToMap={() => setCurrentTab('overview')}
                   />
                 </div>
+
+                {/* Vocabulary Mastery Section - Added directly to the lesson flow */}
+                <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">📚</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Vocabulary Mastery</h2>
+                      <p className="text-purple-200 text-xl">Master the Language of AI</p>
+                    </div>
+                  </div>
+                  
+                  {/* Vocabulary Objectives */}
+                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30 mb-6">
+                    <h3 className="text-purple-300 font-bold text-xl mb-4">📝 Learning Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧠</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Study Key AI Terms</h4>
+                        <p className="text-purple-300/80 text-sm">Learn essential vocabulary for AI and machine learning</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🎯</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Complete Matching Game</h4>
+                        <p className="text-purple-300/80 text-sm">Test your knowledge with interactive challenges</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🏆</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Achieve Mastery</h4>
+                        <p className="text-purple-300/80 text-sm">Score 80% or higher to unlock next section</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Interactive Vocabulary Component */}
+                  <VocabularyMatcher 
+                    onComplete={(score) => {
+                      if (score >= 80) {
+                        setTestState(prev => ({
+                          ...prev,
+                          completed: { ...prev.completed, vocabulary_mastery: true }
+                        }))
+                      }
+                    }}
+                  />
+                </div>
               </div>
             )}
 
