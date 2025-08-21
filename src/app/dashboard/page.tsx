@@ -7,11 +7,16 @@ import { getAllLessons, Lesson } from '@/lib/lesson-data'
 import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
+import LessonDebugger from '@/components/LessonDebugger'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lessons, setLessons] = useState<Lesson[]>(getAllLessons())
+  const [lessons, setLessons] = useState<Lesson[]>(() => {
+    const allLessons = getAllLessons()
+    console.log('Dashboard loading lessons:', allLessons.length, allLessons.map(l => ({ id: l.id, title: l.title })))
+    return allLessons
+  })
   const [userProgress] = useState<Record<string, number>>({
     'week-01': 100, // Week 1 AI Classifier - completed
     'week-02': 0, // Week 2 Python Advisor - not started
@@ -321,13 +326,8 @@ export default function Dashboard() {
         </div>
 
 
-        {/* 🚨 HOMEWORK VISIBILITY TEST - CAN YOU SEE THIS RED BOX? 🚨 */}
-        <div className="mb-8 bg-red-600 border-8 border-yellow-400 p-4 rounded-lg">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-2">🚨 HOMEWORK TEST - CAN YOU SEE THIS? 🚨</h2>
-            <p className="text-white text-xl">If you see this red box, the homework section location is working!</p>
-          </div>
-        </div>
+        {/* 🚨 LESSON DEBUGGER - CAN YOU SEE WEEK 2? 🚨 */}
+        <LessonDebugger />
 
         {/* Section 1 Homework */}
         <div className="mb-8">
