@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   try {
     const files = fs
       .readdirSync(dir)
-      .filter((f) => /\.(png|jpg|jpeg|webp)$/i.test(f))
+      .filter((f) => /\.(png|jpg|jpeg|webp|svg)$/i.test(f))
       .sort()
       .map((f) => `/datasets/${dataset}/${label}/${encodeURIComponent(f)}`);
     

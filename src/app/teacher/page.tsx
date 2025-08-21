@@ -12,6 +12,7 @@ import {
   FileText, PieChart, TrendingUp, Calendar, Printer
 } from 'lucide-react'
 import Link from 'next/link'
+import TeacherPlaybook from '@/components/TeacherPlaybook'
 
 interface StudentProgress {
   user: User
@@ -934,10 +935,18 @@ CodeFly Computer Science Teacher
         {analytics.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-blue-500/30">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-                <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
-                {analytics[0]?.title || 'Lesson'} Analytics 📊
-              </h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-white flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
+                  {analytics[0]?.title || 'Lesson'} Analytics 📊
+                </h3>
+                {analytics[0] && (
+                  <TeacherPlaybook 
+                    lessonId={analytics[0].lessonId} 
+                    title={analytics[0].title} 
+                  />
+                )}
+              </div>
               
               <div className="space-y-4">
                 <div className="bg-blue-900/50 rounded-lg p-4">

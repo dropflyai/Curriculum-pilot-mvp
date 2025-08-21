@@ -1,4 +1,5 @@
-// AI Classifier Curriculum - Week 1: School Supplies Classification
+// Week 1 — AI Classifier (School Supplies)
+// Standards: SC.912.ET.2.2, SC.912.ET.2.3, SC.912.ET.2.5
 
 export interface LessonTest {
   id: string

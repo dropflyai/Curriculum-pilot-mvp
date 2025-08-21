@@ -13,6 +13,7 @@ export default function Dashboard() {
   const router = useRouter()
   const [lessons] = useState<Lesson[]>(getAllLessons())
   const [userProgress] = useState<Record<string, number>>({
+    'week-01': 25, // Week 1 AI Classifier - in progress
     'python-basics-variables': 75,
     'python-magic-8-ball': 100,
     'python-functions': 0,
@@ -20,6 +21,7 @@ export default function Dashboard() {
     'python-file-handling': 0
   })
   const [userScores] = useState<Record<string, number>>({
+    'week-01': 78, // Week 1 AI Classifier quiz score
     'python-basics-variables': 85,
     'python-magic-8-ball': 92,
     'python-lists-loops': 67
@@ -30,9 +32,10 @@ export default function Dashboard() {
   // Learning Progress Data
   const [totalLearningTime] = useState(8.5) // hours this week
   const [recentActivity] = useState([
-    { action: 'Completed Magic 8-Ball Project', time: '2 hours ago', type: 'lesson' },
-    { action: 'Achieved 90% on Quiz', time: '1 day ago', type: 'quiz' },
-    { action: 'Started Variables lesson', time: '2 days ago', type: 'lesson' }
+    { action: 'Trained AI Classifier on School Supplies', time: '1 hour ago', type: 'lesson' },
+    { action: 'Completed Week 1 Main Mode', time: '2 hours ago', type: 'lesson' },
+    { action: 'Achieved 78% on AI Classifier Quiz', time: '1 day ago', type: 'quiz' },
+    { action: 'Started Week 1 - AI Classifier', time: '2 days ago', type: 'lesson' }
   ])
   
   // Learning Analytics

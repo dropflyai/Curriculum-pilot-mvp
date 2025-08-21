@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { AILesson, LessonMode } from '@/lib/lesson-data'
-import AIClassifierTrainer from './AIClassifierTrainer'
+import dynamic from 'next/dynamic'
+
+const AIClassifierTrainer = dynamic(() => import('./AIClassifierTrainer'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading AI Classifier...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 
