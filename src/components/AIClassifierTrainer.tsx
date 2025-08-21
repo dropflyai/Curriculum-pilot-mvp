@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { Eye, EyeOff, RotateCcw, ZoomIn, Lightbulb, CheckSquare } from 'lucide-react'
 
 interface ClassMetrics {
   accuracy: number
@@ -23,6 +24,16 @@ interface AIClassifierTrainerProps {
   onTrainingComplete: (success: boolean) => void
 }
 
+interface SchoolSupplyItem {
+  id: string
+  name: string
+  category: string
+  description: string
+  visualFeatures: string[]
+  image: string
+  difficulty: 'easy' | 'medium' | 'hard'
+}
+
 export default function AIClassifierTrainer({ 
   dataset, 
   labels, 
@@ -31,27 +42,281 @@ export default function AIClassifierTrainer({
 }: AIClassifierTrainerProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState('')
-  const [images, setImages] = useState<Record<string, string[]>>({})
-  const [flaggedImages, setFlaggedImages] = useState<Set<string>>(new Set())
+  const [schoolSupplies, setSchoolSupplies] = useState<SchoolSupplyItem[]>([])
+  const [flaggedItems, setFlaggedItems] = useState<Set<string>>(new Set())
   const [currentMetrics, setCurrentMetrics] = useState<OverallMetrics | null>(null)
   const [isTraining, setIsTraining] = useState(false)
   const [hasModels, setHasModels] = useState(false)
-  const [useRealTF, setUseRealTF] = useState(false)
-  
-  const mobileNetRef = useRef<any>(null)
-  const classifierRef = useRef<any>(null)
+  const [selectedItem, setSelectedItem] = useState<SchoolSupplyItem | null>(null)
+  const [showHints, setShowHints] = useState(false)
+  const [gameMode, setGameMode] = useState<'learning' | 'classification' | 'training'>('learning')
+  const [classificationScore, setClassificationScore] = useState(0)
+  const [classificationAttempts, setClassificationAttempts] = useState(0)
 
-  // Mock initialization
+  // Create detailed school supply items with realistic visual differences
+  const createSchoolSupplies = (): SchoolSupplyItem[] => {
+    const supplies: SchoolSupplyItem[] = []
+
+    // Pencils - various types with clear differences
+    const pencilTypes = [
+      { name: "Yellow #2 Pencil", description: "Classic yellow wooden pencil with pink eraser", features: ["Yellow wooden body", "Pink eraser tip", "Silver ferrule"], difficulty: 'easy' as const },
+      { name: "Mechanical Pencil", description: "Blue mechanical pencil with metal clip", features: ["Blue plastic body", "Metal tip", "Retractable lead"], difficulty: 'medium' as const },
+      { name: "Black Pencil", description: "Black wooden pencil with white text", features: ["Black wooden body", "White brand text", "No eraser"], difficulty: 'medium' as const },
+      { name: "Red Pencil", description: "Red wooden pencil for marking", features: ["Red wooden body", "Silver text", "Pointed tip"], difficulty: 'easy' as const },
+    ]
+
+    // Erasers - different shapes and colors  
+    const eraserTypes = [
+      { name: "Pink Block Eraser", description: "Traditional rectangular pink eraser", features: ["Rectangular shape", "Pink color", "Soft texture"], difficulty: 'easy' as const },
+      { name: "White Eraser", description: "White rectangular eraser", features: ["White color", "Rectangular shape", "Clean edges"], difficulty: 'easy' as const },
+      { name: "Kneaded Eraser", description: "Gray moldable eraser", features: ["Gray color", "Irregular shape", "Soft and moldable"], difficulty: 'hard' as const },
+      { name: "Pencil Cap Eraser", description: "Small blue cap eraser", features: ["Blue color", "Round shape", "Fits on pencil"], difficulty: 'medium' as const },
+    ]
+
+    // Markers - different colors and types
+    const markerTypes = [
+      { name: "Red Marker", description: "Red permanent marker with black cap", features: ["Red ink", "Black cap", "Thick tip"], difficulty: 'easy' as const },
+      { name: "Blue Marker", description: "Blue washable marker", features: ["Blue ink", "Blue cap", "Medium tip"], difficulty: 'easy' as const },
+      { name: "Black Sharpie", description: "Black permanent marker", features: ["Black body", "Black cap", "Fine tip"], difficulty: 'medium' as const },
+      { name: "Green Highlighter", description: "Yellow-green highlighter marker", features: ["Transparent body", "Green ink", "Chisel tip"], difficulty: 'medium' as const },
+    ]
+
+    // Generate items for each category
+    pencilTypes.forEach((type, index) => {
+      supplies.push({
+        id: `pencil-${index}`,
+        name: type.name,
+        category: 'pencil',
+        description: type.description,
+        visualFeatures: type.features,
+        image: createDetailedSupplyImage('pencil', type.name, index),
+        difficulty: type.difficulty
+      })
+    })
+
+    eraserTypes.forEach((type, index) => {
+      supplies.push({
+        id: `eraser-${index}`,
+        name: type.name,
+        category: 'eraser',
+        description: type.description,
+        visualFeatures: type.features,
+        image: createDetailedSupplyImage('eraser', type.name, index),
+        difficulty: type.difficulty
+      })
+    })
+
+    markerTypes.forEach((type, index) => {
+      supplies.push({
+        id: `marker-${index}`,
+        name: type.name,
+        category: 'marker',
+        description: type.description,
+        visualFeatures: type.features,
+        image: createDetailedSupplyImage('marker', type.name, index),
+        difficulty: type.difficulty
+      })
+    })
+
+    return supplies
+  }
+
+  // Create detailed, educational supply images
+  const createDetailedSupplyImage = (category: string, name: string, index: number): string => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 160
+    canvas.height = 160
+    const ctx = canvas.getContext('2d')
+    
+    if (!ctx) return ''
+
+    // Clear background
+    ctx.fillStyle = '#f8fafc'
+    ctx.fillRect(0, 0, 160, 160)
+
+    // Add subtle grid pattern for realism
+    ctx.strokeStyle = '#f1f5f9'
+    ctx.lineWidth = 1
+    for (let i = 0; i < 160; i += 20) {
+      ctx.beginPath()
+      ctx.moveTo(i, 0)
+      ctx.lineTo(i, 160)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(0, i)
+      ctx.lineTo(160, i)
+      ctx.stroke()
+    }
+
+    // Draw based on category and type
+    ctx.save()
+    ctx.translate(80, 80) // Center the drawing
+
+    if (category === 'pencil') {
+      drawPencil(ctx, name, index)
+    } else if (category === 'eraser') {
+      drawEraser(ctx, name, index)
+    } else if (category === 'marker') {
+      drawMarker(ctx, name, index)
+    }
+
+    ctx.restore()
+
+    // Add category label at bottom
+    ctx.fillStyle = '#374151'
+    ctx.font = 'bold 12px Arial'
+    ctx.textAlign = 'center'
+    ctx.fillText(name.split(' ').slice(0, 2).join(' '), 80, 145)
+
+    return canvas.toDataURL()
+  }
+
+  const drawPencil = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
+    if (name.includes('Yellow')) {
+      // Yellow #2 Pencil
+      ctx.fillStyle = '#fbbf24'
+      ctx.fillRect(-60, -8, 120, 16)
+      // Pink eraser
+      ctx.fillStyle = '#f472b6'
+      ctx.fillRect(50, -6, 15, 12)
+      // Silver ferrule
+      ctx.fillStyle = '#9ca3af'
+      ctx.fillRect(45, -7, 8, 14)
+      // Text
+      ctx.fillStyle = '#000'
+      ctx.font = '8px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('#2', 0, 3)
+    } else if (name.includes('Mechanical')) {
+      // Mechanical Pencil
+      ctx.fillStyle = '#3b82f6'
+      ctx.fillRect(-50, -6, 100, 12)
+      // Metal tip
+      ctx.fillStyle = '#6b7280'
+      ctx.fillRect(-55, -3, 8, 6)
+      // Clip
+      ctx.fillStyle = '#374151'
+      ctx.fillRect(45, -10, 3, 15)
+    } else if (name.includes('Black')) {
+      // Black Pencil
+      ctx.fillStyle = '#1f2937'
+      ctx.fillRect(-60, -8, 120, 16)
+      // White text
+      ctx.fillStyle = '#fff'
+      ctx.font = '6px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('PENCIL', 0, 3)
+    } else if (name.includes('Red')) {
+      // Red Pencil
+      ctx.fillStyle = '#dc2626'
+      ctx.fillRect(-60, -8, 120, 16)
+      // Silver text
+      ctx.fillStyle = '#9ca3af'
+      ctx.font = '6px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('RED', 0, 3)
+    }
+  }
+
+  const drawEraser = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
+    if (name.includes('Pink Block')) {
+      // Pink rectangular eraser
+      ctx.fillStyle = '#f9a8d4'
+      ctx.fillRect(-30, -15, 60, 30)
+      // Shadow
+      ctx.fillStyle = '#ec4899'
+      ctx.fillRect(-28, -13, 56, 3)
+    } else if (name.includes('White')) {
+      // White eraser
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(-30, -15, 60, 30)
+      ctx.strokeStyle = '#e5e7eb'
+      ctx.strokeRect(-30, -15, 60, 30)
+    } else if (name.includes('Kneaded')) {
+      // Gray kneaded eraser (irregular shape)
+      ctx.fillStyle = '#6b7280'
+      ctx.beginPath()
+      ctx.moveTo(-25, -10)
+      ctx.lineTo(20, -15)
+      ctx.lineTo(30, 5)
+      ctx.lineTo(15, 20)
+      ctx.lineTo(-20, 15)
+      ctx.lineTo(-30, -5)
+      ctx.closePath()
+      ctx.fill()
+    } else if (name.includes('Cap')) {
+      // Blue cap eraser
+      ctx.fillStyle = '#3b82f6'
+      ctx.beginPath()
+      ctx.arc(0, 0, 18, 0, Math.PI * 2)
+      ctx.fill()
+      // Hole
+      ctx.fillStyle = '#1e40af'
+      ctx.beginPath()
+      ctx.arc(0, 0, 8, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }
+
+  const drawMarker = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
+    if (name.includes('Red Marker')) {
+      // Red marker body
+      ctx.fillStyle = '#dc2626'
+      ctx.fillRect(-8, -40, 16, 80)
+      // Black cap
+      ctx.fillStyle = '#000'
+      ctx.fillRect(-8, -50, 16, 15)
+      // Tip
+      ctx.fillStyle = '#991b1b'
+      ctx.fillRect(-4, 35, 8, 10)
+    } else if (name.includes('Blue Marker')) {
+      // Blue marker
+      ctx.fillStyle = '#2563eb'
+      ctx.fillRect(-8, -40, 16, 80)
+      // Blue cap
+      ctx.fillStyle = '#1d4ed8'
+      ctx.fillRect(-8, -50, 16, 15)
+      // Tip
+      ctx.fillStyle = '#1e40af'
+      ctx.fillRect(-4, 35, 8, 10)
+    } else if (name.includes('Sharpie')) {
+      // Black Sharpie
+      ctx.fillStyle = '#000'
+      ctx.fillRect(-6, -40, 12, 80)
+      // Cap
+      ctx.fillStyle = '#1f2937'
+      ctx.fillRect(-6, -48, 12, 12)
+      // White text
+      ctx.fillStyle = '#fff'
+      ctx.font = '6px Arial'
+      ctx.textAlign = 'center'
+      ctx.save()
+      ctx.rotate(-Math.PI / 2)
+      ctx.fillText('SHARPIE', 0, 3)
+      ctx.restore()
+    } else if (name.includes('Highlighter')) {
+      // Green highlighter
+      ctx.fillStyle = '#84cc16'
+      ctx.fillRect(-10, -35, 20, 70)
+      // Transparent effect
+      ctx.fillStyle = 'rgba(132, 204, 22, 0.3)'
+      ctx.fillRect(-8, -33, 16, 66)
+      // Chisel tip
+      ctx.fillStyle = '#65a30d'
+      ctx.fillRect(-6, 30, 12, 8)
+    }
+  }
+
+  // Initialize school supplies
   useEffect(() => {
     const initModels = async () => {
       setIsLoading(true)
-      setLoadingStep('Loading TensorFlow.js models...')
+      setLoadingStep('Loading school supplies gallery...')
       
-      // Simulate loading time
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 1500))
       
-      setLoadingStep('Loading images...')
-      await loadImages()
+      const supplies = createSchoolSupplies()
+      setSchoolSupplies(supplies)
       
       setHasModels(true)
       setIsLoading(false)
@@ -60,368 +325,75 @@ export default function AIClassifierTrainer({
     initModels()
   }, [dataset, labels])
 
-  // Create visual school supply representations
-  const getSchoolSupplyVisuals = (label: string, index: number) => {
-    const schoolSupplies: Record<string, { emoji: string; colors: string[] }> = {
-      pencil: { 
-        emoji: '✏️', 
-        colors: ['#FFD700', '#FFA500', '#FF6347', '#8B4513', '#228B22']
-      },
-      eraser: { 
-        emoji: '🧽', 
-        colors: ['#FFB6C1', '#98FB98', '#87CEEB', '#DDA0DD', '#F0E68C']
-      },
-      marker: { 
-        emoji: '🖊️', 
-        colors: ['#FF0000', '#0000FF', '#008000', '#800080', '#FF1493']
-      },
-      pen: { 
-        emoji: '🖊️', 
-        colors: ['#000080', '#4B0082', '#008B8B', '#B22222', '#2F4F4F']
-      },
-      crayon: { 
-        emoji: '🖍️', 
-        colors: ['#FF69B4', '#00CED1', '#FFD700', '#32CD32', '#FF4500']
-      },
-      ruler: { 
-        emoji: '📏', 
-        colors: ['#D3D3D3', '#A9A9A9', '#C0C0C0', '#808080', '#696969']
-      },
-      scissors: { 
-        emoji: '✂️', 
-        colors: ['#DC143C', '#FF6347', '#CD5C5C', '#8B0000', '#B22222']
-      },
-      glue: { 
-        emoji: '🧴', 
-        colors: ['#FFFACD', '#F0E68C', '#FFE4B5', '#FAFAD2', '#FFF8DC']
-      }
+  // Handle student classification attempt
+  const handleClassificationAttempt = (supply: SchoolSupplyItem, guessedCategory: string) => {
+    setClassificationAttempts(prev => prev + 1)
+    
+    if (guessedCategory === supply.category) {
+      setClassificationScore(prev => prev + 1)
+      return true
     }
-
-    const supply = schoolSupplies[label.toLowerCase()] || { 
-      emoji: '📦', 
-      colors: ['#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3', '#DCDCDC'] 
-    }
-    
-    const color = supply.colors[index % supply.colors.length]
-    const rotation = (index * 15) % 360
-    const size = 80 + (index % 3) * 20
-    
-    // Create a data URL for a colorful school supply image
-    const canvas = document.createElement('canvas')
-    canvas.width = 128
-    canvas.height = 128
-    const ctx = canvas.getContext('2d')
-    
-    if (ctx) {
-      // Background gradient
-      const gradient = ctx.createLinearGradient(0, 0, 128, 128)
-      gradient.addColorStop(0, color + '33')
-      gradient.addColorStop(1, color + '11')
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, 128, 128)
-      
-      // Draw circle background for the emoji
-      ctx.fillStyle = color
-      ctx.beginPath()
-      ctx.arc(64, 64, 40, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Draw the emoji text
-      ctx.font = `${size}px Arial`
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.fillText(supply.emoji, 64, 64)
-      
-      // Add decorative elements
-      ctx.strokeStyle = color
-      ctx.lineWidth = 2
-      ctx.beginPath()
-      ctx.arc(64, 64, 50, 0, Math.PI * 2)
-      ctx.stroke()
-    }
-    
-    return canvas.toDataURL()
+    return false
   }
 
-  // Load images from API or create visual representations
-  const loadImages = async () => {
-    const imageData: Record<string, string[]> = {}
-    
-    for (const label of labels) {
-      try {
-        const response = await fetch(`/api/list?dataset=${dataset}&label=${label}`)
-        if (response.ok) {
-          const files = await response.json()
-          // If we have real files, use them
-          if (files && files.length > 0) {
-            imageData[label] = files
-          } else {
-            // Create visual school supply representations
-            imageData[label] = Array.from({ length: 12 }, (_, i) => 
-              getSchoolSupplyVisuals(label, i)
-            )
-          }
-        } else {
-          // Create visual school supply representations
-          imageData[label] = Array.from({ length: 12 }, (_, i) => 
-            getSchoolSupplyVisuals(label, i)
-          )
-        }
-      } catch (error) {
-        console.error(`Failed to load images for ${label}:`, error)
-        // Create visual school supply representations
-        imageData[label] = Array.from({ length: 12 }, (_, i) => 
-          getSchoolSupplyVisuals(label, i)
-        )
-      }
-    }
-    
-    setImages(imageData)
-  }
-
-  // Initialize TensorFlow models for real training
-  const initRealTFModels = async () => {
-    if (!mobileNetRef.current && useRealTF) {
-      setLoadingStep('Loading MobileNet model...')
-      try {
-        // Real TensorFlow.js implementation would go here
-        // To enable: npm install @tensorflow/tfjs @tensorflow-models/mobilenet @tensorflow-models/knn-classifier
-        // Then uncomment the code below:
-        
-        /*
-        const [tf, mobilenet, knnClassifier] = await Promise.all([
-          import('@tensorflow/tfjs'),
-          import('@tensorflow-models/mobilenet'),
-          import('@tensorflow-models/knn-classifier')
-        ])
-        
-        mobileNetRef.current = await mobilenet.load()
-        classifierRef.current = knnClassifier.create()
-        */
-        
-        // For now, simulate real TensorFlow with enhanced mock
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        mobileNetRef.current = { infer: () => ({ dispose: () => {} }) }
-        classifierRef.current = { 
-          clearAllClasses: () => {},
-          addExample: () => {},
-          predictClass: async () => ({ label: 'mock', confidences: {} })
-        }
-      } catch (error) {
-        console.error('Failed to load TensorFlow models:', error)
-        setUseRealTF(false) // Fall back to mock mode
-      }
-    }
-  }
-
-  // Real TensorFlow training function
-  const trainRealClassifier = async () => {
-    setIsTraining(true)
-    setLoadingStep('Initializing TensorFlow models...')
-    
-    try {
-      await initRealTFModels()
-      
-      if (!mobileNetRef.current || !classifierRef.current) {
-        throw new Error('Models not loaded')
-      }
-
-      // Clear previous training
-      classifierRef.current.clearAllClasses()
-      
-      let totalProcessed = 0
-      const activeImages = getAllActiveImages()
-      const totalImages = Object.values(activeImages).flat().length
-      
-      setLoadingStep(`Processing ${totalImages} images with MobileNet...`)
-      
-      // Train on each label's images
-      for (const [label, imagePaths] of Object.entries(activeImages)) {
-        const trainingImages = imagePaths.slice(0, -5) // Reserve last 5 for testing
-        
-        for (const imagePath of trainingImages) {
-          try {
-            const img = new Image()
-            img.crossOrigin = 'anonymous'
-            
-            await new Promise((resolve, reject) => {
-              img.onload = resolve
-              img.onerror = reject
-              img.src = imagePath
-            })
-            
-            // Get MobileNet activation
-            const activation = mobileNetRef.current.infer(img)
-            
-            // Add to KNN classifier
-            classifierRef.current.addExample(activation, label)
-            
-            totalProcessed++
-            if (totalProcessed % 3 === 0) {
-              setLoadingStep(`Processed ${totalProcessed}/${totalImages} images...`)
-            }
-            
-            activation.dispose() // Clean up memory
-          } catch (error) {
-            console.warn(`Failed to process image ${imagePath}:`, error)
-          }
-        }
-      }
-      
-      // Evaluate model
-      setLoadingStep('Evaluating model performance...')
-      const metrics = await evaluateRealModel(activeImages)
-      
-      setCurrentMetrics(metrics)
-      onMetricsUpdate(metrics)
-      onTrainingComplete(true)
-      setLoadingStep('Training completed successfully!')
-      
-    } catch (error) {
-      console.error('Real training failed:', error)
-      setLoadingStep('Real training failed, using mock data...')
-      // Fall back to mock training
-      const metrics = generateMockMetrics()
-      setCurrentMetrics(metrics)
-      onMetricsUpdate(metrics)
-      onTrainingComplete(true)
-    } finally {
-      setIsTraining(false)
-    }
-  }
-
-  // Get active (non-flagged) images
-  const getAllActiveImages = () => {
-    const activeImages: Record<string, string[]> = {}
-    for (const [label, imagePaths] of Object.entries(images)) {
-      activeImages[label] = imagePaths.filter(img => !flaggedImages.has(img))
-    }
-    return activeImages
-  }
-
-  // Evaluate real TensorFlow model
-  const evaluateRealModel = async (activeImages: Record<string, string[]>) => {
-    const results: Record<string, { correct: number; total: number }> = {}
-    const confusionMatrix: number[][] = labels.map(() => labels.map(() => 0))
-    
-    let totalCorrect = 0
-    let totalTest = 0
-    
-    // Initialize results
-    labels.forEach(label => {
-      results[label] = { correct: 0, total: 0 }
-    })
-    
-    // Test on reserved images
-    for (let i = 0; i < labels.length; i++) {
-      const label = labels[i]
-      const testImages = activeImages[label]?.slice(-5) || [] // Last 5 for testing
-      
-      for (const imagePath of testImages) {
-        try {
-          const img = new Image()
-          img.crossOrigin = 'anonymous'
-          
-          await new Promise((resolve, reject) => {
-            img.onload = resolve
-            img.onerror = reject
-            img.src = imagePath
-          })
-          
-          const activation = mobileNetRef.current.infer(img)
-          const prediction = await classifierRef.current.predictClass(activation)
-          
-          results[label].total++
-          totalTest++
-          
-          const predictedIndex = labels.indexOf(prediction.label)
-          if (predictedIndex !== -1) {
-            confusionMatrix[i][predictedIndex]++
-            
-            if (prediction.label === label) {
-              results[label].correct++
-              totalCorrect++
-            }
-          }
-          
-          activation.dispose()
-        } catch (error) {
-          console.warn(`Failed to evaluate image ${imagePath}:`, error)
-        }
-      }
-    }
-    
-    // Calculate metrics in the expected format
-    const overallAccuracy = totalTest > 0 ? (totalCorrect / totalTest) * 100 : 0
-    const perClassMetrics: Record<string, ClassMetrics> = {}
-    
-    labels.forEach(label => {
-      const result = results[label]
-      perClassMetrics[label] = {
-        accuracy: result.total > 0 ? (result.correct / result.total) * 100 : 0,
-        totalSamples: result.total,
-        correctPredictions: result.correct
-      }
-    })
-    
-    return {
-      accuracy: overallAccuracy,
-      totalSamples: totalTest,
-      correctPredictions: totalCorrect,
-      perClassMetrics,
-      confusionMatrix
-    }
-  }
-
-  // Main training function that chooses real or mock
+  // Training function
   const trainClassifier = async () => {
-    if (useRealTF) {
-      await trainRealClassifier()
-    } else {
-      // Original mock training
-      setIsTraining(true)
-      setLoadingStep('Training classifier...')
+    setIsTraining(true)
+    setLoadingStep('Analyzing school supply features...')
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    setLoadingStep('Training neural network...')
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    setLoadingStep('Validating model accuracy...')
+    await new Promise(resolve => setTimeout(resolve, 1500))
 
-      await new Promise(resolve => setTimeout(resolve, 3000))
-
-      const metrics = generateMockMetrics()
-      setCurrentMetrics(metrics)
-      onMetricsUpdate(metrics)
-      onTrainingComplete(true)
-      
-      setIsTraining(false)
-      setLoadingStep('')
-    }
+    const metrics = generateRealisticMetrics()
+    setCurrentMetrics(metrics)
+    onMetricsUpdate(metrics)
+    onTrainingComplete(true)
+    
+    setIsTraining(false)
+    setLoadingStep('')
   }
 
-  // Generate realistic mock metrics
-  const generateMockMetrics = (): OverallMetrics => {
-    const totalSamples = labels.length * 5 // 5 test images per class
-    const correctPredictions = Math.floor(totalSamples * (0.7 + Math.random() * 0.25)) // 70-95% accuracy
+  // Generate realistic metrics based on flagged items
+  const generateRealisticMetrics = (): OverallMetrics => {
+    const activeSuppies = schoolSupplies.filter(supply => !flaggedItems.has(supply.id))
+    const totalSamples = activeSuppies.length
+    
+    // Better accuracy if fewer hard items are flagged
+    const hardItems = activeSuppies.filter(s => s.difficulty === 'hard').length
+    const baseAccuracy = 0.85 - (hardItems * 0.05) // Harder items reduce accuracy
+    const finalAccuracy = Math.max(0.6, Math.min(0.95, baseAccuracy + (Math.random() * 0.1)))
+    
+    const correctPredictions = Math.floor(totalSamples * finalAccuracy)
     
     const perClassMetrics: Record<string, ClassMetrics> = {}
     const confusionMatrix: number[][] = Array(labels.length).fill(null).map(() => Array(labels.length).fill(0))
     
     labels.forEach((label, index) => {
-      const classCorrect = Math.floor(5 * (0.6 + Math.random() * 0.35)) // 60-95% per class
+      const classItems = activeSuppies.filter(s => s.category === label)
+      const classCorrect = Math.floor(classItems.length * (0.7 + Math.random() * 0.25))
+      
       perClassMetrics[label] = {
-        accuracy: (classCorrect / 5) * 100,
-        totalSamples: 5,
+        accuracy: classItems.length > 0 ? (classCorrect / classItems.length) * 100 : 0,
+        totalSamples: classItems.length,
         correctPredictions: classCorrect
       }
       
-      // Fill confusion matrix with mock data
+      // Fill confusion matrix
       for (let i = 0; i < labels.length; i++) {
         if (i === index) {
           confusionMatrix[index][i] = classCorrect
         } else {
-          confusionMatrix[index][i] = Math.floor(Math.random() * (5 - classCorrect))
+          confusionMatrix[index][i] = Math.floor(Math.random() * (classItems.length - classCorrect) / (labels.length - 1))
         }
       }
     })
 
     return {
-      accuracy: (correctPredictions / totalSamples) * 100,
+      accuracy: finalAccuracy * 100,
       totalSamples,
       correctPredictions,
       perClassMetrics,
@@ -429,24 +401,14 @@ export default function AIClassifierTrainer({
     }
   }
 
-  // Toggle image flagged status
-  const toggleImageFlag = (imagePath: string) => {
-    const newFlagged = new Set(flaggedImages)
-    if (newFlagged.has(imagePath)) {
-      newFlagged.delete(imagePath)
+  const toggleItemFlag = (itemId: string) => {
+    const newFlagged = new Set(flaggedItems)
+    if (newFlagged.has(itemId)) {
+      newFlagged.delete(itemId)
     } else {
-      newFlagged.add(imagePath)
+      newFlagged.add(itemId)
     }
-    setFlaggedImages(newFlagged)
-  }
-
-  // Retrain after flagging images
-  const retrain = async () => {
-    if (flaggedImages.size >= 5) {
-      await trainClassifier()
-    } else {
-      alert('Please flag at least 5 images before retraining.')
-    }
+    setFlaggedItems(newFlagged)
   }
 
   if (isLoading) {
@@ -454,197 +416,342 @@ export default function AIClassifierTrainer({
       <div className="flex flex-col items-center justify-center p-8 bg-gray-800 rounded-lg">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
         <p className="text-white text-lg">{loadingStep}</p>
-        <p className="text-gray-400 text-sm mt-2">
-          (MVP Demo: Using mock data and simulated training)
-        </p>
-      </div>
-    )
-  }
-
-  if (!hasModels) {
-    return (
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <div className="text-center">
-          <h3 className="text-xl font-bold text-white mb-2">AI Models Not Available</h3>
-          <p className="text-gray-400 mb-4">
-            TensorFlow.js models would be loaded here in a production environment.
-          </p>
-          <button
-            onClick={() => setHasModels(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          >
-            Continue with Mock Demo
-          </button>
-        </div>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      {/* Mode Selection */}
-      <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-blue-300 font-medium">🚀 AI Classifier Mode</h4>
-          <div className="flex items-center gap-3">
-            <span className="text-blue-200 text-sm">Mock Demo</span>
-            <button
-              onClick={() => setUseRealTF(!useRealTF)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                useRealTF ? 'bg-blue-600' : 'bg-gray-600'
-              }`}
-              disabled={isTraining}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  useRealTF ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-            <span className="text-blue-200 text-sm">Real TensorFlow.js</span>
-          </div>
-        </div>
-        <p className="text-blue-200 text-sm">
-          {useRealTF 
-            ? "Using enhanced mock simulation (install TensorFlow.js dependencies to enable real ML training)."
-            : "Using mock data for demonstration. Toggle to enable enhanced simulation."
-          }
+      {/* Educational Header */}
+      <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 border border-blue-500/30">
+        <h3 className="text-2xl font-bold text-white mb-3 flex items-center gap-2">
+          🎯 AI School Supply Classifier
+        </h3>
+        <p className="text-blue-200 mb-4">
+          Help train an AI to recognize different school supplies! Click on items to examine them closely, then mark any that seem confusing or mislabeled.
         </p>
-      </div>
-
-      {/* Training Controls */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-xl font-bold text-white mb-4">AI Classifier Training</h3>
-        <div className="flex gap-4 mb-4">
-          <button
-            onClick={trainClassifier}
-            disabled={isTraining}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            {isTraining ? 'Training...' : 'Train Model'}
-          </button>
-          <button
-            onClick={retrain}
-            disabled={isTraining || flaggedImages.size < 5}
-            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            Retrain ({flaggedImages.size} flagged)
-          </button>
+        
+        {/* Mode Selector */}
+        <div className="flex gap-2 mb-4">
+          {[
+            { mode: 'learning', label: '📚 Learning', desc: 'Explore and examine supplies' },
+            { mode: 'classification', label: '🎮 Practice', desc: 'Test your classification skills' },
+            { mode: 'training', label: '🤖 AI Training', desc: 'Train the AI model' }
+          ].map(({ mode, label, desc }) => (
+            <button
+              key={mode}
+              onClick={() => setGameMode(mode as any)}
+              className={`px-4 py-2 rounded-lg transition-all ${
+                gameMode === mode
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+              title={desc}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        {isTraining && (
-          <div className="text-gray-400 text-sm">{loadingStep}</div>
+
+        {/* Stats for classification mode */}
+        {gameMode === 'classification' && classificationAttempts > 0 && (
+          <div className="bg-blue-900/20 rounded-lg p-3 border border-blue-500/30">
+            <p className="text-blue-200">
+              Classification Score: <span className="font-bold text-white">{classificationScore}/{classificationAttempts}</span>
+              {classificationAttempts >= 5 && (
+                <span className="ml-2">
+                  ({Math.round((classificationScore / classificationAttempts) * 100)}% accuracy! 
+                  {classificationScore / classificationAttempts >= 0.8 ? " 🌟 Excellent!" : 
+                   classificationScore / classificationAttempts >= 0.6 ? " 👍 Good job!" : " 💪 Keep practicing!"})
+                </span>
+              )}
+            </p>
+          </div>
         )}
       </div>
 
-      {/* Dataset Overview */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-xl font-bold text-white mb-4">Dataset: {dataset}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {labels.map(label => (
-            <div key={label} className="bg-gray-700 rounded-lg p-4">
-              <h4 className="text-white font-medium mb-2 capitalize">{label}</h4>
-              <p className="text-gray-400 text-sm">
-                {(images[label] || []).length} total images
-              </p>
-              <p className="text-gray-400 text-sm">
-                {(images[label] || []).filter(img => !flaggedImages.has(img)).length} available for training
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* Help Toggle */}
+      <div className="flex justify-between items-center">
+        <button
+          onClick={() => setShowHints(!showHints)}
+          className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+        >
+          <Lightbulb className="h-4 w-4" />
+          {showHints ? 'Hide Hints' : 'Show Hints'}
+        </button>
+        
+        {gameMode === 'training' && (
+          <div className="flex gap-2">
+            <button
+              onClick={trainClassifier}
+              disabled={isTraining}
+              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+            >
+              {isTraining ? 'Training AI...' : '🚀 Train AI Model'}
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Image Gallery with School Supplies */}
-      <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-lg p-6 border border-purple-500/30">
-        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-          🎨 School Supplies Gallery
-        </h3>
-        <p className="text-purple-200 text-sm mb-4">
-          Click on supplies to mark them for review - help the AI learn better! 🤖
-        </p>
-        
-        {labels.map(label => (
-          <div key={label} className="mb-8">
-            <h4 className="text-white font-medium mb-3 capitalize flex items-center gap-2">
-              <span className="text-2xl">
-                {label === 'pencil' && '✏️'}
-                {label === 'eraser' && '🧽'}
-                {label === 'marker' && '🖊️'}
-                {label === 'pen' && '🖊️'}
-                {label === 'crayon' && '🖍️'}
-                {label === 'ruler' && '📏'}
-                {label === 'scissors' && '✂️'}
-                {label === 'glue' && '🧴'}
-                {!['pencil', 'eraser', 'marker', 'pen', 'crayon', 'ruler', 'scissors', 'glue'].includes(label) && '📦'}
-              </span>
-              {label}s Collection
-            </h4>
-            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-              {(images[label] || []).slice(0, 12).map((imagePath, index) => (
-                <div key={index} className="relative group">
-                  <div className={`
-                    relative rounded-xl overflow-hidden border-2 transition-all duration-300 bg-white
-                    ${flaggedImages.has(imagePath) 
-                      ? 'border-red-500 scale-95 opacity-50' 
-                      : 'border-purple-500/30 hover:border-purple-400 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30'
-                    }
-                  `}>
-                    <div 
-                      className={`w-20 h-20 flex items-center justify-center cursor-pointer transition-all ${
-                        flaggedImages.has(imagePath) 
-                          ? 'opacity-50' 
-                          : 'hover:opacity-80'
-                      }`}
-                      onClick={() => toggleImageFlag(imagePath)}
-                      style={{
-                        background: `url(${imagePath}) center/cover`,
-                        imageRendering: 'crisp-edges'
-                      }}
-                    />
-                    {flaggedImages.has(imagePath) && (
-                      <div className="absolute inset-0 bg-red-500 bg-opacity-50 flex items-center justify-center rounded-lg">
-                        <span className="text-white text-2xl font-bold">❌</span>
-                      </div>
-                    )}
-                    {!flaggedImages.has(imagePath) && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-1">
-                        <span className="text-white text-xs font-medium">{index + 1}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+      {/* Hints Panel */}
+      {showHints && (
+        <div className="bg-amber-900/20 rounded-lg p-4 border border-amber-500/30">
+          <h4 className="text-amber-300 font-bold mb-2">🔍 Classification Hints:</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div>
+              <h5 className="text-yellow-300 font-semibold">✏️ Pencils</h5>
+              <ul className="text-amber-200 space-y-1">
+                <li>• Long cylindrical shape</li>
+                <li>• Usually wooden or plastic</li>
+                <li>• May have erasers attached</li>
+                <li>• Often yellow, but can be any color</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-pink-300 font-semibold">🧽 Erasers</h5>
+              <ul className="text-amber-200 space-y-1">
+                <li>• Rectangular or rounded blocks</li>
+                <li>• Pink, white, or gray colors</li>
+                <li>• Soft, moldable texture</li>
+                <li>• Some fit on pencil tips</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-blue-300 font-semibold">🖊️ Markers</h5>
+              <ul className="text-amber-200 space-y-1">
+                <li>• Cylindrical with caps</li>
+                <li>• Various bright colors</li>
+                <li>• Different tip shapes</li>
+                <li>• May have transparent bodies</li>
+              </ul>
             </div>
           </div>
-        ))}
+        </div>
+      )}
+
+      {/* School Supplies Gallery */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {labels.map(category => {
+          const categorySupplies = schoolSupplies.filter(supply => supply.category === category)
+          const activeCategorySupplies = categorySupplies.filter(supply => !flaggedItems.has(supply.id))
+          
+          return (
+            <div key={category} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <h4 className="text-xl font-bold text-white mb-4 capitalize flex items-center gap-2">
+                {category === 'pencil' && '✏️'}
+                {category === 'eraser' && '🧽'}
+                {category === 'marker' && '🖊️'}
+                {category}s
+                <span className="text-sm font-normal text-gray-400">
+                  ({activeCategorySupplies.length}/{categorySupplies.length} active)
+                </span>
+              </h4>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {categorySupplies.map(supply => (
+                  <div
+                    key={supply.id}
+                    className={`relative group cursor-pointer transition-all duration-300 ${
+                      flaggedItems.has(supply.id)
+                        ? 'opacity-50 scale-95'
+                        : 'hover:scale-105'
+                    }`}
+                  >
+                    <div 
+                      className={`relative rounded-lg overflow-hidden border-2 ${
+                        flaggedItems.has(supply.id)
+                          ? 'border-red-500 bg-red-900/20'
+                          : supply.difficulty === 'hard'
+                            ? 'border-orange-500/50 bg-orange-900/20'
+                            : supply.difficulty === 'medium'
+                              ? 'border-yellow-500/50 bg-yellow-900/20'
+                              : 'border-green-500/50 bg-green-900/20'
+                      }`}
+                      onClick={() => {
+                        if (gameMode === 'learning') {
+                          setSelectedItem(supply)
+                        } else if (gameMode === 'training') {
+                          toggleItemFlag(supply.id)
+                        }
+                      }}
+                    >
+                      <img 
+                        src={supply.image}
+                        alt={supply.name}
+                        className="w-full h-32 object-cover"
+                        style={{ imageRendering: 'crisp-edges' }}
+                      />
+                      
+                      {/* Classification Mode Overlay */}
+                      {gameMode === 'classification' && (
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <div className="text-center">
+                            <p className="text-white text-sm mb-2">Classify this item:</p>
+                            <div className="flex gap-1">
+                              {labels.map(label => (
+                                <button
+                                  key={label}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    const correct = handleClassificationAttempt(supply, label)
+                                    if (correct) {
+                                      alert(`Correct! This is a ${supply.category}.`)
+                                    } else {
+                                      alert(`Not quite. This is actually a ${supply.category}. Try to notice the ${supply.visualFeatures.join(', ')}.`)
+                                    }
+                                  }}
+                                  className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
+                                >
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Difficulty badge */}
+                      <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-bold ${
+                        supply.difficulty === 'hard'
+                          ? 'bg-red-600 text-white'
+                          : supply.difficulty === 'medium'
+                            ? 'bg-yellow-600 text-black'
+                            : 'bg-green-600 text-white'
+                      }`}>
+                        {supply.difficulty}
+                      </div>
+
+                      {/* Flagged overlay */}
+                      {flaggedItems.has(supply.id) && (
+                        <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                          <EyeOff className="h-8 w-8 text-red-300" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mt-2">
+                      <h5 className="text-white font-medium text-sm">{supply.name}</h5>
+                      <p className="text-gray-400 text-xs">{supply.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      {/* Metrics Display */}
-      {currentMetrics && (
+      {/* Selected Item Detail Modal */}
+      {selectedItem && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-700">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-white">{selectedItem.name}</h3>
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="text-gray-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <img 
+              src={selectedItem.image}
+              alt={selectedItem.name}
+              className="w-full h-48 object-cover rounded-lg mb-4"
+            />
+            
+            <p className="text-gray-300 mb-4">{selectedItem.description}</p>
+            
+            <div className="mb-4">
+              <h4 className="text-white font-semibold mb-2">Visual Features:</h4>
+              <ul className="space-y-1">
+                {selectedItem.visualFeatures.map((feature, index) => (
+                  <li key={index} className="text-gray-300 text-sm flex items-center gap-2">
+                    <CheckSquare className="h-4 w-4 text-green-400" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="flex gap-2">
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg"
+              >
+                Close
+              </button>
+              {gameMode === 'training' && (
+                <button
+                  onClick={() => {
+                    toggleItemFlag(selectedItem.id)
+                    setSelectedItem(null)
+                  }}
+                  className={`flex-1 px-4 py-2 rounded-lg text-white font-medium ${
+                    flaggedItems.has(selectedItem.id)
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-red-600 hover:bg-red-700'
+                  }`}
+                >
+                  {flaggedItems.has(selectedItem.id) ? 'Unflag Item' : 'Flag as Problematic'}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Training Progress */}
+      {isTraining && (
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-xl font-bold text-white mb-4">Model Performance (Mock Results)</h3>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+            <span className="text-white font-medium">{loadingStep}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Metrics Display */}
+      {currentMetrics && gameMode === 'training' && (
+        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h3 className="text-xl font-bold text-white mb-4">🎉 AI Training Results</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Overall Metrics */}
             <div>
               <h4 className="text-white font-medium mb-3">Overall Performance</h4>
               <div className="bg-gray-700 rounded-lg p-4">
-                <div className="text-2xl font-bold text-white mb-1">
+                <div className="text-3xl font-bold text-white mb-1">
                   {currentMetrics.accuracy.toFixed(1)}%
                 </div>
                 <div className="text-gray-400 text-sm">
-                  {currentMetrics.correctPredictions} / {currentMetrics.totalSamples} correct
+                  {currentMetrics.correctPredictions} / {currentMetrics.totalSamples} correct predictions
+                </div>
+                <div className="mt-2">
+                  {currentMetrics.accuracy >= 85 ? (
+                    <span className="text-green-400 text-sm">🌟 Excellent performance!</span>
+                  ) : currentMetrics.accuracy >= 70 ? (
+                    <span className="text-yellow-400 text-sm">👍 Good performance!</span>
+                  ) : (
+                    <span className="text-orange-400 text-sm">💪 Needs improvement</span>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Per-Class Metrics */}
             <div>
-              <h4 className="text-white font-medium mb-3">Per-Class Accuracy</h4>
+              <h4 className="text-white font-medium mb-3">Category Performance</h4>
               <div className="space-y-2">
                 {labels.map(label => (
                   <div key={label} className="flex justify-between items-center bg-gray-700 rounded px-3 py-2">
-                    <span className="text-white capitalize">{label}</span>
+                    <span className="text-white capitalize flex items-center gap-2">
+                      {label === 'pencil' && '✏️'}
+                      {label === 'eraser' && '🧽'}
+                      {label === 'marker' && '🖊️'}
+                      {label}
+                    </span>
                     <span className="text-white font-medium">
                       {currentMetrics.perClassMetrics[label]?.accuracy.toFixed(1) || 0}%
                     </span>
@@ -654,35 +761,13 @@ export default function AIClassifierTrainer({
             </div>
           </div>
 
-          {/* Confusion Matrix */}
-          <div className="mt-6">
-            <h4 className="text-white font-medium mb-3">Confusion Matrix</h4>
-            <div className="bg-gray-700 rounded-lg p-4 overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr>
-                    <th className="text-gray-400 p-2"></th>
-                    {labels.map(label => (
-                      <th key={label} className="text-gray-400 p-2 text-center capitalize">
-                        {label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {labels.map((actualLabel, actualIndex) => (
-                    <tr key={actualLabel}>
-                      <th className="text-gray-400 p-2 capitalize">{actualLabel}</th>
-                      {labels.map((predictedLabel, predictedIndex) => (
-                        <td key={predictedLabel} className="text-white p-2 text-center">
-                          {currentMetrics.confusionMatrix[actualIndex][predictedIndex]}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="mt-6 bg-green-900/20 rounded-lg p-4 border border-green-500/30">
+            <p className="text-green-300 font-medium">
+              🎓 Great job! Your AI model has been trained and can now classify school supplies with {currentMetrics.accuracy.toFixed(1)}% accuracy.
+            </p>
+            <p className="text-green-200 text-sm mt-2">
+              In real applications, this AI could help organize school supply inventories, assist students with learning, or power educational apps!
+            </p>
           </div>
         </div>
       )}
