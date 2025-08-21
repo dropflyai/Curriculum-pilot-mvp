@@ -339,9 +339,9 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
           {/* Mission Path - Zigzag Layout */}
           <div className="space-y-4">
             {missions.map((mission, index) => {
-              const isCompleted = index < Math.floor(missions.length * (progressPercentage / 100))
+              const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
               const isActive = currentTab === mission.id
-              const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (progressPercentage / 100)))
+              const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (calculateProgress() / 100)))
               const isEven = index % 2 === 0
 
               return (
@@ -454,7 +454,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
                 <span className="text-2xl">🎯</span>
                 <div>
                   <div className="text-white font-semibold">Missions Completed</div>
-                  <div className="text-purple-300">{Math.floor(missions.length * (progressPercentage / 100))} / {missions.length}</div>
+                  <div className="text-purple-300">{Math.floor(missions.length * (calculateProgress() / 100))} / {missions.length}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -510,7 +510,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         <div className="relative mb-6">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-semibold text-gray-300">Overall Completion</span>
-            <span className="text-lg font-bold text-cyan-300">{Math.round(progressPercentage)}% 🎯</span>
+            <span className="text-lg font-bold text-cyan-300">{Math.round(calculateProgress())}% 🎯</span>
           </div>
           
           {/* Main progress bar */}
@@ -521,7 +521,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
             {/* Progress fill with gradient and animation */}
             <div 
               className="relative h-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-600 transition-all duration-1000 ease-out"
-              style={{ width: `${progressPercentage}%` }}
+              style={{ width: `${calculateProgress()}%` }}
             >
               {/* Shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
@@ -560,7 +560,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         {/* Mission-specific progress mini-bars */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
           {missions.map((mission, index) => {
-            const isCompleted = index < Math.floor(missions.length * (progressPercentage / 100))
+            const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
             const isCurrent = currentTab === mission.id
             
             return (
@@ -605,13 +605,13 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         {/* Motivational footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-400 mb-2">
-            {progressPercentage < 25 
+            {calculateProgress() < 25 
               ? "🚀 Great start! You're building momentum!" 
-              : progressPercentage < 50 
+              : calculateProgress() < 50 
                 ? "🔥 You're on fire! Keep up the excellent work!" 
-                : progressPercentage < 75 
+                : calculateProgress() < 75 
                   ? "💎 Outstanding progress! You're almost there!" 
-                  : progressPercentage < 100 
+                  : calculateProgress() < 100 
                     ? "🏆 So close to completing this mission! Final push!" 
                     : "🎉 Mission accomplished! You're a coding superstar!"
             }
