@@ -4,8 +4,8 @@ import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import { getLessonById } from '@/lib/lesson-data'
-import LessonViewer from '@/components/LessonViewer'
+import { getAILesson } from '@/lib/lesson-data'
+import AILessonViewer from '@/components/AILessonViewer'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -13,7 +13,7 @@ export default function LessonPage() {
   const params = useParams()
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lesson] = useState(getLessonById(params.id as string))
+  const [lesson] = useState(getAILesson(params.id as string))
 
   useEffect(() => {
     // TEMPORARY: Allow lesson access for testing
@@ -63,28 +63,28 @@ export default function LessonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+    <div className="min-h-screen bg-gray-900">
       {/* Navigation Header */}
-      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
+      <div className="bg-gray-800 shadow-lg border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
             <Link
               href="/dashboard"
-              className="flex items-center text-purple-300 hover:text-white transition-colors font-medium group"
+              className="flex items-center text-gray-300 hover:text-white transition-colors font-medium"
             >
-              <ArrowLeft className="h-5 w-5 mr-2 group-hover:animate-pulse" />
-              ← Back to CodeFly Dashboard
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Dashboard
             </Link>
             <div className="flex items-center space-x-4">
-              <span className={`px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg ${
-                lesson.difficulty === 'beginner' ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white' :
-                lesson.difficulty === 'intermediate' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
-                'bg-gradient-to-r from-red-400 to-pink-500 text-white'
+              <span className={`px-3 py-1 rounded text-sm font-medium ${
+                lesson.difficulty === 'beginner' ? 'bg-green-600 text-white' :
+                lesson.difficulty === 'intermediate' ? 'bg-yellow-600 text-white' :
+                'bg-red-600 text-white'
               }`}>
-                {lesson.difficulty} {lesson.difficulty === 'beginner' ? '🌱' : lesson.difficulty === 'intermediate' ? '🚀' : '🏆'}
+                {lesson.difficulty}
               </span>
-              <span className="text-sm text-purple-300 bg-purple-900/30 px-4 py-2 rounded-full font-medium border border-purple-500/30">
-                ⏱️ {lesson.estimatedTime}
+              <span className="text-sm text-gray-300">
+                {lesson.estimatedTime}
               </span>
             </div>
           </div>
@@ -93,11 +93,8 @@ export default function LessonPage() {
 
       {/* Lesson Content */}
       <div className="py-8">
-        <LessonViewer
-          title={lesson.title}
-          description={lesson.description}
-          sections={lesson.sections}
-          lessonId={lesson.id}
+        <AILessonViewer
+          lesson={lesson}
           onLessonComplete={handleLessonComplete}
         />
       </div>

@@ -1,20 +1,45 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Webpack configuration for Pyodide
+  // Webpack configuration for Pyodide and TensorFlow.js
   webpack: (config, { isServer }) => {
-    // Don't bundle Pyodide on the server side
+    // Don't bundle these on the server side
     if (isServer) {
       config.externals = config.externals || []
-      config.externals.push('pyodide')
+      config.externals.push('pyodide', '@tensorflow/tfjs', '@tensorflow/tfjs-node')
     }
 
-    // Ignore Pyodide's dynamic imports during build
+    // Handle TensorFlow.js module resolution issues
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      crypto: false,
+    }
+
+    // Ignore dynamic import warnings
     config.ignoreWarnings = [
       {
         module: /pyodide/,
         message: /Critical dependency: the request of a dependency is an expression/,
       },
+      {
+        module: /@tensorflow/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
     ]
+
+    // Add rule for handling TensorFlow.js files
+    config.module.rules.push({
+      test: /\.js$/,
+      include: /node_modules\/@tensorflow/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+          cacheDirectory: true,
+        },
+      },
+    })
 
     return config
   },
