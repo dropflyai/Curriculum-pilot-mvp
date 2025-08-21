@@ -51,7 +51,7 @@ export interface AILesson {
 export const aiLessons: AILesson[] = [
   {
     id: 'week-01',
-    title: 'AI Classifier — School Supplies',
+    title: 'AI Classifier',
     description: 'Train your first image classifier using school supplies, learn about fairness and accuracy, and explore real-world applications.',
     difficulty: 'beginner',
     estimatedTime: '60 minutes in class + 60 minutes homework',

@@ -8,7 +8,7 @@ const AIClassifierTrainer = dynamic(() => import('./AIClassifierTrainer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading AI Classifier...</div>
 })
-import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target } from 'lucide-react'
+import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
 
@@ -112,13 +112,85 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
     }))
   }
 
-  const tabs = [
-    { id: 'learn', label: 'Learn', icon: BookOpen, color: 'emerald', emoji: '📚' },
-    { id: 'code', label: 'Code', icon: Code, color: 'blue', emoji: '🧠' },
-    { id: 'tests', label: 'Tests', icon: CheckSquare, color: 'orange', emoji: '🎯' },
-    { id: 'quiz', label: 'Quiz', icon: HelpCircle, color: 'purple', emoji: '❓' },
-    { id: 'checklist', label: 'Checklist', icon: CheckSquare, color: 'pink', emoji: '✅' },
-    { id: 'submit', label: 'Submit', icon: Upload, color: 'yellow', emoji: '🚀' }
+  const missions = [
+    { 
+      id: 'learn', 
+      title: 'Knowledge Quest', 
+      subtitle: 'Discover the Ancient Secrets of AI',
+      icon: BookOpen, 
+      color: 'emerald', 
+      emoji: '🏛️',
+      difficulty: 'Beginner',
+      estimatedTime: '15 min',
+      xpReward: 100,
+      description: 'Explore the fundamental concepts and unlock the mysteries of artificial intelligence',
+      objectives: ['Learn core AI concepts', 'Understand key terminology', 'Complete knowledge checkpoints']
+    },
+    { 
+      id: 'code', 
+      title: 'Coding Laboratory', 
+      subtitle: 'Build Your First AI Creation',
+      icon: Brain, 
+      color: 'blue', 
+      emoji: '⚗️',
+      difficulty: 'Intermediate',
+      estimatedTime: '25 min',
+      xpReward: 200,
+      description: 'Enter the lab and craft your very own AI model using cutting-edge techniques',
+      objectives: ['Set up your workspace', 'Train an AI model', 'Test your creation']
+    },
+    { 
+      id: 'tests', 
+      title: 'Trial Chamber', 
+      subtitle: 'Prove Your AI Mastery',
+      icon: Target, 
+      color: 'orange', 
+      emoji: '🏹',
+      difficulty: 'Intermediate',
+      estimatedTime: '10 min',
+      xpReward: 150,
+      description: 'Face the challenges and demonstrate that your AI creation works perfectly',
+      objectives: ['Run accuracy tests', 'Debug any issues', 'Achieve 80%+ success rate']
+    },
+    { 
+      id: 'quiz', 
+      title: 'Wisdom Trials', 
+      subtitle: 'Answer the Ancient Riddles',
+      icon: HelpCircle, 
+      color: 'purple', 
+      emoji: '🔮',
+      difficulty: 'Advanced',
+      estimatedTime: '8 min',
+      xpReward: 120,
+      description: 'Test your understanding with mystical questions about AI and machine learning',
+      objectives: ['Answer concept questions', 'Solve practical problems', 'Score 70%+ to pass']
+    },
+    { 
+      id: 'checklist', 
+      title: 'Final Inspection', 
+      subtitle: 'Complete Your Adventure',
+      icon: CheckSquare, 
+      color: 'pink', 
+      emoji: '📋',
+      difficulty: 'Easy',
+      estimatedTime: '5 min',
+      xpReward: 75,
+      description: 'Review all your accomplishments and ensure everything is ready for submission',
+      objectives: ['Review all completed tasks', 'Check code quality', 'Prepare final submission']
+    },
+    { 
+      id: 'submit', 
+      title: 'Victory Ceremony', 
+      subtitle: 'Claim Your Rewards!',
+      icon: Award, 
+      color: 'yellow', 
+      emoji: '🏆',
+      difficulty: 'Celebration',
+      estimatedTime: '2 min',
+      xpReward: 300,
+      description: 'Submit your masterpiece and receive your well-earned rewards and achievements!',
+      objectives: ['Submit final project', 'Receive completion badge', 'Unlock next adventure']
+    }
   ]
 
   return (
@@ -245,118 +317,320 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         </div>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-2xl p-4 mb-8 border border-gray-600 shadow-xl">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {tabs.map((tab, index) => {
-            const isActive = currentTab === tab.id
-            const colorClasses = {
-              emerald: isActive ? 'bg-gradient-to-r from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/25' : 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20',
-              blue: isActive ? 'bg-gradient-to-r from-blue-500 to-cyan-600 shadow-lg shadow-blue-500/25' : 'bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20',
-              orange: isActive ? 'bg-gradient-to-r from-orange-500 to-red-600 shadow-lg shadow-orange-500/25' : 'bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20',
-              purple: isActive ? 'bg-gradient-to-r from-purple-500 to-violet-600 shadow-lg shadow-purple-500/25' : 'bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20',
-              pink: isActive ? 'bg-gradient-to-r from-pink-500 to-rose-600 shadow-lg shadow-pink-500/25' : 'bg-pink-500/10 border-pink-500/30 hover:bg-pink-500/20',
-              yellow: isActive ? 'bg-gradient-to-r from-yellow-500 to-amber-600 shadow-lg shadow-yellow-500/25' : 'bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20'
-            }
-            
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setCurrentTab(tab.id as any)}
-                className={`group relative p-4 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 border ${
-                  colorClasses[tab.color as keyof typeof colorClasses]
-                } ${isActive ? 'text-white' : 'text-gray-300'}`}
-              >
-                <div className="flex flex-col items-center space-y-2">
-                  <div className={`text-2xl ${isActive ? 'animate-bounce' : 'group-hover:animate-pulse'}`}>
-                    {tab.emoji}
-                  </div>
-                  <tab.icon className={`h-5 w-5 ${isActive ? 'animate-pulse' : ''}`} />
-                  <span className="text-sm font-semibold">{tab.label}</span>
+      {/* Adventure Map */}
+      <div className="relative bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 rounded-3xl p-8 mb-8 border-2 border-cyan-500/30 shadow-2xl overflow-hidden">
+        {/* Fantasy Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 right-12 text-6xl animate-pulse">🏔️</div>
+          <div className="absolute bottom-8 left-16 text-4xl animate-bounce delay-300">🌲</div>
+          <div className="absolute top-12 left-24 text-3xl animate-ping delay-500">⭐</div>
+          <div className="absolute bottom-4 right-32 text-5xl animate-pulse delay-700">🏰</div>
+        </div>
+
+        <div className="relative z-10">
+          {/* Adventure Map Title */}
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
+              🗺️ Adventure Map 🗺️
+            </h2>
+            <p className="text-cyan-200 text-lg">Choose your next mission, brave adventurer!</p>
+          </div>
+
+          {/* Mission Path - Zigzag Layout */}
+          <div className="space-y-4">
+            {missions.map((mission, index) => {
+              const isCompleted = index < Math.floor(missions.length * (progressPercentage / 100))
+              const isActive = currentTab === mission.id
+              const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (progressPercentage / 100)))
+              const isEven = index % 2 === 0
+
+              return (
+                <div 
+                  key={mission.id} 
+                  className={`flex items-center ${isEven ? 'justify-start' : 'justify-end'} relative`}
+                >
+                  {/* Connecting Path Line */}
+                  {index < missions.length - 1 && (
+                    <div className={`absolute ${isEven ? 'right-0' : 'left-0'} top-full h-4 w-px bg-gradient-to-b from-cyan-400/50 to-transparent z-0`}></div>
+                  )}
+
+                  {/* Mission Card */}
+                  <button
+                    onClick={() => !isLocked && setCurrentTab(mission.id as any)}
+                    disabled={isLocked}
+                    className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 shadow-xl ${
+                      isLocked 
+                        ? 'from-gray-800 to-gray-900 border-gray-600 opacity-50 cursor-not-allowed'
+                        : isCompleted 
+                          ? 'from-emerald-600 to-green-700 border-emerald-400 shadow-emerald-500/25'
+                          : isActive 
+                            ? `from-${mission.color}-600 to-${mission.color}-700 border-${mission.color}-400 shadow-${mission.color}-500/25`
+                            : `from-${mission.color}-800/30 to-${mission.color}-900/30 border-${mission.color}-500/50 hover:border-${mission.color}-400`
+                    } w-80`}
+                  >
+                    {/* Mission Status Badge */}
+                    <div className="absolute -top-2 -right-2">
+                      {isLocked ? (
+                        <div className="bg-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
+                          🔒 LOCKED
+                        </div>
+                      ) : isCompleted ? (
+                        <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                          ✅ COMPLETE
+                        </div>
+                      ) : isActive ? (
+                        <div className="bg-cyan-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-bounce">
+                          ⚡ ACTIVE
+                        </div>
+                      ) : (
+                        <div className="bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                          📍 READY
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mission Content */}
+                    <div className="flex items-start gap-4">
+                      {/* Mission Icon */}
+                      <div className={`relative p-4 rounded-xl bg-gradient-to-r ${
+                        isCompleted 
+                          ? 'from-emerald-500 to-green-600' 
+                          : `from-${mission.color}-500 to-${mission.color}-600`
+                      } ${isActive ? 'animate-pulse' : ''}`}>
+                        <div className="text-3xl">{mission.emoji}</div>
+                        <mission.icon className="absolute -bottom-1 -right-1 h-4 w-4 text-white bg-gray-900 rounded-full p-0.5" />
+                      </div>
+
+                      {/* Mission Details */}
+                      <div className="flex-1 text-left">
+                        <h3 className="text-xl font-bold text-white mb-1">{mission.title}</h3>
+                        <p className="text-cyan-200 text-sm mb-3">{mission.subtitle}</p>
+                        
+                        {/* Mission Stats */}
+                        <div className="flex items-center gap-4 text-xs">
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-400">⏱️</span>
+                            <span className="text-gray-300">{mission.estimatedTime}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-purple-400">💎</span>
+                            <span className="text-gray-300">{mission.xpReward} XP</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-orange-400">🎯</span>
+                            <span className="text-gray-300">{mission.difficulty}</span>
+                          </div>
+                        </div>
+
+                        {/* Mission Objectives */}
+                        <div className="mt-3 space-y-1">
+                          {mission.objectives.slice(0, 2).map((objective, objIndex) => (
+                            <div key={objIndex} className="flex items-center gap-2 text-xs text-gray-400">
+                              <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+                              <span>{objective}</span>
+                            </div>
+                          ))}
+                          {mission.objectives.length > 2 && (
+                            <div className="text-xs text-cyan-400">+{mission.objectives.length - 2} more objectives...</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hover Effect */}
+                    {!isLocked && (
+                      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl"></div>
+                    )}
+                  </button>
                 </div>
-                
-                {/* Progress indicator */}
-                {isActive && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                )}
-              </button>
-            )
-          })}
+              )
+            })}
+          </div>
+
+          {/* Adventure Stats Footer */}
+          <div className="mt-8 bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-2xl p-4 border border-purple-500/30">
+            <div className="flex justify-center items-center gap-8 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎯</span>
+                <div>
+                  <div className="text-white font-semibold">Missions Completed</div>
+                  <div className="text-purple-300">{Math.floor(missions.length * (progressPercentage / 100))} / {missions.length}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">💎</span>
+                <div>
+                  <div className="text-white font-semibold">Total XP Available</div>
+                  <div className="text-purple-300">{missions.reduce((sum, m) => sum + m.xpReward, 0)} XP</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">⏰</span>
+                <div>
+                  <div className="text-white font-semibold">Adventure Time</div>
+                  <div className="text-purple-300">~60 minutes</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div className="relative bg-gradient-to-r from-slate-800 to-gray-800 rounded-2xl p-6 mb-8 border border-cyan-500/30 shadow-xl overflow-hidden">
         {/* Animated background particles */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-2 right-8 animate-ping">
-            <div className="w-1 h-1 bg-cyan-400 rounded-full"></div>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 right-12 animate-ping">
+            <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
           </div>
-          <div className="absolute bottom-3 left-12 animate-ping animation-delay-300">
+          <div className="absolute top-8 left-16 animate-pulse delay-300">
             <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
           </div>
-          <div className="absolute top-4 left-20 animate-ping animation-delay-700">
-            <div className="w-1 h-1 bg-pink-400 rounded-full"></div>
+          <div className="absolute bottom-6 right-24 animate-bounce delay-500">
+            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
           </div>
         </div>
-        
-        <div className="relative z-10">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-600 p-2 rounded-xl">
-                <Target className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-white">Mission Progress</h3>
-                <p className="text-sm text-gray-400">Keep going, you're doing amazing! 🌟</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                {Math.round(calculateProgress())}%
-              </span>
-              {calculateProgress() >= 100 && (
-                <div className="animate-bounce">
-                  <Sparkles className="h-6 w-6 text-yellow-400" />
-                </div>
-              )}
-            </div>
+
+        {/* Header with celebration emojis */}
+        <div className="relative flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="text-2xl animate-bounce">🚀</div>
+            <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-300 to-emerald-300 bg-clip-text text-transparent">
+              Mission Progress
+            </h3>
+            <div className="text-2xl animate-pulse delay-300">⭐</div>
+          </div>
+          <div className="flex items-center gap-2 bg-cyan-500/20 px-4 py-2 rounded-xl border border-cyan-500/30">
+            <Clock className="h-4 w-4 text-cyan-300" />
+            <span className="text-sm text-cyan-200 font-medium">45 min remaining</span>
+          </div>
+        </div>
+
+        {/* Progress visualization */}
+        <div className="relative mb-6">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-semibold text-gray-300">Overall Completion</span>
+            <span className="text-lg font-bold text-cyan-300">{Math.round(progressPercentage)}% 🎯</span>
           </div>
           
-          {/* Enhanced Progress Bar */}
-          <div className="relative w-full bg-gray-700 rounded-full h-4 shadow-inner">
+          {/* Main progress bar */}
+          <div className="relative h-4 bg-gray-700 rounded-full overflow-hidden">
+            {/* Background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-700"></div>
+            
+            {/* Progress fill with gradient and animation */}
             <div 
-              className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-full transition-all duration-700 ease-out shadow-lg"
-              style={{ width: `${calculateProgress()}%` }}
+              className="relative h-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-600 transition-all duration-1000 ease-out"
+              style={{ width: `${progressPercentage}%` }}
             >
-              {/* Progress bar animation */}
-              <div className="absolute inset-0 bg-white opacity-30 rounded-full animate-pulse"></div>
-              {/* Progress sparkle effect */}
-              {calculateProgress() > 0 && (
-                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-                </div>
-              )}
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+              
+              {/* Progress glow */}
+              <div className="absolute inset-0 shadow-lg shadow-cyan-500/50"></div>
             </div>
+            
+            {/* Achievement markers */}
+            <div className="absolute top-0 left-1/4 w-0.5 h-full bg-yellow-400 opacity-60"></div>
+            <div className="absolute top-0 left-1/2 w-0.5 h-full bg-yellow-400 opacity-60"></div>
+            <div className="absolute top-0 left-3/4 w-0.5 h-full bg-yellow-400 opacity-60"></div>
           </div>
           
-          {/* Progress milestones */}
-          <div className="flex justify-between mt-2 text-xs">
-            <span className={`font-medium ${calculateProgress() >= 0 ? 'text-cyan-400' : 'text-gray-500'}`}>
-              Start 🚀
+          {/* Achievement labels */}
+          <div className="flex justify-between text-xs text-gray-400 mt-2 px-1">
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              25% 🌟
             </span>
-            <span className={`font-medium ${calculateProgress() >= 25 ? 'text-blue-400' : 'text-gray-500'}`}>
-              Learning 📚
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              50% 🔥
             </span>
-            <span className={`font-medium ${calculateProgress() >= 50 ? 'text-purple-400' : 'text-gray-500'}`}>
-              Coding 🧠
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              75% 💎
             </span>
-            <span className={`font-medium ${calculateProgress() >= 75 ? 'text-pink-400' : 'text-gray-500'}`}>
-              Testing 🎯
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              100% 🏆
             </span>
-            <span className={`font-medium ${calculateProgress() >= 100 ? 'text-yellow-400' : 'text-gray-500'}`}>
-              Complete ✨
-            </span>
+          </div>
+        </div>
+
+        {/* Mission-specific progress mini-bars */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+          {missions.map((mission, index) => {
+            const isCompleted = index < Math.floor(missions.length * (progressPercentage / 100))
+            const isCurrent = currentTab === mission.id
+            
+            return (
+              <div key={mission.id} className={`relative p-2 rounded-lg border transition-all duration-300 ${
+                isCompleted 
+                  ? 'bg-emerald-500/20 border-emerald-500/40' 
+                  : isCurrent 
+                    ? 'bg-cyan-500/20 border-cyan-500/40' 
+                    : 'bg-gray-700/50 border-gray-600/50'
+              }`}>
+                <div className="flex items-center justify-center flex-col space-y-1">
+                  <div className="text-lg">
+                    {isCompleted ? '✅' : isCurrent ? mission.emoji : '⭕'}
+                  </div>
+                  <span className="text-xs font-medium text-gray-300">{mission.title.split(' ')[0]}</span>
+                  
+                  {/* Mini progress bar */}
+                  <div className="w-full h-1 bg-gray-600 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-500 ${
+                        isCompleted 
+                          ? 'bg-emerald-500 w-full' 
+                          : isCurrent 
+                            ? 'bg-cyan-500 w-3/4' 
+                            : 'bg-gray-500 w-0'
+                      }`}
+                    ></div>
+                  </div>
+                </div>
+                
+                {/* Celebration sparkles */}
+                {isCompleted && (
+                  <div className="absolute -top-1 -right-1 animate-spin">
+                    <div className="text-yellow-400 text-sm">✨</div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Motivational footer */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-400 mb-2">
+            {progressPercentage < 25 
+              ? "🚀 Great start! You're building momentum!" 
+              : progressPercentage < 50 
+                ? "🔥 You're on fire! Keep up the excellent work!" 
+                : progressPercentage < 75 
+                  ? "💎 Outstanding progress! You're almost there!" 
+                  : progressPercentage < 100 
+                    ? "🏆 So close to completing this mission! Final push!" 
+                    : "🎉 Mission accomplished! You're a coding superstar!"
+            }
+          </p>
+          
+          {/* XP and streak info */}
+          <div className="flex justify-center items-center gap-6 text-xs">
+            <div className="flex items-center gap-1 text-yellow-400">
+              <span>⭐</span>
+              <span>+50 XP earned</span>
+            </div>
+            <div className="flex items-center gap-1 text-orange-400">
+              <span>🔥</span>
+              <span>5-day streak</span>
+            </div>
+            <div className="flex items-center gap-1 text-purple-400">
+              <span>🏅</span>
+              <span>2 badges unlocked</span>
+            </div>
           </div>
         </div>
       </div>
@@ -369,13 +643,55 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         <div className="relative z-10">
           {currentTab === 'learn' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="bg-gradient-to-r from-emerald-500 to-green-600 p-3 rounded-xl animate-pulse">
-                  <BookOpen className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-white">Let's Learn! 📚</h2>
-                  <p className="text-green-300 text-lg">Get ready to explore the amazing world of AI</p>
+              {/* Mission Header */}
+              <div className="relative bg-gradient-to-r from-emerald-800/50 to-green-800/50 p-8 rounded-3xl border-2 border-emerald-500/30 mb-8">
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <div className="bg-gradient-to-r from-emerald-500 to-green-600 p-6 rounded-2xl animate-pulse shadow-2xl">
+                      <div className="text-6xl">🏛️</div>
+                      <BookOpen className="absolute -bottom-2 -right-2 h-8 w-8 text-white bg-gray-900 rounded-full p-1" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-4xl font-bold text-white">Knowledge Quest</h2>
+                      <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce">
+                        ⚡ ACTIVE MISSION
+                      </div>
+                    </div>
+                    <p className="text-emerald-200 text-xl mb-4">Discover the Ancient Secrets of AI</p>
+                    
+                    {/* Mission Objectives */}
+                    <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-500/20">
+                      <h4 className="text-emerald-300 font-semibold mb-2">Mission Objectives:</h4>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm text-emerald-200">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                          Learn core AI concepts
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-emerald-200">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                          Understand key terminology
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-emerald-200">
+                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                          Complete knowledge checkpoints
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reward Info */}
+                    <div className="flex items-center gap-4 mt-4 text-sm">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-400">💎</span>
+                        <span className="text-emerald-200 font-semibold">100 XP Reward</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-blue-400">⏱️</span>
+                        <span className="text-emerald-200">~15 minutes</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               
@@ -391,13 +707,59 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
 
           {currentTab === 'code' && (
             <div className="space-y-8">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-3 rounded-xl animate-pulse">
-                  <Code className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-white">Time to Code! 🧠</h2>
-                  <p className="text-blue-300 text-lg">Train your first AI model and see the magic happen!</p>
+              {/* Mission Header */}
+              <div className="relative bg-gradient-to-r from-blue-800/50 to-cyan-800/50 p-8 rounded-3xl border-2 border-blue-500/30 mb-8">
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-6 rounded-2xl animate-pulse shadow-2xl">
+                      <div className="text-6xl">⚗️</div>
+                      <Brain className="absolute -bottom-2 -right-2 h-8 w-8 text-white bg-gray-900 rounded-full p-1" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-4xl font-bold text-white">Coding Laboratory</h2>
+                      <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce">
+                        ⚡ ACTIVE MISSION
+                      </div>
+                    </div>
+                    <p className="text-blue-200 text-xl mb-4">Build Your First AI Creation</p>
+                    
+                    {/* Mission Objectives */}
+                    <div className="bg-blue-900/30 rounded-xl p-4 border border-blue-500/20">
+                      <h4 className="text-blue-300 font-semibold mb-2">Mission Objectives:</h4>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm text-blue-200">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          Set up your workspace
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-blue-200">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          Train an AI model
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-blue-200">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          Test your creation
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reward Info */}
+                    <div className="flex items-center gap-4 mt-4 text-sm">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-400">💎</span>
+                        <span className="text-blue-200 font-semibold">200 XP Reward</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-orange-400">⏱️</span>
+                        <span className="text-blue-200">~25 minutes</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-orange-400">🎯</span>
+                        <span className="text-blue-200">Intermediate</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               

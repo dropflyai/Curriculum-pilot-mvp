@@ -6,6 +6,8 @@ import ConceptCheck from './ConceptCheck'
 import HoverDefinition from './HoverDefinition'
 import MiniDemo from './MiniDemo'
 import LearningProgressTracker from './LearningProgressTracker'
+import InteractiveSectionNavigator from './InteractiveSectionNavigator'
+import CompactLearningSection from './CompactLearningSection'
 
 interface InteractiveLessonContentProps {
   onSectionComplete?: (sectionIndex: number) => void
@@ -13,17 +15,37 @@ interface InteractiveLessonContentProps {
 
 export default function InteractiveLessonContent({ onSectionComplete }: InteractiveLessonContentProps) {
   const [completedSections, setCompletedSections] = useState(0)
-  const [sectionVisibility, setSectionVisibility] = useState<boolean[]>(new Array(7).fill(false))
+  const [currentSection, setCurrentSection] = useState(0)
+  const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]))
 
   const sections = [
     "What is ML?",
     "AI vs ML", 
     "Key Vocab",
-    "Accuracy & Bias",
+    "Training & Accuracy",
+    "Bias & Ethics",
     "Real Applications",
-    "Your Mission",
-    "Ready to Code"
+    "Your Mission"
   ]
+
+  const sectionColors = ['blue', 'purple', 'green', 'orange', 'pink', 'yellow', 'red'] as const
+
+  const toggleSectionExpansion = (sectionIndex: number) => {
+    setExpandedSections(prev => {
+      const newExpanded = new Set(prev)
+      if (newExpanded.has(sectionIndex)) {
+        newExpanded.delete(sectionIndex)
+      } else {
+        newExpanded.add(sectionIndex)
+      }
+      return newExpanded
+    })
+  }
+
+  const handleSectionSelect = (sectionIndex: number) => {
+    setCurrentSection(sectionIndex)
+    setExpandedSections(new Set([sectionIndex]))
+  }
 
   const markSectionComplete = (sectionIndex: number) => {
     if (sectionIndex === completedSections) {
@@ -32,40 +54,31 @@ export default function InteractiveLessonContent({ onSectionComplete }: Interact
     }
   }
 
-  const toggleSectionVisibility = (index: number) => {
-    setSectionVisibility(prev => {
-      const newVisibility = [...prev]
-      newVisibility[index] = !newVisibility[index]
-      if (!newVisibility[index] === false) { // If section was just revealed
-        setTimeout(() => markSectionComplete(index), 3000) // Auto-complete after 3 seconds of viewing
-      }
-      return newVisibility
-    })
-  }
-
   useEffect(() => {
-    // Auto-reveal first section
-    setSectionVisibility(prev => {
-      const newVisibility = [...prev]
-      newVisibility[0] = true
-      return newVisibility
-    })
+    // Auto-expand first section
+    setExpandedSections(new Set([0]))
   }, [])
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <LearningProgressTracker 
-        sections={sections} 
-        completedSections={completedSections} 
+    <div className="max-w-5xl mx-auto">
+      <InteractiveSectionNavigator
+        sections={sections}
+        currentSection={currentSection}
+        completedSections={completedSections}
+        onSectionSelect={handleSectionSelect}
       />
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {/* Section 1: What is Machine Learning? */}
-        <section className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-6 border border-blue-500/30">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">🧠</span>
-            <h2 className="text-2xl font-bold text-cyan-300">What Exactly IS Machine Learning?</h2>
-          </div>
+        <CompactLearningSection
+          title="What Exactly IS Machine Learning?"
+          emoji="🧠"
+          isExpanded={expandedSections.has(0)}
+          onToggle={() => toggleSectionExpansion(0)}
+          isCompleted={completedSections > 0}
+          isActive={currentSection === 0}
+          colorScheme={sectionColors[0]}
+        >
           
           {/* Professional Definition */}
           <div className="bg-cyan-900/20 p-4 rounded-lg border border-cyan-500/30 mb-6">
@@ -129,11 +142,11 @@ export default function InteractiveLessonContent({ onSectionComplete }: Interact
 
           <button
             onClick={() => markSectionComplete(0)}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+            className="mt-6 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg"
           >
-            Mark Section Complete ✓
+            ✓ Mark Section Complete
           </button>
-        </section>
+        </CompactLearningSection>
 
         {/* Section 2: AI vs Machine Learning */}
         {completedSections >= 1 && (
