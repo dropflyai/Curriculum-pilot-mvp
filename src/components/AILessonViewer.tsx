@@ -46,8 +46,90 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   const [metrics, setMetrics] = useState<any>(null)
   const [submissionText, setSubmissionText] = useState('')
 
+  // Progress persistence utilities
+  const getProgressKey = () => `lesson-progress-${lesson.id}`
+  
+  const saveProgress = () => {
+    const progress = {
+      currentTab,
+      testState,
+      quizState,
+      checklistState,
+      confusionAnswers,
+      ethicsNote,
+      metrics,
+      submissionText,
+      timestamp: Date.now()
+    }
+    localStorage.setItem(getProgressKey(), JSON.stringify(progress))
+  }
+
+  const loadProgress = () => {
+    try {
+      const saved = localStorage.getItem(getProgressKey())
+      if (saved) {
+        const progress = JSON.parse(saved)
+        // Only restore if saved within last 7 days
+        if (Date.now() - progress.timestamp < 7 * 24 * 60 * 60 * 1000) {
+          setTestState(progress.testState || { completed: {} })
+          setQuizState(progress.quizState || { answers: {}, submitted: false, score: 0 })
+          setChecklistState(progress.checklistState || { completed: {} })
+          setConfusionAnswers(progress.confusionAnswers || ['', '', ''])
+          setEthicsNote(progress.ethicsNote || '')
+          setMetrics(progress.metrics || null)
+          setSubmissionText(progress.submissionText || '')
+          // Don't restore currentTab - let user navigate manually
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load progress:', error)
+    }
+  }
+
   // Get current mode data
   const currentModeData = lesson.modes.find(mode => mode.type === currentMode) || lesson.modes[0]
+
+  // Auto-populate checklist based on completed tasks
+  const updateChecklistFromProgress = () => {
+    const newCompleted: Record<number, boolean> = {}
+    
+    // 0: "I can say how training and inference are different." (completed after viewing learn content)
+    if (currentTab === 'code' || currentTab === 'tests' || currentTab === 'quiz' || currentTab === 'checklist' || currentTab === 'submit') {
+      newCompleted[0] = true
+    }
+    
+    // 1: "I viewed overall accuracy and per-class accuracy." (completed after first training)
+    if (testState.completed['trained_once'] || metrics) {
+      newCompleted[1] = true
+    }
+    
+    // 2: "I improved the dataset (quality or balance) and retrained." (completed after metrics comparison)
+    if (testState.completed['metrics_compared']) {
+      newCompleted[2] = true
+    }
+    
+    // 3: "I interpreted a tiny confusion matrix." (completed after confusion questions)
+    if (testState.completed['confusion_read']) {
+      newCompleted[3] = true
+    }
+    
+    // 4: "I wrote an ethics/mitigation note." (completed after ethics note)
+    if (testState.completed['ethics_note']) {
+      newCompleted[4] = true
+    }
+
+    // Update checklist state if there are changes
+    const hasChanges = Object.keys(newCompleted).some(key => 
+      newCompleted[parseInt(key)] !== checklistState.completed[parseInt(key)]
+    )
+    
+    if (hasChanges) {
+      setChecklistState(prev => ({
+        ...prev,
+        completed: { ...prev.completed, ...newCompleted }
+      }))
+    }
+  }
 
   // Calculate progress
   const calculateProgress = () => {
@@ -77,10 +159,32 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     return (completed / total) * 100
   }
 
+  // Load progress on component mount
   useEffect(() => {
+    loadProgress()
+  }, [])
+
+  // Auto-update checklist and save progress when state changes
+  useEffect(() => {
+    updateChecklistFromProgress()
+    saveProgress()
     const progress = calculateProgress()
     onLessonComplete(progress)
   }, [currentTab, metrics, testState, quizState, checklistState, submissionText])
+
+  // Auto-progress to rewards when all checklist items are complete
+  useEffect(() => {
+    const allChecklistComplete = lesson.modes[0].checklist.every((_, index) => 
+      checklistState.completed[index]
+    )
+    
+    if (allChecklistComplete && currentTab === 'checklist') {
+      // Auto-advance to submit tab after a short delay
+      setTimeout(() => {
+        setCurrentTab('submit')
+      }, 1500)
+    }
+  }, [checklistState, currentTab, lesson.modes])
 
   const handleModeSwitch = (mode: 'main' | 'bonus') => {
     setCurrentMode(mode)
@@ -1251,23 +1355,53 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   {/* Mission Objectives */}
                   <div className="bg-pink-900/40 rounded-2xl p-6 border border-pink-500/30">
                     <h3 className="text-pink-300 font-bold text-xl mb-4">📋 Inspection Checklist</h3>
+                    <p className="text-pink-200 text-sm mb-4">
+                      ✨ Items automatically complete as you finish each section of the lesson!
+                    </p>
                     <div className="space-y-4">
-                      {lesson.modes[0].checklist.map((item, index) => (
-                        <div key={index} className="flex items-center gap-3 bg-pink-800/30 p-4 rounded-xl">
-                          <button
-                            onClick={() => handleChecklistToggle(index)}
-                            className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
-                              checklistState.completed[index]
-                                ? 'bg-pink-500 border-pink-400 text-white'
-                                : 'border-pink-500 hover:border-pink-400'
-                            }`}
-                          >
-                            {checklistState.completed[index] && '✓'}
-                          </button>
-                          <span className="text-pink-200">{item}</span>
-                        </div>
-                      ))}
+                      {lesson.modes[0].checklist.map((item, index) => {
+                        const isCompleted = checklistState.completed[index]
+                        return (
+                          <div key={index} className={`flex items-center gap-3 p-4 rounded-xl transition-all duration-500 ${
+                            isCompleted 
+                              ? 'bg-green-800/30 border border-green-500/50' 
+                              : 'bg-pink-800/30'
+                          }`}>
+                            <div
+                              className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-300 ${
+                                isCompleted
+                                  ? 'bg-green-500 border-green-400 text-white animate-pulse'
+                                  : 'border-pink-500 bg-pink-900/30'
+                              }`}
+                            >
+                              {isCompleted && '✓'}
+                            </div>
+                            <span className={`transition-colors ${
+                              isCompleted ? 'text-green-200' : 'text-pink-200'
+                            }`}>
+                              {item}
+                            </span>
+                            {isCompleted && (
+                              <span className="ml-auto text-green-400 animate-bounce">🎉</span>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
+
+                    {/* Completion Status */}
+                    {lesson.modes[0].checklist.every((_, index) => checklistState.completed[index]) && (
+                      <div className="mt-6 bg-green-900/20 rounded-lg p-4 border border-green-500/30 text-center">
+                        <div className="text-4xl mb-2 animate-bounce">🎊</div>
+                        <h4 className="text-green-300 font-bold text-lg mb-2">All Tasks Complete!</h4>
+                        <p className="text-green-200 mb-4">
+                          Excellent work! You've mastered all the AI concepts. 
+                        </p>
+                        <p className="text-green-300 text-sm animate-pulse">
+                          🚀 Automatically advancing to claim your rewards...
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
