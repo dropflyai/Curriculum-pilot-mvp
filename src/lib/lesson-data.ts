@@ -92,7 +92,7 @@ print(f"Current Level: {level}")
 ## 🎤 Chapter 2: Getting Input (Program Conversations)
 
 ### What is Input?
-The `input()` function makes your program ask questions and wait for answers.
+The \`input()\` function makes your program ask questions and wait for answers.
 
 ### 💡 Perfect Analogy: Drive-Through Experience
 1. **Speaker asks:** "Welcome! What would you like?" (your program asks)
@@ -129,12 +129,12 @@ print("We're going to be great coding partners! 🤝")
 ## 📱 Chapter 3: Showing Output (Program Responses)
 
 ### What is Output?
-The `print()` function is your program's voice - how it communicates back to users.
+The \`print()\` function is your program's voice - how it communicates back to users.
 
 ### 💡 Perfect Analogy: Text Messaging
 - Friend texts: "What's up?"
 - You text back: "Just coding!"
-- `print()` works the same way - your program "texts" back to the user
+- \`print()\` works the same way - your program "texts" back to the user
 
 ### Professional Output Techniques
 \`\`\`python
@@ -171,7 +171,7 @@ print("===================")
 **Every interactive app follows this 4-step pattern:**
 
 ### 1. ASK 🤔
-Use `input()` to get information from the user
+Use \`input()\` to get information from the user
 
 ### 2. STORE 📦  
 Put that information in variables (memory boxes)
@@ -180,7 +180,7 @@ Put that information in variables (memory boxes)
 Your program thinks about the information
 
 ### 4. RESPOND 💬
-Use `print()` to show results
+Use \`print()\` to show results
 
 ### Real Examples:
 - **Instagram:** ASK for photo → STORE on servers → PROCESS with filters → RESPOND by showing to friends

@@ -4,10 +4,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllLessons, Lesson } from '@/lib/lesson-data'
-import { BookOpen, Clock, Award, TrendingUp, User, LogOut, Star, Target, Trophy, Flame, Brain, Timer, CheckCircle, Sparkles } from 'lucide-react'
+import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
-import CelebrationEffect from '@/components/CelebrationEffect'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -28,27 +27,12 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
   
-  // Gamification Data
-  const [userXP] = useState(1250)
-  const [currentStreak] = useState(5)
-  const [weeklyGoal] = useState({ target: 4, completed: 2 })
+  // Learning Progress Data
   const [totalLearningTime] = useState(8.5) // hours this week
-  const [showCelebration, setShowCelebration] = useState(false)
-  const [celebrationMessage, setCelebrationMessage] = useState('')
   const [recentActivity] = useState([
-    { action: 'Completed Magic 8-Ball Project', time: '2 hours ago', xp: 150, type: 'lesson' },
-    { action: 'Earned Quiz Champion badge', time: '1 day ago', xp: 100, type: 'achievement' },
-    { action: 'Started Variables lesson', time: '2 days ago', xp: 50, type: 'lesson' }
-  ])
-  
-  // Achievement System
-  const [achievements] = useState([
-    { id: 'first-lesson', name: 'First Steps', description: 'Complete your first lesson', icon: '🎯', unlocked: true, xp: 100 },
-    { id: 'quiz-champion', name: 'Quiz Champion', description: 'Score 90% or higher on a quiz', icon: '🧠', unlocked: true, xp: 150 },
-    { id: 'speed-coder', name: 'Speed Coder', description: 'Complete a coding challenge in under 5 minutes', icon: '⚡', unlocked: false, xp: 200 },
-    { id: 'python-master', name: 'Python Master', description: 'Complete 5 Python lessons', icon: '🐍', unlocked: false, xp: 300 },
-    { id: 'streak-warrior', name: 'Streak Warrior', description: 'Maintain a 7-day learning streak', icon: '🔥', unlocked: false, xp: 250 },
-    { id: 'perfect-student', name: 'Perfect Student', description: 'Get 100% on 3 quizzes in a row', icon: '⭐', unlocked: false, xp: 400 }
+    { action: 'Completed Magic 8-Ball Project', time: '2 hours ago', type: 'lesson' },
+    { action: 'Achieved 90% on Quiz', time: '1 day ago', type: 'quiz' },
+    { action: 'Started Variables lesson', time: '2 days ago', type: 'lesson' }
   ])
   
   // Learning Analytics
@@ -59,43 +43,10 @@ export default function Dashboard() {
       'functions': 15,
       'input-output': 8
     },
-    commonErrors: [
-      { type: 'SyntaxError', count: 8, concept: 'print statements' },
-      { type: 'NameError', count: 5, concept: 'variable names' },
-      { type: 'IndentationError', count: 3, concept: 'code blocks' }
-    ],
-    weakSpots: ['loops', 'functions'],
-    strengths: ['variables', 'input-output']
+    topicsToReview: ['loops', 'functions'],
+    strongAreas: ['variables', 'input-output']
   })
 
-  // Celebration triggers - only for real achievements
-  const triggerCelebration = useCallback((message: string) => {
-    setCelebrationMessage(message)
-    setShowCelebration(true)
-  }, [])
-  
-  // Real celebration triggers (removed demo auto-trigger)
-  const handleLessonComplete = useCallback((lessonId: string) => {
-    // This would be called when returning from a completed lesson
-    const lesson = lessons.find(l => l.id === lessonId)
-    if (lesson) {
-      triggerCelebration(`🎉 Lesson Complete: ${lesson.title}!`)
-    }
-  }, [lessons, triggerCelebration])
-  
-  const handleQuizComplete = useCallback((score: number) => {
-    // This would be called when a quiz is completed with a good score
-    if (score >= 90) {
-      triggerCelebration('🏆 Perfect Score! You\'re on fire!')
-    } else if (score >= 80) {
-      triggerCelebration('🎯 Great Job! Keep it up!')
-    }
-  }, [triggerCelebration])
-  
-  const handleAchievementUnlock = useCallback((achievementName: string) => {
-    // This would be called when a new achievement is unlocked
-    triggerCelebration(`🏅 New Achievement: ${achievementName}!`)
-  }, [triggerCelebration])
 
   useEffect(() => {
     // TEMPORARY: Allow dashboard access for testing
@@ -103,24 +54,7 @@ export default function Dashboard() {
     //   router.push('/auth')
     // }
     
-    // Check for celebration triggers from URL parameters
-    const urlParams = new URLSearchParams(window.location.search)
-    const celebrationType = urlParams.get('celebrate')
-    const lessonId = urlParams.get('lesson')
-    const score = urlParams.get('score')
-    
-    if (celebrationType === 'lesson' && lessonId) {
-      handleLessonComplete(lessonId)
-      // Clean up URL parameters
-      const cleanUrl = window.location.pathname
-      window.history.replaceState({}, document.title, cleanUrl)
-    } else if (celebrationType === 'quiz' && score) {
-      handleQuizComplete(parseInt(score))
-      // Clean up URL parameters
-      const cleanUrl = window.location.pathname
-      window.history.replaceState({}, document.title, cleanUrl)
-    }
-  }, [isAuthenticated, loading, router, handleLessonComplete, handleQuizComplete])
+  }, [isAuthenticated, loading, router])
 
   const handleSignOut = async () => {
     await signOut()
@@ -129,10 +63,10 @@ export default function Dashboard() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-gradient-to-r from-green-400 to-emerald-500 text-white'
-      case 'intermediate': return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
-      case 'advanced': return 'bg-gradient-to-r from-red-400 to-pink-500 text-white'
-      default: return 'bg-gradient-to-r from-gray-400 to-gray-500 text-white'
+      case 'beginner': return 'bg-green-600 text-white'
+      case 'intermediate': return 'bg-yellow-600 text-white'
+      case 'advanced': return 'bg-red-600 text-white'
+      default: return 'bg-gray-600 text-white'
     }
   }
 
@@ -150,32 +84,10 @@ export default function Dashboard() {
     return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
   }
   
-  // Gamification Helper Functions
-  const getXPLevel = () => {
-    return Math.floor(userXP / 500) + 1
-  }
-  
-  const getXPProgress = () => {
-    const currentLevel = getXPLevel()
-    const xpForCurrentLevel = (currentLevel - 1) * 500
-    const xpForNextLevel = currentLevel * 500
-    const progressInLevel = userXP - xpForCurrentLevel
-    const totalXPNeededForLevel = xpForNextLevel - xpForCurrentLevel
-    return (progressInLevel / totalXPNeededForLevel) * 100
-  }
-  
-  const getUnlockedAchievements = () => {
-    return achievements.filter(a => a.unlocked)
-  }
-  
   const getNextRecommendedLesson = () => {
     // Find first lesson that's not completed
     const incompleteLesson = lessons.find(lesson => getProgressForLesson(lesson.id) < 100)
     return incompleteLesson || lessons[0]
-  }
-  
-  const getWeeklyGoalProgress = () => {
-    return (weeklyGoal.completed / weeklyGoal.target) * 100
   }
 
   const getLessonsByTab = () => {
@@ -208,10 +120,7 @@ export default function Dashboard() {
   }
 
   const filteredLessons = getLessonsByTab()
-  const unlockedAchievements = getUnlockedAchievements()
   const nextLesson = getNextRecommendedLesson()
-  const xpLevel = getXPLevel()
-  const xpProgress = getXPProgress()
 
   if (loading) {
     return (
@@ -230,30 +139,27 @@ export default function Dashboard() {
   // }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
+      <div className="bg-gray-800 shadow-lg border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <div className="relative">
-                <BookOpen className="h-8 w-8 text-blue-600 mr-3 animate-pulse" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
-              </div>
+              <BookOpen className="h-8 w-8 text-blue-500 mr-3" />
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">CodeFly ✈️</h1>
-                <p className="text-sm bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-medium">Student Dashboard - Where Coding Takes Flight! 🚀</p>
+                <h1 className="text-xl font-bold text-white">CodeFly Academy</h1>
+                <p className="text-sm text-gray-400">Student Learning Dashboard</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-purple-300">
+              <div className="flex items-center text-sm text-gray-300">
                 <User className="h-4 w-4 mr-1" />
                 {user?.full_name || user?.email || 'Test User'}
               </div>
               <button
                 onClick={handleSignOut}
-                className="flex items-center text-sm text-purple-300 hover:text-white transition-colors"
+                className="flex items-center text-sm text-gray-300 hover:text-white transition-colors"
               >
                 <LogOut className="h-4 w-4 mr-1" />
                 Sign Out
@@ -266,114 +172,114 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
-            Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}! 👋
+          <h2 className="text-3xl font-bold text-white mb-2">
+            Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}
           </h2>
-          <p className="text-xl text-gray-300 font-medium">Ready to code? Let&apos;s make some programming magic happen! ✨</p>
+          <p className="text-lg text-gray-400">Continue your Python programming journey</p>
         </div>
 
-        {/* Enhanced Stats Cards with Gamification */}
+        {/* Learning Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* XP & Level Card */}
-          <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
-            <div className="flex items-center mb-3">
-              <Star className="h-8 w-8 text-purple-100 animate-pulse" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-purple-100">Level {xpLevel}</p>
-                <p className="text-3xl font-bold text-white">{userXP.toLocaleString()} XP</p>
-              </div>
-            </div>
-            <div className="w-full bg-purple-400/30 rounded-full h-2">
-              <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: `${xpProgress}%` }}></div>
-            </div>
-            <p className="text-xs text-purple-100 mt-1">{Math.round(500 - (userXP % 500))} XP to next level</p>
-          </div>
-
-          {/* Learning Streak Card */}
-          <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+          {/* Total Lessons Card */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
-              <Flame className="h-8 w-8 text-orange-100 animate-bounce" />
+              <BookOpen className="h-8 w-8 text-blue-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-orange-100">Learning Streak</p>
-                <p className="text-3xl font-bold text-white">{currentStreak} days</p>
-                <p className="text-xs text-orange-100">🔥 Keep it going!</p>
+                <p className="text-sm font-medium text-gray-400">Total Lessons</p>
+                <p className="text-2xl font-bold text-white">{lessons.length}</p>
+                <p className="text-xs text-gray-500">Available to learn</p>
               </div>
             </div>
           </div>
 
-          {/* Weekly Goal Card */}
-          <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-            <div className="flex items-center mb-3">
-              <Target className="h-8 w-8 text-green-100 animate-pulse" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-green-100">Weekly Goal</p>
-                <p className="text-3xl font-bold text-white">{weeklyGoal.completed}/{weeklyGoal.target}</p>
-              </div>
-            </div>
-            <div className="w-full bg-green-400/30 rounded-full h-2">
-              <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: `${getWeeklyGoalProgress()}%` }}></div>
-            </div>
-            <p className="text-xs text-green-100 mt-1">{weeklyGoal.target - weeklyGoal.completed} lessons to go</p>
-          </div>
-
-          {/* Learning Time Card */}
-          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+          {/* Completed Lessons Card */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
-              <Timer className="h-8 w-8 text-blue-100 animate-spin" />
+              <CheckCircle className="h-8 w-8 text-green-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-blue-100">This Week</p>
-                <p className="text-3xl font-bold text-white">{totalLearningTime}h</p>
-                <p className="text-xs text-blue-100">📚 Learning time</p>
+                <p className="text-sm font-medium text-gray-400">Completed</p>
+                <p className="text-2xl font-bold text-white">{lessons.filter(l => getProgressForLesson(l.id) === 100).length}</p>
+                <p className="text-xs text-gray-500">Lessons finished</p>
+              </div>
+            </div>
+          </div>
+
+          {/* In Progress Card */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+            <div className="flex items-center">
+              <Clock className="h-8 w-8 text-yellow-500" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-400">In Progress</p>
+                <p className="text-2xl font-bold text-white">{lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length}</p>
+                <p className="text-xs text-gray-500">Currently learning</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Average Score Card */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+            <div className="flex items-center">
+              <Award className="h-8 w-8 text-purple-500" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-400">Average Score</p>
+                <p className="text-2xl font-bold text-white">{getAverageScore()}%</p>
+                <p className="text-xs text-gray-500">Quiz performance</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Achievement Showcase */}
-        <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">🏆 Your Achievements</h3>
-            <div className="text-sm text-gray-300 bg-gray-700/50 px-3 py-1 rounded-full">
-              {unlockedAchievements.length} of {achievements.length} unlocked
+        {/* Learning Progress Overview */}
+        <div className="mb-8 bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h3 className="text-xl font-bold text-white mb-4">Your Learning Progress</h3>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-400">Overall Course Progress</span>
+                <span className="text-sm font-bold text-white">
+                  {Math.round((lessons.filter(l => getProgressForLesson(l.id) === 100).length / lessons.length) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <div 
+                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(lessons.filter(l => getProgressForLesson(l.id) === 100).length / lessons.length) * 100}%` }}
+                />
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {achievements.map((achievement) => (
-              <div 
-                key={achievement.id}
-                className={`relative p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
-                  achievement.unlocked 
-                    ? 'bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border-yellow-400/50 text-white' 
-                    : 'bg-gray-700/50 border-gray-600/50 text-gray-400'
-                }`}
-              >
-                <div className="text-center">
-                  <div className={`text-3xl mb-2 ${achievement.unlocked ? 'animate-bounce' : 'grayscale'}`}>
-                    {achievement.icon}
-                  </div>
-                  <h4 className="text-sm font-bold mb-1">{achievement.name}</h4>
-                  <p className="text-xs opacity-75">{achievement.description}</p>
-                  {achievement.unlocked && (
-                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs px-2 py-1 rounded-full font-bold animate-pulse">
-                      +{achievement.xp}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <div className="bg-gray-700/50 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-gray-400 mb-2">Strong Areas</h4>
+                <div className="space-y-2">
+                  {learningAnalytics.strongAreas.map((area, index) => (
+                    <div key={index} className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-white capitalize">{area}</span>
                     </div>
-                  )}
+                  ))}
                 </div>
               </div>
-            ))}
+              <div className="bg-gray-700/50 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-gray-400 mb-2">Topics to Review</h4>
+                <div className="space-y-2">
+                  {learningAnalytics.topicsToReview.map((topic, index) => (
+                    <div key={index} className="flex items-center">
+                      <Clock className="h-4 w-4 text-yellow-500 mr-2" />
+                      <span className="text-white capitalize">{topic}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Quick Actions & Recommendations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Next Recommended Lesson */}
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-            <h3 className="text-xl font-bold text-purple-300 mb-4 flex items-center">
-              <Sparkles className="h-6 w-6 mr-2 animate-pulse" />
-              🎯 Recommended Next
-            </h3>
-            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-4 border border-blue-500/30">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h3 className="text-xl font-bold text-white mb-4">Continue Learning</h3>
+            <div className="bg-gray-700/50 rounded-lg p-4">
               <h4 className="text-lg font-bold text-white mb-2">{nextLesson.title}</h4>
               <p className="text-gray-300 mb-3">{nextLesson.description}</p>
               <div className="flex items-center justify-between">
@@ -382,35 +288,27 @@ export default function Dashboard() {
                 </span>
                 <Link
                   href={`/lesson/${nextLesson.id}`}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-bold text-sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm"
                 >
-                  Continue Learning! 🚀
+                  Start Lesson
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Recent Activity Feed */}
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-            <h3 className="text-xl font-bold text-green-300 mb-4 flex items-center">
-              <Clock className="h-6 w-6 mr-2 animate-pulse" />
-              📈 Recent Activity
-            </h3>
+          {/* Recent Activity */}
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h3 className="text-xl font-bold text-white mb-4">Recent Activity</h3>
             <div className="space-y-3">
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-700/50 rounded-lg p-3 border border-gray-600/30">
-                  <div className="flex items-center">
-                    <div className={`w-3 h-3 rounded-full mr-3 ${
-                      activity.type === 'lesson' ? 'bg-blue-500' :
-                      activity.type === 'achievement' ? 'bg-yellow-500' : 'bg-green-500'
-                    } animate-pulse`}></div>
-                    <div>
-                      <p className="text-white font-medium text-sm">{activity.action}</p>
-                      <p className="text-gray-400 text-xs">{activity.time}</p>
-                    </div>
-                  </div>
-                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full font-bold">
-                    +{activity.xp} XP
+                <div key={index} className="flex items-center bg-gray-700/50 rounded-lg p-3">
+                  <div className={`w-2 h-2 rounded-full mr-3 ${
+                    activity.type === 'lesson' ? 'bg-blue-500' :
+                    activity.type === 'quiz' ? 'bg-green-500' : 'bg-yellow-500'
+                  }`}></div>
+                  <div className="flex-1">
+                    <p className="text-white text-sm">{activity.action}</p>
+                    <p className="text-gray-400 text-xs">{activity.time}</p>
                   </div>
                 </div>
               ))}
@@ -418,143 +316,89 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Learning Analytics */}
-        <div className="mb-8 bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6 flex items-center">
-            <Brain className="h-7 w-7 mr-3 text-blue-400 animate-pulse" />
-            🧠 Your Learning Insights
-          </h3>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Strengths & Weak Spots */}
-            <div>
-              <h4 className="text-lg font-bold text-green-300 mb-3">💪 Your Strengths</h4>
-              <div className="space-y-2 mb-4">
-                {learningAnalytics.strengths.map((strength, index) => (
-                  <div key={index} className="bg-green-900/30 border border-green-500/30 rounded-lg p-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-green-300 font-medium capitalize">{strength}</span>
-                      <CheckCircle className="h-5 w-5 text-green-400" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <h4 className="text-lg font-bold text-orange-300 mb-3">⚠️ Areas to Practice</h4>
-              <div className="space-y-2">
-                {learningAnalytics.weakSpots.map((weakness, index) => (
-                  <div key={index} className="bg-orange-900/30 border border-orange-500/30 rounded-lg p-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-orange-300 font-medium capitalize">{weakness}</span>
-                      <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-3 py-1 rounded-full hover:shadow-lg transition-all duration-300 font-bold">
-                        Practice More 💪
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Common Errors */}
-            <div>
-              <h4 className="text-lg font-bold text-red-300 mb-3">🐛 Common Errors to Watch</h4>
-              <div className="space-y-2">
-                {learningAnalytics.commonErrors.map((error, index) => (
-                  <div key={index} className="bg-red-900/30 border border-red-500/30 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-red-300 font-medium">{error.type}</span>
-                      <span className="text-red-400 text-sm">{error.count} times</span>
-                    </div>
-                    <p className="text-gray-400 text-sm">in {error.concept}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Lessons Grid */}
         <div className="mb-8">
           <div className="mb-6">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Your Learning Journey 📚</h3>
+            <h3 className="text-2xl font-bold text-white mb-6">Available Lessons</h3>
             
             {/* Progress Tabs */}
             <div className="flex flex-wrap gap-3 mb-6">
               <button 
                 onClick={() => setSelectedTab('all')}
-                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedTab === 'all' 
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' 
-                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                📋 All Lessons ({lessons.length})
+                All Lessons ({lessons.length})
               </button>
               <button 
                 onClick={() => setSelectedTab('completed')}
-                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedTab === 'completed' 
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white' 
-                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                ✅ Completed ({lessons.filter(l => getProgressForLesson(l.id) === 100).length})
+                Completed ({lessons.filter(l => getProgressForLesson(l.id) === 100).length})
               </button>
               <button 
                 onClick={() => setSelectedTab('in-progress')}
-                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedTab === 'in-progress' 
-                    ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white' 
-                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                    ? 'bg-yellow-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                ⚡ In Progress ({lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length})
+                In Progress ({lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length})
               </button>
               <button 
                 onClick={() => setSelectedTab('not-started')}
-                className={`px-6 py-3 text-sm rounded-xl font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedTab === 'not-started' 
-                    ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white' 
-                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 border border-gray-600/50'
+                    ? 'bg-gray-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                🎯 Not Started ({lessons.filter(l => getProgressForLesson(l.id) === 0).length})
+                Not Started ({lessons.filter(l => getProgressForLesson(l.id) === 0).length})
               </button>
             </div>
           </div>
 
           <div className="flex justify-between items-center mb-6">
-            <h4 className="text-xl font-bold text-gray-300">Filter by Difficulty:</h4>
+            <h4 className="text-lg font-medium text-gray-400">Filter by Difficulty:</h4>
             <div className="flex space-x-2">
               <button 
                 onClick={() => setSelectedDifficulty('all')}
-                className={`px-6 py-3 text-sm rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedDifficulty === 'all' 
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
-                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white shadow-md border border-gray-200'
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                All Lessons ({lessons.length}) ✨
+                All ({lessons.length})
               </button>
               <button 
                 onClick={() => setSelectedDifficulty('beginner')}
-                className={`px-6 py-3 text-sm rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedDifficulty === 'beginner' 
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
-                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white shadow-md border border-gray-200'
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                Beginner ({lessons.filter(l => l.difficulty === 'beginner').length}) 🌱
+                Beginner ({lessons.filter(l => l.difficulty === 'beginner').length})
               </button>
               <button 
                 onClick={() => setSelectedDifficulty('intermediate')}
-                className={`px-6 py-3 text-sm rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   selectedDifficulty === 'intermediate' 
-                    ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-lg' 
-                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white shadow-md border border-gray-200'
+                    ? 'bg-yellow-600 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                Intermediate ({lessons.filter(l => l.difficulty === 'intermediate').length}) 🚀
+                Intermediate ({lessons.filter(l => l.difficulty === 'intermediate').length})
               </button>
             </div>
           </div>
@@ -566,31 +410,28 @@ export default function Dashboard() {
               const isStarted = progress > 0
 
               return (
-                <div key={lesson.id} className="lesson-card bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
-                  <div className="p-6 relative">
-                    {/* Floating airplane decoration */}
-                    <div className="absolute top-2 right-2 text-2xl opacity-20">✈️</div>
+                <div key={lesson.id} className="bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-700">
+                  <div className="p-6">
                     {/* Lesson Header */}
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h4 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">{lesson.title}</h4>
-                        <p className="text-sm text-gray-700 mb-3 line-clamp-2 font-medium">{lesson.description}</p>
+                        <h4 className="text-lg font-bold text-white mb-2">{lesson.title}</h4>
+                        <p className="text-sm text-gray-400 mb-3 line-clamp-2">{lesson.description}</p>
                       </div>
                       {isCompleted && (
                         <div className="flex-shrink-0 ml-2">
-                          <Award className="h-6 w-6 text-yellow-500 animate-pulse" />
-                          <div className="text-xs text-yellow-600 font-bold mt-1">COMPLETE!</div>
+                          <CheckCircle className="h-5 w-5 text-green-500" />
                         </div>
                       )}
                     </div>
 
                     {/* Lesson Meta */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className={`px-3 py-2 rounded-full text-xs font-bold uppercase tracking-wide ${getDifficultyColor(lesson.difficulty)} shadow-md`}>
-                        {lesson.difficulty} {lesson.difficulty === 'beginner' ? '🌱' : lesson.difficulty === 'intermediate' ? '🚀' : '🏆'}
+                      <span className={`px-3 py-1 rounded text-xs font-medium ${getDifficultyColor(lesson.difficulty)}`}>
+                        {lesson.difficulty}
                       </span>
-                      <span className="text-sm text-gray-600 flex items-center font-medium bg-gray-100 px-3 py-1 rounded-full">
-                        <Clock className="h-4 w-4 mr-1 text-gray-500" />
+                      <span className="text-sm text-gray-400 flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
                         {lesson.estimatedTime}
                       </span>
                     </div>
@@ -599,25 +440,25 @@ export default function Dashboard() {
                     {isStarted && (
                       <div className="mb-4">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-white">Progress</span>
+                          <span className="text-sm font-medium text-gray-400">Progress</span>
                           <span className="text-sm font-bold text-white">{Math.round(progress)}%</span>
                         </div>
-                        <div className="w-full bg-gray-600/50 rounded-full h-3 mb-3">
+                        <div className="w-full bg-gray-700 rounded-full h-2 mb-3">
                           <div 
-                            className={`h-3 rounded-full transition-all duration-300 ${
-                              isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-blue-500 to-purple-600'
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                              isCompleted ? 'bg-green-500' : 'bg-blue-500'
                             }`}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
                         {getScoreForLesson(lesson.id) > 0 && (
                           <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium text-purple-300">Quiz Score</span>
-                            <span className={`text-sm font-bold px-2 py-1 rounded-full ${
-                              getScoreForLesson(lesson.id) >= 90 ? 'bg-green-500 text-white' :
-                              getScoreForLesson(lesson.id) >= 80 ? 'bg-yellow-500 text-white' :
-                              getScoreForLesson(lesson.id) >= 70 ? 'bg-orange-500 text-white' :
-                              'bg-red-500 text-white'
+                            <span className="text-sm font-medium text-gray-400">Quiz Score</span>
+                            <span className={`text-sm font-bold ${
+                              getScoreForLesson(lesson.id) >= 90 ? 'text-green-500' :
+                              getScoreForLesson(lesson.id) >= 80 ? 'text-yellow-500' :
+                              getScoreForLesson(lesson.id) >= 70 ? 'text-orange-500' :
+                              'text-red-500'
                             }`}>
                               {getScoreForLesson(lesson.id)}%
                             </span>
@@ -629,28 +470,28 @@ export default function Dashboard() {
                     {/* Action Button */}
                     <Link
                       href={`/lesson/${lesson.id}`}
-                      className={`w-full flex items-center justify-center px-6 py-3 rounded-xl text-sm font-bold uppercase tracking-wide transition-all duration-300 transform hover:scale-105 shadow-md ${
+                      className={`w-full flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isCompleted
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg'
+                          ? 'bg-green-600 hover:bg-green-700 text-white'
                           : isStarted
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg'
-                          : 'bg-gradient-to-r from-indigo-600 to-purple-700 text-white hover:shadow-lg'
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                          : 'bg-gray-700 hover:bg-gray-600 text-white'
                       }`}
                     >
                       {isCompleted ? (
                         <>
-                          <Award className="h-5 w-5 mr-2 animate-pulse" />
-                          Review Lesson 🏆
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Review Lesson
                         </>
                       ) : isStarted ? (
                         <>
-                          <TrendingUp className="h-5 w-5 mr-2 animate-bounce" />
-                          Continue Learning ⚡
+                          <TrendingUp className="h-4 w-4 mr-2" />
+                          Continue
                         </>
                       ) : (
                         <>
-                          <BookOpen className="h-5 w-5 mr-2 animate-pulse" />
-                          Start Adventure 🎆
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Start Lesson
                         </>
                       )}
                     </Link>
@@ -661,39 +502,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Motivational Footer */}
-        <div className="bg-gradient-to-r from-purple-900/90 to-pink-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-purple-500/30">
-          <div className="px-6 py-4 border-b border-purple-500/30">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent flex items-center">
-              <Trophy className="h-6 w-6 mr-2 text-yellow-400 animate-bounce" />
-              🌟 Keep Up the Amazing Work!
-            </h3>
-          </div>
-          <div className="p-6">
-            <div className="text-center">
-              <div className="relative inline-block mb-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto animate-pulse">
-                  <span className="text-3xl">🚀</span>
-                </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-bounce">
-                  <span className="text-sm">✨</span>
-                </div>
-              </div>
-              <p className="text-lg font-semibold text-white mb-2">You&apos;re on fire! Level {xpLevel} coder! 🔥</p>
-              <p className="text-sm text-purple-200 bg-gradient-to-r from-purple-900/50 to-pink-900/50 px-4 py-2 rounded-lg inline-block border border-purple-500/30">
-                {currentStreak} day streak • {userXP.toLocaleString()} XP earned • {unlockedAchievements.length} achievements unlocked
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
-      
-      {/* Celebration Effect */}
-      <CelebrationEffect 
-        trigger={showCelebration} 
-        message={celebrationMessage}
-        onComplete={() => setShowCelebration(false)}
-      />
     </div>
   )
 }
