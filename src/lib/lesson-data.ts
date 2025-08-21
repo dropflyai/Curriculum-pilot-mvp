@@ -498,530 +498,128 @@ Attach a metrics screenshot.`,
         title: 'School-Positive Advisor Bot',
         dataset: 'school-advice',
         labels: ['encouragement', 'study-tips', 'motivation', 'goal-setting'],
-        learn_md: `<div class="space-y-6">
+        learn_md: `# 🎓 Build Your Own School Success Advisor!
 
-<!-- Hero Section with Interactive Element -->
-<div class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30 mb-6">
-  <div class="text-center">
-    <div class="text-6xl mb-4 animate-bounce">🎓</div>
-    <h2 class="text-3xl font-bold text-white mb-4">Build Your Own School Success Advisor!</h2>
-    <p class="text-xl text-purple-200 mb-4">Ever wished you had a wise friend who always knew exactly what to say to keep you motivated?</p>
-    
-    <!-- Interactive Goal Setting -->
-    <div class="bg-purple-800/20 rounded-lg p-4 max-w-2xl mx-auto">
-      <h3 class="text-lg font-bold text-white mb-3">🎯 What's Your Biggest School Challenge?</h3>
-      <div class="grid grid-cols-2 gap-3">
-        <button class="bg-red-600/80 hover:bg-red-500 text-white p-3 rounded-lg text-sm font-medium transition-all hover:scale-105">
-          😰 Test Anxiety
-        </button>
-        <button class="bg-orange-600/80 hover:bg-orange-500 text-white p-3 rounded-lg text-sm font-medium transition-all hover:scale-105">
-          📚 Too Much Homework
-        </button>
-        <button class="bg-yellow-600/80 hover:bg-yellow-500 text-white p-3 rounded-lg text-sm font-medium transition-all hover:scale-105">
-          🤝 Friendship Drama
-        </button>
-        <button class="bg-blue-600/80 hover:bg-blue-500 text-white p-3 rounded-lg text-sm font-medium transition-all hover:scale-105">
-          📉 Bad Grades
-        </button>
-      </div>
-      <p class="text-purple-300 text-sm mt-3">✨ Your AI advisor will learn to help with ALL of these!</p>
-    </div>
-  </div>
-</div>
+## What We're Building Today
 
-<!-- What Makes This Special - Interactive Demo -->
-<div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🌟</span> What Makes This Special?
-  </h3>
-  
-  <div class="grid md:grid-cols-2 gap-6">
-    <div class="space-y-4">
-      <div class="bg-blue-900/30 rounded-lg p-4 border border-blue-500/30">
-        <h4 class="text-lg font-bold text-blue-300 mb-2">🧠 Understand Challenges</h4>
-        <p class="text-blue-200">Unlike generic chatbots, your advisor gets it - test anxiety, friendship drama, homework overload!</p>
-      </div>
-      
-      <div class="bg-green-900/30 rounded-lg p-4 border border-green-500/30">
-        <h4 class="text-lg font-bold text-green-300 mb-2">🎯 Actionable Advice</h4>
-        <p class="text-green-200">Real strategies that actually work - not just "try harder" but specific techniques!</p>
-      </div>
-      
-      <div class="bg-purple-900/30 rounded-lg p-4 border border-purple-500/30">
-        <h4 class="text-lg font-bold text-purple-300 mb-2">✨ Stay Positive</h4>
-        <p class="text-purple-200">Focus on growth, resilience, and possibility - build confidence while learning!</p>
-      </div>
-      
-      <div class="bg-orange-900/30 rounded-lg p-4 border border-orange-500/30">
-        <h4 class="text-lg font-bold text-orange-300 mb-2">🛡️ Respect Boundaries</h4>
-        <p class="text-orange-200">Knows when to suggest talking to trusted adults - safety first!</p>
-      </div>
-    </div>
-    
-    <!-- Interactive Chat Preview -->
-    <div class="bg-gray-900 rounded-lg p-4 border border-gray-600">
-      <h4 class="text-lg font-bold text-white mb-3">💬 Chat Preview</h4>
-      <div class="space-y-3 max-h-48 overflow-y-auto">
-        <div class="bg-red-600/20 border border-red-500/30 rounded-lg p-3">
-          <p class="text-red-200 text-sm">😔 "I failed my math test again..."</p>
-        </div>
-        <div class="bg-green-600/20 border border-green-500/30 rounded-lg p-3">
-          <p class="text-green-200 text-sm">🤖 "That sounds frustrating! Let's figure out what happened and make a plan to improve. What part of the test felt hardest?"</p>
-        </div>
-        <div class="bg-blue-600/20 border border-blue-500/30 rounded-lg p-3 text-center">
-          <button class="text-blue-300 text-sm hover:text-blue-200 transition-colors">
-            👆 Try creating your own response! 
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+Imagine having a friendly AI buddy who's always there when you need help with school. Whether you're stressed about a test, overwhelmed with homework, or just need some motivation - your AI advisor will know exactly what to say!
 
-<!-- The Science Behind Positive Thinking - Interactive Discovery -->
-<div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-lg p-6 border border-cyan-500/30 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🧠</span> The Science Behind Positive Thinking
-  </h3>
-  
-  <div class="bg-cyan-800/20 rounded-lg p-4 mb-4 border border-cyan-500/30">
-    <h4 class="text-lg font-bold text-cyan-300 mb-2">🔬 Research Results:</h4>
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="text-center">
-        <div class="text-4xl font-bold text-green-400">23%</div>
-        <div class="text-cyan-200 text-sm">Better Test Performance</div>
-      </div>
-      <div class="text-center">
-        <div class="text-4xl font-bold text-blue-400">40%</div>
-        <div class="text-cyan-200 text-sm">Less Stress Reported</div>
-      </div>
-    </div>
-    <p class="text-cyan-200 text-center mt-3">Your advisor uses real psychology, not just feel-good fluff!</p>
-  </div>
+**Think about it:** What if you had a smart friend who:
+- Never judges you when you're struggling
+- Always has helpful study tips
+- Knows how to motivate you when you're feeling down
+- Remembers what works best for YOU
 
-  <!-- Interactive Growth Mindset Transformer -->
-  <div class="bg-gray-800/50 rounded-lg p-4">
-    <h4 class="text-lg font-bold text-white mb-3">🔄 Growth Mindset Transformer</h4>
-    <div class="space-y-3">
-      <div class="flex items-center gap-4 bg-red-900/30 rounded-lg p-3 border border-red-500/30">
-        <span class="text-2xl">❌</span>
-        <span class="text-red-200 flex-1">"I'm terrible at math"</span>
-        <span class="text-2xl animate-pulse">→</span>
-        <span class="text-green-200 flex-1">✅ "I'm still learning math concepts"</span>
-      </div>
-      
-      <div class="flex items-center gap-4 bg-red-900/30 rounded-lg p-3 border border-red-500/30">
-        <span class="text-2xl">❌</span>
-        <span class="text-red-200 flex-1">"I always fail tests"</span>
-        <span class="text-2xl animate-pulse">→</span>
-        <span class="text-green-200 flex-1">✅ "I can improve my test-taking strategies"</span>
-      </div>
-      
-      <div class="flex items-center gap-4 bg-red-900/30 rounded-lg p-3 border border-red-500/30">
-        <span class="text-2xl">❌</span>
-        <span class="text-red-200 flex-1">"This is too hard"</span>
-        <span class="text-2xl animate-pulse">→</span>
-        <span class="text-green-200 flex-1">✅ "This is challenging, but I can figure it out"</span>
-      </div>
-    </div>
-    
-    <div class="mt-4 text-center">
-      <button class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105">
-        🎯 Practice Your Own Growth Mindset!
-      </button>
-    </div>
-  </div>
-</div>
+That's exactly what we're going to build today using Python!
 
-<!-- How Your Advisor Works - Interactive Response Builder -->
-<div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">💬</span> How Your Advisor Will Work
-  </h3>
-  
-  <p class="text-gray-300 mb-6">Your bot will analyze student messages and categorize them into four key areas. Click each category to see examples!</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    
-    <!-- Encouragement Category -->
-    <div class="bg-gradient-to-br from-pink-900/30 to-red-900/30 rounded-lg p-4 border border-pink-500/30 hover:border-pink-400/50 transition-all cursor-pointer group">
-      <div class="flex items-center gap-3 mb-3">
-        <span class="text-3xl group-hover:animate-bounce">🎯</span>
-        <h4 class="text-lg font-bold text-pink-300">Encouragement</h4>
-      </div>
-      <p class="text-pink-200 text-sm mb-3">When students feel discouraged or want to give up</p>
-      
-      <div class="bg-black/30 rounded-lg p-3 mb-2">
-        <p class="text-red-300 text-sm">📥 Student: "I got a D on my history test and feel like I'm stupid"</p>
-      </div>
-      <div class="bg-pink-800/30 rounded-lg p-3">
-        <p class="text-pink-200 text-sm">🤖 Your AI: "Getting a tough grade doesn't define your intelligence! Let's look at this as valuable feedback about what to study differently next time. What specific topics felt most challenging?"</p>
-      </div>
-    </div>
+## 🤖 How AI Advisors Actually Work
 
-    <!-- Study Tips Category -->
-    <div class="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-lg p-4 border border-green-500/30 hover:border-green-400/50 transition-all cursor-pointer group">
-      <div class="flex items-center gap-3 mb-3">
-        <span class="text-3xl group-hover:animate-bounce">📚</span>
-        <h4 class="text-lg font-bold text-green-300">Study Tips</h4>
-      </div>
-      <p class="text-green-200 text-sm mb-3">When students need practical learning strategies</p>
-      
-      <div class="bg-black/30 rounded-lg p-3 mb-2">
-        <p class="text-red-300 text-sm">📥 Student: "I have a huge science test tomorrow and don't know where to start"</p>
-      </div>
-      <div class="bg-green-800/30 rounded-lg p-3">
-        <p class="text-green-200 text-sm">🤖 Your AI: "Last-minute prep can still be effective! Try the 20-20-20 method: 20 minutes reviewing notes, 20 minutes practicing problems, 20 minutes teaching concepts out loud. Which topic feels most confusing right now?"</p>
-      </div>
-    </div>
+Before we start coding, let's understand what makes a good AI advisor. It's like teaching a robot to be a really good friend!
 
-    <!-- Motivation Category -->
-    <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 rounded-lg p-4 border border-yellow-500/30 hover:border-yellow-400/50 transition-all cursor-pointer group">
-      <div class="flex items-center gap-3 mb-3">
-        <span class="text-3xl group-hover:animate-bounce">🚀</span>
-        <h4 class="text-lg font-bold text-yellow-300">Motivation</h4>
-      </div>
-      <p class="text-yellow-200 text-sm mb-3">When students need energy and drive to tackle challenges</p>
-      
-      <div class="bg-black/30 rounded-lg p-3 mb-2">
-        <p class="text-red-300 text-sm">📥 Student: "I have so much homework and just want to watch Netflix instead"</p>
-      </div>
-      <div class="bg-yellow-800/30 rounded-lg p-3">
-        <p class="text-yellow-200 text-sm">🤖 Your AI: "That feeling is totally normal! Try the 15-minute rule: commit to just 15 minutes of homework, then decide if you want to continue. Often starting is the hardest part. What subject could you knock out first?"</p>
-      </div>
-    </div>
+### The 4 Types of Help Students Need:
 
-    <!-- Goal Setting Category -->
-    <div class="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 rounded-lg p-4 border border-blue-500/30 hover:border-blue-400/50 transition-all cursor-pointer group">
-      <div class="flex items-center gap-3 mb-3">
-        <span class="text-3xl group-hover:animate-bounce">🎯</span>
-        <h4 class="text-lg font-bold text-blue-300">Goal Setting</h4>
-      </div>
-      <p class="text-blue-200 text-sm mb-3">When students need help planning and organizing their success</p>
-      
-      <div class="bg-black/30 rounded-lg p-3 mb-2">
-        <p class="text-red-300 text-sm">📥 Student: "I want to raise my GPA but don't know how"</p>
-      </div>
-      <div class="bg-blue-800/30 rounded-lg p-3">
-        <p class="text-blue-200 text-sm">🤖 Your AI: "Great goal! Let's break this down into actionable steps. What's your current GPA and what's your target? We can create a specific plan for each class with weekly milestones."</p>
-      </div>
-    </div>
-  </div>
-</div>
+**1. 🎯 Encouragement** - When you're feeling down about grades or school
+- *Student says:* "I got a D on my history test and feel stupid"
+- *AI responds:* "Getting a tough grade doesn't mean you're stupid! Let's figure out what happened and make a study plan for next time."
 
-<!-- Technical Challenge - Interactive Learning Path -->
-<div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🔧</span> The Technical Challenge
-  </h3>
-  
-  <p class="text-gray-300 mb-4">Programming a truly helpful advisor requires understanding these core concepts:</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-lg p-4 border border-indigo-500/30 hover:scale-105 transition-transform cursor-pointer">
-      <h4 class="text-lg font-bold text-indigo-300 mb-2">🔤 Natural Language Processing</h4>
-      <p class="text-indigo-200 text-sm">How computers understand human text - like teaching your phone to read emotions!</p>
-    </div>
-    
-    <div class="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-lg p-4 border border-green-500/30 hover:scale-105 transition-transform cursor-pointer">
-      <h4 class="text-lg font-bold text-green-300 mb-2">😊 Sentiment Analysis</h4>
-      <p class="text-green-200 text-sm">Detecting emotions and tone in messages - is someone happy, sad, or frustrated?</p>
-    </div>
-    
-    <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 rounded-lg p-4 border border-yellow-500/30 hover:scale-105 transition-transform cursor-pointer">
-      <h4 class="text-lg font-bold text-yellow-300 mb-2">💭 Response Generation</h4>
-      <p class="text-yellow-200 text-sm">Creating helpful, contextual replies - like having the perfect comeback every time!</p>
-    </div>
-    
-    <div class="bg-gradient-to-br from-red-900/30 to-pink-900/30 rounded-lg p-4 border border-red-500/30 hover:scale-105 transition-transform cursor-pointer">
-      <h4 class="text-lg font-bold text-red-300 mb-2">⚖️ Ethical AI</h4>
-      <p class="text-red-200 text-sm">Ensuring safe, appropriate guidance for students - responsibility comes with power!</p>
-    </div>
-  </div>
-</div>
+**2. 📚 Study Tips** - When you need help figuring out HOW to study
+- *Student says:* "I have a huge science test tomorrow and don't know where to start"
+- *AI responds:* "Let's break this down! Try the 20-20-20 method: 20 minutes reviewing notes, 20 minutes practicing problems, 20 minutes explaining concepts out loud."
 
-<!-- Personality Design - Interactive Character Builder -->
-<div class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-lg p-6 border border-purple-500/30 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🎨</span> Design Your AI's Personality
-  </h3>
-  
-  <p class="text-purple-200 mb-4">Your advisor's personality matters! Choose the traits you want to code:</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="space-y-4">
-      <div class="bg-purple-800/30 rounded-lg p-4">
-        <h4 class="text-lg font-bold text-purple-300 mb-2">🗣️ Tone</h4>
-        <div class="space-y-2">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="tone" value="supportive" class="text-purple-500">
-            <span class="text-purple-200">Encouraging but realistic (like a supportive older sibling)</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="tone" value="professional" class="text-purple-500">
-            <span class="text-purple-200">Professional and authoritative</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="tone" value="casual" class="text-purple-500">
-            <span class="text-purple-200">Casual and friendly</span>
-          </label>
-        </div>
-      </div>
-      
-      <div class="bg-indigo-800/30 rounded-lg p-4">
-        <h4 class="text-lg font-bold text-indigo-300 mb-2">🎭 Style</h4>
-        <div class="space-y-2">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" class="text-indigo-500">
-            <span class="text-indigo-200">Uses relatable examples</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" class="text-indigo-500">
-            <span class="text-indigo-200">Age-appropriate language</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" class="text-indigo-500">
-            <span class="text-indigo-200">Includes encouraging emojis</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    
-    <div class="bg-gray-900 rounded-lg p-4 border border-gray-600">
-      <h4 class="text-lg font-bold text-white mb-3">🛡️ Safety Boundaries</h4>
-      <div class="space-y-3">
-        <div class="flex items-center gap-3 text-green-300">
-          <span class="text-xl">✅</span>
-          <span class="text-sm">Academic support and motivation</span>
-        </div>
-        <div class="flex items-center gap-3 text-green-300">
-          <span class="text-xl">✅</span>
-          <span class="text-sm">Study strategies and time management</span>
-        </div>
-        <div class="flex items-center gap-3 text-red-300">
-          <span class="text-xl">❌</span>
-          <span class="text-sm">Medical advice or therapy</span>
-        </div>
-        <div class="flex items-center gap-3 text-red-300">
-          <span class="text-xl">❌</span>
-          <span class="text-sm">Family problems or serious mental health</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+**3. 🚀 Motivation** - When you just don't feel like doing the work
+- *Student says:* "I have so much homework and just want to watch Netflix"
+- *AI responds:* "That feeling is totally normal! Try the 15-minute rule: commit to just 15 minutes of homework. Often starting is the hardest part."
 
-<!-- Real-World Impact - Interactive Examples -->
-<div class="bg-gradient-to-r from-emerald-900/30 to-teal-900/30 rounded-lg p-6 border border-emerald-500/30 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🌍</span> Real-World Impact
-  </h3>
-  
-  <p class="text-emerald-200 mb-4">Student mental health apps like Woebot and Wysa serve millions worldwide. You're learning the same techniques!</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-emerald-800/20 rounded-lg p-4 hover:bg-emerald-800/30 transition-all cursor-pointer">
-      <h4 class="text-lg font-bold text-emerald-300 mb-2">📱 School Counseling Apps</h4>
-      <p class="text-emerald-200 text-sm mb-2">Provide 24/7 student support</p>
-      <div class="text-2xl font-bold text-emerald-400">5M+</div>
-      <div class="text-emerald-300 text-xs">Students helped daily</div>
-    </div>
-    
-    <div class="bg-teal-800/20 rounded-lg p-4 hover:bg-teal-800/30 transition-all cursor-pointer">
-      <h4 class="text-lg font-bold text-teal-300 mb-2">🎯 Study Motivation Platforms</h4>
-      <p class="text-teal-200 text-sm mb-2">Help students stay on track</p>
-      <div class="text-2xl font-bold text-teal-400">78%</div>
-      <div class="text-teal-300 text-xs">Improvement in study habits</div>
-    </div>
-    
-    <div class="bg-cyan-800/20 rounded-lg p-4 hover:bg-cyan-800/30 transition-all cursor-pointer">
-      <h4 class="text-lg font-bold text-cyan-300 mb-2">🧠 Mental Wellness Tools</h4>
-      <p class="text-cyan-200 text-sm mb-2">Designed for teenagers</p>
-      <div class="text-2xl font-bold text-cyan-400">2.3M</div>
-      <div class="text-cyan-300 text-xs">Teen users last year</div>
-    </div>
-    
-    <div class="bg-blue-800/20 rounded-lg p-4 hover:bg-blue-800/30 transition-all cursor-pointer">
-      <h4 class="text-lg font-bold text-blue-300 mb-2">🏫 Academic Coaching Bots</h4>
-      <p class="text-blue-200 text-sm mb-2">Used by universities</p>
-      <div class="text-2xl font-bold text-blue-400">340+</div>
-      <div class="text-blue-300 text-xs">Universities using AI tutors</div>
-    </div>
-  </div>
-</div>
+**4. 🎯 Goal Setting** - When you want to improve but don't know how
+- *Student says:* "I want to raise my GPA but don't know how"
+- *AI responds:* "Great goal! Let's create a specific plan. What's your current GPA and target? We can set weekly goals for each class."
 
-<!-- Your Coding Mission - Interactive Checklist -->
-<div class="bg-gradient-to-r from-orange-900/30 to-red-900/30 rounded-lg p-6 border border-orange-500/30 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🎮</span> Your Interactive Coding Mission
-  </h3>
-  
-  <p class="text-orange-200 mb-4">Follow this step-by-step journey to build your School Success Advisor:</p>
-  
-  <div class="space-y-3">
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">1. Set up the advisor framework</h4>
-        <p class="text-orange-200 text-sm">with Python classes and methods</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">🏗️</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">2. Create response categories</h4>
-        <p class="text-orange-200 text-sm">for different types of student problems</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">📂</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">3. Build a message classifier</h4>
-        <p class="text-orange-200 text-sm">that detects what kind of help students need</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">🤖</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">4. Design response templates</h4>
-        <p class="text-orange-200 text-sm">with encouraging, actionable advice</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">💬</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">5. Add personality elements</h4>
-        <p class="text-orange-200 text-sm">that make conversations feel natural</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">✨</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">6. Test with realistic scenarios</h4>
-        <p class="text-orange-200 text-sm">to ensure helpful responses</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">🧪</div>
-    </div>
-    
-    <div class="flex items-center gap-4 bg-orange-800/20 rounded-lg p-4 border border-orange-500/30 hover:bg-orange-800/30 transition-all cursor-pointer">
-      <input type="checkbox" class="w-5 h-5 text-orange-500">
-      <div>
-        <h4 class="text-orange-300 font-bold">7. Implement safety features</h4>
-        <p class="text-orange-200 text-sm">for sensitive topics</p>
-      </div>
-      <div class="ml-auto text-orange-400 text-2xl">🛡️</div>
-    </div>
-  </div>
-  
-  <div class="mt-6 text-center">
-    <button class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105">
-      🚀 Start Your Coding Journey!
-    </button>
-  </div>
-</div>
+## 🧠 Why Positive Thinking Actually Works
 
-<!-- Advanced Features - Unlock System -->
-<div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">💡</span> Advanced Features (Unlock as You Progress!)
-  </h3>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-gradient-to-br from-green-900/50 to-emerald-900/50 rounded-lg p-4 border border-green-500/50">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-2xl">🔓</span>
-        <h4 class="text-lg font-bold text-green-300">Mood Tracking</h4>
-      </div>
-      <p class="text-green-200 text-sm">Remembers how students are feeling over time</p>
-    </div>
-    
-    <div class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 opacity-60">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-2xl">🔒</span>
-        <h4 class="text-lg font-bold text-gray-400">Study Schedule Integration</h4>
-      </div>
-      <p class="text-gray-500 text-sm">Unlock after completing main features</p>
-    </div>
-    
-    <div class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 opacity-60">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-2xl">🔒</span>
-        <h4 class="text-lg font-bold text-gray-400">Achievement Celebrations</h4>
-      </div>
-      <p class="text-gray-500 text-sm">Unlock with successful testing</p>
-    </div>
-    
-    <div class="bg-gray-700/50 rounded-lg p-4 border border-gray-600 opacity-60">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-2xl">🔒</span>
-        <h4 class="text-lg font-bold text-gray-400">Resource Recommendations</h4>
-      </div>
-      <p class="text-gray-500 text-sm">Unlock with personality implementation</p>
-    </div>
-  </div>
-</div>
+Did you know that scientists have proven positive thinking helps with school? Here are the real facts:
 
-<!-- Future of Educational AI - Vision Board -->
-<div class="bg-gradient-to-r from-cyan-900/30 to-purple-900/30 rounded-lg p-6 border border-cyan-500/30 mb-6">
-  <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-    <span class="text-3xl">🔮</span> The Future You're Building
-  </h3>
-  
-  <p class="text-cyan-200 mb-4">Your advisor represents the future of personalized learning support:</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-cyan-800/20 rounded-lg p-4 border border-cyan-500/30">
-      <h4 class="text-lg font-bold text-cyan-300 mb-2">🌟 24/7 Academic Coaching</h4>
-      <p class="text-cyan-200 text-sm">Available whenever students are struggling, day or night!</p>
-    </div>
-    
-    <div class="bg-purple-800/20 rounded-lg p-4 border border-purple-500/30">
-      <h4 class="text-lg font-bold text-purple-300 mb-2">🎯 Personalized Motivation</h4>
-      <p class="text-purple-200 text-sm">Based on individual learning patterns and preferences</p>
-    </div>
-    
-    <div class="bg-blue-800/20 rounded-lg p-4 border border-blue-500/30">
-      <h4 class="text-lg font-bold text-blue-300 mb-2">💝 Emotional Support</h4>
-      <p class="text-blue-200 text-sm">During stressful academic periods and exam seasons</p>
-    </div>
-    
-    <div class="bg-indigo-800/20 rounded-lg p-4 border border-indigo-500/30">
-      <h4 class="text-lg font-bold text-indigo-300 mb-2">⚡ Study Optimization</h4>
-      <p class="text-indigo-200 text-sm">Adapts to each student's unique learning needs</p>
-    </div>
-  </div>
-</div>
+- Students who use positive self-talk score **23% better** on tests
+- Students who practice growth mindset report **40% less stress**
+- Your brain literally changes when you think positively!
 
-<!-- Final Call to Action -->
-<div class="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-lg p-8 border border-indigo-500/30 text-center">
-  <div class="text-6xl mb-4 animate-pulse">🚀</div>
-  <h3 class="text-3xl font-bold text-white mb-4">Ready to Build Your AI Advisor?</h3>
-  <p class="text-xl text-indigo-200 mb-6">
-    You're about to create technology that could genuinely help students succeed in school. 
-    This isn't just a coding exercise - you're building a tool that understands real challenges and provides meaningful support.
-  </p>
-  
-  <div class="bg-indigo-800/20 rounded-lg p-4 max-w-2xl mx-auto">
-    <h4 class="text-lg font-bold text-indigo-300 mb-3">🎯 Your Impact Goal:</h4>
-    <p class="text-indigo-200">Create an AI that makes school life better for everyone!</p>
-  </div>
-  
-  <button class="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-12 py-4 rounded-lg font-bold text-xl transition-all duration-300 transform hover:scale-105 animate-pulse">
-    🎓✨ Let's Code an AI That Changes Lives! ✨🎓
-  </button>
-</div>
+### Growth Mindset Examples (This is how your AI will help students think):
 
-</div>`,
+**Instead of:** "I'm terrible at math" 
+**Your AI teaches:** "I'm still learning math concepts"
+
+**Instead of:** "I always fail tests" 
+**Your AI teaches:** "I can improve my test-taking strategies"
+
+**Instead of:** "This is too hard" 
+**Your AI teaches:** "This is challenging, but I can figure it out"
+
+## 🔧 The Programming Challenge
+
+Now let's think like programmers! To build a helpful AI advisor, our Python code needs to understand 4 important concepts:
+
+### 1. Natural Language Processing (NLP)
+- **What it is:** Teaching computers to understand human text
+- **Real example:** When you text "I'm stressed about the test tomorrow," the AI knows you need encouragement AND study tips
+- **Why it's cool:** It's like giving your computer the ability to read emotions!
+
+### 2. Sentiment Analysis  
+- **What it is:** Figuring out if someone is happy, sad, frustrated, or excited
+- **Real example:** "I failed again" = sad, needs encouragement vs "I'm ready to try!" = motivated, needs a plan
+- **Why it matters:** Your AI gives different help based on how someone is feeling
+
+### 3. Response Generation
+- **What it is:** Creating helpful, specific responses (not just "good luck!")
+- **Real example:** Instead of "study more," your AI says "try the 20-20-20 method I mentioned"
+- **The trick:** Having templates for different situations but making them feel personal
+
+### 4. Ethical AI
+- **What it is:** Making sure your AI is safe and helpful, not harmful
+- **Real example:** Your AI says "talk to a counselor" for serious problems, not "just think positive"
+- **Why it's important:** With great coding power comes great responsibility!
+
+## 🌍 Real-World Impact - You're Building Something That Matters!
+
+Apps like the one you're building are already helping millions of students around the world:
+
+- **School counseling apps** help over **5 million students daily** with 24/7 support
+- **Study motivation platforms** help **78% of users** improve their study habits  
+- **Mental wellness tools** served **2.3 million teenagers** last year
+- **Academic coaching bots** are used by **340+ universities** worldwide
+
+That's the power of what you're learning to build today!
+
+## 🎯 Your Coding Mission - Step by Step
+
+Here's exactly what we're going to build today. Check off each step as you complete it:
+
+### ✅ Step 1: Set up the advisor framework
+Create Python classes and methods that can store different types of responses
+
+### ✅ Step 2: Create response categories  
+Build separate sections for encouragement, study tips, motivation, and goal setting
+
+### ✅ Step 3: Build a message classifier
+Code that can read a student message and figure out what kind of help they need
+
+### ✅ Step 4: Design response templates
+Write encouraging, helpful responses that actually work (not just "good luck!")
+
+### ✅ Step 5: Add personality elements  
+Make your AI sound like a supportive friend, not a robot
+
+### ✅ Step 6: Test with realistic scenarios
+Try out your AI with real problems students face
+
+### ✅ Step 7: Implement safety features
+Add boundaries so your AI knows when to suggest talking to adults
+
+## 🚀 Ready to Start Coding?
+
+You're about to create technology that could genuinely help students succeed in school. This isn't just a coding exercise - you're building a tool that understands real challenges and provides meaningful support.
+
+**Your goal:** Create an AI that makes school life better for everyone!
+
+Let's start by looking at the starter code and building your first AI advisor function...`,
         code: {
           starter: `# 🎓 School-Positive Advisor - Your AI Study Buddy!
 # Let's build a chatbot that helps students succeed!
