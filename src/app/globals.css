@@ -25,6 +25,40 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Custom Animations for Enhanced Lesson UI */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-700 {
+  animation-delay: 0.7s;
+}
+
+/* Enhanced hover effects */
+.group:hover .group-hover\:animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradient text animations */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
 /* CodeFly Custom Animations */
 @keyframes fade-in {
   from {
