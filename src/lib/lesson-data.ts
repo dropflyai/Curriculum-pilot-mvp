@@ -214,7 +214,7 @@ LABELS = ["pencil", "eraser", "marker"]  # What we're teaching the AI to recogni
           },
           {
             id: 'metrics_compared',
-            desc: "After removing ≥5 low-quality/duplicate images, retrained and compared accuracy + per-class accuracy."
+            desc: "Improved the dataset by flagging 5+ problematic images, then retrained the AI to see if accuracy improved."
           },
           {
             id: 'confusion_read',

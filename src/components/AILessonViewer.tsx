@@ -39,6 +39,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
+  const [confusionAnswers, setConfusionAnswers] = useState<string[]>(['', '', ''])
+  const [ethicsNote, setEthicsNote] = useState('')
+  const [showConfusionQuestions, setShowConfusionQuestions] = useState(false)
+  const [showEthicsNote, setShowEthicsNote] = useState(false)
   const [metrics, setMetrics] = useState<any>(null)
   const [submissionText, setSubmissionText] = useState('')
 
@@ -124,6 +128,26 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       ...prev,
       completed: { ...prev.completed, [index]: !prev.completed[index] }
     }))
+  }
+
+  const handleConfusionSubmit = () => {
+    const allAnswered = confusionAnswers.every(answer => answer.trim().length > 0)
+    if (allAnswered) {
+      handleTestComplete('confusion_read')
+      setShowConfusionQuestions(false)
+    } else {
+      alert('Please answer all 3 questions about the confusion matrix.')
+    }
+  }
+
+  const handleEthicsSubmit = () => {
+    const sentences = ethicsNote.trim().split(/[.!?]+/).filter(s => s.trim().length > 5)
+    if (sentences.length >= 3 && ethicsNote.length >= 100) {
+      handleTestComplete('ethics_note')
+      setShowEthicsNote(false)
+    } else {
+      alert('Please write at least 3-4 complete sentences (minimum 100 characters) about AI ethics and representativeness.')
+    }
   }
 
   const missions = [
@@ -907,20 +931,220 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         <div className="flex items-center justify-between">
                           <span className="text-white font-medium">{test.desc}</span>
                           <button 
-                            onClick={() => handleTestComplete(test.id)}
+                            onClick={() => {
+                              if (test.id === 'confusion_read') {
+                                setShowConfusionQuestions(true)
+                              } else if (test.id === 'ethics_note') {
+                                setShowEthicsNote(true)
+                              } else {
+                                handleTestComplete(test.id)
+                              }
+                            }}
                             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                               testState.completed[test.id] 
                                 ? 'bg-green-600 text-white' 
-                                : 'bg-orange-600 hover:bg-orange-500 text-white'
+                                : test.id === 'confusion_read' || test.id === 'ethics_note'
+                                  ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                                  : 'bg-orange-600 hover:bg-orange-500 text-white'
                             }`}
                           >
-                            {testState.completed[test.id] ? '✅ Passed' : '▶️ Run Test'}
+                            {testState.completed[test.id] ? '✅ Completed' : 
+                             test.id === 'confusion_read' ? '📊 Answer Questions' :
+                             test.id === 'ethics_note' ? '✍️ Write Note' :
+                             '▶️ Run Test'}
                           </button>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Confusion Matrix Questions Modal */}
+                {showConfusionQuestions && (
+                  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                    <div className="bg-gray-800 rounded-lg p-6 max-w-4xl w-full border border-gray-700 max-h-[90vh] overflow-y-auto">
+                      <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-2xl font-bold text-white">📊 Confusion Matrix Analysis</h3>
+                        <button
+                          onClick={() => setShowConfusionQuestions(false)}
+                          className="text-gray-400 hover:text-white text-2xl"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {/* Sample Confusion Matrix */}
+                      <div className="bg-gray-700 rounded-lg p-6 mb-6">
+                        <h4 className="text-orange-300 font-bold mb-4">Sample AI Results - School Supply Classifier:</h4>
+                        <div className="bg-gray-800 rounded p-4 overflow-x-auto">
+                          <table className="w-full text-sm border-collapse">
+                            <thead>
+                              <tr>
+                                <th className="text-gray-400 p-3 border border-gray-600"></th>
+                                <th className="text-gray-400 p-3 border border-gray-600">Predicted: Pencil</th>
+                                <th className="text-gray-400 p-3 border border-gray-600">Predicted: Eraser</th>
+                                <th className="text-gray-400 p-3 border border-gray-600">Predicted: Marker</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th className="text-gray-400 p-3 border border-gray-600">Actual: Pencil</th>
+                                <td className="text-green-400 p-3 border border-gray-600 text-center font-bold">18</td>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">1</td>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">1</td>
+                              </tr>
+                              <tr>
+                                <th className="text-gray-400 p-3 border border-gray-600">Actual: Eraser</th>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">2</td>
+                                <td className="text-green-400 p-3 border border-gray-600 text-center font-bold">15</td>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">3</td>
+                              </tr>
+                              <tr>
+                                <th className="text-gray-400 p-3 border border-gray-600">Actual: Marker</th>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">0</td>
+                                <td className="text-red-400 p-3 border border-gray-600 text-center">1</td>
+                                <td className="text-green-400 p-3 border border-gray-600 text-center font-bold">19</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p className="text-gray-400 text-sm mt-3">
+                          💡 Green = Correct predictions, Red = Incorrect predictions
+                        </p>
+                      </div>
+
+                      {/* Questions */}
+                      <div className="space-y-6">
+                        <div>
+                          <label className="block text-white font-semibold mb-2">
+                            1. Which category does the AI struggle with most? (Look at the red numbers)
+                          </label>
+                          <input
+                            type="text"
+                            value={confusionAnswers[0]}
+                            onChange={(e) => setConfusionAnswers(prev => {
+                              const newAnswers = [...prev]
+                              newAnswers[0] = e.target.value
+                              return newAnswers
+                            })}
+                            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-orange-500"
+                            placeholder="Type your answer here..."
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-white font-semibold mb-2">
+                            2. What's the overall accuracy? (Add up all green numbers, divide by total)
+                          </label>
+                          <input
+                            type="text"
+                            value={confusionAnswers[1]}
+                            onChange={(e) => setConfusionAnswers(prev => {
+                              const newAnswers = [...prev]
+                              newAnswers[1] = e.target.value
+                              return newAnswers
+                            })}
+                            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-orange-500"
+                            placeholder="Type your calculation and answer..."
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-white font-semibold mb-2">
+                            3. Why might the AI confuse erasers with other items? (Think about visual similarities)
+                          </label>
+                          <textarea
+                            value={confusionAnswers[2]}
+                            onChange={(e) => setConfusionAnswers(prev => {
+                              const newAnswers = [...prev]
+                              newAnswers[2] = e.target.value
+                              return newAnswers
+                            })}
+                            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-orange-500 h-24"
+                            placeholder="Explain your reasoning..."
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 mt-6">
+                        <button
+                          onClick={() => setShowConfusionQuestions(false)}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleConfusionSubmit}
+                          className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-lg font-semibold"
+                        >
+                          📊 Submit Analysis
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Ethics Note Modal */}
+                {showEthicsNote && (
+                  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                    <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700">
+                      <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-2xl font-bold text-white">⚖️ AI Ethics Reflection</h3>
+                        <button
+                          onClick={() => setShowEthicsNote(false)}
+                          className="text-gray-400 hover:text-white text-2xl"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <div className="bg-purple-900/20 rounded-lg p-4 mb-6 border border-purple-500/30">
+                        <h4 className="text-purple-300 font-bold mb-3">🎯 Your Task:</h4>
+                        <p className="text-purple-200 mb-2">
+                          Write 3-4 sentences about <strong>representativeness</strong> in AI datasets and how to make AI systems more fair.
+                        </p>
+                        <p className="text-purple-200 text-sm">
+                          Think about: What happens when AI training data doesn't represent all types of people or objects? How can we prevent bias?
+                        </p>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-white font-semibold mb-2">
+                          Ethics Note (3-4 sentences required):
+                        </label>
+                        <textarea
+                          value={ethicsNote}
+                          onChange={(e) => setEthicsNote(e.target.value)}
+                          className="w-full p-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 h-32"
+                          placeholder="Write about AI representativeness, potential biases, and how to build fairer AI systems..."
+                        />
+                        <div className="flex justify-between items-center mt-2">
+                          <span className="text-gray-400 text-sm">
+                            {ethicsNote.length}/100 characters minimum
+                          </span>
+                          <span className="text-gray-400 text-sm">
+                            {ethicsNote.trim().split(/[.!?]+/).filter(s => s.trim().length > 5).length}/3-4 sentences
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => setShowEthicsNote(false)}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleEthicsSubmit}
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold"
+                        >
+                          ⚖️ Submit Ethics Note
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
