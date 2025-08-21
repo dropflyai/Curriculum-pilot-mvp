@@ -8,6 +8,10 @@ const AIClassifierTrainer = dynamic(() => import('./AIClassifierTrainer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading AI Classifier...</div>
 })
+const VocabularyMatcher = dynamic(() => import('./VocabularyMatcher'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Vocabulary Matcher...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
@@ -34,7 +38,7 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit'>('overview')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'vocabulary' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit'>('overview')
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
@@ -93,8 +97,13 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     const newCompleted: Record<number, boolean> = {}
     
     // 0: "I can say how training and inference are different." (completed after viewing learn content)
-    if (currentTab === 'code' || currentTab === 'tests' || currentTab === 'quiz' || currentTab === 'checklist' || currentTab === 'submit') {
+    if (currentTab === 'vocabulary' || currentTab === 'code' || currentTab === 'tests' || currentTab === 'quiz' || currentTab === 'checklist' || currentTab === 'submit') {
       newCompleted[0] = true
+    }
+    
+    // Add vocabulary completion check
+    if (testState.completed['vocabulary_mastery']) {
+      newCompleted[0] = true // vocabulary mastery counts as understanding concepts
     }
     
     // 1: "I viewed overall accuracy and per-class accuracy." (completed after first training)
@@ -256,6 +265,19 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       xpReward: 100,
       description: 'Explore the fundamental concepts and unlock the mysteries of artificial intelligence',
       objectives: ['Learn core AI concepts', 'Understand key terminology', 'Complete knowledge checkpoints']
+    },
+    { 
+      id: 'vocabulary', 
+      title: 'Vocabulary Mastery', 
+      subtitle: 'Master the Language of AI',
+      icon: BookOpen, 
+      color: 'purple', 
+      emoji: '📚',
+      difficulty: 'Beginner',
+      estimatedTime: '10 min',
+      xpReward: 150,
+      description: 'Learn essential AI vocabulary and test your knowledge with an interactive matching game',
+      objectives: ['Study key AI terms', 'Complete vocabulary matching', 'Achieve 80% or higher score']
     },
     { 
       id: 'code', 
@@ -854,6 +876,55 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     onReturnToMap={() => setCurrentTab('overview')}
                   />
                 </div>
+              </div>
+            )}
+
+            {currentTab === 'vocabulary' && (
+              <div className="space-y-8">
+                {/* Vocabulary Mastery Content */}
+                <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">📚</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Vocabulary Mastery</h2>
+                      <p className="text-purple-200 text-xl">Master the Language of AI</p>
+                    </div>
+                  </div>
+                  
+                  {/* Vocabulary Objectives */}
+                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30 mb-6">
+                    <h3 className="text-purple-300 font-bold text-xl mb-4">📝 Learning Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧠</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Study Key AI Terms</h4>
+                        <p className="text-purple-300/80 text-sm">Learn essential vocabulary for AI and machine learning</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🎯</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Complete Matching Game</h4>
+                        <p className="text-purple-300/80 text-sm">Test your knowledge with interactive challenges</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🏆</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Achieve Mastery</h4>
+                        <p className="text-purple-300/80 text-sm">Score 80% or higher to unlock next section</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Interactive Vocabulary Component */}
+                <VocabularyMatcher 
+                  onComplete={(score) => {
+                    if (score >= 80) {
+                      setTestState(prev => ({
+                        ...prev,
+                        completed: { ...prev.completed, vocabulary_mastery: true }
+                      }))
+                    }
+                  }}
+                />
               </div>
             )}
 
