@@ -347,16 +347,6 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
                   console.log(`Section ${sectionIndex} completed`)
                 }}
               />
-              
-              {/* Fallback to original content if needed */}
-              <details className="mt-8">
-                <summary className="text-cyan-300 cursor-pointer hover:text-cyan-200 transition-colors">
-                  📖 View Original Lesson Content
-                </summary>
-                <div className="mt-4 prose prose-invert max-w-none prose-headings:text-cyan-300 prose-strong:text-yellow-300 prose-em:text-pink-300 prose-code:text-green-300 prose-code:bg-gray-700/50 prose-code:px-2 prose-code:py-1 prose-code:rounded">
-                  <ReactMarkdown>{currentModeData.learn_md}</ReactMarkdown>
-                </div>
-              </details>
             </div>
           )}
 
