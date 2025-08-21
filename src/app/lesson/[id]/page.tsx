@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAILesson } from '@/lib/lesson-data'
 import AILessonViewer from '@/components/AILessonViewer'
+import PythonLessonViewer from '@/components/PythonLessonViewer'
 import RewardSystem, { getBadgesEarned } from '@/components/RewardSystem'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -116,12 +117,21 @@ export default function LessonPage() {
 
       {/* Lesson Content */}
       <div className="py-8">
-        <AILessonViewer
-          lesson={lesson}
-          onLessonComplete={handleLessonComplete}
-          onQuizComplete={handleQuizComplete}
-          onCodeExecution={handleCodeExecution}
-        />
+        {lesson.id === 'week-01' ? (
+          <AILessonViewer
+            lesson={lesson}
+            onLessonComplete={handleLessonComplete}
+            onQuizComplete={handleQuizComplete}
+            onCodeExecution={handleCodeExecution}
+          />
+        ) : (
+          <PythonLessonViewer
+            lesson={lesson}
+            onLessonComplete={handleLessonComplete}
+            onQuizComplete={handleQuizComplete}
+            onCodeExecution={handleCodeExecution}
+          />
+        )}
       </div>
 
       {/* Reward System Modal */}

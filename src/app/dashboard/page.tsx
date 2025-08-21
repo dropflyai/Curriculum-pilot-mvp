@@ -13,7 +13,8 @@ export default function Dashboard() {
   const router = useRouter()
   const [lessons, setLessons] = useState<Lesson[]>(getAllLessons())
   const [userProgress] = useState<Record<string, number>>({
-    'week-01': 25, // Week 1 AI Classifier - in progress
+    'week-01': 100, // Week 1 AI Classifier - completed
+    'week-02': 0, // Week 2 Python Advisor - not started
     'python-basics-variables': 75,
     'python-magic-8-ball': 100,
     'python-functions': 0,
@@ -21,7 +22,8 @@ export default function Dashboard() {
     'python-file-handling': 0
   })
   const [userScores] = useState<Record<string, number>>({
-    'week-01': 78, // Week 1 AI Classifier quiz score
+    'week-01': 85, // Week 1 AI Classifier quiz score
+    'week-02': 0, // Week 2 Python Advisor - not started
     'python-basics-variables': 85,
     'python-magic-8-ball': 92,
     'python-lists-loops': 67
@@ -32,10 +34,10 @@ export default function Dashboard() {
   // Learning Progress Data
   const [totalLearningTime] = useState(8.5) // hours this week
   const [recentActivity] = useState([
-    { action: 'Trained AI Classifier on School Supplies', time: '1 hour ago', type: 'lesson' },
-    { action: 'Completed Week 1 Main Mode', time: '2 hours ago', type: 'lesson' },
-    { action: 'Achieved 78% on AI Classifier Quiz', time: '1 day ago', type: 'quiz' },
-    { action: 'Started Week 1 - AI Classifier', time: '2 days ago', type: 'lesson' }
+    { action: 'Completed Week 1 AI Classifier', time: '30 minutes ago', type: 'lesson' },
+    { action: 'Earned AI Classifier Badge', time: '35 minutes ago', type: 'achievement' },
+    { action: 'Achieved 85% on Week 1 Quiz', time: '1 hour ago', type: 'quiz' },
+    { action: 'Ready to Start Week 2 - Python!', time: 'Now', type: 'lesson' }
   ])
   
   // Learning Analytics

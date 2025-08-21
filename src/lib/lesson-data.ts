@@ -480,6 +480,650 @@ Attach a metrics screenshot.`,
         }
       }
     ]
+  },
+  {
+    id: 'week-02',
+    title: 'Python: School-Positive Advisor',
+    description: 'Build an AI-powered chatbot that provides encouraging, school-focused advice to help students stay motivated and positive.',
+    difficulty: 'beginner',
+    estimatedTime: '60 minutes in class + 60 minutes homework',
+    standards: [
+      'MA.K12.MTR.4.1: Engage in discussions that reflect on the mathematical thinking of self and others',
+      'MA.K12.MTR.6.1: Assess the reasonableness of solutions',
+      'SC.912.L.16.10: Evaluate the impact of biotechnology on the individual, society and environment'
+    ],
+    modes: [
+      {
+        type: 'main',
+        title: 'School-Positive Advisor Bot',
+        dataset: 'school-advice',
+        labels: ['encouragement', 'study-tips', 'motivation', 'goal-setting'],
+        learn_md: `## 🎓 Build Your Own School Success Advisor!
+
+Have you ever wished you had a wise friend who always knew exactly what to say to keep you motivated? Someone who could help you tackle tough homework, stay focused during exam prep, or bounce back from a bad grade? Today, you're going to create exactly that - your very own AI-powered School-Positive Advisor!
+
+### 🌟 What Makes This Special?
+
+Unlike generic chatbots that give bland responses, your advisor will be specifically trained to:
+- **Understand school challenges** - from test anxiety to friendship drama
+- **Provide actionable advice** - real strategies that actually work for students
+- **Keep things positive** - focusing on growth, resilience, and possibility
+- **Respect boundaries** - knowing when to suggest talking to a trusted adult
+
+### 🧠 The Science Behind Positive Thinking
+
+**Did you know?** Research shows that students who practice positive self-talk and growth mindset perform 23% better on tests and report 40% less stress. Your advisor isn't just feel-good fluff - it's based on real psychological principles that help students succeed!
+
+**Growth Mindset Examples:**
+- ❌ "I'm terrible at math" → ✅ "I'm still learning math concepts"
+- ❌ "I always fail tests" → ✅ "I can improve my test-taking strategies"
+- ❌ "This is too hard" → ✅ "This is challenging, but I can figure it out"
+
+### 💬 How Your Advisor Will Work
+
+Your bot will analyze student messages and categorize them into four key areas:
+
+**🎯 Encouragement** - When students feel discouraged or want to give up
+- Input: "I got a D on my history test and feel like I'm stupid"
+- Response: "Getting a tough grade doesn't define your intelligence! Let's look at this as valuable feedback about what to study differently next time. What specific topics felt most challenging?"
+
+**📚 Study Tips** - When students need practical learning strategies
+- Input: "I have a huge science test tomorrow and don't know where to start"
+- Response: "Last-minute prep can still be effective! Try the 20-20-20 method: 20 minutes reviewing notes, 20 minutes practicing problems, 20 minutes teaching concepts out loud. Which topic feels most confusing right now?"
+
+**🚀 Motivation** - When students need energy and drive to tackle challenges
+- Input: "I have so much homework and just want to watch Netflix instead"
+- Response: "That feeling is totally normal! Try the 15-minute rule: commit to just 15 minutes of homework, then decide if you want to continue. Often starting is the hardest part. What subject could you knock out first?"
+
+**🎯 Goal Setting** - When students need help planning and organizing their success
+- Input: "I want to raise my GPA but don't know how"
+- Response: "Great goal! Let's break this down into actionable steps. What's your current GPA and what's your target? We can create a specific plan for each class with weekly milestones."
+
+### 🔧 The Technical Challenge
+
+Programming a truly helpful advisor requires understanding:
+
+**Natural Language Processing** - How computers understand human text
+**Sentiment Analysis** - Detecting emotions and tone in messages
+**Response Generation** - Creating helpful, contextual replies
+**Ethical AI** - Ensuring safe, appropriate guidance for students
+
+### 🎨 Personality Design
+
+Your advisor's personality matters! You'll code specific traits:
+
+**Tone:** Encouraging but realistic, like a supportive older sibling
+**Style:** Uses relatable examples and age-appropriate language
+**Boundaries:** Knows when issues are beyond its scope (family problems, serious mental health, etc.)
+**Safety:** Never gives medical advice or replaces professional help
+
+### 🌍 Real-World Impact
+
+Student mental health apps like Woebot, Wysa, and others serve millions of students worldwide. By building your own version, you're learning the same techniques used by:
+- **School counseling apps** that provide 24/7 student support
+- **Study motivation platforms** that help students stay on track
+- **Mental wellness tools** designed specifically for teenagers
+- **Academic coaching bots** used by universities
+
+### 🎮 Your Coding Mission
+
+1. **Set up the advisor framework** with Python classes and methods
+2. **Create response categories** for different types of student problems
+3. **Build a message classifier** that detects what kind of help students need
+4. **Design response templates** with encouraging, actionable advice
+5. **Add personality elements** that make conversations feel natural
+6. **Test with realistic scenarios** to ensure helpful responses
+7. **Implement safety features** for sensitive topics
+
+### 💡 Advanced Features (If Time Allows)
+
+- **Mood tracking** that remembers how students are feeling over time
+- **Study schedule integration** that provides personalized reminders
+- **Achievement celebrations** that recognize student progress
+- **Resource recommendations** tailored to specific challenges
+
+### 🔮 The Future of Educational AI
+
+Your advisor represents the future of personalized learning support. As AI becomes more sophisticated, every student could have access to:
+- **24/7 academic coaching** available whenever they're struggling
+- **Personalized motivation** based on individual learning patterns
+- **Emotional support** during stressful academic periods
+- **Study optimization** that adapts to each student's needs
+
+### 🚀 Ready to Build Your AI Advisor?
+
+You're about to create technology that could genuinely help students succeed in school. This isn't just a coding exercise - you're building a tool that understands the real challenges students face and provides meaningful support.
+
+**Let's code an AI that makes school life better for everyone!** 🎓✨`,
+        code: {
+          starter: `# 🎓 School-Positive Advisor - Your AI Study Buddy!
+# Let's build a chatbot that helps students succeed!
+
+import random
+
+class SchoolAdvisor:
+    def __init__(self):
+        self.name = "StudyBuddy"
+        self.responses = {
+            'encouragement': [
+                "Remember, every expert was once a beginner! You're growing your brain right now! 🧠",
+                "Mistakes are proof that you're trying. That's actually awesome! 💪",
+                "Your effort matters more than perfection. Keep going! 🌟"
+            ],
+            'study_tips': [
+                "Try the Pomodoro Technique: 25 minutes focused study, 5 minute break! ⏰",
+                "Teaching concepts out loud helps your brain remember better! 🗣️", 
+                "Make flashcards or draw diagrams - visual learning rocks! 🎨"
+            ],
+            'motivation': [
+                "You've overcome challenges before, and you can do it again! 🚀",
+                "Every small step forward is progress. You've got this! 👟",
+                "Think about your future self - they'll thank you for not giving up! ✨"
+            ],
+            'goal_setting': [
+                "Let's break that big goal into smaller, manageable pieces! 🧩",
+                "What's one thing you could do today to move closer to your goal? 🎯",
+                "SMART goals are Specific, Measurable, Achievable, Relevant, and Time-bound! 📊"
+            ]
+        }
+    
+    def analyze_message(self, message):
+        """Determine what type of help the student needs"""
+        message = message.lower()
+        
+        # Keywords for different categories
+        encouragement_words = ['failed', 'stupid', 'can\\'t', 'hate', 'frustrated', 'give up']
+        study_words = ['test', 'exam', 'homework', 'study', 'learn', 'remember']
+        motivation_words = ['tired', 'lazy', 'procrastinating', 'netflix', 'don\\'t want']
+        goal_words = ['want to', 'goal', 'plan', 'future', 'improve', 'better']
+        
+        # Count keyword matches
+        scores = {
+            'encouragement': sum(1 for word in encouragement_words if word in message),
+            'study_tips': sum(1 for word in study_words if word in message),
+            'motivation': sum(1 for word in motivation_words if word in message),
+            'goal_setting': sum(1 for word in goal_words if word in message)
+        }
+        
+        # Return category with highest score
+        return max(scores, key=scores.get)
+    
+    def get_response(self, message):
+        """Generate an encouraging response based on the message"""
+        category = self.analyze_message(message)
+        response = random.choice(self.responses[category])
+        return f"Hi! I'm {self.name}! 😊\\n\\n{response}\\n\\nWhat else can I help you with?"
+
+# 🎮 Test your advisor!
+advisor = SchoolAdvisor()
+
+# Try these example messages:
+test_messages = [
+    "I failed my math test and feel really stupid",
+    "I have a huge science exam tomorrow and don't know how to study",
+    "I keep procrastinating on my English essay",
+    "I want to get better grades but don't know where to start"
+]
+
+print("🤖 Testing your School-Positive Advisor!")
+print("=" * 50)
+
+for message in test_messages:
+    print(f"Student: {message}")
+    print(f"Advisor: {advisor.get_response(message)}")
+    print("-" * 30)
+
+# 🚀 YOUR MISSION:
+# 1) Run this code and see how your advisor responds
+# 2) Add more response options to each category
+# 3) Improve the keyword detection system
+# 4) Add a new category (like 'time_management' or 'test_anxiety')
+# 5) Test with your own student messages!
+
+print("\\n💡 Now it's your turn to improve the advisor!")
+print("What student challenge would you like to help solve?")`,
+        },
+        tests_ui: [
+          {
+            id: 'advisor_created',
+            desc: "Created the SchoolAdvisor class and tested it with the provided messages."
+          },
+          {
+            id: 'responses_added',
+            desc: "Added at least 2 more response options to each category."
+          },
+          {
+            id: 'new_category',
+            desc: "Added a new help category (like 'time_management' or 'test_anxiety') with responses."
+          },
+          {
+            id: 'keyword_improved',
+            desc: "Enhanced the keyword detection system to be more accurate."
+          },
+          {
+            id: 'personal_test',
+            desc: "Tested the advisor with 3 original student messages and verified helpful responses."
+          }
+        ],
+        quiz: {
+          questions: [
+            {
+              prompt: "What is the main purpose of sentiment analysis in the School Advisor?",
+              options: ["To count words", "To detect emotions and categorize student needs", "To translate languages", "To check spelling"],
+              answer_index: 1
+            },
+            {
+              prompt: "Why is it important for AI advisors to have boundaries?",
+              options: ["To save computing power", "To ensure student safety and know when to refer to professionals", "To run faster", "To use less memory"],
+              answer_index: 1
+            },
+            {
+              prompt: "What makes a response 'school-positive'?",
+              options: ["It's long and detailed", "It focuses on growth, effort, and actionable solutions", "It uses big words", "It's written in all caps"],
+              answer_index: 1
+            },
+            {
+              prompt: "How does keyword matching help classify messages?",
+              options: ["It counts letters", "It identifies topic categories based on word patterns", "It fixes grammar", "It translates text"],
+              answer_index: 1
+            }
+          ]
+        },
+        checklist: [
+          "I understand how the message analyzer categorizes student problems.",
+          "I can explain why positive, growth-focused responses are important.",
+          "I added new response options to make the advisor more helpful.",
+          "I tested the advisor with realistic student scenarios.",
+          "I can identify when an issue might need human adult support."
+        ],
+        submit: {
+          prompt: `**Project Showcase (15 min):** Enhance your School-Positive Advisor with one major improvement:
+1) Add a new category (test anxiety, friendship issues, time management, etc.), or
+2) Create a mood tracking feature that remembers conversation history, or
+3) Build a safety feature that recognizes serious issues and suggests talking to adults.
+**Turn in:** Working code + demo with 3 test messages + explanation of your enhancement.`,
+          rubric: {
+            exceeds: [
+              "Enhancement demonstrates clear understanding of educational AI principles.",
+              "Code includes thoughtful improvements to response quality or safety features.",
+              "Demo shows advisor providing genuinely helpful, age-appropriate guidance."
+            ],
+            meets: [
+              "Successfully added new functionality with working code.",
+              "Advisor provides appropriate responses to test scenarios."
+            ],
+            approaching: [
+              "Enhancement attempted but not fully functional or limited improvement."
+            ],
+            beginning: [
+              "No significant enhancement or advisor doesn't provide helpful responses."
+            ]
+          },
+          badges_on_complete: ["Python Helper", "AI Ethics Advocate"]
+        }
+      },
+      {
+        type: 'bonus',
+        title: 'Classic Magic 8-Ball',
+        dataset: 'fortune-responses',
+        labels: ['positive', 'negative', 'neutral', 'mysterious'],
+        learn_md: `## 🎱 Build the Classic Magic 8-Ball - But Make It Smart!
+
+Welcome to a nostalgic coding adventure! Remember those plastic Magic 8-Balls you'd shake for "mystical" answers to life's big questions? Today, you're going to recreate that experience with Python - but with a modern twist that teaches important programming concepts!
+
+### 🔮 The Magic Behind the Magic
+
+The original Magic 8-Ball was simple genius: 20 different responses floating in blue liquid, revealed randomly when you shook the ball. But your digital version will be so much better:
+
+**🎯 Smart Response Categories**
+- **Positive** (10 responses): "Yes definitely!", "It is certain!", "Outlook good!"
+- **Negative** (5 responses): "Don't count on it", "My reply is no", "Very doubtful"
+- **Neutral** (5 responses): "Reply hazy, try again", "Ask again later", "Cannot predict now"
+
+**🧠 Why These Categories Matter**
+The original designers understood psychology! Most people asking questions *want* positive answers, so they weighted the responses accordingly. About 50% positive, 25% negative, 25% neutral - just enough uncertainty to keep it interesting!
+
+### 🎮 Your Programming Challenge
+
+You'll master these key concepts:
+
+**📝 Lists and Random Selection**
+- Store responses in Python lists and use random.choice() to select
+- Example: positive_responses = ["Yes definitely!", "It is certain!"]
+
+**🔄 While Loops and User Input**
+- Create continuous interaction with while True loops
+- Handle user input and exit conditions gracefully
+
+**🎯 Conditional Logic**
+- Use if/elif statements to categorize responses
+- Provide different experiences based on response type
+
+**🎨 String Formatting and User Experience**
+- Use f-strings for dynamic message formatting
+- Add emoji and styling for engaging interactions
+
+### 🌟 Advanced Features to Explore
+
+**🎭 Personality Modes**
+- **Encouraging Mode**: Mostly positive responses for test anxiety
+- **Realistic Mode**: Balanced responses for important decisions  
+- **Mysterious Mode**: Cryptic, philosophical answers
+- **Funny Mode**: Humorous, sarcastic responses
+
+**📊 Statistics Tracking**
+- Count how many positive vs negative responses you've given
+- Track the most popular questions
+- Display response distribution
+
+**🎪 Enhanced User Experience**
+- ASCII art Magic 8-Ball animation
+- Typing effect for dramatic response reveals
+- Color-coded responses (green positive, red negative, yellow neutral)
+
+### 🔬 The Computer Science Behind Fortune Telling
+
+**Random Number Generation**
+Your Magic 8-Ball uses pseudorandom algorithms - mathematical formulas that create sequences that *appear* random but are actually deterministic. Understanding randomness is crucial for:
+- **Game development** (dice rolls, card shuffling)
+- **Cryptography** (secure password generation)  
+- **Simulations** (weather modeling, financial analysis)
+- **Machine learning** (data sampling, neural network initialization)
+
+**User Interface Design**
+Even a simple command-line program requires thoughtful UX decisions:
+- How do you make users feel engaged?
+- What feedback confirms their input was received?
+- How do you gracefully handle unexpected inputs?
+- When should the program exit vs continue?
+
+### 🎪 Creative Extensions
+
+**🏆 Challenge Mode: Question Intelligence**
+Can you make your 8-Ball respond differently based on question type?
+- Yes/No questions get definitive answers
+- "How" questions get process-focused responses
+- "When" questions get time-related answers
+- "Should I" questions get advice-style responses
+
+**🎨 Artistic Flair**
+- Add ASCII art animations
+- Create "shaking" effect with delays and dots
+- Use colorful emoji combinations
+- Add sound effects (if running locally)
+
+**📱 Modern Features**
+- Save favorite responses to a file
+- Load custom response sets from text files
+- Create themed 8-Ball variations (sports, academic, career)
+- Add response confidence levels
+
+### 🌍 Real-World Applications
+
+The programming patterns you're learning power:
+
+**🎮 Game Development**
+- Random loot drops in RPGs
+- Procedural content generation
+- NPC dialogue systems
+- Matchmaking algorithms
+
+**📊 Data Science**
+- Statistical sampling
+- Monte Carlo simulations
+- A/B testing frameworks
+- Random forest algorithms
+
+**🔐 Cybersecurity**
+- Cryptographic key generation
+- Password creation systems
+- Security testing tools
+- Random audit sampling
+
+### 🎯 Your Coding Mission
+
+1. **Build the basic Magic 8-Ball** with authentic responses
+2. **Add response categories** with appropriate weighting
+3. **Create an engaging user interface** with prompts and formatting
+4. **Implement continuous play** with graceful exit options
+5. **Track and display statistics** about response patterns
+6. **Add one creative enhancement** that makes it uniquely yours
+
+### 🔮 The Philosophy of Randomness
+
+Here's a fun thought experiment: Is your digital Magic 8-Ball actually *random*? The computer follows deterministic algorithms, so in theory, if you knew the exact state of the system, you could predict every "random" response.
+
+But for practical purposes, pseudorandomness is indistinguishable from true randomness. This concept applies to:
+- **Quantum computing** (true vs. pseudorandom number generation)
+- **Philosophy of free will** (determinism vs. perceived choice)
+- **Game theory** (mixed strategies in competitive scenarios)
+
+### 🚀 Ready to Code Some Magic?
+
+You're about to create a program that combines nostalgia, psychology, programming fundamentals, and creative expression. Whether users ask serious questions or silly ones, your Magic 8-Ball will provide that perfect mix of guidance and mystery that has entertained people for generations.
+
+**Let's bring the magic of childhood wonder into the digital age!** 🎱✨`,
+        code: {
+          starter: `# 🎱 Magic 8-Ball - The Classic Fortune Teller!
+# Let's recreate the nostalgic experience with Python magic!
+
+import random
+import time
+
+class Magic8Ball:
+    def __init__(self):
+        # 🌟 Authentic Magic 8-Ball responses (just like the original!)
+        self.positive_responses = [
+            "It is certain",
+            "It is decidedly so", 
+            "Without a doubt",
+            "Yes definitely",
+            "You may rely on it",
+            "As I see it, yes",
+            "Most likely",
+            "Outlook good",
+            "Yes",
+            "Signs point to yes"
+        ]
+        
+        self.negative_responses = [
+            "Don't count on it",
+            "My reply is no",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful"
+        ]
+        
+        self.neutral_responses = [
+            "Reply hazy, try again",
+            "Ask again later",
+            "Better not tell you now",
+            "Cannot predict now",
+            "Concentrate and ask again"
+        ]
+        
+        # 📊 Track statistics
+        self.total_questions = 0
+        self.response_counts = {"positive": 0, "negative": 0, "neutral": 0}
+    
+    def shake(self):
+        """Simulate shaking the Magic 8-Ball"""
+        print("🎱 *Shaking the Magic 8-Ball*")
+        print("✨ . . . ✨")
+        time.sleep(1)  # Add dramatic pause
+        
+        # Choose response category (weighted like original)
+        # 50% positive, 25% negative, 25% neutral
+        choice = random.randint(1, 20)
+        
+        if choice <= 10:  # 50% chance
+            response = random.choice(self.positive_responses)
+            category = "positive"
+            emoji = "🌟"
+        elif choice <= 15:  # 25% chance  
+            response = random.choice(self.negative_responses)
+            category = "negative"
+            emoji = "⚠️"
+        else:  # 25% chance
+            response = random.choice(self.neutral_responses)
+            category = "neutral"
+            emoji = "🤔"
+        
+        # Update statistics
+        self.total_questions += 1
+        self.response_counts[category] += 1
+        
+        return response, emoji, category
+    
+    def show_stats(self):
+        """Display usage statistics"""
+        print("\\n📊 Magic 8-Ball Statistics:")
+        print("=" * 30)
+        print(f"Total questions asked: {self.total_questions}")
+        
+        if self.total_questions > 0:
+            for category, count in self.response_counts.items():
+                percentage = (count / self.total_questions) * 100
+                print(f"{category.title()}: {count} ({percentage:.1f}%)")
+    
+    def display_welcome(self):
+        """Show welcome message"""
+        print("🎱" * 15)
+        print("     MAGIC 8-BALL ORACLE     ")
+        print("🎱" * 15)
+        print("\\n🔮 Ask me any yes/no question!")
+        print("✨ I'll reveal the answer from beyond...")
+        print("💡 Type 'stats' to see response statistics")
+        print("🚪 Type 'quit' when you're done")
+        print()
+
+# 🎮 Main game loop
+def play_magic_8_ball():
+    ball = Magic8Ball()
+    ball.display_welcome()
+    
+    while True:
+        # Get user question
+        question = input("🔮 What do you want to know? ").strip()
+        
+        # Handle special commands
+        if question.lower() == 'quit':
+            print("\\n🎱 Thanks for consulting the Magic 8-Ball!")
+            ball.show_stats()
+            print("✨ May your future be bright! ✨")
+            break
+        elif question.lower() == 'stats':
+            ball.show_stats()
+            print()
+            continue
+        elif not question:
+            print("🤨 The Magic 8-Ball needs a question to answer!")
+            continue
+        
+        # Get mystical response
+        response, emoji, category = ball.shake()
+        
+        # Display answer with style
+        print(f"\\n{emoji} The Magic 8-Ball says:")
+        print(f"✨ \\"{response}\\" ✨")
+        print()
+
+# 🚀 Run the Magic 8-Ball!
+if __name__ == "__main__":
+    play_magic_8_ball()
+
+# 🎯 YOUR CHALLENGES:
+# 1) Run the code and ask it some questions!
+# 2) Add more personality with custom responses
+# 3) Create different "modes" (encouraging, funny, mysterious)
+# 4) Add ASCII art or animation effects
+# 5) Make it respond differently to different question types
+# 6) Save questions and answers to a file
+    
+print("\\n💡 Ready to enhance your Magic 8-Ball? The magic is in your hands!")`,
+        },
+        tests_ui: [
+          {
+            id: 'magic_8_ball_works',
+            desc: "Ran the Magic 8-Ball and asked at least 5 different questions."
+          },
+          {
+            id: 'statistics_checked',
+            desc: "Used the 'stats' command to view response distribution."
+          },
+          {
+            id: 'responses_enhanced',
+            desc: "Added at least 3 new responses to any category or created a new response mode."
+          },
+          {
+            id: 'user_experience_improved',
+            desc: "Enhanced the user interface with better formatting, colors, or animations."
+          },
+          {
+            id: 'creative_feature_added',
+            desc: "Implemented one creative feature (question analysis, themed modes, file saving, etc.)."
+          }
+        ],
+        quiz: {
+          questions: [
+            {
+              prompt: "Why does the Magic 8-Ball use weighted randomness (50% positive, 25% negative, 25% neutral)?",
+              options: ["To save memory", "Because people prefer optimistic responses", "To make it run faster", "To use fewer responses"],
+              answer_index: 1
+            },
+            {
+              prompt: "What is the difference between 'true random' and 'pseudorandom' numbers?",
+              options: ["No difference", "Pseudorandom follows mathematical algorithms, true random is unpredictable", "True random is faster", "Pseudorandom uses more memory"],
+              answer_index: 1
+            },
+            {
+              prompt: "Which programming concept is most important for the Magic 8-Ball's core functionality?",
+              options: ["File handling", "Random selection from lists", "Database connections", "Web requests"],
+              answer_index: 1
+            },
+            {
+              prompt: "How does tracking statistics enhance the user experience?",
+              options: ["It makes the program bigger", "Users can see patterns in their question habits", "It uses more CPU", "It requires internet access"],
+              answer_index: 1
+            }
+          ]
+        },
+        checklist: [
+          "I understand how random.choice() selects items from lists.",
+          "I can explain why the Magic 8-Ball uses weighted response categories.",
+          "I successfully added new features to enhance user experience.",
+          "I tested the program with various types of questions.",
+          "I can identify real-world applications of random number generation."
+        ],
+        submit: {
+          prompt: `**Creative Showcase (20 min):** Transform your Magic 8-Ball into something unique!
+Choose one major enhancement:
+1) **Themed Versions** - Create specialized 8-Balls (Academic Advisor, Sports Oracle, Career Guide)
+2) **Question Intelligence** - Make responses adapt to question type ("Will I...?", "Should I...?", "When will...?")
+3) **Persistence Features** - Save questions/answers to files, load custom response sets
+4) **Interactive Experience** - Add ASCII animations, typing effects, or themed interfaces
+**Turn in:** Enhanced code + demonstration + explanation of your creative choices.`,
+          rubric: {
+            exceeds: [
+              "Enhancement shows deep understanding of programming concepts and user experience design.",
+              "Code demonstrates creative problem-solving and attention to detail.",
+              "Feature adds genuine value and showcases technical skills learned."
+            ],
+            meets: [
+              "Successfully implemented chosen enhancement with working functionality.",
+              "Code is well-organized and demonstrates understanding of key concepts."
+            ],
+            approaching: [
+              "Enhancement attempted but partially functional or limited in scope."
+            ],
+            beginning: [
+              "Minimal changes made or enhancement doesn't work as intended."
+            ]
+          },
+          badges_on_complete: ["Python Wizard", "Creative Coder"]
+        }
+      }
+    ]
   }
 ]
 
