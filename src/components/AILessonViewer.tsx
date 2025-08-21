@@ -153,18 +153,57 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
           </div>
           <p className="text-blue-200 text-lg mb-6 leading-relaxed">{lesson.description}</p>
         
-          {/* Standards */}
+          {/* Lesson Overview */}
           <div className="mb-6">
             <h3 className="text-sm font-semibold text-cyan-300 mb-3 flex items-center gap-2">
               <Target className="h-4 w-4" />
-              Florida Standards Alignment 🎯
+              Lesson Overview 🎯
             </h3>
-            <div className="grid grid-cols-1 gap-2">
-              {lesson.standards.map((standard, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm border border-cyan-500/30 px-4 py-2 rounded-xl">
-                  <span className="text-sm text-cyan-100 font-medium">{standard}</span>
+            <div className="bg-white/10 backdrop-blur-sm border border-cyan-500/30 px-6 py-4 rounded-xl">
+              <p className="text-cyan-100 font-medium mb-3">By the end of this lesson, you will be able to:</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Explain what machine learning is and how it differs from traditional programming</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Understand key ML concepts: labels, datasets, training, and inference</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Train your own AI image classifier using real school supplies data</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Interpret accuracy metrics and confusion matrices</span>
+                  </div>
                 </div>
-              ))}
+                <div className="space-y-2">
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Identify bias and fairness issues in AI systems</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Improve model performance through data cleaning</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Connect AI concepts to real-world applications</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-green-400 mt-1">✓</span>
+                    <span className="text-sm text-cyan-100">Think critically about ethical implications of AI technology</span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 rounded-lg p-3">
+                <p className="text-cyan-200 text-sm font-medium">
+                  🚀 <strong>Real Impact:</strong> You'll master the same concepts used by data scientists at Google, Netflix, and Tesla!
+                </p>
+              </div>
             </div>
           </div>
 
