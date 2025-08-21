@@ -319,6 +319,83 @@ export default function Dashboard() {
         </div>
 
 
+        {/* Section 1 Homework */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="text-4xl">📚</div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">Section 1 - Homework</h3>
+                <p className="text-purple-200">Complete these assignments to master AI fundamentals</p>
+              </div>
+            </div>
+
+            {/* Homework Assignment Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Vocabulary Assignment */}
+              <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 group">
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl group-hover:animate-bounce">🧠</div>
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-white mb-2">AI Vocabulary Mastery</h4>
+                    <p className="text-purple-200 text-sm mb-4">
+                      Learn and master essential AI terminology through interactive study and matching games.
+                    </p>
+                    
+                    {/* Assignment Details */}
+                    <div className="bg-purple-900/30 rounded-lg p-3 mb-4">
+                      <div className="text-purple-300 text-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span>📖</span>
+                          <span>Study 11 key AI terms with definitions</span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span>🎯</span>
+                          <span>Complete interactive matching quiz</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>🏆</span>
+                          <span>Score 80% or higher to complete</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Assignment Status */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 text-sm">⏱️</span>
+                        <span className="text-gray-300 text-sm">Est. Time: 10-15 min</span>
+                      </div>
+                      <Link
+                        href="/homework/vocabulary"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
+                      >
+                        Start Assignment
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Future Assignment Placeholder */}
+              <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600 opacity-60">
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl">🔒</div>
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-gray-400 mb-2">Next Assignment</h4>
+                    <p className="text-gray-500 text-sm mb-4">
+                      Additional homework assignments will be unlocked as you progress through the lessons.
+                    </p>
+                    <div className="bg-gray-700/50 rounded-lg p-3">
+                      <span className="text-gray-500 text-sm">Complete AI Classifier lesson to unlock</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Lessons Grid */}
         <div className="mb-8">
           <div className="mb-6">
