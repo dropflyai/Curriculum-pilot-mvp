@@ -786,6 +786,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     onSectionComplete={(sectionIndex) => {
                       console.log(`Section ${sectionIndex} completed`)
                     }}
+                    onReturnToMap={() => setCurrentTab('overview')}
                   />
                 </div>
               </div>

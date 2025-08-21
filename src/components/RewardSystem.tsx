@@ -20,6 +20,7 @@ interface RewardSystemProps {
   show: boolean
   onClose: () => void
   earnedBadges: string[]
+  onReturnToMap?: () => void
 }
 
 const availableBadges: Badge[] = [
@@ -80,7 +81,7 @@ const availableBadges: Badge[] = [
   }
 ]
 
-export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadges }: RewardSystemProps) {
+export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadges, onReturnToMap }: RewardSystemProps) {
   const [animatedBadges, setAnimatedBadges] = useState<string[]>([])
   const [celebrationActive, setCelebrationActive] = useState(false)
 
@@ -220,10 +221,15 @@ export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadg
         {/* Action Buttons */}
         <div className="flex justify-center gap-4">
           <button
-            onClick={onClose}
+            onClick={() => {
+              onClose()
+              if (onReturnToMap) {
+                onReturnToMap()
+              }
+            }}
             className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 transform hover:scale-105"
           >
-            🚀 Continue Learning
+            🚀 Back to Adventure Map
           </button>
         </div>
 

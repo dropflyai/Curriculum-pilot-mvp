@@ -130,6 +130,7 @@ export default function LessonPage() {
         onClose={() => setShowRewards(false)}
         earnedBadges={earnedBadges}
         onRewardEarned={(badge) => console.log('Badge earned:', badge)}
+        onReturnToMap={() => router.push('/dashboard')}
       />
     </div>
   )
