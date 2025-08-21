@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAILesson } from '@/lib/lesson-data'
 import AILessonViewer from '@/components/AILessonViewer'
+import RewardSystem, { getBadgesEarned } from '@/components/RewardSystem'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -14,6 +15,10 @@ export default function LessonPage() {
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [lesson] = useState(getAILesson(params.id as string))
+  const [showRewards, setShowRewards] = useState(false)
+  const [earnedBadges, setEarnedBadges] = useState<string[]>([])
+  const [quizScore, setQuizScore] = useState<number | undefined>()
+  const [codeExecuted, setCodeExecuted] = useState(false)
 
   useEffect(() => {
     // TEMPORARY: Allow lesson access for testing
@@ -24,8 +29,26 @@ export default function LessonPage() {
 
   const handleLessonComplete = (progress: number) => {
     console.log(`Lesson progress: ${progress}%`)
+    
+    // Determine which badges should be earned based on progress
+    const badges = getBadgesEarned(progress, quizScore, codeExecuted)
+    setEarnedBadges(badges)
+    
+    // Show rewards modal when lesson is completed (100%)
+    if (progress >= 100) {
+      setShowRewards(true)
+    }
+    
     // Here you would save progress to Supabase
-    // saveProgressToDatabase(lesson.id, progress)
+    // saveProgressToDatabase(lesson.id, progress, badges)
+  }
+
+  const handleQuizComplete = (score: number) => {
+    setQuizScore(score)
+  }
+
+  const handleCodeExecution = () => {
+    setCodeExecuted(true)
   }
 
   if (loading) {
@@ -96,8 +119,18 @@ export default function LessonPage() {
         <AILessonViewer
           lesson={lesson}
           onLessonComplete={handleLessonComplete}
+          onQuizComplete={handleQuizComplete}
+          onCodeExecution={handleCodeExecution}
         />
       </div>
+
+      {/* Reward System Modal */}
+      <RewardSystem
+        show={showRewards}
+        onClose={() => setShowRewards(false)}
+        earnedBadges={earnedBadges}
+        onRewardEarned={(badge) => console.log('Badge earned:', badge)}
+      />
     </div>
   )
 }

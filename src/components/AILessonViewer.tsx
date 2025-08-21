@@ -15,6 +15,8 @@ import InteractiveLessonContent from './InteractiveLessonContent'
 interface AILessonViewerProps {
   lesson: AILesson
   onLessonComplete: (progress: number) => void
+  onQuizComplete?: (score: number) => void
+  onCodeExecution?: () => void
 }
 
 interface QuizState {
@@ -31,7 +33,7 @@ interface TestState {
   completed: Record<string, boolean>
 }
 
-export default function AILessonViewer({ lesson, onLessonComplete }: AILessonViewerProps) {
+export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
   const [currentMode, setCurrentMode] = useState<'main' | 'bonus'>('main')
   const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit' | 'bonus'>('overview')
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
@@ -103,6 +105,11 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
     })
     const score = (correct / lesson.modes[0].quiz.questions.length) * 100
     setQuizState(prev => ({ ...prev, submitted: true, score }))
+    
+    // Notify parent component about quiz completion
+    if (onQuizComplete) {
+      onQuizComplete(score)
+    }
   }
 
   const handleTestComplete = (testId: string) => {
@@ -840,6 +847,10 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
                         if (success) {
                           handleTestComplete('dataset_loaded')
                           handleTestComplete('trained_once')
+                          // Notify parent component about code execution
+                          if (onCodeExecution) {
+                            onCodeExecution()
+                          }
                         }
                       }}
                     />
@@ -1067,16 +1078,47 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
                   </div>
                 </div>
                 
-                {/* Submission Button */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 text-center">
-                  <h3 className="text-yellow-300 font-bold text-2xl mb-4">Ready to Submit?</h3>
-                  <p className="text-gray-300 mb-6">Submit your completed adventure and unlock new challenges!</p>
-                  <button 
-                    onClick={() => onLessonComplete(100)}
-                    className="bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold px-8 py-4 rounded-xl text-xl hover:from-yellow-400 hover:to-amber-500 transition-all duration-300 transform hover:scale-105"
-                  >
-                    🚀 Submit Adventure & Claim Rewards
-                  </button>
+                {/* Claim Rewards Section */}
+                <div className="bg-gradient-to-r from-yellow-800/50 to-amber-800/50 rounded-3xl p-8 border-2 border-yellow-500/50 text-center relative overflow-hidden">
+                  {/* Background effects */}
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-4 left-4 text-6xl animate-bounce">🎁</div>
+                    <div className="absolute bottom-4 right-4 text-6xl animate-pulse">💎</div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl animate-spin-slow opacity-10">🏆</div>
+                  </div>
+
+                  <div className="relative z-10">
+                    <div className="text-8xl mb-4 animate-bounce">🎉</div>
+                    <h3 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
+                      Adventure Complete!
+                    </h3>
+                    <p className="text-yellow-200 text-xl mb-2">You've mastered the concepts and deserve recognition!</p>
+                    <p className="text-amber-300 mb-8 text-lg">🏅 Badges • 🏆 Trophies • 💎 XP Points • ⭐ Achievements</p>
+                    
+                    <button 
+                      onClick={() => onLessonComplete(100)}
+                      className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-bold px-12 py-6 rounded-2xl text-2xl hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 transition-all duration-300 transform hover:scale-110 shadow-2xl shadow-yellow-500/50 animate-pulse"
+                    >
+                      {/* Button glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl blur-xl opacity-50 -z-10"></div>
+                      
+                      <span className="flex items-center gap-3">
+                        <span className="text-3xl">🎁</span>
+                        <span>CLAIM YOUR REWARDS NOW!</span>
+                        <span className="text-3xl">🏆</span>
+                      </span>
+                      
+                      {/* Sparkle animations */}
+                      <div className="absolute -top-2 -left-2 w-4 h-4 bg-white rounded-full animate-ping"></div>
+                      <div className="absolute -top-2 -right-2 w-4 h-4 bg-white rounded-full animate-ping animation-delay-200"></div>
+                      <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white rounded-full animate-ping animation-delay-400"></div>
+                      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-white rounded-full animate-ping animation-delay-600"></div>
+                    </button>
+                    
+                    <p className="text-yellow-200 mt-6 text-sm">
+                      🎯 Click above to see your earned badges and unlock your next adventure!
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
