@@ -9,7 +9,7 @@ export default function LessonDebugger() {
   const [selectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
   
   // Mock the same progress data as dashboard
-  const userProgress = {
+  const userProgress: Record<string, number> = {
     'week-01': 100, // Week 1 AI Classifier - completed
     'week-02': 0, // Week 2 Python Advisor - not started
   }
