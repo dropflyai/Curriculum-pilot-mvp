@@ -1,0 +1,19 @@
+
+> coding-pilot-mvp@0.1.0 dev
+> next dev
+
+ ⚠ Warning: Found multiple lockfiles. Selecting C:\Users\escot\package-lock.json.
+   Consider removing the lockfiles at:
+   * C:\Users\escot\coding-pilot-mvp\package-lock.json
+
+ ⚠ Port 3000 is in use by process 27136, using available port 3001 instead.
+   ▲ Next.js 15.4.7
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.1.158:3001
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · esmExternals: "loose"
+
+ ✓ Starting...
+ ⚠ The "experimental.esmExternals" option has been modified. experimental.esmExternals is not recommended to be modified as it may disrupt module resolution. It should be removed from your next.config.js.
+ ✓ Ready in 2.5s

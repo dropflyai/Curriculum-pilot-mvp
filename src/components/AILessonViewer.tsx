@@ -12,6 +12,10 @@ const VocabularyMatcher = dynamic(() => import('./VocabularyMatcher'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Vocabulary Matcher...</div>
 })
+const VocabularyTest = dynamic(() => import('./VocabularyTest'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Test...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
@@ -876,6 +880,9 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     onReturnToMap={() => setCurrentTab('overview')}
                   />
                 </div>
+
+                {/* VISIBILITY TEST - Remove after confirming visibility */}
+                <VocabularyTest />
 
                 {/* Vocabulary Mastery Section - Added directly to the lesson flow */}
                 <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
