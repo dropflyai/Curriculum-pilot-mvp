@@ -95,13 +95,20 @@ export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadg
         }, index * 500)
       })
 
-      // Auto-close after animations
-      const totalDuration = earnedBadges.length * 500 + 3000
+      // Auto-close after animations and return to dashboard
+      const totalDuration = earnedBadges.length * 500 + 4000 // Extra second for celebration
       setTimeout(() => {
         setCelebrationActive(false)
+        // Mark lesson as completed and unlock bonus
+        localStorage.setItem('lesson-completed-1', 'true')
+        localStorage.setItem('bonus-unlocked-1', 'true')
+        onClose()
+        if (onReturnToMap) {
+          onReturnToMap()
+        }
       }, totalDuration)
     }
-  }, [show, earnedBadges])
+  }, [show, earnedBadges, onClose, onReturnToMap])
 
   const getRewardedBadges = () => {
     return availableBadges.filter(badge => earnedBadges.includes(badge.id))
