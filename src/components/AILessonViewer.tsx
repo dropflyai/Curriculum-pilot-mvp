@@ -190,6 +190,19 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
       xpReward: 300,
       description: 'Submit your masterpiece and receive your well-earned rewards and achievements!',
       objectives: ['Submit final project', 'Receive completion badge', 'Unlock next adventure']
+    },
+    { 
+      id: 'bonus', 
+      title: 'Bonus Quest: AI Master Challenge', 
+      subtitle: 'Advanced Techniques & Secrets',
+      icon: Sparkles, 
+      color: 'purple', 
+      emoji: '🌟',
+      difficulty: 'Master',
+      estimatedTime: '30 min',
+      xpReward: 500,
+      description: 'Unlock advanced AI techniques and secret knowledge reserved for true masters!',
+      objectives: ['Explore advanced algorithms', 'Create complex AI models', 'Discover hidden features', 'Earn master certification']
     }
   ]
 
@@ -317,166 +330,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         </div>
       </div>
 
-      {/* Adventure Map */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 rounded-3xl p-8 mb-8 border-2 border-cyan-500/30 shadow-2xl overflow-hidden">
-        {/* Fantasy Background */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 right-12 text-6xl animate-pulse">🏔️</div>
-          <div className="absolute bottom-8 left-16 text-4xl animate-bounce delay-300">🌲</div>
-          <div className="absolute top-12 left-24 text-3xl animate-ping delay-500">⭐</div>
-          <div className="absolute bottom-4 right-32 text-5xl animate-pulse delay-700">🏰</div>
-        </div>
-
-        <div className="relative z-10">
-          {/* Adventure Map Title */}
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
-              🗺️ Adventure Map 🗺️
-            </h2>
-            <p className="text-cyan-200 text-lg">Choose your next mission, brave adventurer!</p>
-          </div>
-
-          {/* Mission Path - Zigzag Layout */}
-          <div className="space-y-4">
-            {missions.map((mission, index) => {
-              const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
-              const isActive = currentTab === mission.id
-              const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (calculateProgress() / 100)))
-              const isEven = index % 2 === 0
-
-              return (
-                <div 
-                  key={mission.id} 
-                  className={`flex items-center ${isEven ? 'justify-start' : 'justify-end'} relative`}
-                >
-                  {/* Connecting Path Line */}
-                  {index < missions.length - 1 && (
-                    <div className={`absolute ${isEven ? 'right-0' : 'left-0'} top-full h-4 w-px bg-gradient-to-b from-cyan-400/50 to-transparent z-0`}></div>
-                  )}
-
-                  {/* Mission Card */}
-                  <button
-                    onClick={() => !isLocked && setCurrentTab(mission.id as any)}
-                    disabled={isLocked}
-                    className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 shadow-xl ${
-                      isLocked 
-                        ? 'from-gray-800 to-gray-900 border-gray-600 opacity-50 cursor-not-allowed'
-                        : isCompleted 
-                          ? 'from-emerald-600 to-green-700 border-emerald-400 shadow-emerald-500/25'
-                          : isActive 
-                            ? `from-${mission.color}-600 to-${mission.color}-700 border-${mission.color}-400 shadow-${mission.color}-500/25`
-                            : `from-${mission.color}-800/30 to-${mission.color}-900/30 border-${mission.color}-500/50 hover:border-${mission.color}-400`
-                    } w-80`}
-                  >
-                    {/* Mission Status Badge */}
-                    <div className="absolute -top-2 -right-2">
-                      {isLocked ? (
-                        <div className="bg-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
-                          🔒 LOCKED
-                        </div>
-                      ) : isCompleted ? (
-                        <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
-                          ✅ COMPLETE
-                        </div>
-                      ) : isActive ? (
-                        <div className="bg-cyan-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-bounce">
-                          ⚡ ACTIVE
-                        </div>
-                      ) : (
-                        <div className="bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                          📍 READY
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Mission Content */}
-                    <div className="flex items-start gap-4">
-                      {/* Mission Icon */}
-                      <div className={`relative p-4 rounded-xl bg-gradient-to-r ${
-                        isCompleted 
-                          ? 'from-emerald-500 to-green-600' 
-                          : `from-${mission.color}-500 to-${mission.color}-600`
-                      } ${isActive ? 'animate-pulse' : ''}`}>
-                        <div className="text-3xl">{mission.emoji}</div>
-                        <mission.icon className="absolute -bottom-1 -right-1 h-4 w-4 text-white bg-gray-900 rounded-full p-0.5" />
-                      </div>
-
-                      {/* Mission Details */}
-                      <div className="flex-1 text-left">
-                        <h3 className="text-xl font-bold text-white mb-1">{mission.title}</h3>
-                        <p className="text-cyan-200 text-sm mb-3">{mission.subtitle}</p>
-                        
-                        {/* Mission Stats */}
-                        <div className="flex items-center gap-4 text-xs">
-                          <div className="flex items-center gap-1">
-                            <span className="text-yellow-400">⏱️</span>
-                            <span className="text-gray-300">{mission.estimatedTime}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-purple-400">💎</span>
-                            <span className="text-gray-300">{mission.xpReward} XP</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-orange-400">🎯</span>
-                            <span className="text-gray-300">{mission.difficulty}</span>
-                          </div>
-                        </div>
-
-                        {/* Mission Objectives */}
-                        <div className="mt-3 space-y-1">
-                          {mission.objectives.slice(0, 2).map((objective, objIndex) => (
-                            <div key={objIndex} className="flex items-center gap-2 text-xs text-gray-400">
-                              <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
-                              <span>{objective}</span>
-                            </div>
-                          ))}
-                          {mission.objectives.length > 2 && (
-                            <div className="text-xs text-cyan-400">+{mission.objectives.length - 2} more objectives...</div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Hover Effect */}
-                    {!isLocked && (
-                      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl"></div>
-                    )}
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Adventure Stats Footer */}
-          <div className="mt-8 bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-2xl p-4 border border-purple-500/30">
-            <div className="flex justify-center items-center gap-8 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">🎯</span>
-                <div>
-                  <div className="text-white font-semibold">Missions Completed</div>
-                  <div className="text-purple-300">{Math.floor(missions.length * (calculateProgress() / 100))} / {missions.length}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">💎</span>
-                <div>
-                  <div className="text-white font-semibold">Total XP Available</div>
-                  <div className="text-purple-300">{missions.reduce((sum, m) => sum + m.xpReward, 0)} XP</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">⏰</span>
-                <div>
-                  <div className="text-white font-semibold">Adventure Time</div>
-                  <div className="text-purple-300">~60 minutes</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
+      {/* Mission Progress Bar - Right after lesson overview */}
       <div className="relative bg-gradient-to-r from-slate-800 to-gray-800 rounded-2xl p-6 mb-8 border border-cyan-500/30 shadow-xl overflow-hidden">
         {/* Animated background particles */}
         <div className="absolute inset-0 opacity-10">
@@ -496,7 +350,7 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
           <div className="flex items-center gap-3">
             <div className="text-2xl animate-bounce">🚀</div>
             <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-300 to-emerald-300 bg-clip-text text-transparent">
-              Mission Progress
+              Adventure Progress
             </h3>
             <div className="text-2xl animate-pulse delay-300">⭐</div>
           </div>
@@ -635,7 +489,220 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         </div>
       </div>
 
-      {/* Tab Content */}
+      {/* Adventure Map - Navigation Style */}
+      <div className="relative bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 rounded-3xl p-8 mb-8 border-2 border-cyan-500/30 shadow-2xl overflow-hidden">
+        {/* Fantasy Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 right-12 text-6xl animate-pulse">🏔️</div>
+          <div className="absolute bottom-8 left-16 text-4xl animate-bounce delay-300">🌲</div>
+          <div className="absolute top-12 left-24 text-3xl animate-ping delay-500">⭐</div>
+          <div className="absolute bottom-4 right-32 text-5xl animate-pulse delay-700">🏰</div>
+        </div>
+
+        <div className="relative z-10">
+          {/* Adventure Map Title */}
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
+              🗺️ Adventure Map 🗺️
+            </h2>
+            <p className="text-cyan-200 text-lg">Navigate to your missions and complete your adventure!</p>
+          </div>
+
+          {/* Main Mission Path */}
+          <div className="relative">
+            {/* Winding Road Path */}
+            <svg className="absolute inset-0 w-full h-full z-0" viewBox="0 0 800 600" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="roadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#6b7280" stopOpacity="0.6"/>
+                  <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.4"/>
+                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.6"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Winding adventure path */}
+              <path
+                d="M 100 100 Q 300 50 500 150 T 700 250 Q 600 350 400 400 T 100 500"
+                stroke="url(#roadGradient)"
+                strokeWidth="8"
+                fill="none"
+                strokeDasharray="20 10"
+                filter="url(#glow)"
+                className="animate-pulse"
+              />
+              {/* Road markers */}
+              <circle cx="100" cy="100" r="4" fill="#fbbf24" className="animate-ping"/>
+              <circle cx="300" cy="120" r="4" fill="#3b82f6" className="animate-ping" style={{animationDelay: '0.5s'}}/>
+              <circle cx="500" cy="150" r="4" fill="#f97316" className="animate-ping" style={{animationDelay: '1s'}}/>
+              <circle cx="600" cy="250" r="4" fill="#a855f7" className="animate-ping" style={{animationDelay: '1.5s'}}/>
+              <circle cx="400" cy="400" r="4" fill="#ec4899" className="animate-ping" style={{animationDelay: '2s'}}/>
+              <circle cx="150" cy="480" r="4" fill="#eab308" className="animate-ping" style={{animationDelay: '2.5s'}}/>
+            </svg>
+
+            {/* Mission Navigation Cards */}
+            <div className="relative z-10 space-y-6">
+              {missions.map((mission, index) => {
+                const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
+                const isActive = currentTab === mission.id
+                const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (calculateProgress() / 100)))
+                const isEven = index % 2 === 0
+                
+                // Add bonus mission logic
+                const isBonusMission = index === missions.length - 1 && mission.title.includes('Bonus')
+                const mainMissionsCompleted = Math.floor((missions.length - 1) * (calculateProgress() / 100)) === (missions.length - 1)
+                const bonusUnlocked = isBonusMission && mainMissionsCompleted
+
+                return (
+                  <div 
+                    key={mission.id} 
+                    className={`flex items-center ${isEven ? 'justify-start' : 'justify-end'} relative`}
+                  >
+                    {/* Mission Navigation Card */}
+                    <div
+                      onClick={() => {
+                        if (!isLocked && (!isBonusMission || bonusUnlocked)) {
+                          // Navigate to dedicated mission page
+                          window.location.href = `/lesson/${encodeURIComponent(lesson.title)}/mission/${mission.id}`
+                        }
+                      }}
+                      className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 cursor-pointer transition-all duration-500 transform hover:scale-105 shadow-xl ${
+                        isLocked || (isBonusMission && !bonusUnlocked)
+                          ? 'from-gray-800 to-gray-900 border-gray-600 opacity-50 cursor-not-allowed'
+                          : isCompleted 
+                            ? 'from-emerald-600 to-green-700 border-emerald-400 shadow-emerald-500/25'
+                            : isActive 
+                              ? `from-${mission.color}-600 to-${mission.color}-700 border-${mission.color}-400 shadow-${mission.color}-500/25`
+                              : `from-${mission.color}-800/30 to-${mission.color}-900/30 border-${mission.color}-500/50 hover:border-${mission.color}-400`
+                      } w-96`}
+                    >
+                      {/* Mission Status Badge */}
+                      <div className="absolute -top-2 -right-2">
+                        {isBonusMission && !bonusUnlocked ? (
+                          <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                            🎁 BONUS - COMPLETE MAIN QUEST
+                          </div>
+                        ) : isLocked ? (
+                          <div className="bg-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">
+                            🔒 LOCKED
+                          </div>
+                        ) : isCompleted ? (
+                          <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                            ✅ COMPLETE
+                          </div>
+                        ) : (
+                          <div className="bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold animate-bounce">
+                            🎯 START MISSION
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Mission Content */}
+                      <div className="flex items-start gap-4">
+                        {/* Mission Icon */}
+                        <div className={`relative p-4 rounded-xl bg-gradient-to-r ${
+                          isCompleted 
+                            ? 'from-emerald-500 to-green-600' 
+                            : `from-${mission.color}-500 to-${mission.color}-600`
+                        } ${!isLocked && (!isBonusMission || bonusUnlocked) ? 'group-hover:animate-pulse' : ''}`}>
+                          <div className="text-4xl">{mission.emoji}</div>
+                          <mission.icon className="absolute -bottom-1 -right-1 h-5 w-5 text-white bg-gray-900 rounded-full p-0.5" />
+                        </div>
+
+                        {/* Mission Details */}
+                        <div className="flex-1 text-left">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-xl font-bold text-white">{mission.title}</h3>
+                            {isBonusMission && (
+                              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse">
+                                BONUS
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-cyan-200 text-sm mb-3">{mission.subtitle}</p>
+                          
+                          {/* Mission Stats */}
+                          <div className="flex items-center gap-4 text-xs mb-3">
+                            <div className="flex items-center gap-1">
+                              <span className="text-yellow-400">⏱️</span>
+                              <span className="text-gray-300">{mission.estimatedTime}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-purple-400">💎</span>
+                              <span className="text-gray-300">{mission.xpReward} XP</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-orange-400">🎯</span>
+                              <span className="text-gray-300">{mission.difficulty}</span>
+                            </div>
+                          </div>
+
+                          {/* Navigation Button */}
+                          <div className={`mt-3 px-4 py-2 rounded-lg text-center font-semibold text-sm transition-all duration-300 ${
+                            isLocked || (isBonusMission && !bonusUnlocked)
+                              ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                              : isCompleted
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white group-hover:from-cyan-400 group-hover:to-blue-500'
+                          }`}>
+                            {isBonusMission && !bonusUnlocked 
+                              ? '🎁 Complete Main Quest to Unlock'
+                              : isLocked 
+                                ? '🔒 Complete Previous Mission'
+                                : isCompleted 
+                                  ? '✅ Mission Complete - Review' 
+                                  : '🚀 Enter Mission'
+                            }
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Hover Effect */}
+                      {!isLocked && (!isBonusMission || bonusUnlocked) && (
+                        <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl"></div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Adventure Stats Footer */}
+          <div className="mt-8 bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-2xl p-4 border border-purple-500/30">
+            <div className="flex justify-center items-center gap-8 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎯</span>
+                <div>
+                  <div className="text-white font-semibold">Missions Available</div>
+                  <div className="text-purple-300">{missions.length} Epic Adventures</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">💎</span>
+                <div>
+                  <div className="text-white font-semibold">Total XP Available</div>
+                  <div className="text-purple-300">{missions.reduce((sum, m) => sum + m.xpReward, 0)} XP</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎁</span>
+                <div>
+                  <div className="text-white font-semibold">Bonus Content</div>
+                  <div className="text-purple-300">Unlock by completing all missions!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mission Content - Only shows when accessed via navigation */}
       <div className="bg-gradient-to-br from-gray-800 to-slate-800 rounded-2xl p-8 border border-gray-600 shadow-xl relative overflow-hidden">
         {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-pulse"></div>
