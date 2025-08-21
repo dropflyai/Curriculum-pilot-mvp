@@ -33,7 +33,7 @@ interface TestState {
 
 export default function AILessonViewer({ lesson, onLessonComplete }: AILessonViewerProps) {
   const [currentMode, setCurrentMode] = useState<'main' | 'bonus'>('main')
-  const [currentTab, setCurrentTab] = useState<'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit'>('learn')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit' | 'bonus'>('overview')
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
@@ -87,14 +87,21 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
     setSubmissionText('')
   }
 
+  const handleQuizAnswer = (questionIndex: number, answerIndex: number) => {
+    setQuizState(prev => ({
+      ...prev,
+      answers: { ...prev.answers, [questionIndex]: answerIndex }
+    }))
+  }
+
   const handleQuizSubmit = () => {
     let correct = 0
-    currentModeData.quiz.questions.forEach((question, index) => {
+    lesson.modes[0].quiz.questions.forEach((question, index) => {
       if (quizState.answers[index] === question.answer_index) {
         correct++
       }
     })
-    const score = (correct / currentModeData.quiz.questions.length) * 100
+    const score = (correct / lesson.modes[0].quiz.questions.length) * 100
     setQuizState(prev => ({ ...prev, submitted: true, score }))
   }
 
@@ -567,8 +574,8 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
                     <div
                       onClick={() => {
                         if (!isLocked && (!isBonusMission || bonusUnlocked)) {
-                          // Navigate to dedicated mission page
-                          window.location.href = `/lesson/${encodeURIComponent(lesson.title)}/mission/${mission.id}`
+                          // Show mission content by switching tabs
+                          setCurrentTab(mission.id as any)
                         }
                       }}
                       className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 cursor-pointer transition-all duration-500 transform hover:scale-105 shadow-xl ${
@@ -702,319 +709,432 @@ export default function AILessonViewer({ lesson, onLessonComplete }: AILessonVie
         </div>
       </div>
 
-      {/* Mission Content - Only shows when accessed via navigation */}
-      <div className="bg-gradient-to-br from-gray-800 to-slate-800 rounded-2xl p-8 border border-gray-600 shadow-xl relative overflow-hidden">
-        {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-pulse"></div>
-        
-        <div className="relative z-10">
-          {currentTab === 'learn' && (
-            <div className="space-y-6">
-              {/* Mission Header */}
-              <div className="relative bg-gradient-to-r from-emerald-800/50 to-green-800/50 p-8 rounded-3xl border-2 border-emerald-500/30 mb-8">
-                <div className="flex items-center gap-6">
-                  <div className="relative">
-                    <div className="bg-gradient-to-r from-emerald-500 to-green-600 p-6 rounded-2xl animate-pulse shadow-2xl">
-                      <div className="text-6xl">🏛️</div>
-                      <BookOpen className="absolute -bottom-2 -right-2 h-8 w-8 text-white bg-gray-900 rounded-full p-1" />
+      {/* Mission Content - Full Screen Mission Experience */}
+      {currentTab && currentTab !== 'overview' && (
+        <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 z-50 overflow-auto">
+          {/* Mission Header with Back Button */}
+          <div className="sticky top-0 bg-gradient-to-r from-slate-900/95 via-gray-900/95 to-slate-900/95 backdrop-blur-sm border-b border-gray-700/50 p-4 z-10">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <button 
+                onClick={() => setCurrentTab('overview')}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors duration-200 text-white"
+              >
+                <span>←</span>
+                <span>Back to Adventure Map</span>
+              </button>
+              <div className="flex items-center gap-4">
+                {missions.find(m => m.id === currentTab) && (
+                  <>
+                    <div className="text-2xl">{missions.find(m => m.id === currentTab)?.emoji}</div>
+                    <h1 className="text-2xl font-bold text-white">{missions.find(m => m.id === currentTab)?.title}</h1>
+                    <div className="bg-cyan-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                      ⚡ ACTIVE MISSION
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h2 className="text-4xl font-bold text-white">Knowledge Quest</h2>
-                      <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce">
-                        ⚡ ACTIVE MISSION
-                      </div>
-                    </div>
-                    <p className="text-emerald-200 text-xl mb-4">Discover the Ancient Secrets of AI</p>
-                    
-                    {/* Mission Objectives */}
-                    <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-500/20">
-                      <h4 className="text-emerald-300 font-semibold mb-2">Mission Objectives:</h4>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-sm text-emerald-200">
-                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                          Learn core AI concepts
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-emerald-200">
-                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                          Understand key terminology
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-emerald-200">
-                          <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                          Complete knowledge checkpoints
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Reward Info */}
-                    <div className="flex items-center gap-4 mt-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-400">💎</span>
-                        <span className="text-emerald-200 font-semibold">100 XP Reward</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-blue-400">⏱️</span>
-                        <span className="text-emerald-200">~15 minutes</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
-              
-              {/* Interactive Lesson Content */}
-              <InteractiveLessonContent 
-                onSectionComplete={(sectionIndex) => {
-                  // Track section completion for progress
-                  console.log(`Section ${sectionIndex} completed`)
-                }}
-              />
-            </div>
-          )}
-
-          {currentTab === 'code' && (
-            <div className="space-y-8">
-              {/* Mission Header */}
-              <div className="relative bg-gradient-to-r from-blue-800/50 to-cyan-800/50 p-8 rounded-3xl border-2 border-blue-500/30 mb-8">
-                <div className="flex items-center gap-6">
-                  <div className="relative">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-6 rounded-2xl animate-pulse shadow-2xl">
-                      <div className="text-6xl">⚗️</div>
-                      <Brain className="absolute -bottom-2 -right-2 h-8 w-8 text-white bg-gray-900 rounded-full p-1" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h2 className="text-4xl font-bold text-white">Coding Laboratory</h2>
-                      <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce">
-                        ⚡ ACTIVE MISSION
-                      </div>
-                    </div>
-                    <p className="text-blue-200 text-xl mb-4">Build Your First AI Creation</p>
-                    
-                    {/* Mission Objectives */}
-                    <div className="bg-blue-900/30 rounded-xl p-4 border border-blue-500/20">
-                      <h4 className="text-blue-300 font-semibold mb-2">Mission Objectives:</h4>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-sm text-blue-200">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                          Set up your workspace
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-blue-200">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                          Train an AI model
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-blue-200">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                          Test your creation
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Reward Info */}
-                    <div className="flex items-center gap-4 mt-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-400">💎</span>
-                        <span className="text-blue-200 font-semibold">200 XP Reward</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-orange-400">⏱️</span>
-                        <span className="text-blue-200">~25 minutes</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-orange-400">🎯</span>
-                        <span className="text-blue-200">Intermediate</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-gray-900 to-slate-900 rounded-xl p-6 border border-cyan-500/30 shadow-lg">
-                <h4 className="text-cyan-300 font-semibold mb-3 flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
-                  Configuration 🔧
-                </h4>
-                <pre className="text-green-300 text-sm overflow-x-auto bg-black/30 p-4 rounded-lg border border-green-500/20">
-                  {currentModeData.code.starter}
-                </pre>
-              </div>
-              
-              <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-1">
-                <AIClassifierTrainer
-                  dataset={currentModeData.dataset}
-                  labels={currentModeData.labels}
-                  onMetricsUpdate={setMetrics}
-                  onTrainingComplete={(success) => {
-                    if (success) {
-                      // Auto-complete some tests when training succeeds
-                      handleTestComplete('dataset_loaded')
-                      handleTestComplete('trained_once')
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-        {currentTab === 'tests' && (
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Learning Tests</h3>
-            <div className="space-y-4">
-              {currentModeData.tests_ui.map(test => (
-                <div
-                  key={test.id}
-                  className={`p-4 rounded-lg border-2 transition-colors ${
-                    testState.completed[test.id]
-                      ? 'border-green-500 bg-green-900/20'
-                      : 'border-gray-600 bg-gray-700/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="text-white">{test.desc}</p>
-                    <button
-                      onClick={() => handleTestComplete(test.id)}
-                      className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                        testState.completed[test.id]
-                          ? 'bg-green-600 text-white'
-                          : 'bg-gray-600 hover:bg-gray-500 text-white'
-                      }`}
-                    >
-                      {testState.completed[test.id] ? 'Completed' : 'Mark Complete'}
-                    </button>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
-        )}
 
-        {currentTab === 'quiz' && (
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Knowledge Check</h3>
-            {!quizState.submitted ? (
-              <div className="space-y-6">
-                {currentModeData.quiz.questions.map((question, qIndex) => (
-                  <div key={qIndex} className="bg-gray-700 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-3">{question.prompt}</h4>
-                    <div className="space-y-2">
-                      {question.options.map((option, oIndex) => (
-                        <label key={oIndex} className="flex items-center cursor-pointer">
-                          <input
-                            type="radio"
-                            name={`question-${qIndex}`}
-                            value={oIndex}
-                            checked={quizState.answers[qIndex] === oIndex}
-                            onChange={(e) => setQuizState(prev => ({
-                              ...prev,
-                              answers: { ...prev.answers, [qIndex]: parseInt(e.target.value) }
-                            }))}
-                            className="mr-3"
-                          />
-                          <span className="text-gray-300">{option}</span>
-                        </label>
+          {/* Mission Content */}
+          <div className="max-w-7xl mx-auto p-8">
+            {currentTab === 'learn' && (
+              <div className="space-y-8">
+                {/* Knowledge Quest Content */}
+                <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🏛️</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
+                      <p className="text-emerald-200 text-xl">Discover the Ancient Secrets of AI</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-emerald-900/40 rounded-2xl p-6 border border-emerald-500/30">
+                    <h3 className="text-emerald-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-emerald-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">📚</div>
+                        <h4 className="text-emerald-200 font-semibold mb-1">Learn Core AI Concepts</h4>
+                        <p className="text-emerald-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
+                      </div>
+                      <div className="bg-emerald-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🎓</div>
+                        <h4 className="text-emerald-200 font-semibold mb-1">Understand Terminology</h4>
+                        <p className="text-emerald-300/80 text-sm">Learn the language of AI and machine learning</p>
+                      </div>
+                      <div className="bg-emerald-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">✅</div>
+                        <h4 className="text-emerald-200 font-semibold mb-1">Complete Checkpoints</h4>
+                        <p className="text-emerald-300/80 text-sm">Verify your understanding with interactive quizzes</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Interactive Lesson Content */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <InteractiveLessonContent 
+                    onSectionComplete={(sectionIndex) => {
+                      console.log(`Section ${sectionIndex} completed`)
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'code' && (
+              <div className="space-y-8">
+                {/* Coding Laboratory Content */}
+                <div className="bg-gradient-to-r from-blue-800/30 to-cyan-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">⚗️</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Coding Laboratory</h2>
+                      <p className="text-blue-200 text-xl">Build Your First AI Creation</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
+                    <h3 className="text-blue-300 font-bold text-xl mb-4">⚗️ Laboratory Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🔧</div>
+                        <h4 className="text-blue-200 font-semibold mb-1">Set Up Workspace</h4>
+                        <p className="text-blue-300/80 text-sm">Configure your AI development environment</p>
+                      </div>
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🤖</div>
+                        <h4 className="text-blue-200 font-semibold mb-1">Train AI Model</h4>
+                        <p className="text-blue-300/80 text-sm">Create and train your first machine learning model</p>
+                      </div>
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧪</div>
+                        <h4 className="text-blue-200 font-semibold mb-1">Test Your Creation</h4>
+                        <p className="text-blue-300/80 text-sm">Validate your AI model with real data</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* AI Classifier Trainer */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
+                    <Zap className="h-6 w-6" />
+                    AI Model Configuration 🔧
+                  </h3>
+                  <div className="bg-black/30 p-6 rounded-xl border border-cyan-500/20 mb-6">
+                    <pre className="text-green-300 text-sm overflow-x-auto">
+                      {currentModeData.code.starter}
+                    </pre>
+                  </div>
+                  
+                  <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-4">
+                    <AIClassifierTrainer
+                      dataset={currentModeData.dataset}
+                      labels={currentModeData.labels}
+                      onMetricsUpdate={setMetrics}
+                      onTrainingComplete={(success) => {
+                        if (success) {
+                          handleTestComplete('dataset_loaded')
+                          handleTestComplete('trained_once')
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'tests' && (
+              <div className="space-y-8">
+                {/* Trial Chamber Content */}
+                <div className="bg-gradient-to-r from-orange-800/30 to-red-800/30 rounded-3xl p-8 border-2 border-orange-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🏹</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Trial Chamber</h2>
+                      <p className="text-orange-200 text-xl">Prove Your AI Mastery</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-orange-900/40 rounded-2xl p-6 border border-orange-500/30">
+                    <h3 className="text-orange-300 font-bold text-xl mb-4">🎯 Testing Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-orange-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">📊</div>
+                        <h4 className="text-orange-200 font-semibold mb-1">Run Accuracy Tests</h4>
+                        <p className="text-orange-300/80 text-sm">Measure your AI model's performance</p>
+                      </div>
+                      <div className="bg-orange-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🔧</div>
+                        <h4 className="text-orange-200 font-semibold mb-1">Debug Issues</h4>
+                        <p className="text-orange-300/80 text-sm">Identify and fix any problems</p>
+                      </div>
+                      <div className="bg-orange-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🏆</div>
+                        <h4 className="text-orange-200 font-semibold mb-1">Achieve 80%+ Success</h4>
+                        <p className="text-orange-300/80 text-sm">Meet the performance threshold</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Test Interface */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <h3 className="text-orange-300 font-bold text-xl mb-6 flex items-center gap-2">
+                    <Target className="h-6 w-6" />
+                    AI Model Testing Suite 🎯
+                  </h3>
+                  <div className="grid gap-4">
+                    {lesson.modes[0].tests_ui.map((test, index) => (
+                      <div key={index} className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div className="flex items-center justify-between">
+                          <span className="text-white font-medium">{test.desc}</span>
+                          <button 
+                            onClick={() => handleTestComplete(test.id)}
+                            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                              testState.completed[test.id] 
+                                ? 'bg-green-600 text-white' 
+                                : 'bg-orange-600 hover:bg-orange-500 text-white'
+                            }`}
+                          >
+                            {testState.completed[test.id] ? '✅ Passed' : '▶️ Run Test'}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'quiz' && (
+              <div className="space-y-8">
+                {/* Wisdom Trials Content */}
+                <div className="bg-gradient-to-r from-purple-800/30 to-violet-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🔮</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Wisdom Trials</h2>
+                      <p className="text-purple-200 text-xl">Answer the Ancient Riddles</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                    <h3 className="text-purple-300 font-bold text-xl mb-4">🔮 Trial Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">❓</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Answer Concept Questions</h4>
+                        <p className="text-purple-300/80 text-sm">Test your theoretical knowledge</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧩</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Solve Practical Problems</h4>
+                        <p className="text-purple-300/80 text-sm">Apply your learning to real scenarios</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">📊</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Score 70%+ to Pass</h4>
+                        <p className="text-purple-300/80 text-sm">Demonstrate your mastery</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Quiz Interface */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <h3 className="text-purple-300 font-bold text-xl mb-6 flex items-center gap-2">
+                    <HelpCircle className="h-6 w-6" />
+                    Knowledge Assessment 🔮
+                  </h3>
+                  <div className="space-y-6">
+                    {lesson.modes[0].quiz.questions.map((question, index) => (
+                      <div key={index} className="bg-gray-700/50 p-6 rounded-lg border border-gray-600">
+                        <h4 className="text-white font-semibold mb-4">{question.prompt}</h4>
+                        <div className="space-y-2">
+                          {question.options.map((option, optIndex) => (
+                            <button
+                              key={optIndex}
+                              onClick={() => handleQuizAnswer(index, optIndex)}
+                              className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                                quizState.answers[index] === optIndex
+                                  ? 'bg-purple-600 border-purple-400 text-white'
+                                  : 'bg-gray-600 border-gray-500 text-gray-200 hover:bg-gray-500'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {!quizState.submitted && (
+                      <button
+                        onClick={handleQuizSubmit}
+                        className="w-full bg-gradient-to-r from-purple-600 to-violet-600 text-white font-bold py-4 rounded-lg hover:from-purple-500 hover:to-violet-500 transition-all duration-300"
+                      >
+                        Submit Wisdom Trial 🔮
+                      </button>
+                    )}
+                    
+                    {quizState.submitted && (
+                      <div className="bg-purple-900/30 p-6 rounded-xl border border-purple-500/30">
+                        <h4 className="text-purple-300 font-bold text-lg mb-2">Trial Results:</h4>
+                        <p className="text-white text-xl">Score: {quizState.score}%</p>
+                        {quizState.score >= 70 ? (
+                          <p className="text-green-400 mt-2">🎉 Congratulations! You have passed the Wisdom Trials!</p>
+                        ) : (
+                          <p className="text-red-400 mt-2">Keep studying and try again. You need 70% to pass.</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'checklist' && (
+              <div className="space-y-8">
+                {/* Final Inspection Content */}
+                <div className="bg-gradient-to-r from-pink-800/30 to-rose-800/30 rounded-3xl p-8 border-2 border-pink-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">📋</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Final Inspection</h2>
+                      <p className="text-pink-200 text-xl">Complete Your Adventure</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-pink-900/40 rounded-2xl p-6 border border-pink-500/30">
+                    <h3 className="text-pink-300 font-bold text-xl mb-4">📋 Inspection Checklist</h3>
+                    <div className="space-y-4">
+                      {lesson.modes[0].checklist.map((item, index) => (
+                        <div key={index} className="flex items-center gap-3 bg-pink-800/30 p-4 rounded-xl">
+                          <button
+                            onClick={() => handleChecklistToggle(index)}
+                            className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+                              checklistState.completed[index]
+                                ? 'bg-pink-500 border-pink-400 text-white'
+                                : 'border-pink-500 hover:border-pink-400'
+                            }`}
+                          >
+                            {checklistState.completed[index] && '✓'}
+                          </button>
+                          <span className="text-pink-200">{item}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
-                ))}
-                <button
-                  onClick={handleQuizSubmit}
-                  disabled={Object.keys(quizState.answers).length < currentModeData.quiz.questions.length}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                >
-                  Submit Quiz
-                </button>
-              </div>
-            ) : (
-              <div className="bg-gray-700 rounded-lg p-6">
-                <h4 className="text-white font-bold mb-2">Quiz Results</h4>
-                <div className="text-2xl font-bold text-white mb-4">
-                  Score: {Math.round(quizState.score)}%
                 </div>
-                <p className="text-gray-300">
-                  You got {Math.round(quizState.score / 100 * currentModeData.quiz.questions.length)} out of {currentModeData.quiz.questions.length} questions correct.
-                </p>
               </div>
             )}
-          </div>
-        )}
 
-        {currentTab === 'checklist' && (
-          <div>
-            <h3 className="text-xl font-bold text-white mb-4">Learning Checklist</h3>
-            <div className="space-y-3">
-              {currentModeData.checklist.map((item, index) => (
-                <label key={index} className="flex items-center cursor-pointer p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={checklistState.completed[index] || false}
-                    onChange={() => handleChecklistToggle(index)}
-                    className="mr-3 h-4 w-4"
-                  />
-                  <span className={`${checklistState.completed[index] ? 'text-green-400' : 'text-white'}`}>
-                    {item}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
-          {currentTab === 'submit' && (
-            <div className="space-y-8">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="bg-gradient-to-r from-yellow-500 to-amber-600 p-3 rounded-xl animate-pulse">
-                  <Upload className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-white">Submit Your Work! 🚀</h2>
-                  <p className="text-yellow-300 text-lg">Show off what you've learned and earn your badge!</p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-r from-amber-900/20 to-yellow-900/20 rounded-xl p-6 border border-yellow-500/30">
-                <div className="prose prose-invert max-w-none prose-headings:text-yellow-300 prose-strong:text-amber-300">
-                  <ReactMarkdown>{currentModeData.submit.prompt}</ReactMarkdown>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <label className="block text-white font-bold text-lg flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-yellow-400" />
-                  Your Amazing Reflection:
-                </label>
-                <textarea
-                  value={submissionText}
-                  onChange={(e) => setSubmissionText(e.target.value)}
-                  placeholder="Share your thoughts about this AI adventure! What did you discover? What surprised you? 🤔✨"
-                  className="w-full h-40 bg-gray-900 text-white rounded-xl p-4 border-2 border-yellow-500/30 focus:border-yellow-400 focus:outline-none transition-colors shadow-lg placeholder-gray-400"
-                />
-                <div className="text-sm text-gray-400">
-                  {submissionText.length}/50 characters minimum
-                </div>
-              </div>
-
-              {submissionText.length > 50 && (
-                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400 rounded-2xl p-6 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-green-400/5 animate-pulse"></div>
-                  <div className="relative z-10 flex items-center gap-4">
-                    <div className="bg-green-500 p-3 rounded-full animate-bounce">
-                      <Award className="h-8 w-8 text-white" />
-                    </div>
+            {currentTab === 'submit' && (
+              <div className="space-y-8">
+                {/* Victory Ceremony Content */}
+                <div className="bg-gradient-to-r from-yellow-800/30 to-amber-800/30 rounded-3xl p-8 border-2 border-yellow-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🏆</div>
                     <div>
-                      <h4 className="text-2xl font-bold text-green-300 mb-2">🎉 Mission Accomplished!</h4>
-                      <p className="text-green-200 font-medium text-lg">
-                        Badge Earned: <span className="text-yellow-300">{currentModeData.submit.badges_on_complete[0]}</span>
-                      </p>
-                      <p className="text-green-400 text-sm">You're officially an AI explorer! Keep up the amazing work! 🌟</p>
+                      <h2 className="text-5xl font-bold text-white mb-2">Victory Ceremony</h2>
+                      <p className="text-yellow-200 text-xl">Claim Your Rewards!</p>
+                    </div>
+                  </div>
+                  
+                  {/* Achievement Summary */}
+                  <div className="bg-yellow-900/40 rounded-2xl p-6 border border-yellow-500/30">
+                    <h3 className="text-yellow-300 font-bold text-xl mb-4">🏆 Adventure Complete!</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-yellow-800/30 p-6 rounded-xl text-center">
+                        <div className="text-4xl mb-2">🎖️</div>
+                        <h4 className="text-yellow-200 font-bold text-lg mb-2">Mission Status</h4>
+                        <p className="text-yellow-300">All objectives completed!</p>
+                      </div>
+                      <div className="bg-yellow-800/30 p-6 rounded-xl text-center">
+                        <div className="text-4xl mb-2">💎</div>
+                        <h4 className="text-yellow-200 font-bold text-lg mb-2">XP Earned</h4>
+                        <p className="text-yellow-300">945 Experience Points</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
+                
+                {/* Submission Button */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 text-center">
+                  <h3 className="text-yellow-300 font-bold text-2xl mb-4">Ready to Submit?</h3>
+                  <p className="text-gray-300 mb-6">Submit your completed adventure and unlock new challenges!</p>
+                  <button 
+                    onClick={() => onLessonComplete(100)}
+                    className="bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold px-8 py-4 rounded-xl text-xl hover:from-yellow-400 hover:to-amber-500 transition-all duration-300 transform hover:scale-105"
+                  >
+                    🚀 Submit Adventure & Claim Rewards
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'bonus' && (
+              <div className="space-y-8">
+                {/* Bonus Quest Content */}
+                <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🌟</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Bonus Quest: AI Master Challenge</h2>
+                      <p className="text-purple-200 text-xl">Advanced Techniques & Secrets</p>
+                    </div>
+                  </div>
+                  
+                  {/* Master Objectives */}
+                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                    <h3 className="text-purple-300 font-bold text-xl mb-4">🌟 Master Objectives</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧠</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Explore Advanced Algorithms</h4>
+                        <p className="text-purple-300/80 text-sm">Deep dive into neural networks and deep learning</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🏗️</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Create Complex AI Models</h4>
+                        <p className="text-purple-300/80 text-sm">Build multi-layer architectures</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🔍</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Discover Hidden Features</h4>
+                        <p className="text-purple-300/80 text-sm">Unlock advanced AI capabilities</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🏅</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Earn Master Certification</h4>
+                        <p className="text-purple-300/80 text-sm">Achieve AI mastery status</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bonus Content */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <h3 className="text-purple-300 font-bold text-xl mb-6">🌟 Master-Level Content</h3>
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🔒</div>
+                    <h4 className="text-2xl text-purple-300 mb-2">Advanced Content Coming Soon!</h4>
+                    <p className="text-gray-400">This master-level content is being developed for true AI adventurers.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
