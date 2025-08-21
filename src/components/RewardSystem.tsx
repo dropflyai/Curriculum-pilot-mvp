@@ -99,9 +99,8 @@ export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadg
       const totalDuration = earnedBadges.length * 500 + 4000 // Extra second for celebration
       setTimeout(() => {
         setCelebrationActive(false)
-        // Mark lesson as completed and unlock bonus
+        // Mark lesson as completed
         localStorage.setItem('lesson-completed-1', 'true')
-        localStorage.setItem('bonus-unlocked-1', 'true')
         onClose()
         if (onReturnToMap) {
           onReturnToMap()
@@ -237,20 +236,6 @@ export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadg
             className="px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold rounded-xl hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 transform hover:scale-105"
           >
             🏠 Return to Dashboard
-          </button>
-          <button
-            onClick={() => {
-              // Mark lesson as completed and unlock bonus
-              localStorage.setItem('lesson-completed-1', 'true')
-              localStorage.setItem('bonus-unlocked-1', 'true')
-              onClose()
-              if (onReturnToMap) {
-                onReturnToMap()
-              }
-            }}
-            className="px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 transform hover:scale-105"
-          >
-            🌟 Unlock Bonus Quest
           </button>
         </div>
 

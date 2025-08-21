@@ -12,7 +12,6 @@ export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [lessons, setLessons] = useState<Lesson[]>(getAllLessons())
-  const [bonusUnlocked, setBonusUnlocked] = useState(false)
   const [userProgress] = useState<Record<string, number>>({
     'week-01': 25, // Week 1 AI Classifier - in progress
     'python-basics-variables': 75,
@@ -57,44 +56,6 @@ export default function Dashboard() {
     // if (!loading && !isAuthenticated) {
     //   router.push('/auth')
     // }
-    
-    // Check for bonus unlocks
-    const checkBonusUnlocks = () => {
-      const bonus1Unlocked = localStorage.getItem('bonus-unlocked-1') === 'true'
-      setBonusUnlocked(bonus1Unlocked)
-      
-      if (bonus1Unlocked) {
-        // Add bonus lesson to the lessons array if not already present
-        const allLessons = getAllLessons()
-        const bonusLesson = {
-          id: 'bonus-1',
-          title: 'AI Master Challenge - Bonus Quest',
-          description: 'Advanced AI techniques, neural networks, and hidden features for true AI mastery',
-          difficulty: 'advanced' as const,
-          estimatedTime: '45 min',
-          sections: [],
-          tags: ['bonus', 'advanced', 'neural-networks'],
-          objectives: ['Explore advanced algorithms', 'Create complex AI models', 'Discover hidden features', 'Earn master certification'],
-          isBonus: true
-        }
-        
-        const hasBonus = allLessons.some(lesson => lesson.id === 'bonus-1')
-        if (!hasBonus) {
-          setLessons([...allLessons, bonusLesson])
-        }
-      }
-    }
-    
-    checkBonusUnlocks()
-    
-    // Listen for storage changes to update when bonus is unlocked
-    const handleStorageChange = () => {
-      checkBonusUnlocks()
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
-    
   }, [isAuthenticated, loading, router])
 
   const handleSignOut = async () => {
@@ -450,38 +411,22 @@ export default function Dashboard() {
               const isCompleted = progress === 100
               const isStarted = progress > 0
 
-              const isBonus = (lesson as any).isBonus
-              
               return (
-                <div key={lesson.id} className={`rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border ${
-                  isBonus 
-                    ? 'bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500 hover:border-purple-400 hover:scale-105' 
-                    : 'bg-gray-800 border-gray-700'
-                }`}>
+                <div key={lesson.id} className="bg-gray-800 border-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border">
                   <div className="p-6">
                     {/* Lesson Header */}
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="text-lg font-bold text-white">{lesson.title}</h4>
-                          {isBonus && (
-                            <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">
-                              🌟 BONUS
-                            </span>
-                          )}
                         </div>
-                        <p className={`text-sm mb-3 line-clamp-2 ${isBonus ? 'text-purple-200' : 'text-gray-400'}`}>
+                        <p className="text-sm mb-3 line-clamp-2 text-gray-400">
                           {lesson.description}
                         </p>
                       </div>
                       <div className="flex-shrink-0 ml-2 flex flex-col gap-1">
                         {isCompleted && (
                           <CheckCircle className="h-5 w-5 text-green-500" />
-                        )}
-                        {isBonus && (
-                          <div className="text-yellow-400 text-xl animate-bounce" title="Bonus Quest Unlocked!">
-                            ⭐
-                          </div>
                         )}
                       </div>
                     </div>
@@ -532,21 +477,14 @@ export default function Dashboard() {
                     <Link
                       href={`/lesson/${lesson.id}`}
                       className={`w-full flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                        isBonus
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white transform hover:scale-105 shadow-lg'
-                          : isCompleted
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : isStarted
-                              ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                              : 'bg-gray-700 hover:bg-gray-600 text-white'
+                        isCompleted
+                          ? 'bg-green-600 hover:bg-green-700 text-white'
+                          : isStarted
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                            : 'bg-gray-700 hover:bg-gray-600 text-white'
                       }`}
                     >
-                      {isBonus ? (
-                        <>
-                          <span className="text-lg">⭐</span>
-                          <span className="ml-2">Begin Bonus Quest</span>
-                        </>
-                      ) : isCompleted ? (
+                      {isCompleted ? (
                         <>
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Review Lesson

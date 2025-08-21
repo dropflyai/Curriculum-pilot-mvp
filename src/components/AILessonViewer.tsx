@@ -34,8 +34,7 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentMode, setCurrentMode] = useState<'main' | 'bonus'>('main')
-  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit' | 'bonus'>('overview')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit'>('overview')
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
@@ -87,7 +86,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   }
 
   // Get current mode data
-  const currentModeData = lesson.modes.find(mode => mode.type === currentMode) || lesson.modes[0]
+  const currentModeData = lesson.modes[0]
 
   // Auto-populate checklist based on completed tasks
   const updateChecklistFromProgress = () => {
@@ -186,16 +185,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     }
   }, [checklistState, currentTab, lesson.modes])
 
-  const handleModeSwitch = (mode: 'main' | 'bonus') => {
-    setCurrentMode(mode)
-    setCurrentTab('learn')
-    // Reset progress for new mode
-    setQuizState({ answers: {}, submitted: false, score: 0 })
-    setChecklistState({ completed: {} })
-    setTestState({ completed: {} })
-    setMetrics(null)
-    setSubmissionText('')
-  }
 
   const handleQuizAnswer = (questionIndex: number, answerIndex: number) => {
     setQuizState(prev => ({
@@ -332,19 +321,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       xpReward: 300,
       description: 'Submit your masterpiece and receive your well-earned rewards and achievements!',
       objectives: ['Submit final project', 'Receive completion badge', 'Unlock next adventure']
-    },
-    { 
-      id: 'bonus', 
-      title: 'Bonus Quest: AI Master Challenge', 
-      subtitle: 'Advanced Techniques & Secrets',
-      icon: Sparkles, 
-      color: 'purple', 
-      emoji: '🌟',
-      difficulty: 'Master',
-      estimatedTime: '30 min',
-      xpReward: 500,
-      description: 'Unlock advanced AI techniques and secret knowledge reserved for true masters!',
-      objectives: ['Explore advanced algorithms', 'Create complex AI models', 'Discover hidden features', 'Earn master certification']
     }
   ]
 
@@ -434,41 +410,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             </div>
           </div>
 
-          {/* Mode Switcher */}
-          <div className="flex space-x-4">
-            <button
-              onClick={() => handleModeSwitch('main')}
-              className={`group px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
-                currentMode === 'main'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
-                  : 'bg-white/10 text-cyan-200 hover:bg-white/20 border border-cyan-500/30'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5" />
-                <div>
-                  <div className="text-sm">Main Mission</div>
-                  <div className="text-xs opacity-80">{lesson.modes[0]?.title}</div>
-                </div>
-              </div>
-            </button>
-            <button
-              onClick={() => handleModeSwitch('bonus')}
-              className={`group px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
-                currentMode === 'bonus'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/25'
-                  : 'bg-white/10 text-purple-200 hover:bg-white/20 border border-purple-500/30'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                <div>
-                  <div className="text-sm">Bonus Challenge</div>
-                  <div className="text-xs opacity-80">{lesson.modes[1]?.title}</div>
-                </div>
-              </div>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -695,10 +636,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                 const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (calculateProgress() / 100)))
                 const isEven = index % 2 === 0
                 
-                // Add bonus mission logic
-                const isBonusMission = index === missions.length - 1 && mission.title.includes('Bonus')
-                const mainMissionsCompleted = Math.floor((missions.length - 1) * (calculateProgress() / 100)) === (missions.length - 1)
-                const bonusUnlocked = isBonusMission && mainMissionsCompleted
 
                 return (
                   <div 
@@ -708,13 +645,13 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     {/* Mission Navigation Card */}
                     <div
                       onClick={() => {
-                        if (!isLocked && (!isBonusMission || bonusUnlocked)) {
+                        if (!isLocked) {
                           // Show mission content by switching tabs
                           setCurrentTab(mission.id as any)
                         }
                       }}
                       className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 cursor-pointer transition-all duration-500 transform hover:scale-105 shadow-xl ${
-                        isLocked || (isBonusMission && !bonusUnlocked)
+                        isLocked
                           ? 'from-gray-800 to-gray-900 border-gray-600 opacity-50 cursor-not-allowed'
                           : isCompleted 
                             ? 'from-emerald-600 to-green-700 border-emerald-400 shadow-emerald-500/25'
@@ -725,7 +662,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     >
                       {/* Mission Status Badge */}
                       <div className="absolute -top-2 -right-2">
-                        {isBonusMission && !bonusUnlocked ? (
+                        {false ? (
                           <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
                             🎁 BONUS - COMPLETE MAIN QUEST
                           </div>
@@ -751,7 +688,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                           isCompleted 
                             ? 'from-emerald-500 to-green-600' 
                             : `from-${mission.color}-500 to-${mission.color}-600`
-                        } ${!isLocked && (!isBonusMission || bonusUnlocked) ? 'group-hover:animate-pulse' : ''}`}>
+                        } ${!isLocked ? 'group-hover:animate-pulse' : ''}`}>
                           <div className="text-4xl">{mission.emoji}</div>
                           <mission.icon className="absolute -bottom-1 -right-1 h-5 w-5 text-white bg-gray-900 rounded-full p-0.5" />
                         </div>
@@ -760,7 +697,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         <div className="flex-1 text-left">
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="text-xl font-bold text-white">{mission.title}</h3>
-                            {isBonusMission && (
+                            {false && (
                               <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse">
                                 BONUS
                               </div>
@@ -786,13 +723,13 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
 
                           {/* Navigation Button */}
                           <div className={`mt-3 px-4 py-2 rounded-lg text-center font-semibold text-sm transition-all duration-300 ${
-                            isLocked || (isBonusMission && !bonusUnlocked)
+                            isLocked
                               ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                               : isCompleted
                                 ? 'bg-emerald-600 text-white'
                                 : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white group-hover:from-cyan-400 group-hover:to-blue-500'
                           }`}>
-                            {isBonusMission && !bonusUnlocked 
+                            {false 
                               ? '🎁 Complete Main Quest to Unlock'
                               : isLocked 
                                 ? '🔒 Complete Previous Mission'
@@ -805,7 +742,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
 
                       {/* Hover Effect */}
-                      {!isLocked && (!isBonusMission || bonusUnlocked) && (
+                      {!isLocked && (
                         <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl"></div>
                       )}
                     </div>
@@ -1482,57 +1419,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
               </div>
             )}
 
-            {currentTab === 'bonus' && (
-              <div className="space-y-8">
-                {/* Bonus Quest Content */}
-                <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">🌟</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Bonus Quest: AI Master Challenge</h2>
-                      <p className="text-purple-200 text-xl">Advanced Techniques & Secrets</p>
-                    </div>
-                  </div>
-                  
-                  {/* Master Objectives */}
-                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
-                    <h3 className="text-purple-300 font-bold text-xl mb-4">🌟 Master Objectives</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🧠</div>
-                        <h4 className="text-purple-200 font-semibold mb-1">Explore Advanced Algorithms</h4>
-                        <p className="text-purple-300/80 text-sm">Deep dive into neural networks and deep learning</p>
-                      </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🏗️</div>
-                        <h4 className="text-purple-200 font-semibold mb-1">Create Complex AI Models</h4>
-                        <p className="text-purple-300/80 text-sm">Build multi-layer architectures</p>
-                      </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🔍</div>
-                        <h4 className="text-purple-200 font-semibold mb-1">Discover Hidden Features</h4>
-                        <p className="text-purple-300/80 text-sm">Unlock advanced AI capabilities</p>
-                      </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🏅</div>
-                        <h4 className="text-purple-200 font-semibold mb-1">Earn Master Certification</h4>
-                        <p className="text-purple-300/80 text-sm">Achieve AI mastery status</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Bonus Content */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <h3 className="text-purple-300 font-bold text-xl mb-6">🌟 Master-Level Content</h3>
-                  <div className="text-center py-12">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h4 className="text-2xl text-purple-300 mb-2">Advanced Content Coming Soon!</h4>
-                    <p className="text-gray-400">This master-level content is being developed for true AI adventurers.</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
