@@ -60,7 +60,90 @@ export default function AIClassifierTrainer({
     initModels()
   }, [dataset, labels])
 
-  // Load images from API
+  // Create visual school supply representations
+  const getSchoolSupplyVisuals = (label: string, index: number) => {
+    const schoolSupplies: Record<string, { emoji: string; colors: string[] }> = {
+      pencil: { 
+        emoji: '✏️', 
+        colors: ['#FFD700', '#FFA500', '#FF6347', '#8B4513', '#228B22']
+      },
+      eraser: { 
+        emoji: '🧽', 
+        colors: ['#FFB6C1', '#98FB98', '#87CEEB', '#DDA0DD', '#F0E68C']
+      },
+      marker: { 
+        emoji: '🖊️', 
+        colors: ['#FF0000', '#0000FF', '#008000', '#800080', '#FF1493']
+      },
+      pen: { 
+        emoji: '🖊️', 
+        colors: ['#000080', '#4B0082', '#008B8B', '#B22222', '#2F4F4F']
+      },
+      crayon: { 
+        emoji: '🖍️', 
+        colors: ['#FF69B4', '#00CED1', '#FFD700', '#32CD32', '#FF4500']
+      },
+      ruler: { 
+        emoji: '📏', 
+        colors: ['#D3D3D3', '#A9A9A9', '#C0C0C0', '#808080', '#696969']
+      },
+      scissors: { 
+        emoji: '✂️', 
+        colors: ['#DC143C', '#FF6347', '#CD5C5C', '#8B0000', '#B22222']
+      },
+      glue: { 
+        emoji: '🧴', 
+        colors: ['#FFFACD', '#F0E68C', '#FFE4B5', '#FAFAD2', '#FFF8DC']
+      }
+    }
+
+    const supply = schoolSupplies[label.toLowerCase()] || { 
+      emoji: '📦', 
+      colors: ['#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3', '#DCDCDC'] 
+    }
+    
+    const color = supply.colors[index % supply.colors.length]
+    const rotation = (index * 15) % 360
+    const size = 80 + (index % 3) * 20
+    
+    // Create a data URL for a colorful school supply image
+    const canvas = document.createElement('canvas')
+    canvas.width = 128
+    canvas.height = 128
+    const ctx = canvas.getContext('2d')
+    
+    if (ctx) {
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, 128, 128)
+      gradient.addColorStop(0, color + '33')
+      gradient.addColorStop(1, color + '11')
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, 128, 128)
+      
+      // Draw circle background for the emoji
+      ctx.fillStyle = color
+      ctx.beginPath()
+      ctx.arc(64, 64, 40, 0, Math.PI * 2)
+      ctx.fill()
+      
+      // Draw the emoji text
+      ctx.font = `${size}px Arial`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(supply.emoji, 64, 64)
+      
+      // Add decorative elements
+      ctx.strokeStyle = color
+      ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.arc(64, 64, 50, 0, Math.PI * 2)
+      ctx.stroke()
+    }
+    
+    return canvas.toDataURL()
+  }
+
+  // Load images from API or create visual representations
   const loadImages = async () => {
     const imageData: Record<string, string[]> = {}
     
@@ -69,18 +152,26 @@ export default function AIClassifierTrainer({
         const response = await fetch(`/api/list?dataset=${dataset}&label=${label}`)
         if (response.ok) {
           const files = await response.json()
-          imageData[label] = files
+          // If we have real files, use them
+          if (files && files.length > 0) {
+            imageData[label] = files
+          } else {
+            // Create visual school supply representations
+            imageData[label] = Array.from({ length: 12 }, (_, i) => 
+              getSchoolSupplyVisuals(label, i)
+            )
+          }
         } else {
-          // Mock data if API fails
-          imageData[label] = Array.from({ length: 10 }, (_, i) => 
-            `https://via.placeholder.com/128x128/666/fff?text=${label}_${i + 1}`
+          // Create visual school supply representations
+          imageData[label] = Array.from({ length: 12 }, (_, i) => 
+            getSchoolSupplyVisuals(label, i)
           )
         }
       } catch (error) {
         console.error(`Failed to load images for ${label}:`, error)
-        // Mock data for demonstration
-        imageData[label] = Array.from({ length: 10 }, (_, i) => 
-          `https://via.placeholder.com/128x128/666/fff?text=${label}_${i + 1}`
+        // Create visual school supply representations
+        imageData[label] = Array.from({ length: 12 }, (_, i) => 
+          getSchoolSupplyVisuals(label, i)
         )
       }
     }
@@ -463,32 +554,64 @@ export default function AIClassifierTrainer({
         </div>
       </div>
 
-      {/* Image Gallery with Flagging */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-xl font-bold text-white mb-4">Image Gallery (Mock Data)</h3>
-        <p className="text-gray-400 text-sm mb-4">Click images to flag them as low-quality or duplicates</p>
+      {/* Image Gallery with School Supplies */}
+      <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-lg p-6 border border-purple-500/30">
+        <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          🎨 School Supplies Gallery
+        </h3>
+        <p className="text-purple-200 text-sm mb-4">
+          Click on supplies to mark them for review - help the AI learn better! 🤖
+        </p>
         
         {labels.map(label => (
-          <div key={label} className="mb-6">
-            <h4 className="text-white font-medium mb-3 capitalize">{label}</h4>
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
-              {(images[label] || []).slice(0, 16).map((imagePath, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={imagePath}
-                    alt={`${label} ${index}`}
-                    className={`w-full h-16 object-cover rounded cursor-pointer transition-all ${
-                      flaggedImages.has(imagePath) 
-                        ? 'opacity-50 border-2 border-red-500' 
-                        : 'hover:opacity-80 border border-gray-600'
-                    }`}
-                    onClick={() => toggleImageFlag(imagePath)}
-                  />
-                  {flaggedImages.has(imagePath) && (
-                    <div className="absolute inset-0 bg-red-500 bg-opacity-50 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">X</span>
-                    </div>
-                  )}
+          <div key={label} className="mb-8">
+            <h4 className="text-white font-medium mb-3 capitalize flex items-center gap-2">
+              <span className="text-2xl">
+                {label === 'pencil' && '✏️'}
+                {label === 'eraser' && '🧽'}
+                {label === 'marker' && '🖊️'}
+                {label === 'pen' && '🖊️'}
+                {label === 'crayon' && '🖍️'}
+                {label === 'ruler' && '📏'}
+                {label === 'scissors' && '✂️'}
+                {label === 'glue' && '🧴'}
+                {!['pencil', 'eraser', 'marker', 'pen', 'crayon', 'ruler', 'scissors', 'glue'].includes(label) && '📦'}
+              </span>
+              {label}s Collection
+            </h4>
+            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              {(images[label] || []).slice(0, 12).map((imagePath, index) => (
+                <div key={index} className="relative group">
+                  <div className={`
+                    relative rounded-xl overflow-hidden border-2 transition-all duration-300 bg-white
+                    ${flaggedImages.has(imagePath) 
+                      ? 'border-red-500 scale-95 opacity-50' 
+                      : 'border-purple-500/30 hover:border-purple-400 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30'
+                    }
+                  `}>
+                    <div 
+                      className={`w-20 h-20 flex items-center justify-center cursor-pointer transition-all ${
+                        flaggedImages.has(imagePath) 
+                          ? 'opacity-50' 
+                          : 'hover:opacity-80'
+                      }`}
+                      onClick={() => toggleImageFlag(imagePath)}
+                      style={{
+                        background: `url(${imagePath}) center/cover`,
+                        imageRendering: 'crisp-edges'
+                      }}
+                    />
+                    {flaggedImages.has(imagePath) && (
+                      <div className="absolute inset-0 bg-red-500 bg-opacity-50 flex items-center justify-center rounded-lg">
+                        <span className="text-white text-2xl font-bold">❌</span>
+                      </div>
+                    )}
+                    {!flaggedImages.has(imagePath) && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-1">
+                        <span className="text-white text-xs font-medium">{index + 1}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
