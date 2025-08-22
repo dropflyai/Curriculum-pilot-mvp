@@ -753,6 +753,8 @@ Apps like yours help millions of students:
                     ]}
                     onComplete={() => {
                       console.log('Learning mode completed!')
+                      // Return to Python Adventure Map
+                      setCurrentTab('overview')
                     }}
                   />
                 ) : (

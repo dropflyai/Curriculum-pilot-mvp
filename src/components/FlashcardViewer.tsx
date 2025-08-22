@@ -253,16 +253,17 @@ export default function FlashcardViewer({ flashcards, onComplete }: FlashcardVie
       {/* Complete button when all cards are studied */}
       {studiedCards.size === flashcards.length && (
         <div className="mt-6 text-center">
-          <div className="mb-4 text-2xl animate-bounce">🎉</div>
-          <p className="text-green-400 font-bold text-lg mb-4">
-            Congratulations! You've studied all flashcards!
+          <div className="mb-4 text-6xl animate-bounce">🎉</div>
+          <h3 className="text-2xl font-bold text-green-300 mb-2">Knowledge Quest Complete!</h3>
+          <p className="text-green-200 text-lg mb-6">
+            Congratulations! You've mastered all the flashcards. Ready to start coding?
           </p>
           {onComplete && (
             <button
               onClick={onComplete}
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-400 hover:to-emerald-400 transition-colors"
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
             >
-              Continue to Next Activity
+              🚀 Complete Learning & Return to Adventure Map
             </button>
           )}
         </div>

@@ -188,9 +188,15 @@ export default function SlideViewer({ slides, onSlideComplete, onAllSlidesComple
           <div className="text-center">
             <div className="text-6xl mb-4">🎉</div>
             <h3 className="text-2xl font-bold text-green-300 mb-2">Knowledge Quest Complete!</h3>
-            <p className="text-green-200 text-lg">
+            <p className="text-green-200 text-lg mb-6">
               You've successfully completed all learning slides. Ready to start coding?
             </p>
+            <button
+              onClick={() => onAllSlidesComplete?.()}
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+            >
+              🚀 Complete Learning & Return to Adventure Map
+            </button>
           </div>
         </div>
       )}
