@@ -15,9 +15,10 @@ interface SlideViewerProps {
   slides: LessonSlide[]
   onSlideComplete?: (slideId: string) => void
   onAllSlidesComplete?: () => void
+  onReturnToModeSelection?: () => void
 }
 
-export default function SlideViewer({ slides, onSlideComplete, onAllSlidesComplete }: SlideViewerProps) {
+export default function SlideViewer({ slides, onSlideComplete, onAllSlidesComplete, onReturnToModeSelection }: SlideViewerProps) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [completedSlides, setCompletedSlides] = useState<Set<string>>(new Set())
 
@@ -39,7 +40,7 @@ export default function SlideViewer({ slides, onSlideComplete, onAllSlidesComple
       setCompletedSlides(newCompleted)
       onSlideComplete?.(currentSlide.id)
       
-      // Check if all slides are completed
+      // When clicking "Complete Learning" on last slide, trigger completion
       if (newCompleted.size === slides.length) {
         onAllSlidesComplete?.()
       }
@@ -187,15 +188,18 @@ export default function SlideViewer({ slides, onSlideComplete, onAllSlidesComple
         <div className="mt-6 bg-gradient-to-r from-green-800/30 to-emerald-800/30 rounded-2xl p-6 border border-green-500/30">
           <div className="text-center">
             <div className="text-6xl mb-4">🎉</div>
-            <h3 className="text-2xl font-bold text-green-300 mb-2">Knowledge Quest Complete!</h3>
+            <h3 className="text-2xl font-bold text-green-300 mb-2">Slides Complete!</h3>
             <p className="text-green-200 text-lg mb-6">
-              You've successfully completed all learning slides. Ready to start coding?
+              Great job! You've completed all the interactive slides. Ready to study the flashcards too?
             </p>
             <button
-              onClick={() => onAllSlidesComplete?.()}
+              onClick={() => {
+                onAllSlidesComplete?.() // Mark slides as complete
+                onReturnToModeSelection?.() // Return to mode selection
+              }}
               className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
             >
-              🚀 Complete Learning & Return to Adventure Map
+              📚 Complete Slides & Choose Next Learning Mode
             </button>
           </div>
         </div>

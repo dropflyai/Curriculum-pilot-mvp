@@ -70,6 +70,7 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
         <SlideViewer 
           slides={slides}
           onAllSlidesComplete={() => handleModeComplete('slides')}
+          onReturnToModeSelection={handleBackToChoice}
         />
       </div>
     )
@@ -92,6 +93,7 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
         <FlashcardViewer 
           flashcards={flashcards}
           onComplete={() => handleModeComplete('flashcards')}
+          onReturnToModeSelection={handleBackToChoice}
         />
       </div>
     )

@@ -14,9 +14,10 @@ interface Flashcard {
 interface FlashcardViewerProps {
   flashcards: Flashcard[]
   onComplete?: () => void
+  onReturnToModeSelection?: () => void
 }
 
-export default function FlashcardViewer({ flashcards, onComplete }: FlashcardViewerProps) {
+export default function FlashcardViewer({ flashcards, onComplete, onReturnToModeSelection }: FlashcardViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
   const [showCategoryView, setShowCategoryView] = useState(false)
@@ -254,16 +255,19 @@ export default function FlashcardViewer({ flashcards, onComplete }: FlashcardVie
       {studiedCards.size === flashcards.length && (
         <div className="mt-6 text-center">
           <div className="mb-4 text-6xl animate-bounce">🎉</div>
-          <h3 className="text-2xl font-bold text-green-300 mb-2">Knowledge Quest Complete!</h3>
+          <h3 className="text-2xl font-bold text-green-300 mb-2">Flashcards Complete!</h3>
           <p className="text-green-200 text-lg mb-6">
-            Congratulations! You've mastered all the flashcards. Ready to start coding?
+            Excellent! You've mastered all the vocabulary flashcards. Ready to try the slides too?
           </p>
           {onComplete && (
             <button
-              onClick={onComplete}
+              onClick={() => {
+                onComplete() // Mark flashcards as complete
+                onReturnToModeSelection?.() // Return to mode selection
+              }}
               className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
             >
-              🚀 Complete Learning & Return to Adventure Map
+              🎴 Complete Flashcards & Choose Next Learning Mode
             </button>
           )}
         </div>
