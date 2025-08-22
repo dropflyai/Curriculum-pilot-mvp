@@ -82,13 +82,17 @@ _stderr = StringIO()
 _execution_result = {"success": True, "output": "", "error": ""}
 `)
 
+    // Store code in globals to avoid escaping issues
+    const codeToRun = code
+    pyodide.runPython(`_user_code = ${JSON.stringify(codeToRun)}`)
+
     // Execute user code with output capture
     const executionCode = `
 import traceback
 
 try:
     with contextlib.redirect_stdout(_stdout), contextlib.redirect_stderr(_stderr):
-        exec("""${code.replace(/"/g, '\\"').replace(/\n/g, '\\n')}""")
+        exec(_user_code)
     
     _execution_result["output"] = _stdout.getvalue()
     error_output = _stderr.getvalue()
