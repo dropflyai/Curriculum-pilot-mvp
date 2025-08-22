@@ -43,8 +43,8 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
     const newCompleted = new Set([...completedModes, mode])
     setCompletedModes(newCompleted)
     
-    // If both modes are completed, mark overall as complete
-    if (newCompleted.size >= 1) { // Only need one mode for completion
+    // Now both modes are required for completion
+    if (newCompleted.size >= 2) { // Need both modes for completion
       onComplete?.()
     }
   }
@@ -103,9 +103,18 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
       <div className="bg-gradient-to-r from-emerald-800/30 to-blue-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
         <div className="text-center mb-8">
           <div className="text-8xl mb-4">🎓</div>
-          <h2 className="text-4xl font-bold text-white mb-4">Choose Your Learning Style</h2>
-          <p className="text-emerald-200 text-xl">
-            How would you like to explore the School Success Advisor concepts?
+          <h2 className="text-4xl font-bold text-white mb-4">Complete Both Learning Components</h2>
+          <p className="text-emerald-200 text-xl mb-4">
+            You need to complete BOTH modes to master all the essential knowledge:
+          </p>
+          <div className="bg-cyan-600/20 rounded-lg p-4 border border-cyan-500/30 mb-4">
+            <p className="text-cyan-200 font-semibold">
+              📖 <strong>Slides:</strong> AI Psychology & Creative Inspiration<br/>
+              🎴 <strong>Flashcards:</strong> Key Vocabulary & Technical Terms
+            </p>
+          </div>
+          <p className="text-emerald-300 font-semibold">
+            Choose where to start - you can switch between them anytime!
           </p>
         </div>
 
@@ -119,7 +128,7 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
               <div className="text-6xl mb-4 group-hover:animate-bounce">📖</div>
               <h3 className="text-2xl font-bold text-white mb-3">Interactive Slides</h3>
               <p className="text-emerald-200 text-lg mb-4">
-                Navigate through structured content with progress tracking
+                Deep dive into AI psychology with behind-the-scenes code examples and creative inspiration
               </p>
               
               <div className="space-y-2 text-emerald-300 text-sm">
@@ -156,7 +165,7 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
               <div className="text-6xl mb-4 group-hover:animate-pulse">🎴</div>
               <h3 className="text-2xl font-bold text-white mb-3">Study Flashcards</h3>
               <p className="text-indigo-200 text-lg mb-4">
-                Review key concepts with interactive flip cards by category
+                Master key vocabulary and technical terms with definitions, context, and memory aids
               </p>
               
               <div className="space-y-2 text-indigo-300 text-sm">
@@ -185,12 +194,14 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
           </button>
         </div>
 
-        {/* Recommendation */}
+        {/* Requirement Notice */}
         <div className="mt-8 text-center">
           <div className="bg-yellow-600/20 rounded-lg p-4 border border-yellow-500/30">
-            <div className="text-yellow-300 font-semibold mb-2">💡 Recommendation</div>
+            <div className="text-yellow-300 font-semibold mb-2">⚠️ Both Required for Completion</div>
             <p className="text-yellow-200 text-sm">
-              Try <strong>Slides first</strong> for comprehensive learning, then use <strong>Flashcards</strong> to reinforce key concepts!
+              <strong>Slides:</strong> Learn AI psychology and get creative inspiration<br/>
+              <strong>Flashcards:</strong> Master technical vocabulary and key terms<br/>
+              <span className="text-yellow-100 font-semibold">You must complete BOTH to proceed to coding!</span>
             </p>
           </div>
         </div>
@@ -199,12 +210,20 @@ export default function LearningModeSelector({ slides, flashcards, onComplete }:
         {completedModes.size > 0 && (
           <div className="mt-6 text-center">
             <div className="bg-green-600/20 rounded-lg p-4 border border-green-500/30">
-              <div className="text-green-300 font-semibold">
-                🎉 Great Progress! You've completed {completedModes.size} learning mode{completedModes.size > 1 ? 's' : ''}
+              <div className="text-green-300 font-semibold mb-2">
+                🎉 Learning Progress: {completedModes.size}/2 Components Complete
               </div>
-              {completedModes.size >= 1 && (
-                <p className="text-green-200 text-sm mt-2">
-                  Ready to move on to the Code Lab when you're done exploring!
+              <div className="text-green-200 text-sm space-y-1">
+                <div>📖 Slides: {completedModes.has('slides') ? '✅ Complete' : '⏳ Not Started'}</div>
+                <div>🎴 Flashcards: {completedModes.has('flashcards') ? '✅ Complete' : '⏳ Not Started'}</div>
+              </div>
+              {completedModes.size >= 2 ? (
+                <p className="text-green-100 font-bold text-sm mt-3">
+                  🚀 All learning complete! Ready to return to the Adventure Map!
+                </p>
+              ) : (
+                <p className="text-yellow-200 text-sm mt-3">
+                  Complete {completedModes.has('slides') ? 'Flashcards' : completedModes.has('flashcards') ? 'Slides' : 'both modes'} to proceed to coding!
                 </p>
               )}
             </div>
