@@ -27,6 +27,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set())
   const [showOutput, setShowOutput] = useState(false)
+  const [executionResult, setExecutionResult] = useState<{success: boolean, output: string, error?: string} | null>(null)
 
   const tutorialSteps: TutorialStep[] = [
     {
@@ -125,6 +126,47 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
   const isLastStep = currentStepIndex === tutorialSteps.length - 1
   const isFirstStep = currentStepIndex === 0
 
+  const getErrorExplanation = (error: string) => {
+    if (error.includes('SyntaxError')) {
+      return {
+        explanation: "🤔 Syntax Error means Python couldn't understand your code structure.",
+        hints: [
+          "Check for missing quotes around text (strings)",
+          "Make sure parentheses () are properly closed",
+          "Check your indentation - Python is picky about spaces!"
+        ]
+      }
+    }
+    if (error.includes('NameError')) {
+      return {
+        explanation: "📝 Name Error means you're using a variable that doesn't exist yet.",
+        hints: [
+          "Make sure you've defined the variable before using it",
+          "Check for typos in variable names",
+          "Remember Python is case-sensitive: 'Name' ≠ 'name'"
+        ]
+      }
+    }
+    if (error.includes('IndentationError')) {
+      return {
+        explanation: "📐 Indentation Error means your spacing is off.",
+        hints: [
+          "Use 4 spaces (or 1 tab) for each indentation level",
+          "Make sure if/elif/else blocks are properly indented",
+          "Check that all lines at the same level have the same indentation"
+        ]
+      }
+    }
+    return {
+      explanation: "🐛 Something went wrong with your code.",
+      hints: [
+        "Read the error message carefully for clues",
+        "Try comparing your code to the example above",
+        "Don't worry - errors are how we learn!"
+      ]
+    }
+  }
+
   const handleNext = () => {
     if (!isLastStep) {
       // Mark current step as completed
@@ -132,6 +174,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
       setCompletedSteps(newCompleted)
       setCurrentStepIndex(currentStepIndex + 1)
       setShowOutput(false)
+      setExecutionResult(null)
     }
   }
 
@@ -139,10 +182,16 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
     if (!isFirstStep) {
       setCurrentStepIndex(currentStepIndex - 1)
       setShowOutput(false)
+      setExecutionResult(null)
     }
   }
 
   const handleRunCode = () => {
+    setShowOutput(true)
+  }
+
+  const handleExecutionResult = (result: {success: boolean, output: string, error?: string}) => {
+    setExecutionResult(result)
     setShowOutput(true)
   }
 
@@ -247,7 +296,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
               <CodeEditor
                 initialCode={currentStep.code}
                 onCodeChange={() => {}}
-                onExecutionResult={handleRunCode}
+                onExecutionResult={handleExecutionResult}
               />
             </div>
             
@@ -275,12 +324,64 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
               </pre>
             </div>
 
-            {/* Show execution confirmation when run */}
-            {showOutput && (
-              <div className="bg-green-900/30 rounded-xl p-4 border border-green-500/30">
-                <div className="text-green-400 font-semibold text-center">
-                  ✅ Great! You ran the code and saw the expected output! 
-                </div>
+            {/* Show execution results - success or error */}
+            {executionResult && (
+              <div className={`rounded-xl p-6 border ${
+                executionResult.success 
+                  ? 'bg-green-900/30 border-green-500/30' 
+                  : 'bg-red-900/30 border-red-500/30'
+              }`}>
+                {executionResult.success ? (
+                  <div className="space-y-3">
+                    <div className="text-green-400 font-semibold text-center">
+                      ✅ Perfect! Your code ran successfully!
+                    </div>
+                    <div className="bg-green-900/40 rounded p-3">
+                      <div className="text-green-300 text-sm mb-1">Your Output:</div>
+                      <pre className="text-green-200 font-mono text-sm">{executionResult.output}</pre>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="text-red-400 font-semibold text-center">
+                      ⚠️ Oops! Let's fix this error together
+                    </div>
+                    
+                    {/* Error Explanation */}
+                    {executionResult.error && (() => {
+                      const errorHelp = getErrorExplanation(executionResult.error)
+                      return (
+                        <div className="space-y-4">
+                          <div className="bg-red-900/40 rounded p-3">
+                            <div className="text-red-300 text-sm mb-1">Error Message:</div>
+                            <pre className="text-red-200 font-mono text-xs">{executionResult.error}</pre>
+                          </div>
+                          
+                          <div className="bg-orange-900/30 rounded p-4 border border-orange-500/30">
+                            <div className="text-orange-300 font-semibold mb-2">{errorHelp.explanation}</div>
+                            <div className="text-orange-200 text-sm">
+                              <div className="font-semibold mb-2">💡 How to Fix It:</div>
+                              <ul className="space-y-1">
+                                {errorHelp.hints.map((hint, index) => (
+                                  <li key={index} className="flex items-start gap-2">
+                                    <span className="text-orange-400">•</span>
+                                    <span>{hint}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-blue-900/30 rounded p-3 border border-blue-500/30 text-center">
+                            <div className="text-blue-300 text-sm">
+                              🎯 <strong>Keep trying!</strong> Every programmer makes mistakes - it's how we learn and get better!
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </div>
+                )}
               </div>
             )}
 
@@ -325,9 +426,9 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
         {isLastStep ? (
           <button
             onClick={handleComplete}
-            disabled={!showOutput}
+            disabled={!executionResult?.success}
             className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all transform ${
-              showOutput
+              executionResult?.success
                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white hover:scale-105 shadow-lg'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
@@ -338,9 +439,9 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
         ) : (
           <button
             onClick={handleNext}
-            disabled={!showOutput}
+            disabled={!executionResult?.success}
             className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all transform ${
-              showOutput
+              executionResult?.success
                 ? 'bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-105'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}

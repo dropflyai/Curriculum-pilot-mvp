@@ -249,7 +249,7 @@ export default function CodeEditor({
             <textarea
               value={code}
               onChange={(e) => handleCodeChange(e.target.value)}
-              className="w-full h-80 font-mono text-sm border rounded-lg pl-16 pr-4 py-4 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+              className="w-full h-80 font-mono text-sm border rounded-lg pl-16 pr-4 py-4 bg-gray-50 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
               placeholder="# Write your Python code here..."
               spellCheck={false}
               style={{ lineHeight: '1.25rem' }}
