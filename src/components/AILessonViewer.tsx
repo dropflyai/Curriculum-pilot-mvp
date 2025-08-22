@@ -853,32 +853,15 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           {/* Mission Content */}
           <div className="max-w-7xl mx-auto p-8">
             
-            {/* TOP LEVEL DEBUG - Should ALWAYS show */}
-            <div className="bg-purple-500 text-white p-4 rounded mb-4">
-              TOP LEVEL DEBUG: Component is rendering. currentTab = "{currentTab}"
-              <br/>Available tabs: overview, learn, code, tests, quiz, flashcards, checklist, submit
-              <br/>Lesson ID: {lesson.id}
-            </div>
-            
-            {/* Show which tab is active */}
-            <div className="bg-cyan-500 text-white p-2 rounded mb-4">
-              ACTIVE TAB: {currentTab}
-            </div>
-            
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* DEBUG INFO */}
-                <div className="bg-red-500 text-white p-4 rounded">
-                  DEBUG: currentTab = {currentTab}, lesson.id = {lesson.id}
-                </div>
-                
                 {/* Week 2 - School Success Advisor: Offer choice between Slides and Flashcards */}
                 {lesson.id === 'week-02' ? (
-                  <div className="space-y-4">
-                    <div className="bg-blue-500 text-white p-4 rounded">
-                      FALLBACK: Week-02 detected, attempting to load LearningModeSelector...
-                    </div>
-                    <LearningModeSelector 
+                  <div className="bg-yellow-500 text-black p-4 rounded">
+                    NOTE: Week-02 now uses PythonLessonViewer with LearningModeSelector. This AILessonViewer section is no longer used for week-02.
+                  </div>
+                ) : (
+                  <LearningModeSelector 
                     slides={[
                       {
                         id: 'slide-1',
@@ -1202,12 +1185,9 @@ You're about to create technology that could genuinely help students succeed in 
                       console.log('Learning mode completed!')
                     }}
                   />
-                  </div>
-                ) : lesson.id === 'week-02' ? (
-                  <div className="bg-yellow-500 text-black p-4 rounded">
-                    ERROR: Week-02 detected but LearningModeSelector failed to load. Lesson ID: {lesson.id}
-                  </div>
-                ) : (
+                )}
+                
+                {lesson.id !== 'week-02' && (
                   <>
                     {/* Traditional Knowledge Quest Content (for lessons without slides) */}
                     <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">

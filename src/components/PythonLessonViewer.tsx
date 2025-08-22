@@ -12,6 +12,11 @@ const CodeEditor = dynamic(() => import('./CodeEditor'), {
   loading: () => <div className="text-white">Loading Python Environment...</div>
 })
 
+const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Learning Options...</div>
+})
+
 interface PythonLessonViewerProps {
   lesson: AILesson
   onLessonComplete: (progress: number) => void
@@ -629,23 +634,148 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
           <div className="max-w-7xl mx-auto p-8">
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* Knowledge Quest Content */}
-                <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">🎓</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
-                      <p className="text-emerald-200 text-xl">Learn Python & AI Concepts</p>
+                {/* Week 2 - School Success Advisor: Use LearningModeSelector */}
+                {lesson.id === 'week-02' ? (
+                  <LearningModeSelector 
+                    slides={[
+                      {
+                        id: 'slide-1',
+                        title: 'AI Study Buddy - Your 7-Step Mission',
+                        emoji: '🎓',
+                        content: `# 🎓 Build Your School Success Advisor
+
+## What You're Creating Today
+Your mission is to build an AI that helps students succeed in school. Think of it as creating a digital mentor that knows exactly what to say when students are stressed, confused, or need motivation.
+
+## 🎯 Your 7-Step Coding Mission
+
+### Step 1: Set Up the Foundation 🏗️
+Create the basic Python structure that will hold all your AI's knowledge and responses.
+
+### Step 2: Create Help Categories 📚
+Build four main areas your AI can help with:
+- **Encouragement** - When students feel discouraged
+- **Study Tips** - When they need better learning strategies  
+- **Motivation** - When they're losing focus
+- **Goal Setting** - When they need direction
+
+### Step 3: Build the Brain 🧠
+Code a classifier that reads what students write and figures out what kind of help they need.
+
+### Step 4: Write Great Responses ✍️
+Create helpful, specific responses - not just "good luck!" but real, actionable advice.
+
+### Step 5: Add Personality 😊
+Make your AI sound friendly and supportive, like a helpful friend who really cares.
+
+### Step 6: Test Everything 🧪
+Try your AI with real student problems to make sure it actually works well.
+
+### Step 7: Add Safety Features 🛡️
+Teach your AI when to suggest talking to teachers, counselors, or parents for serious issues.
+
+**Ready to start coding? Let's build an AI that changes students' lives!**`
+                      },
+                      {
+                        id: 'slide-2', 
+                        title: 'The Science Behind AI Helpers',
+                        emoji: '🤖',
+                        content: `# 🤖 How AI Advisors Work
+
+## The 4 Types of Help Students Need
+
+### 1. 💪 Encouragement 
+**When:** Students feel like giving up or think they're not smart enough
+**What your AI does:** Reminds them of past successes and builds confidence
+**Example:** "Remember when you thought algebra was impossible? Look at you now!"
+
+### 2. 🎯 Study Tips
+**When:** Students don't know how to learn effectively 
+**What your AI does:** Suggests specific, proven study techniques
+**Example:** "Try the 15-minute rule - study for just 15 minutes. You'll often keep going!"
+
+### 3. 🔥 Motivation
+**When:** Students know what to do but can't get started
+**What your AI does:** Connects schoolwork to their personal goals and dreams
+**Example:** "That biology test? It's practice for becoming the doctor you want to be!"
+
+### 4. 📈 Goal Setting
+**When:** Students feel overwhelmed or don't know where to focus
+**What your AI does:** Helps break big challenges into manageable steps
+**Example:** "Let's turn 'improve math grade' into 'do 3 practice problems daily this week'"
+
+## 🧠 The Programming Behind the Magic
+
+Your AI uses **Natural Language Processing** to understand what students write, **Sentiment Analysis** to detect emotions, and **Response Generation** to craft helpful replies.
+
+**Fun Fact:** Studies show positive AI interactions can improve test scores by 23%!
+
+## 🌍 Real-World Impact
+
+Apps like yours help millions of students:
+- 5 million daily users of school counseling apps
+- 78% of students improve study habits with AI coaching
+- 340+ universities use academic coaching bots
+
+**Ready to code this amazing technology?**`
+                      }
+                    ]}
+                    flashcards={[
+                      // 4 Types of Help
+                      {
+                        id: 'help-1',
+                        category: '4 Types of Help',
+                        front: '🎯 What is ENCOURAGEMENT help?',
+                        back: 'When students feel down about grades or abilities.\n\nExample: "I got a D and feel stupid" → AI responds with understanding and creates a study plan.',
+                        emoji: '🎯'
+                      },
+                      {
+                        id: 'help-2',
+                        category: '4 Types of Help',
+                        front: '📚 What are STUDY TIPS?',
+                        back: 'Specific learning strategies when students don\'t know how to study.\n\nExample: "Try the 20-20-20 method: 20 min notes, 20 min problems, 20 min explaining concepts."',
+                        emoji: '📚'
+                      },
+                      {
+                        id: 'help-3',
+                        category: '4 Types of Help',
+                        front: '🚀 What is MOTIVATION help?',
+                        back: 'When students know what to do but can\'t get started.\n\nExample: "Try the 15-minute rule - commit to just 15 minutes of homework."',
+                        emoji: '🚀'
+                      },
+                      {
+                        id: 'help-4',
+                        category: '4 Types of Help',
+                        front: '🎯 What is GOAL SETTING help?',
+                        back: 'Breaking big challenges into manageable steps.\n\nExample: "Turn \'improve GPA\' into \'do 3 practice problems daily this week.\'"',
+                        emoji: '🎯'
+                      }
+                    ]}
+                    onComplete={() => {
+                      console.log('Learning mode completed!')
+                    }}
+                  />
+                ) : (
+                  <>
+                    {/* Traditional Knowledge Quest Content (for other lessons) */}
+                    <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl animate-pulse">🎓</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
+                          <p className="text-emerald-200 text-xl">Learn Python & AI Concepts</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Learn Content */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <div className="prose prose-invert max-w-none">
-                    <ReactMarkdown>{currentModeData.learn_md}</ReactMarkdown>
-                  </div>
-                </div>
+                    
+                    {/* Learn Content */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <div className="prose prose-invert max-w-none">
+                        <ReactMarkdown>{currentModeData.learn_md}</ReactMarkdown>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
