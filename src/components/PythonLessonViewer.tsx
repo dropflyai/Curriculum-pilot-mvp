@@ -17,9 +17,9 @@ const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
   loading: () => <div className="text-white">Loading Learning Options...</div>
 })
 
-const PythonTutorialViewer = dynamic(() => import('./PythonTutorialViewer'), {
+const InteractiveCodeWalkthrough = dynamic(() => import('./InteractiveCodeWalkthrough'), {
   ssr: false,
-  loading: () => <div className="text-white">Loading Python Tutorial...</div>
+  loading: () => <div className="text-white">Loading Interactive Python Tutorial...</div>
 })
 
 interface PythonLessonViewerProps {
@@ -1061,7 +1061,7 @@ Now you understand how each type of help works behind the scenes. Time to bring 
             )}
 
             {currentTab === 'code' && (
-              <PythonTutorialViewer 
+              <InteractiveCodeWalkthrough 
                 onComplete={() => {
                   // Mark Python Laboratory as completed
                   setCurrentTab('overview')
