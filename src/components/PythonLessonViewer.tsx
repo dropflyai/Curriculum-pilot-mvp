@@ -17,6 +17,11 @@ const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
   loading: () => <div className="text-white">Loading Learning Options...</div>
 })
 
+const InteractivePythonTutorial = dynamic(() => import('./InteractivePythonTutorial'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Python Tutorial...</div>
+})
+
 interface PythonLessonViewerProps {
   lesson: AILesson
   onLessonComplete: (progress: number) => void
@@ -1056,36 +1061,14 @@ Now you understand how each type of help works behind the scenes. Time to bring 
             )}
 
             {currentTab === 'code' && (
-              <div className="space-y-8">
-                {/* Python Laboratory Content */}
-                <div className="bg-gradient-to-r from-blue-800/30 to-cyan-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">🐍</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Python Laboratory</h2>
-                      <p className="text-blue-200 text-xl">Build Your AI Advisor</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Python Code Editor */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
-                    <Play className="h-6 w-6" />
-                    Python Code Editor 🐍
-                  </h3>
-                  
-                  <CodeEditor
-                    initialCode={currentModeData.code.starter}
-                    onCodeChange={(code) => console.log('Code changed:', code)}
-                    onExecutionResult={(result) => {
-                      if (result.success) {
-                        handleCodeExecution()
-                      }
-                    }}
-                  />
-                </div>
-              </div>
+              <InteractivePythonTutorial 
+                onComplete={() => {
+                  // Mark Python Laboratory as completed
+                  setCurrentTab('overview')
+                  // Update progress
+                  onLessonComplete(calculateProgress() + 25) // Add 25% for completing Python Lab
+                }}
+              />
             )}
 
             {currentTab === 'tests' && (
