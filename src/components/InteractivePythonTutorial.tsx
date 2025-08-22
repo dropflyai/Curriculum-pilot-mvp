@@ -239,20 +239,16 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
           <button
             key={step.id}
             onClick={() => {
-              if (index <= currentStepIndex) {
-                setCurrentStepIndex(index)
-                setShowOutput(false)
-              }
+              setCurrentStepIndex(index)
+              setShowOutput(false)
+              setExecutionResult(null)
             }}
-            disabled={index > currentStepIndex}
             className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
               completedSteps.has(step.id)
                 ? 'bg-green-600 border-green-400 text-white'
                 : index === currentStepIndex
                 ? 'bg-blue-600 border-blue-400 text-white'
-                : index < currentStepIndex
-                ? 'bg-cyan-600 border-cyan-400 text-white hover:bg-cyan-500'
-                : 'bg-gray-700 border-gray-500 text-gray-400 cursor-not-allowed'
+                : 'bg-cyan-600 border-cyan-400 text-white hover:bg-cyan-500'
             }`}
           >
             <span className="text-lg">{step.emoji}</span>
@@ -426,12 +422,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
         {isLastStep ? (
           <button
             onClick={handleComplete}
-            disabled={!executionResult?.success}
-            className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all transform ${
-              executionResult?.success
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white hover:scale-105 shadow-lg'
-                : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-            }`}
+            className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all transform bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white hover:scale-105 shadow-lg"
           >
             <Sparkles className="h-5 w-5" />
             🎉 My AI Advisor is Complete! 🎉
@@ -439,12 +430,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
         ) : (
           <button
             onClick={handleNext}
-            disabled={!executionResult?.success}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all transform ${
-              executionResult?.success
-                ? 'bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-105'
-                : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-            }`}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all transform bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-105"
           >
             Next Step
             <ChevronRight className="h-5 w-5" />
@@ -453,7 +439,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
       </div>
 
       {/* Completion Celebration */}
-      {isLastStep && showOutput && (
+      {isLastStep && (
         <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30 text-center">
           <div className="text-8xl mb-4 animate-bounce">🎉</div>
           <h3 className="text-4xl font-bold text-white mb-4">
