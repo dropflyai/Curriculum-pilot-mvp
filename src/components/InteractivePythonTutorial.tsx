@@ -231,11 +231,23 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
               <h4 className="text-xl font-bold text-cyan-300">Code to Try:</h4>
             </div>
             
+            {/* Code Display */}
+            <div className="bg-cyan-900/20 rounded-xl border border-cyan-500/30 p-4">
+              <div className="text-cyan-300 font-semibold mb-3">🐍 Python Code to Learn:</div>
+              <pre className="text-cyan-200 font-mono text-sm whitespace-pre-wrap overflow-x-auto bg-cyan-900/30 rounded p-3 border border-cyan-600/30">
+                {currentStep.code}
+              </pre>
+            </div>
+            
+            {/* Interactive Code Editor */}
             <div className="bg-gray-900/80 rounded-xl border border-gray-600">
+              <div className="text-gray-400 text-xs p-2 border-b border-gray-600">
+                💻 Try editing and running this code yourself:
+              </div>
               <CodeEditor
                 initialCode={currentStep.code}
                 onCodeChange={() => {}}
-                onExecutionResult={() => {}}
+                onExecutionResult={handleRunCode}
               />
             </div>
             
@@ -255,22 +267,22 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
               <h4 className="text-xl font-bold text-yellow-300">Expected Output:</h4>
             </div>
             
-            <div className={`bg-gray-900/80 rounded-xl p-6 border border-gray-600 transition-all duration-500 ${
-              showOutput ? 'border-green-500 bg-green-900/20' : ''
-            }`}>
-              {showOutput ? (
-                <div className="space-y-2">
-                  <div className="text-green-400 font-semibold mb-3">✅ Code Executed Successfully!</div>
-                  <pre className="text-green-300 whitespace-pre-wrap font-mono text-sm">
-                    {currentStep.expectedOutput}
-                  </pre>
-                </div>
-              ) : (
-                <div className="text-gray-400 italic text-center py-8">
-                  👆 Run the code above to see the magic happen!
-                </div>
-              )}
+            {/* Always show expected output */}
+            <div className="bg-yellow-900/20 rounded-xl p-6 border border-yellow-500/30">
+              <div className="text-yellow-300 font-semibold mb-3">📋 What This Code Will Do:</div>
+              <pre className="text-yellow-200 whitespace-pre-wrap font-mono text-sm bg-yellow-900/30 rounded p-3">
+                {currentStep.expectedOutput}
+              </pre>
             </div>
+
+            {/* Show execution confirmation when run */}
+            {showOutput && (
+              <div className="bg-green-900/30 rounded-xl p-4 border border-green-500/30">
+                <div className="text-green-400 font-semibold text-center">
+                  ✅ Great! You ran the code and saw the expected output! 
+                </div>
+              </div>
+            )}
 
             {/* Learning Tip */}
             {currentStep.tip && (
