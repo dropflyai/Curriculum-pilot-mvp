@@ -20,6 +20,10 @@ const FlashcardViewer = dynamic(() => import('./FlashcardViewer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Flashcards...</div>
 })
+const SlideViewer = dynamic(() => import('./SlideViewer'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Slides...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
@@ -846,48 +850,63 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           <div className="max-w-7xl mx-auto p-8">
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* Knowledge Quest Content */}
-                <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">🏛️</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
-                      <p className="text-emerald-200 text-xl">Discover the Ancient Secrets of AI</p>
-                    </div>
-                  </div>
-                  
-                  {/* Mission Objectives */}
-                  <div className="bg-emerald-900/40 rounded-2xl p-6 border border-emerald-500/30">
-                    <h3 className="text-emerald-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-emerald-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">📚</div>
-                        <h4 className="text-emerald-200 font-semibold mb-1">Learn Core AI Concepts</h4>
-                        <p className="text-emerald-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
-                      </div>
-                      <div className="bg-emerald-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🎓</div>
-                        <h4 className="text-emerald-200 font-semibold mb-1">Understand Terminology</h4>
-                        <p className="text-emerald-300/80 text-sm">Learn the language of AI and machine learning</p>
-                      </div>
-                      <div className="bg-emerald-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">✅</div>
-                        <h4 className="text-emerald-200 font-semibold mb-1">Complete Checkpoints</h4>
-                        <p className="text-emerald-300/80 text-sm">Verify your understanding with interactive quizzes</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Interactive Lesson Content */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <InteractiveLessonContent 
-                    onSectionComplete={(sectionIndex) => {
-                      console.log(`Section ${sectionIndex} completed`)
+                {/* Check if lesson has slides, use SlideViewer, otherwise use traditional content */}
+                {currentModeData.learn_slides && currentModeData.learn_slides.length > 0 ? (
+                  <SlideViewer 
+                    slides={currentModeData.learn_slides}
+                    onSlideComplete={(slideId) => {
+                      console.log('Slide completed:', slideId)
                     }}
-                    onReturnToMap={() => setCurrentTab('overview')}
+                    onAllSlidesComplete={() => {
+                      console.log('All slides completed!')
+                    }}
                   />
-                </div>
+                ) : (
+                  <>
+                    {/* Traditional Knowledge Quest Content (for lessons without slides) */}
+                    <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl animate-pulse">🏛️</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
+                          <p className="text-emerald-200 text-xl">Discover the Ancient Secrets of AI</p>
+                        </div>
+                      </div>
+                      
+                      {/* Mission Objectives */}
+                      <div className="bg-emerald-900/40 rounded-2xl p-6 border border-emerald-500/30">
+                        <h3 className="text-emerald-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">📚</div>
+                            <h4 className="text-emerald-200 font-semibold mb-1">Learn Core AI Concepts</h4>
+                            <p className="text-emerald-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
+                          </div>
+                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🎓</div>
+                            <h4 className="text-emerald-200 font-semibold mb-1">Understand Terminology</h4>
+                            <p className="text-emerald-300/80 text-sm">Learn the language of AI and machine learning</p>
+                          </div>
+                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">✅</div>
+                            <h4 className="text-emerald-200 font-semibold mb-1">Complete Checkpoints</h4>
+                            <p className="text-emerald-300/80 text-sm">Verify your understanding with interactive quizzes</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Interactive Lesson Content */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <InteractiveLessonContent 
+                        onSectionComplete={(sectionIndex) => {
+                          console.log(`Section ${sectionIndex} completed`)
+                        }}
+                        onReturnToMap={() => setCurrentTab('overview')}
+                      />
+                    </div>
+                  </>
+                )}
 
                 {/* Vocabulary assignment moved to dedicated homework section on dashboard */}
               </div>

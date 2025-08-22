@@ -20,12 +20,20 @@ export interface Flashcard {
   emoji?: string
 }
 
+export interface LessonSlide {
+  id: string
+  title: string
+  content: string
+  emoji?: string
+}
+
 export interface LessonMode {
   type: 'main' | 'bonus'
   title: string
   dataset: string
   labels: string[]
-  learn_md: string
+  learn_md?: string // Keep for backward compatibility
+  learn_slides?: LessonSlide[] // New slide-based content
   code: {
     starter: string
   }
@@ -507,7 +515,12 @@ Attach a metrics screenshot.`,
         title: 'School-Positive Advisor Bot',
         dataset: 'school-advice',
         labels: ['encouragement', 'study-tips', 'motivation', 'goal-setting'],
-        learn_md: `## 🎓 Build Your Own School Success Advisor!
+        learn_slides: [
+          {
+            id: 'slide-1',
+            title: 'Building Your AI Study Buddy',
+            emoji: '🎓',
+            content: `## 🎓 Build Your Own School Success Advisor!
 
 ### What We're Building Today
 
@@ -538,9 +551,13 @@ Make your AI sound like a supportive friend, not a robot. Add variety, humor, an
 Try out your AI with real problems students face. Test edge cases and make sure it handles various situations well.
 
 #### ✅ Step 7: Implement Safety Features
-Add boundaries so your AI knows when to suggest talking to adults. This is crucial for responsible AI development!
-
-### 🤖 How AI Advisors Actually Work
+Add boundaries so your AI knows when to suggest talking to adults. This is crucial for responsible AI development!`
+          },
+          {
+            id: 'slide-2',
+            title: 'How AI Advisors Work',
+            emoji: '🤖',
+            content: `### 🤖 How AI Advisors Actually Work
 
 Before we start coding, let's understand what makes a good AI advisor. It's like teaching a robot to be a really good friend!
 
@@ -593,25 +610,21 @@ That thought *"This is too hard for me"* becomes *"This is challenging, which me
 Now let's think like programmers! To build a helpful AI advisor, our Python code needs to understand 4 important concepts:
 
 #### 1. Natural Language Processing (NLP)
-
 - **What it is:** Teaching computers to understand human text
 - **Real example:** When you text "I'm stressed about the test tomorrow," the AI knows you need encouragement AND study tips
 - **Why it's cool:** It's like giving your computer the ability to read emotions!
 
 #### 2. Sentiment Analysis
-
 - **What it is:** Figuring out if someone is happy, sad, frustrated, or excited
 - **Real example:** "I failed again" = sad, needs encouragement vs "I'm ready to try!" = motivated, needs a plan
 - **Why it matters:** Your AI gives different help based on how someone is feeling
 
 #### 3. Response Generation
-
 - **What it is:** Creating helpful, specific responses (not just "good luck!")
 - **Real example:** Instead of "study more," your AI says "try the 20-20-20 method I mentioned"
 - **The trick:** Having templates for different situations but making them feel personal
 
 #### 4. Ethical AI
-
 - **What it is:** Making sure your AI is safe and helpful, not harmful
 - **Real example:** Your AI says "talk to a counselor" for serious problems, not "just think positive"
 - **Why it's important:** With great coding power comes great responsibility!
@@ -642,7 +655,9 @@ You're about to create technology that could genuinely help students succeed in 
 
 **Your goal:** Create an AI that makes school life better for everyone!
 
-**Let's start by looking at the starter code and building your first AI advisor function! Click the Code tab to begin! 🚀✨**`,
+**Let's start by looking at the starter code and building your first AI advisor function! Click the Code tab to begin! 🚀✨**`
+          }
+        ],
         code: {
           starter: `# 🎓 School Success Advisor - Build Your AI Study Buddy!
 # Follow the 7 steps to create an AI that helps students succeed!
