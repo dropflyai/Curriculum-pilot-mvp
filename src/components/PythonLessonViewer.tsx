@@ -51,6 +51,7 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const [submissionText, setSubmissionText] = useState('')
   const [codeExecuted, setCodeExecuted] = useState(false)
   const [knowledgeQuestCompleted, setKnowledgeQuestCompleted] = useState(false)
+  const [pythonLabCompleted, setPythonLabCompleted] = useState(false)
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -163,6 +164,12 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     const kqCompleted = localStorage.getItem(`knowledge-quest-completed-${lesson.id}`)
     if (kqCompleted === 'true') {
       setKnowledgeQuestCompleted(true)
+    }
+    
+    // Load Python Lab completion status
+    const plCompleted = localStorage.getItem(`python-lab-completed-${lesson.id}`)
+    if (plCompleted === 'true') {
+      setPythonLabCompleted(true)
     }
   }, [])
 
@@ -507,13 +514,14 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
             {missions.map((mission, index) => {
               const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
               const isActive = currentTab === mission.id
-              // Special unlock logic: Python Laboratory unlocks when Knowledge Quest is completed
+              // Progressive unlock logic: each mission unlocks the next
               const isLocked = (() => {
                 if (index === 0) return false; // Knowledge Quest is always unlocked
                 if (index === 1) return !knowledgeQuestCompleted; // Python Lab unlocks after Knowledge Quest
-                if (index === 2) return !knowledgeQuestCompleted || calculateProgress() < 25; // Debug Detective needs 25% progress + Knowledge Quest
-                if (index === 3) return !knowledgeQuestCompleted || calculateProgress() < 50; // Code Coach needs 50% progress + Knowledge Quest
-                if (index === 4) return !knowledgeQuestCompleted || calculateProgress() < 75; // Final Challenge needs 75% progress + Knowledge Quest
+                if (index === 2) return !pythonLabCompleted; // Enhancement Lab unlocks after Python Lab
+                if (index === 3) return !pythonLabCompleted; // Python Mastery unlocks after Python Lab
+                if (index === 4) return !pythonLabCompleted; // Final Review unlocks after Python Lab
+                if (index === 5) return !pythonLabCompleted; // Victory Ceremony unlocks after Python Lab
                 return true;
               })()
               const isEven = index % 2 === 0
@@ -1064,6 +1072,8 @@ Now you understand how each type of help works behind the scenes. Time to bring 
               <InteractiveCodeWalkthrough 
                 onComplete={() => {
                   // Mark Python Laboratory as completed
+                  setPythonLabCompleted(true)
+                  localStorage.setItem(`python-lab-completed-${lesson.id}`, 'true')
                   setCurrentTab('overview')
                   // Update progress
                   onLessonComplete(calculateProgress() + 25) // Add 25% for completing Python Lab
