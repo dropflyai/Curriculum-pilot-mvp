@@ -43,6 +43,14 @@ interface TutorialSection {
   }
 }
 
+interface QuizQuestion {
+  id: string
+  question: string
+  options: string[]
+  correctAnswer: number
+  explanation: string
+}
+
 interface InteractiveCodeWalkthroughProps {
   onComplete?: () => void
 }
@@ -62,6 +70,9 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
   const [showPredictionResult, setShowPredictionResult] = useState(false)
   const [predictionXP, setPredictionXP] = useState(0)
   const [showMiniActivity, setShowMiniActivity] = useState(false)
+  const [quizAnswers, setQuizAnswers] = useState<{[key: string]: number}>({})
+  const [quizSubmitted, setQuizSubmitted] = useState(false)
+  const [quizScore, setQuizScore] = useState(0)
 
   const tutorialSections: TutorialSection[] = [
     {
@@ -684,6 +695,105 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
     }
   ]
 
+  const quizQuestions: QuizQuestion[] = [
+    {
+      id: 'q1',
+      question: 'What does the print() function do in Python?',
+      options: [
+        'Prints documents on paper',
+        'Displays text on the screen',
+        'Saves files to computer',
+        'Deletes information'
+      ],
+      correctAnswer: 1,
+      explanation: 'print() displays text on the screen - like sending a message that appears for users to see.'
+    },
+    {
+      id: 'q2', 
+      question: 'Which of these is the best variable name for storing a student\'s age?',
+      options: [
+        'x',
+        'number', 
+        'student_age',
+        'data'
+      ],
+      correctAnswer: 2,
+      explanation: 'student_age is descriptive and clear - anyone reading your code immediately knows what information it stores.'
+    },
+    {
+      id: 'q3',
+      question: 'What does input() do?',
+      options: [
+        'Displays text on screen',
+        'Asks user a question and waits for their answer',
+        'Creates random numbers', 
+        'Stores information permanently'
+      ],
+      correctAnswer: 1,
+      explanation: 'input() asks the user a question and pauses the program until they type an answer - essential for interactive AI.'
+    },
+    {
+      id: 'q4',
+      question: 'What does this code do? if mood == "happy":',
+      options: [
+        'Sets mood to happy',
+        'Checks if mood equals happy and runs code if true',
+        'Prints the word happy',
+        'Creates a variable called mood'
+      ],
+      correctAnswer: 1,
+      explanation: 'The == compares two values. If they match, the code inside the if block runs - this is how AI makes decisions.'
+    },
+    {
+      id: 'q5',
+      question: 'Why are lists important for AI advisors?',
+      options: [
+        'They make code look professional',
+        'They store many advice options so AI can pick appropriate responses', 
+        'They run code faster',
+        'They prevent errors'
+      ],
+      correctAnswer: 1,
+      explanation: 'Lists let AI store hundreds of responses and pick the perfect one for each situation - making AI helpful and varied.'
+    },
+    {
+      id: 'q6',
+      question: 'What does random.choice() do?',
+      options: [
+        'Deletes random items',
+        'Creates random text',
+        'Picks one random item from a list',
+        'Sorts lists alphabetically'
+      ],
+      correctAnswer: 2,
+      explanation: 'random.choice() picks one random item from a list - making AI responses surprising and engaging for users.'
+    },
+    {
+      id: 'q7',
+      question: 'What makes an AI advisor "intelligent"?',
+      options: [
+        'Using big words',
+        'Analyzing user input, making decisions, and giving personalized responses',
+        'Running very fast',
+        'Having colorful displays'
+      ],
+      correctAnswer: 1,
+      explanation: 'True AI intelligence comes from understanding what users need and responding appropriately - just like human counselors do.'
+    },
+    {
+      id: 'q8',
+      question: 'Which Python concept helps AI understand user emotions?',
+      options: [
+        'print() statements',
+        'Variables for storing data',
+        'if statements for checking keywords like "stressed" or "happy"',
+        'Lists for organization'
+      ],
+      correctAnswer: 2,
+      explanation: 'if statements analyze user messages for emotional keywords, allowing AI to detect feelings and respond with appropriate help.'
+    }
+  ]
+
   const currentSection = tutorialSections[currentSectionIndex]
   const currentLine = currentSection?.codeLines[currentLineIndex]
   const isLineRevealed = currentLineIndex < currentSection?.codeLines.length
@@ -721,26 +831,33 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
     if (isCorrect) {
       setTotalXP(prev => prev + prediction.xpReward)
       triggerParticles('success')
+
+      // Auto-advance after showing correct result
+      setTimeout(() => {
+        setShowPredictionResult(false)
+        setSelectedPrediction(null)
+        
+        if (currentLineIndex < currentSection.codeLines.length - 1) {
+          setLineIndex(currentLineIndex + 1)
+        } else {
+          // Move to mini-activity
+          setShowMiniActivity(true)
+          setSectionProgress(prev => ({
+            ...prev,
+            [currentSection.id]: currentSection.codeLines.length
+          }))
+        }
+      }, 2500)
     } else {
       triggerParticles('error')
+      // Don't auto-advance on wrong answers - student must try again
     }
+  }
 
-    // Auto-advance after showing result
-    setTimeout(() => {
-      setShowPredictionResult(false)
-      setSelectedPrediction(null)
-      
-      if (currentLineIndex < currentSection.codeLines.length - 1) {
-        setLineIndex(currentLineIndex + 1)
-      } else {
-        // Move to mini-activity
-        setShowMiniActivity(true)
-        setSectionProgress(prev => ({
-          ...prev,
-          [currentSection.id]: currentSection.codeLines.length
-        }))
-      }
-    }, 2500)
+  const handleTryAgain = () => {
+    setShowPredictionResult(false)
+    setSelectedPrediction(null)
+    setPredictionXP(0)
   }
 
   const handleMiniActivityComplete = (answerIndex: number, activity: MiniActivity) => {
@@ -784,18 +901,181 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
     setLevel(newLevel)
   }, [totalXP])
 
+  const handleQuizAnswer = (questionId: string, answerIndex: number) => {
+    setQuizAnswers(prev => ({
+      ...prev,
+      [questionId]: answerIndex
+    }))
+  }
+
+  const handleQuizSubmit = () => {
+    let correct = 0
+    quizQuestions.forEach(question => {
+      if (quizAnswers[question.id] === question.correctAnswer) {
+        correct++
+      }
+    })
+    const score = Math.round((correct / quizQuestions.length) * 100)
+    setQuizScore(score)
+    setQuizSubmitted(true)
+    
+    // Big celebration for quiz completion
+    triggerCelebration()
+  }
+
+  const handleQuizComplete = () => {
+    onComplete?.()
+  }
+
   if (showQuiz) {
     return (
-      <div className="max-w-4xl mx-auto text-center py-8">
-        <div className="text-6xl mb-4">🎓</div>
-        <h2 className="text-3xl font-bold text-white mb-4">Ready for the Final Quiz!</h2>
-        <p className="text-gray-300 mb-6">You've completed all interactive sections. Time to test your knowledge!</p>
-        <button
-          onClick={() => onComplete?.()}
-          className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg"
-        >
-          Take Final Quiz
-        </button>
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Confetti for quiz celebration */}
+        {showConfetti && (
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            recycle={false}
+            numberOfPieces={200}
+          />
+        )}
+
+        {/* Quiz Header */}
+        <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-6 border-2 border-purple-500/30">
+          <div className="flex items-center gap-4">
+            <div className="text-6xl">🧠</div>
+            <div>
+              <h2 className="text-4xl font-bold text-white mb-1">Python Knowledge Quiz</h2>
+              <p className="text-purple-200 text-lg">Test your AI programming mastery!</p>
+            </div>
+          </div>
+          <div className="mt-4 text-right">
+            <div className="text-yellow-400 font-bold text-xl flex items-center justify-end gap-2">
+              <Star className="h-5 w-5" />
+              Final Level: {level} • Total XP: {totalXP}
+            </div>
+          </div>
+        </div>
+
+        {!quizSubmitted ? (
+          <div className="space-y-6">
+            {/* Quiz Questions */}
+            {quizQuestions.map((question, qIndex) => (
+              <div key={question.id} className="bg-gray-800/50 rounded-2xl p-6 border border-gray-600">
+                <h3 className="text-purple-300 font-bold text-lg mb-4">
+                  Question {qIndex + 1}: {question.question}
+                </h3>
+                <div className="space-y-3">
+                  {question.options.map((option, oIndex) => (
+                    <button
+                      key={oIndex}
+                      onClick={() => handleQuizAnswer(question.id, oIndex)}
+                      className={`w-full text-left p-4 rounded-lg border transition-all ${
+                        quizAnswers[question.id] === oIndex
+                          ? 'bg-purple-600/30 border-purple-400 text-white'
+                          : 'bg-gray-700/30 border-gray-600 text-gray-300 hover:bg-purple-600/10 hover:border-purple-500'
+                      }`}
+                    >
+                      <span className="font-semibold mr-3">{String.fromCharCode(65 + oIndex)}.</span>
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <div className="text-center">
+              <button
+                onClick={handleQuizSubmit}
+                disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                className={`px-8 py-4 rounded-xl font-bold text-lg transition-all transform ${
+                  Object.keys(quizAnswers).length === quizQuestions.length
+                    ? 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white hover:scale-105 shadow-lg'
+                    : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                📊 Submit Quiz & See Results
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Quiz Results */}
+            <div className={`rounded-3xl p-8 border-2 text-center ${
+              quizScore >= 80 
+                ? 'bg-gradient-to-r from-green-800/30 to-emerald-800/30 border-green-500/30'
+                : quizScore >= 60
+                ? 'bg-gradient-to-r from-yellow-800/30 to-orange-800/30 border-yellow-500/30'
+                : 'bg-gradient-to-r from-red-800/30 to-pink-800/30 border-red-500/30'
+            }`}>
+              <div className="text-8xl mb-4">
+                {quizScore >= 80 ? '🎉' : quizScore >= 60 ? '👍' : '💪'}
+              </div>
+              <h3 className="text-4xl font-bold text-white mb-4">
+                Quiz Complete!
+              </h3>
+              <div className="text-6xl font-bold text-white mb-4">
+                {quizScore}%
+              </div>
+              <p className="text-lg mb-6">
+                {quizScore >= 80 
+                  ? 'Outstanding! You truly understand AI programming concepts!'
+                  : quizScore >= 60
+                  ? 'Good job! You have a solid foundation in AI concepts!'
+                  : 'Keep learning! AI programming takes practice - you\'re on the right track!'
+                }
+              </p>
+            </div>
+
+            {/* Detailed Results */}
+            <div className="space-y-4">
+              {quizQuestions.map((question, index) => {
+                const userAnswer = quizAnswers[question.id]
+                const isCorrect = userAnswer === question.correctAnswer
+                return (
+                  <div key={question.id} className={`rounded-xl p-4 border ${
+                    isCorrect ? 'bg-green-900/30 border-green-500/30' : 'bg-red-900/30 border-red-500/30'
+                  }`}>
+                    <div className="flex items-start gap-3">
+                      <div className={`text-2xl ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+                        {isCorrect ? '✅' : '❌'}
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-white font-semibold mb-2">
+                          Question {index + 1}: {question.question}
+                        </div>
+                        <div className="text-sm space-y-1">
+                          <div className={isCorrect ? 'text-green-200' : 'text-red-200'}>
+                            Your answer: {question.options[userAnswer]}
+                          </div>
+                          {!isCorrect && (
+                            <div className="text-green-200">
+                              Correct answer: {question.options[question.correctAnswer]}
+                            </div>
+                          )}
+                          <div className="text-gray-300 text-xs mt-2">
+                            💡 {question.explanation}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Completion Button */}
+            <div className="text-center">
+              <button
+                onClick={handleQuizComplete}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+              >
+                🎓 Complete Python Laboratory & Return to Adventure Map
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -995,18 +1275,33 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
                 </div>
                 
                 <div className={`p-4 rounded-lg ${
-                  predictionXP > 0 ? 'bg-green-800/30' : 'bg-blue-800/30'
+                  predictionXP > 0 ? 'bg-green-800/30' : 'bg-orange-800/30'
                 }`}>
-                  <p className={`text-sm ${
-                    predictionXP > 0 ? 'text-green-200' : 'text-blue-200'
+                  <div className={`flex items-start gap-2 ${
+                    predictionXP > 0 ? 'text-green-200' : 'text-orange-200'
                   }`}>
-                    {currentLine.prediction.explanation}
-                  </p>
+                    <Lightbulb className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm">
+                      {currentLine.prediction.explanation}
+                    </p>
+                  </div>
                 </div>
                 
-                {predictionXP > 0 && (
+                {predictionXP > 0 ? (
                   <div className="mt-4 text-center text-green-400 text-sm animate-pulse">
                     ✨ Moving to next line automatically...
+                  </div>
+                ) : (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={handleTryAgain}
+                      className="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white rounded-lg font-semibold transition-all transform hover:scale-105"
+                    >
+                      🔄 Try Again
+                    </button>
+                    <p className="text-orange-300 text-sm mt-2">
+                      💪 Learning happens through practice - give it another shot!
+                    </p>
                   </div>
                 )}
               </div>
