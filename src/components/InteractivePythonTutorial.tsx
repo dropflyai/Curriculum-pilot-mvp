@@ -33,7 +33,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
     {
       id: 'welcome',
       title: 'Welcome to Python Programming',
-      explanation: 'Let\'s start with the basics! Python is like having a conversation with your computer. You give it instructions, and it responds. Watch how we can make Python say hello to us.',
+      explanation: "Let's start with the basics! Python is like having a conversation with your computer. You give it instructions, and it responds. Watch how we can make Python say hello to us.",
       code: 'print("Hello, future AI creator!")\nprint("Welcome to your Python journey!")',
       expectedOutput: 'Hello, future AI creator!\nWelcome to your Python journey!',
       emoji: '👋',
@@ -64,7 +64,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
       code: 'mood = input("How are you feeling? (happy/sad/stressed) ")\n\nif mood == "happy":\n    print("That\'s wonderful! Keep spreading those good vibes! 😊")\nelif mood == "sad":\n    print("I\'m sorry you\'re feeling down. Remember, this feeling will pass. 🤗")\nelif mood == "stressed":\n    print("Take a deep breath. You\'ve got this! Try some relaxation. 🧘")\nelse:\n    print("Whatever you\'re feeling is valid. I\'m here to help! 💙")',
       expectedOutput: '# When user types "stressed":\nTake a deep breath. You\'ve got this! Try some relaxation. 🧘',
       emoji: '🤔',
-      tip: 'elif means "else if" - it\'s like saying "if not that, then maybe this?"'
+      tip: 'elif means "else if" - it is like saying "if not that, then maybe this?"'
     },
     {
       id: 'lists-advice',
@@ -87,11 +87,11 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
     {
       id: 'building-advisor-step1',
       title: 'Step 1: Create Your AI Advisor Foundation',
-      explanation: 'Now we\'re building YOUR AI advisor! We start by creating the basic structure - asking what kind of help they need and storing different types of advice. This is like building the brain of your advisor!',
+      explanation: "Now we're building YOUR AI advisor! We start by creating the basic structure - asking what kind of help they need and storing different types of advice. This is like building the brain of your advisor!",
       code: 'import random\n\n# Your AI Advisor\'s Knowledge Base\npositive_affirmations = [\n    "You are capable of amazing things! 🌟",\n    "Today is full of possibilities! ✨",\n    "You have the power to make great choices! 💪",\n    "Your potential is limitless! 🚀"\n]\n\nstudy_advice = [\n    "Break big tasks into smaller steps",\n    "Create a study schedule and stick to it",\n    "Find your peak focus hours",\n    "Use active learning techniques"\n]\n\nstress_relief = [\n    "Take 5 deep breaths",\n    "Go for a short walk",\n    "Listen to calming music", \n    "Talk to someone you trust"\n]\n\nprint("🤖 AI Advisor Foundation Created!")\nprint("Knowledge base loaded with positive advice!")',
       expectedOutput: '🤖 AI Advisor Foundation Created!\nKnowledge base loaded with positive advice!',
       emoji: '🏗️',
-      tip: 'We\'re organizing advice into categories - this makes our AI smarter and more helpful!'
+      tip: "We're organizing advice into categories - this makes our AI smarter and more helpful!"
     },
     {
       id: 'building-advisor-step2',
@@ -105,7 +105,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
     {
       id: 'building-advisor-step3',
       title: 'Step 3: Connect Brain to Advice Database',
-      explanation: 'Now we connect the AI brain to our advice database! When the brain decides what help is needed, this function grabs the perfect advice. It\'s like having a smart librarian who knows exactly which book you need.',
+      explanation: "Now we connect the AI brain to our advice database! When the brain decides what help is needed, this function grabs the perfect advice. It's like having a smart librarian who knows exactly which book you need.",
       code: 'def get_personalized_advice(advice_type, user_name="friend"):\n    """Get specific advice based on what the AI brain detected"""\n    \n    if advice_type == "stress_relief":\n        advice = random.choice(stress_relief)\n        response = f"Hey {user_name}, I can tell you\'re feeling overwhelmed. Here\'s what helps: {advice} 🌱"\n    \n    elif advice_type == "study_advice":\n        advice = random.choice(study_advice)\n        response = f"{user_name}, let\'s boost your study game! Try this: {advice} 📚"\n    \n    else:  # positive_affirmations\n        advice = random.choice(positive_affirmations)\n        response = f"{user_name}, here\'s some positivity for you: {advice} 💝"\n    \n    return response\n\n# Test the complete system\nuser_input = "I have a big test tomorrow and I\'m stressed"\nbrain_decision = ai_advisor_brain(user_input)\npersonalized_response = get_personalized_advice(brain_decision, "Alex")\n\nprint("\\n=== AI ADVISOR IN ACTION ===")\nprint(f"Student: {user_input}")\nprint(f"AI Advisor: {personalized_response}")',
       expectedOutput: '\n=== AI ADVISOR IN ACTION ===\nStudent: I have a big test tomorrow and I\'m stressed\nAI Advisor: Hey Alex, I can tell you\'re feeling overwhelmed. Here\'s what helps: Take 5 deep breaths 🌱',
       emoji: '🔗',
@@ -114,11 +114,11 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
     {
       id: 'building-advisor-step4',
       title: 'Step 4: Create the Complete AI Advisor',
-      explanation: 'This is it! We\'re putting everything together into one amazing AI advisor. This is your complete creation - it can listen, think, and respond just like a real counselor. You\'ve built something truly incredible!',
+      explanation: "This is it! We're putting everything together into one amazing AI advisor. This is your complete creation - it can listen, think, and respond just like a real counselor. You've built something truly incredible!",
       code: 'def school_positive_advisor():\n    """Your complete AI advisor - ready to help students!"""\n    print("🤖✨ Welcome to your School Positive AI Advisor! ✨🤖")\n    print("I\'m here to help you succeed and feel great about school!")\n    print("\\nType \'quit\' when you\'re ready to finish.\\n")\n    \n    while True:\n        # Get student input\n        user_message = input("💭 What\'s on your mind? ")\n        \n        # Check if they want to stop\n        if user_message.lower() == \'quit\':\n            print("\\n🌟 Thanks for chatting! You\'ve got this! 🌟")\n            break\n        \n        # Get student name for personalization\n        if "my name is" in user_message.lower():\n            name = user_message.split("is")[-1].strip()\n            print(f"Nice to meet you, {name}! 😊")\n            continue\n        \n        # Use AI brain to analyze and respond\n        advice_type = ai_advisor_brain(user_message)\n        response = get_personalized_advice(advice_type)\n        \n        print(f"\\n🤖 {response}\\n")\n        print("---" * 20)\n\n# Launch your AI advisor!\nprint("🎉 CONGRATULATIONS! 🎉")\nprint("You\'ve successfully created your very own AI advisor!")\nprint("\\nReady to test it? Here we go...")\nschool_positive_advisor()',
       expectedOutput: '🎉 CONGRATULATIONS! 🎉\nYou\'ve successfully created your very own AI advisor!\n\nReady to test it? Here we go...\n🤖✨ Welcome to your School Positive AI Advisor! ✨🤖\nI\'m here to help you succeed and feel great about school!\n\nType \'quit\' when you\'re ready to finish.\n\n💭 What\'s on your mind? ',
       emoji: '🎉',
-      tip: 'You\'ve just built a real AI advisor! This is actual artificial intelligence programming!'
+      tip: "You've just built a real AI advisor! This is actual artificial intelligence programming!"
     }
   ]
 
@@ -443,7 +443,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
         <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30 text-center">
           <div className="text-8xl mb-4 animate-bounce">🎉</div>
           <h3 className="text-4xl font-bold text-white mb-4">
-            CONGRATULATIONS! YOU\'VE BUILT AN AI ADVISOR! 
+            CONGRATULATIONS! YOU&apos;VE BUILT AN AI ADVISOR! 
           </h3>
           <p className="text-purple-200 text-lg mb-6">
             You just created a real artificial intelligence program that can:
@@ -466,7 +466,7 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
             </div>
           </div>
           <p className="text-white text-lg font-semibold">
-            This is real AI programming - you\'re officially an AI developer! 🚀
+            This is real AI programming - you&apos;re officially an AI developer! 🚀
           </p>
         </div>
       )}
