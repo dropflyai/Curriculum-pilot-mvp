@@ -51,11 +51,11 @@ interface QuizQuestion {
   explanation: string
 }
 
-interface InteractiveCodeWalkthroughProps {
+interface PythonConceptsWalkthroughProps {
   onComplete?: () => void
 }
 
-export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCodeWalkthroughProps) {
+export default function PythonConceptsWalkthrough({ onComplete }: PythonConceptsWalkthroughProps) {
   const [currentSectionIndex, setSectionIndex] = useState(0)
   const [currentLineIndex, setLineIndex] = useState(0)
   const [completedSections, setCompletedSections] = useState<Set<string>>(new Set())
@@ -1109,8 +1109,8 @@ export default function InteractiveCodeWalkthrough({ onComplete }: InteractiveCo
           <div className="flex items-center gap-4">
             <div className="text-6xl animate-pulse">🐍</div>
             <div>
-              <h2 className="text-4xl font-bold text-white mb-1">Interactive Python Laboratory</h2>
-              <p className="text-purple-200 text-lg">Learn AI Programming Line by Line</p>
+              <h2 className="text-4xl font-bold text-white mb-1">Python Concepts Walkthrough</h2>
+              <p className="text-purple-200 text-lg">Master Programming Fundamentals Interactively</p>
             </div>
           </div>
           <div className="text-right">

@@ -17,9 +17,14 @@ const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
   loading: () => <div className="text-white">Loading Learning Options...</div>
 })
 
-const InteractiveCodeWalkthrough = dynamic(() => import('./InteractiveCodeWalkthrough'), {
+const PythonConceptsWalkthrough = dynamic(() => import('./PythonConceptsWalkthrough'), {
   ssr: false,
-  loading: () => <div className="text-white">Loading Interactive Python Tutorial...</div>
+  loading: () => <div className="text-white">Loading Python Concepts...</div>
+})
+
+const AIAdvisorLab = dynamic(() => import('./AIAdvisorLab'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading AI Advisor Lab...</div>
 })
 
 interface PythonLessonViewerProps {
@@ -255,29 +260,29 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     },
     { 
       id: 'code', 
-      title: 'Python Laboratory', 
-      subtitle: 'Build Your AI Advisor',
+      title: 'Python Concepts', 
+      subtitle: 'Learn Programming Fundamentals',
       icon: Code, 
       color: 'blue', 
       emoji: '🐍',
-      difficulty: 'Intermediate',
+      difficulty: 'Beginner',
       estimatedTime: '25 min',
       xpReward: 250,
-      description: 'Write Python code to create an intelligent school advisor chatbot',
-      objectives: ['Set up Python environment', 'Code the advisor logic', 'Test your chatbot']
+      description: 'Master Python fundamentals through interactive line-by-line walkthroughs',
+      objectives: ['Learn variables and functions', 'Practice with predictions', 'Master AI concepts']
     },
     { 
       id: 'tests', 
-      title: 'Enhancement Lab', 
-      subtitle: 'Improve Your Creation',
+      title: 'AI Advisor Lab', 
+      subtitle: 'Build Your Real AI Advisor',
       icon: Target, 
       color: 'orange', 
-      emoji: '🔧',
+      emoji: '🤖',
       difficulty: 'Intermediate',
-      estimatedTime: '15 min',
-      xpReward: 200,
-      description: 'Enhance your advisor with new features and capabilities',
-      objectives: ['Add more responses', 'Create new categories', 'Test enhancements']
+      estimatedTime: '20 min',
+      xpReward: 300,
+      description: 'Now create your actual AI advisor using the concepts you learned!',
+      objectives: ['Code your AI advisor', 'Test with real scenarios', 'Deploy your creation']
     },
     { 
       id: 'quiz', 
@@ -1069,58 +1074,29 @@ Now you understand how each type of help works behind the scenes. Time to bring 
             )}
 
             {currentTab === 'code' && (
-              <InteractiveCodeWalkthrough 
+              <PythonConceptsWalkthrough 
                 onComplete={() => {
-                  // Mark Python Laboratory as completed
+                  // Mark Python Concepts Walkthrough as completed
                   setPythonLabCompleted(true)
                   localStorage.setItem(`python-lab-completed-${lesson.id}`, 'true')
                   setCurrentTab('overview')
                   // Update progress
-                  onLessonComplete(calculateProgress() + 25) // Add 25% for completing Python Lab
+                  onLessonComplete(calculateProgress() + 25) // Add 25% for completing concepts walkthrough
                 }}
               />
             )}
 
             {currentTab === 'tests' && (
-              <div className="space-y-8">
-                {/* Enhancement Lab Content */}
-                <div className="bg-gradient-to-r from-orange-800/30 to-red-800/30 rounded-3xl p-8 border-2 border-orange-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">🔧</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Enhancement Lab</h2>
-                      <p className="text-orange-200 text-xl">Improve Your Creation</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Test Interface */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <h3 className="text-orange-300 font-bold text-xl mb-6 flex items-center gap-2">
-                    <Target className="h-6 w-6" />
-                    Enhancement Tasks 🔧
-                  </h3>
-                  <div className="grid gap-4">
-                    {lesson.modes[0].tests_ui.map((test, index) => (
-                      <div key={index} className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
-                        <div className="flex items-center justify-between">
-                          <span className="text-white font-medium">{test.desc}</span>
-                          <button 
-                            onClick={() => handleTestComplete(test.id)}
-                            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                              testState.completed[test.id] 
-                                ? 'bg-green-600 text-white' 
-                                : 'bg-orange-600 hover:bg-orange-500 text-white'
-                            }`}
-                          >
-                            {testState.completed[test.id] ? '✅ Completed' : '▶️ Complete Task'}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <AIAdvisorLab 
+                onComplete={() => {
+                  // Mark AI Advisor Lab as completed
+                  setPythonLabCompleted(true)
+                  localStorage.setItem(`python-lab-completed-${lesson.id}`, 'true')
+                  setCurrentTab('overview')
+                  // Update progress
+                  onLessonComplete(calculateProgress() + 25) // Add 25% for completing AI advisor lab
+                }}
+              />
             )}
 
             {currentTab === 'quiz' && (
