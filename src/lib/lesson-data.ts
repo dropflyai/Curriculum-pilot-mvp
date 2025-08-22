@@ -813,11 +813,12 @@ print("\\n🎯 Your goal: Create an AI that makes school life better for everyon
           ]
         },
         checklist: [
-          "I understand how the message analyzer categorizes student problems.",
-          "I can explain why positive, growth-focused responses are important.",
-          "I added new response options to make the advisor more helpful.",
-          "I tested the advisor with realistic student scenarios.",
-          "I can identify when an issue might need human adult support."
+          "I completed the Knowledge Quest and learned Python & AI concepts.",
+          "I mastered Python fundamentals through the interactive concepts walkthrough.",
+          "I built my own AI advisor with knowledge base, brain function, and response system.",
+          "I tested my AI advisor with real student scenarios and verified it works.",
+          "I understand how AI can help students with personalized, ethical responses.",
+          "I'm ready to claim my Python programming badge and advance to the next level!"
         ],
         flashcards: [
           // Category: The 4 Types of Help Students Need

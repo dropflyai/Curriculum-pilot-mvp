@@ -57,6 +57,7 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const [codeExecuted, setCodeExecuted] = useState(false)
   const [knowledgeQuestCompleted, setKnowledgeQuestCompleted] = useState(false)
   const [pythonLabCompleted, setPythonLabCompleted] = useState(false)
+  const [aiAdvisorLabCompleted, setAiAdvisorLabCompleted] = useState(false)
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -100,25 +101,33 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const updateChecklistFromProgress = () => {
     const newCompleted: Record<number, boolean> = {}
     
-    // Mark items complete based on progress
-    if (currentTab !== 'learn' && currentTab !== 'overview') {
-      newCompleted[0] = true // Viewed learn content
+    // Updated checklist items based on new lesson structure:
+    // 0: "I completed the Knowledge Quest and learned Python & AI concepts."
+    if (knowledgeQuestCompleted) {
+      newCompleted[0] = true
     }
     
-    if (codeExecuted) {
-      newCompleted[1] = true // Executed code
+    // 1: "I mastered Python fundamentals through the interactive concepts walkthrough."
+    if (pythonLabCompleted) {
+      newCompleted[1] = true
     }
     
-    if (testState.completed['responses_added']) {
-      newCompleted[2] = true // Enhanced responses
+    // 2: "I built my own AI advisor with knowledge base, brain function, and response system."
+    // 3: "I tested my AI advisor with real student scenarios and verified it works."
+    // These will be marked by the AIAdvisorLab component completion
+    if (aiAdvisorLabCompleted) {
+      newCompleted[2] = true
+      newCompleted[3] = true
     }
     
-    if (testState.completed['new_category']) {
-      newCompleted[3] = true // Added new category
+    // 4: "I understand how AI can help students with personalized, ethical responses."
+    if (quizState.submitted && quizState.score >= 80) {
+      newCompleted[4] = true
     }
     
-    if (testState.completed['personal_test']) {
-      newCompleted[4] = true // Tested with personal messages
+    // 5: "I'm ready to claim my Python programming badge and advance to the next level!"
+    if (newCompleted[0] && newCompleted[1] && newCompleted[2] && newCompleted[3] && newCompleted[4]) {
+      newCompleted[5] = true
     }
 
     // Update checklist state if there are changes
@@ -175,6 +184,12 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     const plCompleted = localStorage.getItem(`python-lab-completed-${lesson.id}`)
     if (plCompleted === 'true') {
       setPythonLabCompleted(true)
+    }
+    
+    // Load AI Advisor Lab completion status
+    const aiCompleted = localStorage.getItem(`ai-advisor-lab-completed-${lesson.id}`)
+    if (aiCompleted === 'true') {
+      setAiAdvisorLabCompleted(true)
     }
   }, [])
 
@@ -522,11 +537,11 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
               // Progressive unlock logic: each mission unlocks the next
               const isLocked = (() => {
                 if (index === 0) return false; // Knowledge Quest is always unlocked
-                if (index === 1) return !knowledgeQuestCompleted; // Python Lab unlocks after Knowledge Quest
-                if (index === 2) return !pythonLabCompleted; // Enhancement Lab unlocks after Python Lab
-                if (index === 3) return !pythonLabCompleted; // Python Mastery unlocks after Python Lab
-                if (index === 4) return !pythonLabCompleted; // Final Review unlocks after Python Lab
-                if (index === 5) return !pythonLabCompleted; // Victory Ceremony unlocks after Python Lab
+                if (index === 1) return !knowledgeQuestCompleted; // Python Concepts unlocks after Knowledge Quest
+                if (index === 2) return !pythonLabCompleted; // AI Advisor Lab unlocks after Python Concepts
+                if (index === 3) return !aiAdvisorLabCompleted; // Python Mastery unlocks after AI Advisor Lab
+                if (index === 4) return !aiAdvisorLabCompleted; // Final Review unlocks after AI Advisor Lab
+                if (index === 5) return !aiAdvisorLabCompleted; // Victory Ceremony unlocks after AI Advisor Lab
                 return true;
               })()
               const isEven = index % 2 === 0
@@ -1090,8 +1105,8 @@ Now you understand how each type of help works behind the scenes. Time to bring 
               <AIAdvisorLab 
                 onComplete={() => {
                   // Mark AI Advisor Lab as completed
-                  setPythonLabCompleted(true)
-                  localStorage.setItem(`python-lab-completed-${lesson.id}`, 'true')
+                  setAiAdvisorLabCompleted(true)
+                  localStorage.setItem(`ai-advisor-lab-completed-${lesson.id}`, 'true')
                   setCurrentTab('overview')
                   // Update progress
                   onLessonComplete(calculateProgress() + 25) // Add 25% for completing AI advisor lab
