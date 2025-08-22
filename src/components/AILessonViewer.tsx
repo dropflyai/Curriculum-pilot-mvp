@@ -851,15 +851,22 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             {currentTab === 'learn' && (
               <div className="space-y-8">
                 {/* Check if lesson has slides, use SlideViewer, otherwise use traditional content */}
-                {(() => {
-                  console.log('DEBUG: currentModeData:', currentModeData)
-                  console.log('DEBUG: learn_slides exists:', !!currentModeData.learn_slides)
-                  console.log('DEBUG: learn_slides length:', currentModeData.learn_slides?.length)
-                  return null
-                })()}
-                {currentModeData.learn_slides && currentModeData.learn_slides.length > 0 ? (
+                {lesson.id === 'week-02' ? (
                   <SlideViewer 
-                    slides={currentModeData.learn_slides}
+                    slides={currentModeData.learn_slides || [
+                      {
+                        id: 'test-slide-1',
+                        title: 'Building Your AI Study Buddy',
+                        emoji: '🎓',
+                        content: `## Test Slide 1\n\nThis is a test slide to verify the SlideViewer component works.\n\n### Your 7-Step Mission\n\n1. Test slides\n2. Verify navigation\n3. Check content`
+                      },
+                      {
+                        id: 'test-slide-2', 
+                        title: 'How AI Works',
+                        emoji: '🤖',
+                        content: `## Test Slide 2\n\nThis is the second test slide.\n\n### Key Concepts\n\n- Natural Language Processing\n- Sentiment Analysis\n- Response Generation`
+                      }
+                    ]}
                     onSlideComplete={(slideId) => {
                       console.log('Slide completed:', slideId)
                     }}

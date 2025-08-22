@@ -15,14 +15,7 @@ export default function LessonPage() {
   const params = useParams()
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lesson] = useState(() => {
-    const lessonData = getAILesson(params.id as string)
-    console.log('DEBUG LESSON PAGE: Loading lesson', params.id, lessonData)
-    if (lessonData?.modes?.[0]?.learn_slides) {
-      console.log('DEBUG: Lesson has slides:', lessonData.modes[0].learn_slides.length)
-    }
-    return lessonData
-  })
+  const [lesson] = useState(getAILesson(params.id as string))
   const [showRewards, setShowRewards] = useState(false)
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [quizScore, setQuizScore] = useState<number | undefined>()
