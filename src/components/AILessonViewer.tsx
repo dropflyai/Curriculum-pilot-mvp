@@ -851,6 +851,12 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             {currentTab === 'learn' && (
               <div className="space-y-8">
                 {/* Check if lesson has slides, use SlideViewer, otherwise use traditional content */}
+                {(() => {
+                  console.log('DEBUG: currentModeData:', currentModeData)
+                  console.log('DEBUG: learn_slides exists:', !!currentModeData.learn_slides)
+                  console.log('DEBUG: learn_slides length:', currentModeData.learn_slides?.length)
+                  return null
+                })()}
                 {currentModeData.learn_slides && currentModeData.learn_slides.length > 0 ? (
                   <SlideViewer 
                     slides={currentModeData.learn_slides}
