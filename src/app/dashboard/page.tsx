@@ -7,7 +7,6 @@ import { getAllLessons, Lesson } from '@/lib/lesson-data'
 import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
-import LessonDebugger from '@/components/LessonDebugger'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -326,25 +325,6 @@ export default function Dashboard() {
         </div>
 
 
-        {/* 🚨 WEEK 2 DEPLOYMENT TEST 🚨 */}
-        <div className="mb-8 bg-red-600 border-8 border-yellow-400 p-8 rounded-lg">
-          <div className="text-center">
-            <h2 className="text-6xl font-bold text-white mb-4">🚨 WEEK 2 TEST - DEPLOYMENT CHECK 🚨</h2>
-            <p className="text-white text-2xl mb-4">Current lesson count: {lessons.length}</p>
-            <div className="bg-yellow-400 text-black p-4 rounded-lg mb-4">
-              <h3 className="text-xl font-bold mb-2">All Lessons:</h3>
-              {lessons.map(lesson => (
-                <div key={lesson.id} className="text-lg font-bold">
-                  • {lesson.id}: {lesson.title}
-                </div>
-              ))}
-            </div>
-            <div className="bg-green-400 text-black p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">Week 2 Check:</h3>
-              <p className="text-lg">Week 2 exists: {lessons.find(l => l.id === 'week-02') ? 'YES ✅' : 'NO ❌'}</p>
-            </div>
-          </div>
-        </div>
 
         {/* Section 1 Homework */}
         <div className="mb-8">
