@@ -500,126 +500,187 @@ Attach a metrics screenshot.`,
         labels: ['encouragement', 'study-tips', 'motivation', 'goal-setting'],
         learn_md: `# 🎓 Build Your Own School Success Advisor!
 
-## What We're Building Today
+---
+
+## 📖 What We're Building Today
 
 Imagine having a friendly AI buddy who's always there when you need help with school. Whether you're stressed about a test, overwhelmed with homework, or just need some motivation - your AI advisor will know exactly what to say!
 
-**Think about it:** What if you had a smart friend who:
-- Never judges you when you're struggling
-- Always has helpful study tips
-- Knows how to motivate you when you're feeling down
-- Remembers what works best for YOU
+### 🤔 Think about it: What if you had a smart friend who...
 
-That's exactly what we're going to build today using Python!
+- **Never judges you** when you're struggling
+- **Always has helpful study tips** ready to share
+- **Knows how to motivate you** when you're feeling down  
+- **Remembers what works best** for YOU specifically
+
+**That's exactly what we're going to build today using Python!**
+
+---
 
 ## 🤖 How AI Advisors Actually Work
 
 Before we start coding, let's understand what makes a good AI advisor. It's like teaching a robot to be a really good friend!
 
-### The 4 Types of Help Students Need:
+### 💬 The 4 Types of Help Students Need:
 
-**1. 🎯 Encouragement** - When you're feeling down about grades or school
-- *Student says:* "I got a D on my history test and feel stupid"
-- *AI responds:* "Getting a tough grade doesn't mean you're stupid! Let's figure out what happened and make a study plan for next time."
+#### 1. 🎯 **Encouragement** - When you're feeling down about grades or school
 
-**2. 📚 Study Tips** - When you need help figuring out HOW to study
-- *Student says:* "I have a huge science test tomorrow and don't know where to start"
-- *AI responds:* "Let's break this down! Try the 20-20-20 method: 20 minutes reviewing notes, 20 minutes practicing problems, 20 minutes explaining concepts out loud."
+**Student says:** *"I got a D on my history test and feel stupid"*
 
-**3. 🚀 Motivation** - When you just don't feel like doing the work
-- *Student says:* "I have so much homework and just want to watch Netflix"
-- *AI responds:* "That feeling is totally normal! Try the 15-minute rule: commit to just 15 minutes of homework. Often starting is the hardest part."
+**AI responds:** *"Getting a tough grade doesn't mean you're stupid! Let's figure out what happened and make a study plan for next time."*
 
-**4. 🎯 Goal Setting** - When you want to improve but don't know how
-- *Student says:* "I want to raise my GPA but don't know how"
-- *AI responds:* "Great goal! Let's create a specific plan. What's your current GPA and target? We can set weekly goals for each class."
+---
+
+#### 2. 📚 **Study Tips** - When you need help figuring out HOW to study
+
+**Student says:** *"I have a huge science test tomorrow and don't know where to start"*
+
+**AI responds:** *"Let's break this down! Try the 20-20-20 method: 20 minutes reviewing notes, 20 minutes practicing problems, 20 minutes explaining concepts out loud."*
+
+---
+
+#### 3. 🚀 **Motivation** - When you just don't feel like doing the work
+
+**Student says:** *"I have so much homework and just want to watch Netflix"*
+
+**AI responds:** *"That feeling is totally normal! Try the 15-minute rule: commit to just 15 minutes of homework. Often starting is the hardest part."*
+
+---
+
+#### 4. 🎯 **Goal Setting** - When you want to improve but don't know how
+
+**Student says:** *"I want to raise my GPA but don't know how"*
+
+**AI responds:** *"Great goal! Let's create a specific plan. What's your current GPA and target? We can set weekly goals for each class."*
+
+---
 
 ## 🧠 Why Positive Thinking Actually Works
 
 Did you know that scientists have proven positive thinking helps with school? Here are the real facts:
 
+### 📊 Research Results:
+
 - Students who use positive self-talk score **23% better** on tests
-- Students who practice growth mindset report **40% less stress**
+- Students who practice growth mindset report **40% less stress**  
 - Your brain literally changes when you think positively!
 
-### Growth Mindset Examples (This is how your AI will help students think):
+### 🔄 Growth Mindset Examples
 
-**Instead of:** "I'm terrible at math" 
-**Your AI teaches:** "I'm still learning math concepts"
+*This is how your AI will help students think:*
 
-**Instead of:** "I always fail tests" 
-**Your AI teaches:** "I can improve my test-taking strategies"
+| ❌ **Fixed Mindset** | ✅ **Growth Mindset** |
+|---------------------|----------------------|
+| "I'm terrible at math" | "I'm still learning math concepts" |
+| "I always fail tests" | "I can improve my test-taking strategies" |
+| "This is too hard" | "This is challenging, but I can figure it out" |
 
-**Instead of:** "This is too hard" 
-**Your AI teaches:** "This is challenging, but I can figure it out"
+---
 
 ## 🔧 The Programming Challenge
 
 Now let's think like programmers! To build a helpful AI advisor, our Python code needs to understand 4 important concepts:
 
-### 1. Natural Language Processing (NLP)
+### 1. 🔤 **Natural Language Processing (NLP)**
+
 - **What it is:** Teaching computers to understand human text
-- **Real example:** When you text "I'm stressed about the test tomorrow," the AI knows you need encouragement AND study tips
+- **Real example:** When you text *"I'm stressed about the test tomorrow,"* the AI knows you need encouragement AND study tips
 - **Why it's cool:** It's like giving your computer the ability to read emotions!
 
-### 2. Sentiment Analysis  
+---
+
+### 2. 😊 **Sentiment Analysis**
+
 - **What it is:** Figuring out if someone is happy, sad, frustrated, or excited
-- **Real example:** "I failed again" = sad, needs encouragement vs "I'm ready to try!" = motivated, needs a plan
+- **Real example:** *"I failed again"* = sad, needs encouragement vs *"I'm ready to try!"* = motivated, needs a plan
 - **Why it matters:** Your AI gives different help based on how someone is feeling
 
-### 3. Response Generation
+---
+
+### 3. 💭 **Response Generation**
+
 - **What it is:** Creating helpful, specific responses (not just "good luck!")
 - **Real example:** Instead of "study more," your AI says "try the 20-20-20 method I mentioned"
 - **The trick:** Having templates for different situations but making them feel personal
 
-### 4. Ethical AI
+---
+
+### 4. ⚖️ **Ethical AI**
+
 - **What it is:** Making sure your AI is safe and helpful, not harmful
 - **Real example:** Your AI says "talk to a counselor" for serious problems, not "just think positive"
 - **Why it's important:** With great coding power comes great responsibility!
+
+---
 
 ## 🌍 Real-World Impact - You're Building Something That Matters!
 
 Apps like the one you're building are already helping millions of students around the world:
 
-- **School counseling apps** help over **5 million students daily** with 24/7 support
-- **Study motivation platforms** help **78% of users** improve their study habits  
-- **Mental wellness tools** served **2.3 million teenagers** last year
-- **Academic coaching bots** are used by **340+ universities** worldwide
+### 📈 Impact Statistics:
 
-That's the power of what you're learning to build today!
+| Type of App | Number Helped | Success Rate |
+|-------------|---------------|--------------|
+| 📱 **School counseling apps** | 5+ million students daily | 24/7 support |
+| 🎯 **Study motivation platforms** | 78% of users | Improved study habits |
+| 🧠 **Mental wellness tools** | 2.3 million teens | Last year alone |
+| 🏫 **Academic coaching bots** | 340+ universities | Worldwide usage |
+
+**That's the power of what you're learning to build today!**
+
+---
 
 ## 🎯 Your Coding Mission - Step by Step
 
 Here's exactly what we're going to build today. Check off each step as you complete it:
 
-### ✅ Step 1: Set up the advisor framework
+### Phase 1: Foundation 🏗️
+
+#### ✅ **Step 1: Set up the advisor framework**
 Create Python classes and methods that can store different types of responses
 
-### ✅ Step 2: Create response categories  
+#### ✅ **Step 2: Create response categories**
 Build separate sections for encouragement, study tips, motivation, and goal setting
 
-### ✅ Step 3: Build a message classifier
+---
+
+### Phase 2: Intelligence 🤖
+
+#### ✅ **Step 3: Build a message classifier**
 Code that can read a student message and figure out what kind of help they need
 
-### ✅ Step 4: Design response templates
+#### ✅ **Step 4: Design response templates**
 Write encouraging, helpful responses that actually work (not just "good luck!")
 
-### ✅ Step 5: Add personality elements  
+---
+
+### Phase 3: Personality ✨
+
+#### ✅ **Step 5: Add personality elements**
 Make your AI sound like a supportive friend, not a robot
 
-### ✅ Step 6: Test with realistic scenarios
+#### ✅ **Step 6: Test with realistic scenarios**
 Try out your AI with real problems students face
 
-### ✅ Step 7: Implement safety features
+---
+
+### Phase 4: Safety 🛡️
+
+#### ✅ **Step 7: Implement safety features**
 Add boundaries so your AI knows when to suggest talking to adults
+
+---
 
 ## 🚀 Ready to Start Coding?
 
 You're about to create technology that could genuinely help students succeed in school. This isn't just a coding exercise - you're building a tool that understands real challenges and provides meaningful support.
 
-**Your goal:** Create an AI that makes school life better for everyone!
+### 🎯 **Your Goal:** 
+**Create an AI that makes school life better for everyone!**
 
-Let's start by looking at the starter code and building your first AI advisor function...`,
+Let's start by looking at the starter code and building your first AI advisor function...
+
+---`,
         code: {
           starter: `# 🎓 School-Positive Advisor - Your AI Study Buddy!
 # Let's build a chatbot that helps students succeed!
