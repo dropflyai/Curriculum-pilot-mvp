@@ -854,9 +854,18 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           <div className="max-w-7xl mx-auto p-8">
             {currentTab === 'learn' && (
               <div className="space-y-8">
+                {/* DEBUG INFO */}
+                <div className="bg-red-500 text-white p-4 rounded">
+                  DEBUG: currentTab = {currentTab}, lesson.id = {lesson.id}
+                </div>
+                
                 {/* Week 2 - School Success Advisor: Offer choice between Slides and Flashcards */}
                 {lesson.id === 'week-02' ? (
-                  <LearningModeSelector 
+                  <div className="space-y-4">
+                    <div className="bg-blue-500 text-white p-4 rounded">
+                      FALLBACK: Week-02 detected, attempting to load LearningModeSelector...
+                    </div>
+                    <LearningModeSelector 
                     slides={[
                       {
                         id: 'slide-1',
@@ -1180,6 +1189,11 @@ You're about to create technology that could genuinely help students succeed in 
                       console.log('Learning mode completed!')
                     }}
                   />
+                  </div>
+                ) : lesson.id === 'week-02' ? (
+                  <div className="bg-yellow-500 text-black p-4 rounded">
+                    ERROR: Week-02 detected but LearningModeSelector failed to load. Lesson ID: {lesson.id}
+                  </div>
                 ) : (
                   <>
                     {/* Traditional Knowledge Quest Content (for lessons without slides) */}
