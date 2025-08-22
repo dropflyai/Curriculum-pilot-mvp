@@ -678,46 +678,226 @@ Teach your AI when to suggest talking to teachers, counselors, or parents for se
                       },
                       {
                         id: 'slide-2', 
-                        title: 'The Science Behind AI Helpers',
+                        title: 'The 4 Types of Help Students Need',
                         emoji: '🤖',
-                        content: `# 🤖 How AI Advisors Work
+                        content: `# 🤖 The 4 Types of Help Students Need
 
-## The 4 Types of Help Students Need
+Your AI will be like a Swiss Army knife for student success - equipped to handle different challenges students face every day.
 
-### 1. 💪 Encouragement 
-**When:** Students feel like giving up or think they're not smart enough
-**What your AI does:** Reminds them of past successes and builds confidence
-**Example:** "Remember when you thought algebra was impossible? Look at you now!"
+## 🔍 Let's Explore Each Type
 
-### 2. 🎯 Study Tips
-**When:** Students don't know how to learn effectively 
-**What your AI does:** Suggests specific, proven study techniques
-**Example:** "Try the 15-minute rule - study for just 15 minutes. You'll often keep going!"
+Each type of help requires different AI thinking and approaches. We'll dive deep into how your AI will work behind the scenes for each one:
 
-### 3. 🔥 Motivation
-**When:** Students know what to do but can't get started
-**What your AI does:** Connects schoolwork to their personal goals and dreams
-**Example:** "That biology test? It's practice for becoming the doctor you want to be!"
+### 1. 💪 **Encouragement** - Building Confidence
+*When students feel defeated or think they're not smart enough*
 
-### 4. 📈 Goal Setting
-**When:** Students feel overwhelmed or don't know where to focus
-**What your AI does:** Helps break big challenges into manageable steps
-**Example:** "Let's turn 'improve math grade' into 'do 3 practice problems daily this week'"
+### 2. 🎯 **Study Tips** - Learning How to Learn  
+*When students don't know effective study strategies*
 
-## 🧠 The Programming Behind the Magic
+### 3. 🔥 **Motivation** - Igniting the Spark
+*When students know what to do but can't get started*
 
-Your AI uses **Natural Language Processing** to understand what students write, **Sentiment Analysis** to detect emotions, and **Response Generation** to craft helpful replies.
+### 4. 📈 **Goal Setting** - Creating Clear Paths
+*When students feel overwhelmed and need direction*
 
-**Fun Fact:** Studies show positive AI interactions can improve test scores by 23%!
+## 🚀 Your Creative Challenge
 
-## 🌍 Real-World Impact
+As we explore each type, think about:
+- What would YOU want an AI to say in these situations?
+- How can you make your AI sound genuinely caring, not robotic?
+- What creative responses could surprise and delight students?
 
-Apps like yours help millions of students:
-- 5 million daily users of school counseling apps
-- 78% of students improve study habits with AI coaching
-- 340+ universities use academic coaching bots
+**Let's dive deeper into each type and see how the AI magic happens!**`
+                      },
+                      {
+                        id: 'slide-3',
+                        title: '💪 Encouragement: Building Student Confidence',
+                        emoji: '💪',
+                        content: `# 💪 Encouragement: Building Student Confidence
 
-**Ready to code this amazing technology?**`
+## 🎯 The Challenge
+Students say things like:
+- *"I got a D on my history test and feel stupid"*
+- *"Everyone else gets math but I just don't"*
+- *"I'm not smart enough for AP classes"*
+
+## 🧠 How Your AI Thinks Behind the Scenes
+
+### Step 1: Emotion Detection
+\`\`\`python
+# Your AI analyzes the text for emotional clues
+negative_words = ["stupid", "can't", "terrible", "hate"]
+confidence_level = analyze_confidence(student_message)
+# Result: confidence_level = "very_low"
+\`\`\`
+
+### Step 2: Response Strategy Selection
+\`\`\`python
+if confidence_level == "very_low":
+    response_type = "gentle_encouragement_with_evidence"
+    include_past_success_reminder = True
+    tone = "warm_and_understanding"
+\`\`\`
+
+### Step 3: Personalized Response Generation
+Your AI crafts responses that:
+- **Acknowledge feelings**: "That D must feel really disappointing..."
+- **Reframe the situation**: "One test doesn't define your intelligence"
+- **Provide evidence**: "Remember when you improved your English grade?"
+- **Offer next steps**: "Let's figure out what happened and make a plan"
+
+## 🎨 Your Creative Opportunity
+How will YOUR AI show encouragement? Consider:
+- Personal touches: Remember student achievements
+- Metaphors: "Learning is like building muscle - it takes time"
+- Humor: "Even Einstein had bad days!"
+- Action plans: Turn discouragement into improvement strategies
+
+**Think: What would you want to hear when YOU feel defeated?**`
+                      },
+                      {
+                        id: 'slide-4',
+                        title: '🎯 Study Tips: Teaching How to Learn',
+                        emoji: '🎯',
+                        content: `# 🎯 Study Tips: Teaching How to Learn
+
+## 🎯 The Challenge
+Students say things like:
+- *"I have a huge science test tomorrow and don't know where to start"*
+- *"I studied for 3 hours but still failed"*
+- *"How do people actually memorize all this stuff?"*
+
+## 🧠 How Your AI Thinks Behind the Scenes
+
+### Step 1: Learning Challenge Analysis
+\`\`\`python
+# Your AI identifies the specific learning problem
+study_challenge = analyze_study_problem(student_message)
+subjects = extract_subjects(student_message)
+time_available = extract_time_constraint(student_message)
+
+# Result: challenge="overwhelmed", subject="science", time="1_day"
+\`\`\`
+
+### Step 2: Strategy Matching
+\`\`\`python
+if study_challenge == "overwhelmed" and time_available == "short":
+    strategy = "chunking_and_prioritization"
+    techniques = ["20-20-20_method", "concept_mapping", "practice_problems"]
+\`\`\`
+
+### Step 3: Customized Study Plan
+Your AI creates specific, actionable advice:
+- **Break it down**: "Let's turn that giant test into 3 bite-sized chunks"
+- **Use proven techniques**: "Try the 20-20-20 method: 20 min reading, 20 min problems, 20 min explaining"
+- **Match learning style**: Visual learners get diagrams, auditory learners get explanations
+- **Set realistic goals**: "Aim for understanding 80% really well vs. 100% poorly"
+
+## 🎨 Your Creative Opportunity
+How will YOUR AI teach study skills? Consider:
+- **Gamification**: "Treat studying like leveling up in a video game"
+- **Real analogies**: "Studying is like training for sports..."
+- **Memory tricks**: Creative mnemonics and associations
+- **Personal strategies**: "What's worked for you before?"
+
+**Think: What study techniques actually work for YOU?**`
+                      },
+                      {
+                        id: 'slide-5',
+                        title: '🔥 Motivation: Igniting the Inner Spark',
+                        emoji: '🔥',
+                        content: `# 🔥 Motivation: Igniting the Inner Spark
+
+## 🎯 The Challenge
+Students say things like:
+- *"I have so much homework and just want to watch Netflix"*
+- *"Why do I even need to learn this?"*
+- *"I'll start tomorrow... again"*
+
+## 🧠 How Your AI Thinks Behind the Scenes
+
+### Step 1: Motivation Pattern Recognition
+\`\`\`python
+# Your AI identifies procrastination patterns
+motivation_level = analyze_energy(student_message)
+procrastination_type = identify_delay_reason(student_message)
+personal_interests = recall_student_goals(student_id)
+
+# Result: motivation="low", type="overwhelm", interests=["medicine", "helping_people"]
+\`\`\`
+
+### Step 2: Connection Building
+\`\`\`python
+if personal_interests == ["medicine"] and subject == "biology":
+    connection_strategy = "link_to_career_dreams"
+    motivation_type = "purpose_driven"
+\`\`\`
+
+### Step 3: Spark Generation
+Your AI creates motivational bridges:
+- **Connect to dreams**: "That biology test? It's practice for saving lives as a doctor"
+- **Make it relevant**: "Understanding genetics could help you cure diseases someday"
+- **Use psychology**: "Just 15 minutes. Your future self will thank you"
+- **Celebrate small wins**: "You opened your textbook - that's already winning!"
+
+## 🎨 Your Creative Opportunity
+How will YOUR AI motivate students? Consider:
+- **Future visualization**: Help them see their success story
+- **Hero's journey**: "Every expert was once a beginner"
+- **Personal challenges**: "What if you could prove yourself wrong?"
+- **Energy management**: Match motivation techniques to their mood
+
+**Think: What actually motivates YOU when you don't want to do something?**`
+                      },
+                      {
+                        id: 'slide-6',
+                        title: '📈 Goal Setting: Creating Clear Paths to Success',
+                        emoji: '📈',
+                        content: `# 📈 Goal Setting: Creating Clear Paths to Success
+
+## 🎯 The Challenge
+Students say things like:
+- *"I want to raise my GPA but don't know how"*
+- *"I have too much to do and feel overwhelmed"*
+- *"I want to get into college but it seems impossible"*
+
+## 🧠 How Your AI Thinks Behind the Scenes
+
+### Step 1: Goal Complexity Analysis
+\`\`\`python
+# Your AI breaks down overwhelming goals
+goal_size = analyze_goal_scope(student_message)
+current_situation = assess_starting_point(student_data)
+timeline = extract_deadline(student_message)
+
+# Result: goal_size="large", current_gpa=2.8, target_gpa=3.5, timeline="1_year"
+\`\`\`
+
+### Step 2: Smart Goal Creation
+\`\`\`python
+if goal_size == "large":
+    strategy = "break_into_weekly_milestones"
+    success_metrics = create_measurable_steps(current_situation, target)
+\`\`\`
+
+### Step 3: Actionable Path Building
+Your AI creates step-by-step roadmaps:
+- **Make it specific**: "Raise GPA" → "Improve math grade from C to B by doing 3 practice problems daily"
+- **Set milestones**: "Week 1: Master fractions, Week 2: Tackle equations"
+- **Track progress**: "You've completed 5/7 days this week - amazing consistency!"
+- **Adjust plans**: "Math is harder than expected? Let's spend 2 extra days on it"
+
+## 🎨 Your Creative Opportunity
+How will YOUR AI help students achieve dreams? Consider:
+- **Visual progress**: "You're 30% closer to your goal!"
+- **Celebration rituals**: "Time for a victory dance!"
+- **Obstacle planning**: "What if you have a bad day? Here's Plan B"
+- **Support systems**: "Who can cheer you on?"
+
+**Think: What helps YOU turn big dreams into reality?**
+
+## 🚀 Ready to Code This Magic?
+Now you understand how each type of help works behind the scenes. Time to bring your creative vision to life in Python!`
                       }
                     ]}
                     flashcards={[
