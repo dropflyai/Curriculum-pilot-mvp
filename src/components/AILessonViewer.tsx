@@ -16,6 +16,10 @@ const VocabularyTest = dynamic(() => import('./VocabularyTest'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Test...</div>
 })
+const FlashcardViewer = dynamic(() => import('./FlashcardViewer'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Flashcards...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
@@ -42,7 +46,7 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'checklist' | 'submit'>('overview')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit'>('overview')
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
@@ -251,7 +255,8 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     }
   }
 
-  const missions = [
+  // Build missions dynamically based on lesson content
+  const baseMissions = [
     { 
       id: 'learn', 
       title: 'Knowledge Quest', 
@@ -303,7 +308,28 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       xpReward: 120,
       description: 'Test your understanding with mystical questions about AI and machine learning',
       objectives: ['Answer concept questions', 'Solve practical problems', 'Score 70%+ to pass']
-    },
+    }
+  ]
+  
+  // Add flashcards mission if lesson has flashcards
+  if (currentModeData.flashcards && currentModeData.flashcards.length > 0) {
+    baseMissions.push({
+      id: 'flashcards',
+      title: 'Study Cards',
+      subtitle: 'Master Key Concepts',
+      icon: BookOpen,
+      color: 'indigo',
+      emoji: '🎴',
+      difficulty: 'Easy',
+      estimatedTime: '10 min',
+      xpReward: 80,
+      description: 'Review important concepts with interactive flashcards',
+      objectives: ['Study all flashcard categories', 'Test your memory', 'Reinforce learning']
+    })
+  }
+  
+  const missions = [
+    ...baseMissions,
     { 
       id: 'checklist', 
       title: 'Final Inspection', 
@@ -1284,6 +1310,54 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'flashcards' && currentModeData.flashcards && (
+              <div className="space-y-8">
+                {/* Study Cards Content */}
+                <div className="bg-gradient-to-r from-indigo-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-indigo-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🎴</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Study Cards</h2>
+                      <p className="text-indigo-200 text-xl">Master Key Concepts with Interactive Flashcards</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-indigo-900/40 rounded-2xl p-6 border border-indigo-500/30">
+                    <h3 className="text-indigo-300 font-bold text-xl mb-4">🎴 Study Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">📚</div>
+                        <h4 className="text-indigo-200 font-semibold mb-1">Review Core Concepts</h4>
+                        <p className="text-indigo-300/80 text-sm">Study organized topics with interactive flashcards</p>
+                      </div>
+                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧠</div>
+                        <h4 className="text-indigo-200 font-semibold mb-1">Test Your Memory</h4>
+                        <p className="text-indigo-300/80 text-sm">Practice recall and reinforce learning</p>
+                      </div>
+                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🎯</div>
+                        <h4 className="text-indigo-200 font-semibold mb-1">Track Progress</h4>
+                        <p className="text-indigo-300/80 text-sm">Monitor which concepts you've mastered</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Flashcard Viewer */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <FlashcardViewer 
+                    flashcards={currentModeData.flashcards}
+                    onComplete={() => {
+                      console.log('Flashcards completed!')
+                      // You could track completion here if needed
+                    }}
+                  />
                 </div>
               </div>
             )}
