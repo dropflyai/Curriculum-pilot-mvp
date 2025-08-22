@@ -24,6 +24,10 @@ const SlideViewer = dynamic(() => import('./SlideViewer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Slides...</div>
 })
+const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Learning Options...</div>
+})
 import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
@@ -850,9 +854,9 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           <div className="max-w-7xl mx-auto p-8">
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* Check if lesson has slides, use SlideViewer, otherwise use traditional content */}
+                {/* Week 2 - School Success Advisor: Offer choice between Slides and Flashcards */}
                 {lesson.id === 'week-02' ? (
-                  <SlideViewer 
+                  <LearningModeSelector 
                     slides={[
                       {
                         id: 'slide-1',
@@ -982,11 +986,166 @@ You're about to create technology that could genuinely help students succeed in 
 **Let's start by looking at the starter code and building your first AI advisor function! Click the Code tab to begin! 🚀✨**`
                       }
                     ]}
-                    onSlideComplete={(slideId) => {
-                      console.log('Slide completed:', slideId)
-                    }}
-                    onAllSlidesComplete={() => {
-                      console.log('All slides completed!')
+                    flashcards={[
+                      // 4 Types of Help
+                      {
+                        id: 'help-1',
+                        category: '4 Types of Help',
+                        front: '🎯 What is ENCOURAGEMENT help?',
+                        back: 'When students feel down about grades or abilities.\n\nExample: "I got a D and feel stupid" → AI responds with understanding and creates a study plan.',
+                        emoji: '🎯'
+                      },
+                      {
+                        id: 'help-2',
+                        category: '4 Types of Help',
+                        front: '📚 What are STUDY TIPS for?',
+                        back: 'When students don\'t know HOW to study.\n\nExample: "Huge test tomorrow, don\'t know where to start" → AI suggests 20-20-20 method (20 min notes, 20 min practice, 20 min explain).',
+                        emoji: '📚'
+                      },
+                      {
+                        id: 'help-3',
+                        category: '4 Types of Help',
+                        front: '🚀 When do students need MOTIVATION?',
+                        back: 'When they know what to do but don\'t feel like doing it.\n\nExample: "So much homework, want Netflix" → AI suggests 15-minute rule to start small.',
+                        emoji: '🚀'
+                      },
+                      {
+                        id: 'help-4',
+                        category: '4 Types of Help',
+                        front: '🎯 What is GOAL SETTING help?',
+                        back: 'When students want to improve but need a plan.\n\nExample: "Want to raise GPA" → AI helps create specific weekly goals for each class.',
+                        emoji: '🎯'
+                      },
+                      
+                      // Science of Positive Thinking
+                      {
+                        id: 'science-1',
+                        category: 'Positive Thinking Science',
+                        front: '🧠 How much do test scores improve with positive self-talk?',
+                        back: '23% on average! That\'s like going from a C to a B just by changing how you think.',
+                        emoji: '🧠'
+                      },
+                      {
+                        id: 'science-2',
+                        category: 'Positive Thinking Science',
+                        front: '💭 What is Growth Mindset?',
+                        back: 'Believing abilities can improve with effort. Students with growth mindset have 40% less stress during finals!',
+                        emoji: '💭'
+                      },
+                      {
+                        id: 'science-3',
+                        category: 'Positive Thinking Science',
+                        front: '🔄 How does AI reframe negative thoughts?',
+                        back: '"I\'m terrible at math" → "You\'re still learning math concepts"\n"I always fail" → "You haven\'t found the right strategy yet"\n"Too hard" → "Challenging means your brain is growing!"',
+                        emoji: '🔄'
+                      },
+                      
+                      // Programming Concepts
+                      {
+                        id: 'prog-1',
+                        category: 'Programming Concepts',
+                        front: '🔤 What is Natural Language Processing (NLP)?',
+                        back: 'Teaching computers to understand human text AND emotions.\n\nExample: "stressed about test tomorrow" → AI knows you need encouragement + study tips.',
+                        emoji: '🔤'
+                      },
+                      {
+                        id: 'prog-2',
+                        category: 'Programming Concepts',
+                        front: '😊 What is Sentiment Analysis?',
+                        back: 'Figuring out emotions from text.\n\n"I failed again..." (sad, needs encouragement) vs "I\'m ready to try!" (motivated, needs plan).',
+                        emoji: '😊'
+                      },
+                      {
+                        id: 'prog-3',
+                        category: 'Programming Concepts',
+                        front: '💬 What is Response Generation?',
+                        back: 'Creating helpful, specific responses.\n\nBAD: "Good luck!"\nGOOD: "Try the 20-20-20 study method I mentioned."',
+                        emoji: '💬'
+                      },
+                      {
+                        id: 'prog-4',
+                        category: 'Programming Concepts',
+                        front: '⚖️ What is Ethical AI?',
+                        back: 'Making AI safe and helpful. If someone mentions serious issues (depression, self-harm), AI says "talk to a counselor" not "think positive".',
+                        emoji: '⚖️'
+                      },
+                      
+                      // Real-World Impact
+                      {
+                        id: 'impact-1',
+                        category: 'Real-World Impact',
+                        front: '🌍 How many students use AI counseling apps daily?',
+                        back: 'Over 5 million students get 24/7 support from AI counseling apps!',
+                        emoji: '🌍'
+                      },
+                      {
+                        id: 'impact-2',
+                        category: 'Real-World Impact',
+                        front: '📊 What % of users improve study habits with AI?',
+                        back: '78% of students improve their study habits within 3 weeks of using motivation apps!',
+                        emoji: '📊'
+                      },
+                      {
+                        id: 'impact-3',
+                        category: 'Real-World Impact',
+                        front: '🏫 How many universities use AI coaching bots?',
+                        back: '340+ universities worldwide! Students using them are 31% more likely to graduate.',
+                        emoji: '🏫'
+                      },
+                      
+                      // The 7 Coding Steps
+                      {
+                        id: 'step-1',
+                        category: '7 Coding Steps',
+                        front: '1️⃣ Step 1: What is the advisor framework?',
+                        back: 'Create Python classes and methods to store different types of responses. Build the foundation!',
+                        emoji: '🏗️'
+                      },
+                      {
+                        id: 'step-2',
+                        category: '7 Coding Steps',
+                        front: '2️⃣ Step 2: What are response categories?',
+                        back: 'Separate sections for: Encouragement, Study Tips, Motivation, Goal Setting. Each has specialized responses.',
+                        emoji: '📂'
+                      },
+                      {
+                        id: 'step-3',
+                        category: '7 Coding Steps',
+                        front: '3️⃣ Step 3: What does the message classifier do?',
+                        back: 'Reads student messages and figures out what help they need. This is the AI magic - analyzing keywords and context!',
+                        emoji: '🔍'
+                      },
+                      {
+                        id: 'step-4',
+                        category: '7 Coding Steps',
+                        front: '4️⃣ Step 4: What makes good response templates?',
+                        back: 'Specific, actionable advice - not generic! Example: "Try 20-20-20 method" not just "study more".',
+                        emoji: '📝'
+                      },
+                      {
+                        id: 'step-5',
+                        category: '7 Coding Steps',
+                        front: '5️⃣ Step 5: How do you add personality?',
+                        back: 'Make AI sound like a supportive friend: add variety, appropriate humor, warmth. Use emojis and encouraging language!',
+                        emoji: '😊'
+                      },
+                      {
+                        id: 'step-6',
+                        category: '7 Coding Steps',
+                        front: '6️⃣ Step 6: What scenarios should you test?',
+                        back: 'Real student problems: failed tests, procrastination, test anxiety, goal setting. Test edge cases too!',
+                        emoji: '🧪'
+                      },
+                      {
+                        id: 'step-7',
+                        category: '7 Coding Steps',
+                        front: '7️⃣ Step 7: What safety features are needed?',
+                        back: 'Detect serious keywords (depression, self-harm). Immediately suggest talking to adults/counselors. Never try to handle serious issues alone!',
+                        emoji: '🛡️'
+                      }
+                    ]}
+                    onComplete={() => {
+                      console.log('Learning mode completed!')
                     }}
                   />
                 ) : (
