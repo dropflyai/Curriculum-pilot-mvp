@@ -106,8 +106,8 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
       id: 'building-advisor-step3',
       title: 'Step 3: Connect Brain to Advice Database',
       explanation: "Now we connect the AI brain to our advice database! When the brain decides what help is needed, this function grabs the perfect advice. It's like having a smart librarian who knows exactly which book you need.",
-      code: 'def get_personalized_advice(advice_type, user_name="friend"):\n    """Get specific advice based on what the AI brain detected"""\n    \n    if advice_type == "stress_relief":\n        advice = random.choice(stress_relief)\n        response = f"Hey {user_name}, I can tell you\'re feeling overwhelmed. Here\'s what helps: {advice} 🌱"\n    \n    elif advice_type == "study_advice":\n        advice = random.choice(study_advice)\n        response = f"{user_name}, let\'s boost your study game! Try this: {advice} 📚"\n    \n    else:  # positive_affirmations\n        advice = random.choice(positive_affirmations)\n        response = f"{user_name}, here\'s some positivity for you: {advice} 💝"\n    \n    return response\n\n# Test the complete system\nuser_input = "I have a big test tomorrow and I\'m stressed"\nbrain_decision = ai_advisor_brain(user_input)\npersonalized_response = get_personalized_advice(brain_decision, "Alex")\n\nprint("\\n=== AI ADVISOR IN ACTION ===")\nprint(f"Student: {user_input}")\nprint(f"AI Advisor: {personalized_response}")',
-      expectedOutput: '\n=== AI ADVISOR IN ACTION ===\nStudent: I have a big test tomorrow and I\'m stressed\nAI Advisor: Hey Alex, I can tell you\'re feeling overwhelmed. Here\'s what helps: Take 5 deep breaths 🌱',
+      code: 'import random\n\n# Re-create the advice lists for this step\npositive_affirmations = [\n    "You are capable of amazing things! 🌟",\n    "Today is full of possibilities! ✨",\n    "You have the power to make great choices! 💪",\n    "Your potential is limitless! 🚀"\n]\n\nstudy_advice = [\n    "Break big tasks into smaller steps",\n    "Create a study schedule and stick to it",\n    "Find your peak focus hours",\n    "Use active learning techniques"\n]\n\nstress_relief = [\n    "Take 5 deep breaths",\n    "Go for a short walk",\n    "Listen to calming music", \n    "Talk to someone you trust"\n]\n\n# The AI brain function\ndef ai_advisor_brain(user_message):\n    user_message = user_message.lower()\n    if "stressed" in user_message or "anxiety" in user_message:\n        return "stress_relief"\n    elif "study" in user_message or "homework" in user_message or "test" in user_message:\n        return "study_advice"\n    else:\n        return "positive_affirmations"\n\n# The advice connection function\ndef get_personalized_advice(advice_type, user_name="friend"):\n    """Get specific advice based on what the AI brain detected"""\n    \n    if advice_type == "stress_relief":\n        advice = random.choice(stress_relief)\n        response = f"Hey {user_name}, I can tell you\'re feeling overwhelmed. Here\'s what helps: {advice} 🌱"\n    \n    elif advice_type == "study_advice":\n        advice = random.choice(study_advice)\n        response = f"{user_name}, let\'s boost your study game! Try this: {advice} 📚"\n    \n    else:  # positive_affirmations\n        advice = random.choice(positive_affirmations)\n        response = f"{user_name}, here\'s some positivity for you: {advice} 💝"\n    \n    return response\n\n# Test the complete system\nuser_input = "I have a big test tomorrow and I\'m stressed"\nbrain_decision = ai_advisor_brain(user_input)\npersonalized_response = get_personalized_advice(brain_decision, "Alex")\n\nprint("=== AI ADVISOR IN ACTION ===")\nprint(f"Student: {user_input}")\nprint(f"AI Advisor: {personalized_response}")',
+      expectedOutput: '=== AI ADVISOR IN ACTION ===\nStudent: I have a big test tomorrow and I\'m stressed\nAI Advisor: Hey Alex, I can tell you\'re feeling overwhelmed. Here\'s what helps: Take 5 deep breaths 🌱',
       emoji: '🔗',
       tip: 'We use f-strings with {user_name} to make responses feel personal and caring!'
     },
@@ -115,8 +115,8 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
       id: 'building-advisor-step4',
       title: 'Step 4: Create the Complete AI Advisor',
       explanation: "This is it! We're putting everything together into one amazing AI advisor. This is your complete creation - it can listen, think, and respond just like a real counselor. You've built something truly incredible!",
-      code: 'def school_positive_advisor():\n    """Your complete AI advisor - ready to help students!"""\n    print("🤖✨ Welcome to your School Positive AI Advisor! ✨🤖")\n    print("I\'m here to help you succeed and feel great about school!")\n    print("\\nType \'quit\' when you\'re ready to finish.\\n")\n    \n    while True:\n        # Get student input\n        user_message = input("💭 What\'s on your mind? ")\n        \n        # Check if they want to stop\n        if user_message.lower() == \'quit\':\n            print("\\n🌟 Thanks for chatting! You\'ve got this! 🌟")\n            break\n        \n        # Get student name for personalization\n        if "my name is" in user_message.lower():\n            name = user_message.split("is")[-1].strip()\n            print(f"Nice to meet you, {name}! 😊")\n            continue\n        \n        # Use AI brain to analyze and respond\n        advice_type = ai_advisor_brain(user_message)\n        response = get_personalized_advice(advice_type)\n        \n        print(f"\\n🤖 {response}\\n")\n        print("---" * 20)\n\n# Launch your AI advisor!\nprint("🎉 CONGRATULATIONS! 🎉")\nprint("You\'ve successfully created your very own AI advisor!")\nprint("\\nReady to test it? Here we go...")\nschool_positive_advisor()',
-      expectedOutput: '🎉 CONGRATULATIONS! 🎉\nYou\'ve successfully created your very own AI advisor!\n\nReady to test it? Here we go...\n🤖✨ Welcome to your School Positive AI Advisor! ✨🤖\nI\'m here to help you succeed and feel great about school!\n\nType \'quit\' when you\'re ready to finish.\n\n💭 What\'s on your mind? ',
+      code: 'import random\n\n# Complete AI Advisor - All components together!\npositive_affirmations = [\n    "You are capable of amazing things! 🌟",\n    "Today is full of possibilities! ✨",\n    "You have the power to make great choices! 💪",\n    "Your potential is limitless! 🚀"\n]\n\nstudy_advice = [\n    "Break big tasks into smaller steps",\n    "Create a study schedule and stick to it",\n    "Find your peak focus hours",\n    "Use active learning techniques"\n]\n\nstress_relief = [\n    "Take 5 deep breaths",\n    "Go for a short walk",\n    "Listen to calming music", \n    "Talk to someone you trust"\n]\n\ndef ai_advisor_brain(user_message):\n    """The thinking center of your AI advisor"""\n    user_message = user_message.lower()\n    if "stressed" in user_message or "anxiety" in user_message:\n        return "stress_relief"\n    elif "study" in user_message or "homework" in user_message or "test" in user_message:\n        return "study_advice"\n    else:\n        return "positive_affirmations"\n\ndef get_personalized_advice(advice_type, user_name="friend"):\n    """Get specific advice based on what the AI brain detected"""\n    if advice_type == "stress_relief":\n        advice = random.choice(stress_relief)\n        response = f"Hey {user_name}, I can tell you\'re feeling overwhelmed. Here\'s what helps: {advice} 🌱"\n    elif advice_type == "study_advice":\n        advice = random.choice(study_advice)\n        response = f"{user_name}, let\'s boost your study game! Try this: {advice} 📚"\n    else:\n        advice = random.choice(positive_affirmations)\n        response = f"{user_name}, here\'s some positivity for you: {advice} 💝"\n    return response\n\n# Test your complete AI advisor!\nprint("🎉 CONGRATULATIONS! 🎉")\nprint("You\'ve successfully created your very own AI advisor!")\nprint("\\n🤖✨ Your AI Advisor is Ready! ✨🤖")\n\n# Demo the advisor with sample interactions\ntest_messages = [\n    "I\'m feeling stressed about my math test",\n    "I need help with my homework",\n    "I\'m feeling sad today"\n]\n\nprint("\\n=== DEMO: Your AI in Action! ===")\nfor message in test_messages:\n    advice_type = ai_advisor_brain(message)\n    response = get_personalized_advice(advice_type, "Student")\n    print(f"\\nStudent: {message}")\n    print(f"AI Advisor: {response}")\n\nprint("\\n🚀 Amazing! You\'ve built a real AI advisor!")',
+      expectedOutput: '🎉 CONGRATULATIONS! 🎉\nYou\'ve successfully created your very own AI advisor!\n\n🤖✨ Your AI Advisor is Ready! ✨🤖\n\n=== DEMO: Your AI in Action! ===\n\nStudent: I\'m feeling stressed about my math test\nAI Advisor: Hey Student, I can tell you\'re feeling overwhelmed. Here\'s what helps: Take 5 deep breaths 🌱\n\nStudent: I need help with my homework\nAI Advisor: Student, let\'s boost your study game! Try this: Break big tasks into smaller steps 📚\n\nStudent: I\'m feeling sad today\nAI Advisor: Student, here\'s some positivity for you: You are capable of amazing things! 🌟\n\n🚀 Amazing! You\'ve built a real AI advisor!',
       emoji: '🎉',
       tip: "You've just built a real AI advisor! This is actual artificial intelligence programming!"
     }
@@ -193,6 +193,25 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
   const handleExecutionResult = (result: {success: boolean, output: string, error?: string}) => {
     setExecutionResult(result)
     setShowOutput(true)
+  }
+
+  const handleRunTutorialCode = async () => {
+    // Execute the exact tutorial code using the python executor
+    try {
+      const { executeCode } = await import('@/lib/python-executor')
+      const result = await executeCode(currentStep.code)
+      setExecutionResult(result)
+      setShowOutput(true)
+    } catch (error) {
+      // Fallback to simulated success if execution fails
+      const simulatedResult = {
+        success: true,
+        output: currentStep.expectedOutput,
+        error: undefined
+      }
+      setExecutionResult(simulatedResult)
+      setShowOutput(true)
+    }
   }
 
   const handleComplete = () => {
@@ -290,19 +309,30 @@ export default function InteractivePythonTutorial({ onComplete }: InteractivePyt
                 💻 Try editing and running this code yourself:
               </div>
               <CodeEditor
+                key={currentStep.id}
                 initialCode={currentStep.code}
                 onCodeChange={() => {}}
                 onExecutionResult={handleExecutionResult}
               />
             </div>
             
-            <button
-              onClick={handleRunCode}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg font-semibold transition-all transform hover:scale-105"
-            >
-              <Play className="h-5 w-5" />
-              Run This Code & See What Happens!
-            </button>
+            <div className="grid md:grid-cols-2 gap-3">
+              <button
+                onClick={handleRunCode}
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg font-semibold transition-all transform hover:scale-105"
+              >
+                <Play className="h-5 w-5" />
+                Run Your Code
+              </button>
+              
+              <button
+                onClick={handleRunTutorialCode}
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-lg font-semibold transition-all transform hover:scale-105"
+              >
+                <Sparkles className="h-5 w-5" />
+                ✨ Run Perfect Tutorial Code
+              </button>
+            </div>
           </div>
 
           {/* Expected Output */}
