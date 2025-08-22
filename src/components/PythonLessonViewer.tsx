@@ -901,34 +901,110 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                       }
                     ]}
                     flashcards={[
-                      // 4 Types of Help
+                      // AI & Programming Terms
                       {
-                        id: 'help-1',
-                        category: '4 Types of Help',
-                        front: '🎯 What is ENCOURAGEMENT help?',
-                        back: 'When students feel down about grades or abilities.\n\nExample: "I got a D and feel stupid" → AI responds with understanding and creates a study plan.',
-                        emoji: '🎯'
+                        id: 'vocab-1',
+                        category: 'AI & Programming Terms',
+                        front: '🤖 Natural Language Processing (NLP)',
+                        back: 'DEFINITION: Teaching computers to understand human text and speech.\n\nCONTEXT: When your AI reads "I hate math" and knows the student needs encouragement.\n\nANALOGY: Like giving a computer "translation glasses" to read human emotions and meaning, not just words.',
+                        emoji: '🤖'
                       },
                       {
-                        id: 'help-2',
-                        category: '4 Types of Help',
-                        front: '📚 What are STUDY TIPS?',
-                        back: 'Specific learning strategies when students don\'t know how to study.\n\nExample: "Try the 20-20-20 method: 20 min notes, 20 min problems, 20 min explaining concepts."',
+                        id: 'vocab-2',
+                        category: 'AI & Programming Terms',
+                        front: '📊 Sentiment Analysis',
+                        back: 'DEFINITION: AI technique that detects emotions and attitudes in text.\n\nCONTEXT: Determining if a student message is happy, sad, frustrated, or excited.\n\nACRONYM: S.A.D. = Spot Attitudes Digitally (helps remember it detects feelings)',
+                        emoji: '📊'
+                      },
+                      {
+                        id: 'vocab-3',
+                        category: 'AI & Programming Terms',
+                        front: '⚡ Response Generation',
+                        back: 'DEFINITION: AI creating personalized, helpful replies based on analysis.\n\nCONTEXT: After understanding a student needs motivation, generating an inspiring message.\n\nANALOGY: Like having a wise friend in your pocket who always knows exactly what to say.',
+                        emoji: '⚡'
+                      },
+                      {
+                        id: 'vocab-4',
+                        category: 'AI & Programming Terms',
+                        front: '🎯 Classification Algorithm',
+                        back: 'DEFINITION: Code that sorts input into categories (like sorting mail into different boxes).\n\nCONTEXT: Classifying student messages as needing "encouragement" vs "study tips".\n\nACRONYM: C.L.A.S.S. = Categorize, Label, Analyze, Sort, Systematically',
+                        emoji: '🎯'
+                      },
+
+                      // Python Programming Concepts
+                      {
+                        id: 'python-1',
+                        category: 'Python Programming',
+                        front: '🐍 Function',
+                        back: 'DEFINITION: A reusable block of code that performs a specific task.\n\nCONTEXT: def get_encouragement(emotion): return "You got this!"\n\nANALOGY: Like a recipe - write once, use many times. Mix ingredients (inputs) → get cookies (outputs).',
+                        emoji: '🐍'
+                      },
+                      {
+                        id: 'python-2',
+                        category: 'Python Programming',
+                        front: '📝 Variable',
+                        back: 'DEFINITION: A container that stores data values (like a labeled box).\n\nCONTEXT: student_emotion = "frustrated" or confidence_level = "low"\n\nANALOGY: Like name tags for your data - so you can find and use them later.',
+                        emoji: '📝'
+                      },
+                      {
+                        id: 'python-3',
+                        category: 'Python Programming',
+                        front: '🔀 If-Then Statement',
+                        back: 'DEFINITION: Code that makes decisions based on conditions.\n\nCONTEXT: if student_feels == "sad": give_encouragement()\n\nACRONYM: I.F. = Intelligent Fork (your code chooses which path to take)',
+                        emoji: '🔀'
+                      },
+                      {
+                        id: 'python-4',
+                        category: 'Python Programming',
+                        front: '📚 List/Array',
+                        back: 'DEFINITION: A collection of items stored in order, like a shopping list.\n\nCONTEXT: encouragement_messages = ["You can do it!", "Keep trying!", "Believe in yourself!"]\n\nANALOGY: Like a playlist for music, but for data - organized and easy to access.',
                         emoji: '📚'
                       },
+
+                      // Student Support Concepts
                       {
-                        id: 'help-3',
-                        category: '4 Types of Help',
-                        front: '🚀 What is MOTIVATION help?',
-                        back: 'When students know what to do but can\'t get started.\n\nExample: "Try the 15-minute rule - commit to just 15 minutes of homework."',
-                        emoji: '🚀'
+                        id: 'support-1',
+                        category: 'Student Support',
+                        front: '💪 Growth Mindset',
+                        back: 'DEFINITION: Believing abilities can be developed through effort and learning.\n\nCONTEXT: When AI says "You haven\'t learned this YET" instead of "You can\'t do this"\n\nANALOGY: Like a muscle - the more you exercise your brain, the stronger it gets.',
+                        emoji: '💪'
                       },
                       {
-                        id: 'help-4',
-                        category: '4 Types of Help',
-                        front: '🎯 What is GOAL SETTING help?',
-                        back: 'Breaking big challenges into manageable steps.\n\nExample: "Turn \'improve GPA\' into \'do 3 practice problems daily this week.\'"',
+                        id: 'support-2',
+                        category: 'Student Support',
+                        front: '🎯 Active Listening',
+                        back: 'DEFINITION: Fully focusing on understanding what someone is really saying.\n\nCONTEXT: AI recognizing "Fine, whatever" actually means "I\'m frustrated and need help"\n\nACRONYM: L.I.S.T.E.N. = Look for emotions, Identify real needs, Support with empathy, Take action, Encourage growth, Never judge',
                         emoji: '🎯'
+                      },
+                      {
+                        id: 'support-3',
+                        category: 'Student Support',
+                        front: '🔥 Intrinsic Motivation',
+                        back: 'DEFINITION: Drive that comes from internal satisfaction, not external rewards.\n\nCONTEXT: Helping students find personal reasons to learn, not just grades.\n\nANALOGY: Like loving to play guitar vs. being forced to practice - internal fire burns brighter.',
+                        emoji: '🔥'
+                      },
+                      {
+                        id: 'support-4',
+                        category: 'Student Support',
+                        front: '📈 Scaffolding',
+                        back: 'DEFINITION: Providing temporary support that\'s gradually removed as skills develop.\n\nCONTEXT: AI giving detailed help first, then hints, then letting students solve independently.\n\nANALOGY: Like training wheels on a bike - support while learning, remove when ready.',
+                        emoji: '📈'
+                      },
+
+                      // Ethics & Safety
+                      {
+                        id: 'ethics-1',
+                        category: 'AI Ethics & Safety',
+                        front: '⚖️ Ethical AI',
+                        back: 'DEFINITION: Designing AI that\'s fair, safe, and beneficial to humans.\n\nCONTEXT: AI knowing when to say "talk to a counselor" instead of trying to solve serious problems.\n\nACRONYM: E.T.H.I.C.S. = Ensure safety, Think of consequences, Help responsibly, Include human judgment, Care for wellbeing, Stay within limits',
+                        emoji: '⚖️'
+                      },
+                      {
+                        id: 'ethics-2',
+                        category: 'AI Ethics & Safety',
+                        front: '🚨 Boundary Recognition',
+                        back: 'DEFINITION: AI knowing its limits and when to involve human professionals.\n\nCONTEXT: Detecting serious mental health keywords and suggesting professional help.\n\nANALOGY: Like a lifeguard knowing when to jump in vs. when to call paramedics - knowing your scope.',
+                        emoji: '🚨'
                       }
                     ]}
                     onComplete={() => {
