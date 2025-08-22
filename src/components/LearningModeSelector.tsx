@@ -2,8 +2,17 @@
 
 import { useState } from 'react'
 import { BookOpen, Grid, ArrowRight } from 'lucide-react'
-import SlideViewer from './SlideViewer'
-import FlashcardViewer from './FlashcardViewer'
+import dynamic from 'next/dynamic'
+
+const SlideViewer = dynamic(() => import('./SlideViewer'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Slides...</div>
+})
+
+const FlashcardViewer = dynamic(() => import('./FlashcardViewer'), {
+  ssr: false,  
+  loading: () => <div className="text-white">Loading Flashcards...</div>
+})
 
 interface LessonSlide {
   id: string

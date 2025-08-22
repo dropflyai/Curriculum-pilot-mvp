@@ -860,9 +860,41 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     slides={[
                       {
                         id: 'slide-1',
-                        title: 'Building Your AI Study Buddy',
+                        title: 'AI Study Buddy - Your 7-Step Mission',
                         emoji: '🎓',
-                        content: `## 🎓 Build Your Own School Success Advisor!
+                        content: `# 🎓 Build Your School Success Advisor
+
+## What You're Creating Today
+Your mission is to build an AI that helps students succeed in school. Think of it as creating a digital mentor that knows exactly what to say when students are stressed, confused, or need motivation.
+
+## 🎯 Your 7-Step Coding Mission
+
+### Step 1: Set Up the Foundation 🏗️
+Create the basic Python structure that will hold all your AI's knowledge and responses.
+
+### Step 2: Create Help Categories 📚
+Build four main areas your AI can help with:
+- **Encouragement** - When students feel discouraged
+- **Study Tips** - When they need better learning strategies  
+- **Motivation** - When they're losing focus
+- **Goal Setting** - When they need direction
+
+### Step 3: Build the Brain 🧠
+Code a classifier that reads what students write and figures out what kind of help they need.
+
+### Step 4: Write Great Responses ✍️
+Create helpful, specific responses - not just "good luck!" but real, actionable advice.
+
+### Step 5: Add Personality 😊
+Make your AI sound friendly and supportive, like a helpful friend who really cares.
+
+### Step 6: Test Everything 🧪
+Try your AI with real student problems to make sure it actually works well.
+
+### Step 7: Add Safety Features 🛡️
+Teach your AI when to suggest talking to teachers, counselors, or parents for serious issues.
+
+**Ready to start coding? Let's build an AI that changes students' lives!**
 
 ### What We're Building Today
 

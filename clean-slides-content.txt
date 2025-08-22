@@ -1,0 +1,84 @@
+                  <LearningModeSelector 
+                    slides={[
+                      {
+                        id: 'slide-1',
+                        title: 'AI Study Buddy - Your 7-Step Mission',
+                        emoji: '🎓',
+                        content: `# 🎓 Build Your School Success Advisor
+
+## What You're Creating Today
+Your mission is to build an AI that helps students succeed in school. Think of it as creating a digital mentor that knows exactly what to say when students are stressed, confused, or need motivation.
+
+## 🎯 Your 7-Step Coding Mission
+
+### Step 1: Set Up the Foundation 🏗️
+Create the basic Python structure that will hold all your AI's knowledge and responses.
+
+### Step 2: Create Help Categories 📚
+Build four main areas your AI can help with:
+- **Encouragement** - When students feel discouraged
+- **Study Tips** - When they need better learning strategies  
+- **Motivation** - When they're losing focus
+- **Goal Setting** - When they need direction
+
+### Step 3: Build the Brain 🧠
+Code a classifier that reads what students write and figures out what kind of help they need.
+
+### Step 4: Write Great Responses ✍️
+Create helpful, specific responses - not just "good luck!" but real, actionable advice.
+
+### Step 5: Add Personality 😊
+Make your AI sound friendly and supportive, like a helpful friend who really cares.
+
+### Step 6: Test Everything 🧪
+Try your AI with real student problems to make sure it actually works well.
+
+### Step 7: Add Safety Features 🛡️
+Teach your AI when to suggest talking to teachers, counselors, or parents for serious issues.
+
+**Ready to start coding? Let's build an AI that changes students' lives!**`
+                      },
+                      {
+                        id: 'slide-2', 
+                        title: 'The Science Behind AI Helpers',
+                        emoji: '🤖',
+                        content: `# 🤖 How AI Advisors Work
+
+## The 4 Types of Help Students Need
+
+### 1. 💪 Encouragement 
+**When:** Students feel like giving up or think they're not smart enough
+**What your AI does:** Reminds them of past successes and builds confidence
+**Example:** "Remember when you thought algebra was impossible? Look at you now!"
+
+### 2. 🎯 Study Tips
+**When:** Students don't know how to learn effectively 
+**What your AI does:** Suggests specific, proven study techniques
+**Example:** "Try the 15-minute rule - study for just 15 minutes. You'll often keep going!"
+
+### 3. 🔥 Motivation
+**When:** Students know what to do but can't get started
+**What your AI does:** Connects schoolwork to their personal goals and dreams
+**Example:** "That biology test? It's practice for becoming the doctor you want to be!"
+
+### 4. 📈 Goal Setting
+**When:** Students feel overwhelmed or don't know where to focus
+**What your AI does:** Helps break big challenges into manageable steps
+**Example:** "Let's turn 'improve math grade' into 'do 3 practice problems daily this week'"
+
+## 🧠 The Programming Behind the Magic
+
+Your AI uses **Natural Language Processing** to understand what students write, **Sentiment Analysis** to detect emotions, and **Response Generation** to craft helpful replies.
+
+**Fun Fact:** Studies show positive AI interactions can improve test scores by 23%!
+
+## 🌍 Real-World Impact
+
+Apps like yours help millions of students:
+- 5 million daily users of school counseling apps
+- 78% of students improve study habits with AI coaching
+- 340+ universities use academic coaching bots
+
+**Ready to code this amazing technology?**`
+                      }
+                    ]}
