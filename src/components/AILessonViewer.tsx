@@ -852,6 +852,19 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
 
           {/* Mission Content */}
           <div className="max-w-7xl mx-auto p-8">
+            
+            {/* TOP LEVEL DEBUG - Should ALWAYS show */}
+            <div className="bg-purple-500 text-white p-4 rounded mb-4">
+              TOP LEVEL DEBUG: Component is rendering. currentTab = "{currentTab}"
+              <br/>Available tabs: overview, learn, code, tests, quiz, flashcards, checklist, submit
+              <br/>Lesson ID: {lesson.id}
+            </div>
+            
+            {/* Show which tab is active */}
+            <div className="bg-cyan-500 text-white p-2 rounded mb-4">
+              ACTIVE TAB: {currentTab}
+            </div>
+            
             {currentTab === 'learn' && (
               <div className="space-y-8">
                 {/* DEBUG INFO */}
