@@ -57,12 +57,12 @@ export default function AIClassifierTrainer({
   const createSchoolSupplies = (): SchoolSupplyItem[] => {
     const supplies: SchoolSupplyItem[] = []
 
-    // Pencils - various types with clear differences
+    // Pencils - enhanced visual variety with distinct features
     const pencilTypes = [
-      { name: "Yellow #2 Pencil", description: "Classic yellow wooden pencil with pink eraser", features: ["Yellow wooden body", "Pink eraser tip", "Silver ferrule"], difficulty: 'easy' as const },
-      { name: "Mechanical Pencil", description: "Blue mechanical pencil with metal clip", features: ["Blue plastic body", "Metal tip", "Retractable lead"], difficulty: 'medium' as const },
-      { name: "Black Pencil", description: "Black wooden pencil with white text", features: ["Black wooden body", "White brand text", "No eraser"], difficulty: 'medium' as const },
-      { name: "Red Pencil", description: "Red wooden pencil for marking", features: ["Red wooden body", "Silver text", "Pointed tip"], difficulty: 'easy' as const },
+      { name: "Yellow #2 Pencil", description: "Bright yellow wooden pencil with wood grain, hot pink eraser, and bold #2 text", features: ["Bright yellow body", "Wood grain texture", "Hot pink eraser", "Silver ferrule", "Black #2 text"], difficulty: 'easy' as const },
+      { name: "Mechanical Pencil", description: "Blue plastic mechanical pencil with metal tip, clip, and grip section", features: ["Bright blue body", "Metal tip", "Black clip", "Grip section", "MECH text"], difficulty: 'medium' as const },
+      { name: "Black Pencil", description: "Deep black wooden pencil with white text and yellow stripe", features: ["Deep black body", "White PENCIL text", "Yellow stripe", "Wood tip"], difficulty: 'medium' as const },
+      { name: "Red Pencil", description: "Bright red wooden pencil with 3D highlights and white text", features: ["Bright red body", "3D highlights", "White RED text", "Pointed tip"], difficulty: 'easy' as const },
     ]
 
     // Erasers - different shapes and colors with enhanced visual distinction
@@ -73,12 +73,12 @@ export default function AIClassifierTrainer({
       { name: "Pencil Cap Eraser", description: "Bright blue circular cap eraser with highlight", features: ["Vibrant blue color", "Perfect circle shape", "Central hole"], difficulty: 'medium' as const },
     ]
 
-    // Markers - different colors and types
+    // Markers - enhanced visual variety with distinct features
     const markerTypes = [
-      { name: "Red Marker", description: "Red permanent marker with black cap", features: ["Red ink", "Black cap", "Thick tip"], difficulty: 'easy' as const },
-      { name: "Blue Marker", description: "Blue washable marker", features: ["Blue ink", "Blue cap", "Medium tip"], difficulty: 'easy' as const },
-      { name: "Black Sharpie", description: "Black permanent marker", features: ["Black body", "Black cap", "Fine tip"], difficulty: 'medium' as const },
-      { name: "Green Highlighter", description: "Yellow-green highlighter marker", features: ["Transparent body", "Green ink", "Chisel tip"], difficulty: 'medium' as const },
+      { name: "Red Marker", description: "Bright red marker with 3D cylinder effect, black cap, and MARKER text", features: ["Bright red body", "3D highlights", "Black cap", "Thick tip", "White MARKER text"], difficulty: 'easy' as const },
+      { name: "Blue Marker", description: "Vibrant blue marker with cylinder shading and blue cap", features: ["Bright blue body", "Cylinder shading", "Blue cap", "Medium tip", "White BLUE text"], difficulty: 'easy' as const },
+      { name: "Black Sharpie", description: "Deep black Sharpie with ridge details and fine tip", features: ["Deep black body", "Cap ridges", "Fine tip", "White SHARPIE text"], difficulty: 'medium' as const },
+      { name: "Green Highlighter", description: "Bright green highlighter with transparent body and chisel tip", features: ["Bright green body", "Transparent effect", "Chisel tip", "White HILITE text"], difficulty: 'medium' as const },
     ]
 
     // Generate items for each category
@@ -173,48 +173,118 @@ export default function AIClassifierTrainer({
 
   const drawPencil = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
     if (name.includes('Yellow')) {
-      // Yellow #2 Pencil
-      ctx.fillStyle = '#fbbf24'
-      ctx.fillRect(-60, -8, 120, 16)
-      // Pink eraser
-      ctx.fillStyle = '#f472b6'
-      ctx.fillRect(50, -6, 15, 12)
-      // Silver ferrule
-      ctx.fillStyle = '#9ca3af'
-      ctx.fillRect(45, -7, 8, 14)
-      // Text
+      // Yellow #2 Pencil - enhanced with 3D effects
+      ctx.fillStyle = '#fde047'  // Brighter yellow
+      ctx.fillRect(-65, -10, 130, 20)
+      // Add wood grain effect
+      ctx.fillStyle = '#facc15'
+      for (let i = 0; i < 5; i++) {
+        ctx.fillRect(-63 + i * 25, -8, 2, 16)
+      }
+      // 3D highlight on top
+      ctx.fillStyle = '#fef08a'
+      ctx.fillRect(-63, -8, 126, 4)
+      // Shadow on bottom
+      ctx.fillStyle = '#ca8a04'
+      ctx.fillRect(-63, 6, 126, 2)
+      // Pink eraser - enhanced
+      ctx.fillStyle = '#ff69b4'
+      ctx.fillRect(52, -8, 18, 16)
+      // Eraser highlight
+      ctx.fillStyle = '#ffb3da'
+      ctx.fillRect(54, -6, 14, 4)
+      // Silver ferrule - enhanced
+      ctx.fillStyle = '#e5e7eb'
+      ctx.fillRect(46, -9, 10, 18)
+      ctx.strokeStyle = '#9ca3af'
+      ctx.lineWidth = 1
+      ctx.strokeRect(46, -9, 10, 18)
+      // Bold text
       ctx.fillStyle = '#000'
-      ctx.font = '8px Arial'
+      ctx.font = 'bold 10px Arial'
       ctx.textAlign = 'center'
-      ctx.fillText('#2', 0, 3)
-    } else if (name.includes('Mechanical')) {
-      // Mechanical Pencil
-      ctx.fillStyle = '#3b82f6'
-      ctx.fillRect(-50, -6, 100, 12)
-      // Metal tip
-      ctx.fillStyle = '#6b7280'
-      ctx.fillRect(-55, -3, 8, 6)
-      // Clip
+      ctx.fillText('#2', 0, 4)
+      // Pencil tip
       ctx.fillStyle = '#374151'
-      ctx.fillRect(45, -10, 3, 15)
-    } else if (name.includes('Black')) {
-      // Black Pencil
-      ctx.fillStyle = '#1f2937'
-      ctx.fillRect(-60, -8, 120, 16)
-      // White text
+      ctx.beginPath()
+      ctx.moveTo(-65, 0)
+      ctx.lineTo(-75, -2)
+      ctx.lineTo(-75, 2)
+      ctx.closePath()
+      ctx.fill()
+    } else if (name.includes('Mechanical')) {
+      // Mechanical Pencil - enhanced design
+      ctx.fillStyle = '#2563eb'  // Brighter blue
+      ctx.fillRect(-55, -8, 110, 16)
+      // 3D highlight
+      ctx.fillStyle = '#60a5fa'
+      ctx.fillRect(-53, -6, 106, 4)
+      // Shadow
+      ctx.fillStyle = '#1d4ed8'
+      ctx.fillRect(-53, 4, 106, 2)
+      // Metal tip - enhanced
+      ctx.fillStyle = '#d1d5db'
+      ctx.fillRect(-62, -4, 12, 8)
+      ctx.strokeStyle = '#6b7280'
+      ctx.lineWidth = 1
+      ctx.strokeRect(-62, -4, 12, 8)
+      // Clip - more prominent
+      ctx.fillStyle = '#374151'
+      ctx.fillRect(48, -12, 4, 20)
+      // Grip section
+      ctx.fillStyle = '#1e40af'
+      ctx.fillRect(35, -6, 15, 12)
+      // Text
       ctx.fillStyle = '#fff'
-      ctx.font = '6px Arial'
+      ctx.font = 'bold 8px Arial'
       ctx.textAlign = 'center'
-      ctx.fillText('PENCIL', 0, 3)
+      ctx.fillText('MECH', 0, 3)
+    } else if (name.includes('Black')) {
+      // Black Pencil - enhanced contrast
+      ctx.fillStyle = '#111827'  // Deeper black
+      ctx.fillRect(-65, -10, 130, 20)
+      // Highlight edge
+      ctx.fillStyle = '#374151'
+      ctx.fillRect(-63, -8, 126, 3)
+      // Wood tip
+      ctx.fillStyle = '#f3f4f6'
+      ctx.beginPath()
+      ctx.moveTo(-65, 0)
+      ctx.lineTo(-75, -3)
+      ctx.lineTo(-75, 3)
+      ctx.closePath()
+      ctx.fill()
+      // Bold white text
+      ctx.fillStyle = '#fff'
+      ctx.font = 'bold 9px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('PENCIL', 0, 4)
+      // Brand stripe
+      ctx.fillStyle = '#fbbf24'
+      ctx.fillRect(-55, -2, 110, 1)
     } else if (name.includes('Red')) {
-      // Red Pencil
+      // Red Pencil - enhanced vibrancy
+      ctx.fillStyle = '#ef4444'  // Brighter red
+      ctx.fillRect(-65, -10, 130, 20)
+      // 3D highlight
+      ctx.fillStyle = '#f87171'
+      ctx.fillRect(-63, -8, 126, 4)
+      // Shadow
       ctx.fillStyle = '#dc2626'
-      ctx.fillRect(-60, -8, 120, 16)
-      // Silver text
-      ctx.fillStyle = '#9ca3af'
-      ctx.font = '6px Arial'
+      ctx.fillRect(-63, 6, 126, 2)
+      // Wood tip
+      ctx.fillStyle = '#fca5a5'
+      ctx.beginPath()
+      ctx.moveTo(-65, 0)
+      ctx.lineTo(-75, -2)
+      ctx.lineTo(-75, 2)
+      ctx.closePath()
+      ctx.fill()
+      // Silver text - more visible
+      ctx.fillStyle = '#f3f4f6'
+      ctx.font = 'bold 9px Arial'
       ctx.textAlign = 'center'
-      ctx.fillText('RED', 0, 3)
+      ctx.fillText('RED', 0, 4)
     }
   }
 
@@ -317,50 +387,127 @@ export default function AIClassifierTrainer({
 
   const drawMarker = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
     if (name.includes('Red Marker')) {
-      // Red marker body
+      // Red marker body - enhanced with 3D effects
+      ctx.fillStyle = '#ef4444'  // Brighter red
+      ctx.fillRect(-10, -45, 20, 90)
+      // 3D cylinder highlight
+      ctx.fillStyle = '#f87171'
+      ctx.fillRect(-8, -43, 6, 86)
+      // Shadow side
       ctx.fillStyle = '#dc2626'
-      ctx.fillRect(-8, -40, 16, 80)
-      // Black cap
+      ctx.fillRect(2, -43, 6, 86)
+      // Black cap - enhanced
       ctx.fillStyle = '#000'
-      ctx.fillRect(-8, -50, 16, 15)
-      // Tip
+      ctx.fillRect(-10, -55, 20, 18)
+      // Cap highlight
+      ctx.fillStyle = '#374151'
+      ctx.fillRect(-8, -53, 16, 4)
+      // Tip - more defined
       ctx.fillStyle = '#991b1b'
-      ctx.fillRect(-4, 35, 8, 10)
-    } else if (name.includes('Blue Marker')) {
-      // Blue marker
-      ctx.fillStyle = '#2563eb'
-      ctx.fillRect(-8, -40, 16, 80)
-      // Blue cap
-      ctx.fillStyle = '#1d4ed8'
-      ctx.fillRect(-8, -50, 16, 15)
-      // Tip
-      ctx.fillStyle = '#1e40af'
-      ctx.fillRect(-4, 35, 8, 10)
-    } else if (name.includes('Sharpie')) {
-      // Black Sharpie
-      ctx.fillStyle = '#000'
-      ctx.fillRect(-6, -40, 12, 80)
-      // Cap
-      ctx.fillStyle = '#1f2937'
-      ctx.fillRect(-6, -48, 12, 12)
-      // White text
+      ctx.fillRect(-6, 40, 12, 12)
+      // Tip highlight
+      ctx.fillStyle = '#b91c1c'
+      ctx.fillRect(-4, 42, 8, 3)
+      // Brand text
       ctx.fillStyle = '#fff'
-      ctx.font = '6px Arial'
+      ctx.font = 'bold 7px Arial'
       ctx.textAlign = 'center'
       ctx.save()
       ctx.rotate(-Math.PI / 2)
-      ctx.fillText('SHARPIE', 0, 3)
+      ctx.fillText('MARKER', 0, 3)
+      ctx.restore()
+    } else if (name.includes('Blue Marker')) {
+      // Blue marker - enhanced design
+      ctx.fillStyle = '#3b82f6'  // Brighter blue
+      ctx.fillRect(-10, -45, 20, 90)
+      // 3D highlight
+      ctx.fillStyle = '#60a5fa'
+      ctx.fillRect(-8, -43, 6, 86)
+      // Shadow
+      ctx.fillStyle = '#2563eb'
+      ctx.fillRect(2, -43, 6, 86)
+      // Blue cap - enhanced
+      ctx.fillStyle = '#1e40af'
+      ctx.fillRect(-10, -55, 20, 18)
+      // Cap highlight
+      ctx.fillStyle = '#3b82f6'
+      ctx.fillRect(-8, -53, 16, 4)
+      // Tip
+      ctx.fillStyle = '#1d4ed8'
+      ctx.fillRect(-6, 40, 12, 12)
+      // White text
+      ctx.fillStyle = '#fff'
+      ctx.font = 'bold 7px Arial'
+      ctx.textAlign = 'center'
+      ctx.save()
+      ctx.rotate(-Math.PI / 2)
+      ctx.fillText('BLUE', 0, 3)
+      ctx.restore()
+    } else if (name.includes('Sharpie')) {
+      // Black Sharpie - enhanced contrast
+      ctx.fillStyle = '#111827'  // Deeper black
+      ctx.fillRect(-8, -45, 16, 90)
+      // Subtle highlight
+      ctx.fillStyle = '#374151'
+      ctx.fillRect(-6, -43, 4, 86)
+      // Cap - more defined
+      ctx.fillStyle = '#000'
+      ctx.fillRect(-8, -55, 16, 15)
+      // Cap ridge details
+      ctx.strokeStyle = '#4b5563'
+      ctx.lineWidth = 1
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath()
+        ctx.moveTo(-6, -52 + i * 3)
+        ctx.lineTo(6, -52 + i * 3)
+        ctx.stroke()
+      }
+      // Fine tip
+      ctx.fillStyle = '#1f2937'
+      ctx.fillRect(-3, 40, 6, 10)
+      // Bold white text
+      ctx.fillStyle = '#fff'
+      ctx.font = 'bold 6px Arial'
+      ctx.textAlign = 'center'
+      ctx.save()
+      ctx.rotate(-Math.PI / 2)
+      ctx.fillText('SHARPIE', 0, 2)
       ctx.restore()
     } else if (name.includes('Highlighter')) {
-      // Green highlighter
-      ctx.fillStyle = '#84cc16'
-      ctx.fillRect(-10, -35, 20, 70)
-      // Transparent effect
-      ctx.fillStyle = 'rgba(132, 204, 22, 0.3)'
-      ctx.fillRect(-8, -33, 16, 66)
-      // Chisel tip
-      ctx.fillStyle = '#65a30d'
-      ctx.fillRect(-6, 30, 12, 8)
+      // Green highlighter - enhanced transparency effect
+      ctx.fillStyle = '#22c55e'  // Brighter green
+      ctx.fillRect(-12, -40, 24, 80)
+      // Transparent body effect
+      ctx.fillStyle = 'rgba(34, 197, 94, 0.4)'
+      ctx.fillRect(-10, -38, 20, 76)
+      // 3D highlight
+      ctx.fillStyle = '#4ade80'
+      ctx.fillRect(-10, -38, 8, 76)
+      // Cap
+      ctx.fillStyle = '#15803d'
+      ctx.fillRect(-12, -50, 24, 15)
+      // Cap highlight
+      ctx.fillStyle = '#22c55e'
+      ctx.fillRect(-10, -48, 20, 4)
+      // Chisel tip - more defined
+      ctx.fillStyle = '#16a34a'
+      ctx.fillRect(-8, 35, 16, 12)
+      // Tip bevel
+      ctx.fillStyle = '#15803d'
+      ctx.beginPath()
+      ctx.moveTo(-8, 47)
+      ctx.lineTo(0, 50)
+      ctx.lineTo(8, 47)
+      ctx.closePath()
+      ctx.fill()
+      // Text
+      ctx.fillStyle = '#fff'
+      ctx.font = 'bold 6px Arial'
+      ctx.textAlign = 'center'
+      ctx.save()
+      ctx.rotate(-Math.PI / 2)
+      ctx.fillText('HILITE', 0, 2)
+      ctx.restore()
     }
   }
 
