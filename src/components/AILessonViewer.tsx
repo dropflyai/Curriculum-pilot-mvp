@@ -150,29 +150,46 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     }
   }
 
+  // Check if specific sections are completed
+  const isSectionCompleted = (sectionId: string) => {
+    switch (sectionId) {
+      case 'learn':
+        // Learn is completed when user has visited and spent some time (auto-completed when leaving)
+        return currentTab !== 'learn' || localStorage.getItem(`lesson-${lesson.id}-learn-visited`) === 'true'
+      case 'code':
+        // Code is completed when model is trained
+        return metrics !== null
+      case 'tests':
+        // Tests completed when all tests are marked done
+        return currentModeData.tests_ui.every(test => testState.completed[test.id])
+      case 'quiz':
+        // Quiz completed when submitted with passing score
+        return quizState.submitted && quizState.score >= 70
+      case 'flashcards':
+        // Flashcards completed (if they exist)
+        return !currentModeData.flashcards || localStorage.getItem(`lesson-${lesson.id}-flashcards-completed`) === 'true'
+      case 'checklist':
+        // Checklist completed when all items checked
+        return currentModeData.checklist.every((_, index) => checklistState.completed[index])
+      case 'submit':
+        // Submission is always available after checklist
+        return true
+      default:
+        return false
+    }
+  }
+
   // Calculate progress
   const calculateProgress = () => {
     let completed = 0
     let total = 6 // learn, code, tests, quiz, checklist, submit
 
-    // Learn tab is automatically completed when visited
-    if (currentTab !== 'learn') completed += 1
-
-    // Code tab completed when model is trained
-    if (metrics) completed += 1
-
-    // Tests completed when all tests are marked done
-    const testsCompleted = currentModeData.tests_ui.every(test => testState.completed[test.id])
-    if (testsCompleted) completed += 1
-
-    // Quiz completed when submitted
-    if (quizState.submitted) completed += 1
-
-    // Checklist completed when all items checked
-    const checklistCompleted = currentModeData.checklist.every((_, index) => checklistState.completed[index])
-    if (checklistCompleted) completed += 1
-
-    // Submission completed when text is provided
+    // Count completed sections
+    if (isSectionCompleted('learn')) completed += 1
+    if (isSectionCompleted('code')) completed += 1
+    if (isSectionCompleted('tests')) completed += 1
+    if (isSectionCompleted('quiz')) completed += 1
+    if (isSectionCompleted('checklist')) completed += 1
     if (submissionText.length > 50) completed += 1
 
     return (completed / total) * 100
@@ -204,6 +221,21 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       }, 1500)
     }
   }, [checklistState, currentTab, lesson.modes])
+
+  // Track learn section completion
+  useEffect(() => {
+    if (currentTab === 'learn') {
+      // Mark as visited after 10 seconds or when leaving
+      const timer = setTimeout(() => {
+        localStorage.setItem(`lesson-${lesson.id}-learn-visited`, 'true')
+      }, 10000)
+      
+      return () => clearTimeout(timer)
+    } else if (currentTab !== 'overview') {
+      // Mark learn as visited when moving to any other section
+      localStorage.setItem(`lesson-${lesson.id}-learn-visited`, 'true')
+    }
+  }, [currentTab, lesson.id])
 
 
   const handleQuizAnswer = (questionIndex: number, answerIndex: number) => {
@@ -539,7 +571,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
         {/* Mission-specific progress mini-bars */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
           {missions.map((mission, index) => {
-            const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
+            const isCompleted = isSectionCompleted(mission.id)
             const isCurrent = currentTab === mission.id
             
             return (
@@ -673,9 +705,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             {/* Mission Navigation Cards */}
             <div className="relative z-10 space-y-6">
               {missions.map((mission, index) => {
-                const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
+                const isCompleted = isSectionCompleted(mission.id)
                 const isActive = currentTab === mission.id
-                const isLocked = index > 0 && !missions.slice(0, index).every((_, i) => i < Math.floor(missions.length * (calculateProgress() / 100)))
+                // Lock missions based on previous section completion
+                const isLocked = index > 0 && !isSectionCompleted(missions[index - 1].id)
                 const isEven = index % 2 === 0
                 
 
@@ -690,6 +723,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         if (!isLocked) {
                           // Show mission content by switching tabs
                           setCurrentTab(mission.id as any)
+                        } else {
+                          // Show notification about what needs to be completed first
+                          const prevMission = missions[index - 1]
+                          alert(`🔒 Complete "${prevMission.title}" first to unlock this section!`)
                         }
                       }}
                       className={`group relative bg-gradient-to-br p-6 rounded-2xl border-2 cursor-pointer transition-all duration-500 transform hover:scale-105 shadow-xl ${
