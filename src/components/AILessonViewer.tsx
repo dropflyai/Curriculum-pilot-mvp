@@ -855,29 +855,31 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* Week 2 - School Success Advisor: Offer choice between Slides and Flashcards */}
-                {lesson.id === 'week-02' ? (
-                  <div className="bg-yellow-500 text-black p-4 rounded">
-                    NOTE: Week-02 now uses PythonLessonViewer with LearningModeSelector. This AILessonViewer section is no longer used for week-02.
-                  </div>
+                {/* Show traditional learn content for week-01 and other lessons */}
+                {lesson.id !== 'week-02' ? (
+                  <>
+                    <div className="bg-gradient-to-r from-blue-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl">📚</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Learn</h2>
+                          <p className="text-blue-200 text-xl">Understand the concepts</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Learn Content */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <div className="prose prose-invert max-w-none">
+                        <ReactMarkdown>{currentModeData.learn_md}</ReactMarkdown>
+                      </div>
+                    </div>
+                  </>
                 ) : (
-                  <LearningModeSelector 
-                    slides={[
-                      {
-                        id: 'slide-1',
-                        title: 'AI Study Buddy - Your 7-Step Mission',
-                        emoji: '🎓',
-                        content: `# 🎓 Build Your School Success Advisor
-
-## What You're Creating Today
-Your mission is to build an AI that helps students succeed in school. Think of it as creating a digital mentor that knows exactly what to say when students are stressed, confused, or need motivation.
-
-## 🎯 Your 7-Step Coding Mission
-
-### Step 1: Set Up the Foundation 🏗️
-Create the basic Python structure that will hold all your AI's knowledge and responses.
-
-### Step 2: Create Help Categories 📚
+                  // Week-02 uses PythonLessonViewer, this path should never be reached
+                  <div className="bg-yellow-500 text-black p-4 rounded">
+                    NOTE: Week-02 now uses PythonLessonViewer. This section should not be reached.
+                  </div>
 Build four main areas your AI can help with:
 - **Encouragement** - When students feel discouraged
 - **Study Tips** - When they need better learning strategies  
