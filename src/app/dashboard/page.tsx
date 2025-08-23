@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllLessons, Lesson } from '@/lib/lesson-data'
+import { getLessonProgress, getWeek02CompletionStatus, getAllLessonProgress } from '@/lib/progress-utils'
 import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
@@ -16,22 +17,8 @@ export default function Dashboard() {
     console.log('Dashboard loading lessons:', allLessons.length, allLessons.map(l => ({ id: l.id, title: l.title })))
     return allLessons
   })
-  const [userProgress] = useState<Record<string, number>>({
-    'week-01': 100, // Week 1 AI Classifier - completed
-    'week-02': 0, // Week 2 Python Advisor - not started
-    'python-basics-variables': 75,
-    'python-magic-8-ball': 100,
-    'python-functions': 0,
-    'python-lists-loops': 25,
-    'python-file-handling': 0
-  })
-  const [userScores] = useState<Record<string, number>>({
-    'week-01': 85, // Week 1 AI Classifier quiz score
-    'week-02': 0, // Week 2 Python Advisor - not started
-    'python-basics-variables': 85,
-    'python-magic-8-ball': 92,
-    'python-lists-loops': 67
-  })
+  const [userProgress, setUserProgress] = useState<Record<string, number>>({})
+  const [userScores, setUserScores] = useState<Record<string, number>>({})
   const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
   
@@ -77,6 +64,52 @@ export default function Dashboard() {
       default: return 'bg-gray-600 text-white'
     }
   }
+
+  // Load real progress data
+  const loadProgressData = useCallback(() => {
+    const allProgress = getAllLessonProgress()
+    const progressMap: Record<string, number> = {}
+    const scoresMap: Record<string, number> = {}
+    
+    // Add default completed lessons
+    progressMap['week-01'] = 100
+    scoresMap['week-01'] = 85
+    progressMap['python-basics-variables'] = 75
+    scoresMap['python-basics-variables'] = 85
+    progressMap['python-magic-8-ball'] = 100
+    scoresMap['python-magic-8-ball'] = 92
+    progressMap['python-lists-loops'] = 25
+    scoresMap['python-lists-loops'] = 67
+    
+    // Override with real progress for tracked lessons
+    Object.entries(allProgress).forEach(([lessonId, data]) => {
+      if (data.progress > 0) {
+        progressMap[lessonId] = data.progress
+        scoresMap[lessonId] = data.score
+      }
+    })
+    
+    // Special handling for week-02 (the main lesson we're tracking)
+    const week02Status = getWeek02CompletionStatus()
+    progressMap['week-02'] = week02Status.progress
+    scoresMap['week-02'] = week02Status.score
+    
+    setUserProgress(progressMap)
+    setUserScores(scoresMap)
+  }, [])
+
+  // Load progress on mount and listen for updates
+  useEffect(() => {
+    loadProgressData()
+    
+    // Listen for lesson progress updates
+    const handleProgressUpdate = () => {
+      loadProgressData()
+    }
+    
+    window.addEventListener('lessonProgressUpdate', handleProgressUpdate)
+    return () => window.removeEventListener('lessonProgressUpdate', handleProgressUpdate)
+  }, [loadProgressData])
 
   const getProgressForLesson = (lessonId: string) => {
     return userProgress[lessonId] || 0

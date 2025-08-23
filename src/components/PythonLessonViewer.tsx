@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { AILesson, LessonMode } from '@/lib/lesson-data'
+import { updateLessonProgress } from '@/lib/progress-utils'
 import dynamic from 'next/dynamic'
 import { BookOpen, Code, CheckSquare, HelpCircle, Award, Sparkles, Brain, Zap, Target, Clock, Play } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
@@ -198,8 +199,17 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     updateChecklistFromProgress()
     saveProgress()
     const progress = calculateProgress()
+    
+    // Update global lesson progress
+    const completedSections = []
+    if (knowledgeQuestCompleted) completedSections.push('knowledge-quest')
+    if (pythonLabCompleted) completedSections.push('python-concepts')
+    if (aiAdvisorLabCompleted) completedSections.push('ai-advisor-lab')
+    if (quizState.submitted) completedSections.push('quiz')
+    
+    updateLessonProgress(lesson.id, progress, quizState.score, completedSections)
     onLessonComplete(progress)
-  }, [currentTab, testState, quizState, checklistState, submissionText, codeExecuted])
+  }, [currentTab, testState, quizState, checklistState, submissionText, codeExecuted, knowledgeQuestCompleted, pythonLabCompleted, aiAdvisorLabCompleted, lesson.id])
 
   // Auto-progress to rewards when all checklist items are complete
   useEffect(() => {
@@ -231,6 +241,10 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     })
     const score = (correct / lesson.modes[0].quiz.questions.length) * 100
     setQuizState(prev => ({ ...prev, submitted: true, score }))
+    
+    // Update lesson progress with quiz completion
+    const completedSections = ['knowledge-quest', 'python-concepts', 'ai-advisor-lab', 'quiz']
+    updateLessonProgress(lesson.id, 85, score, completedSections)
     
     // Notify parent component about quiz completion
     if (onQuizComplete) {
@@ -1060,6 +1074,8 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                       setKnowledgeQuestCompleted(true)
                       // Save completion status to localStorage
                       localStorage.setItem(`knowledge-quest-completed-${lesson.id}`, 'true')
+                      // Update lesson progress
+                      updateLessonProgress(lesson.id, 25, 0, ['knowledge-quest'])
                       // Return to Python Adventure Map
                       setCurrentTab('overview')
                     }}
@@ -1094,6 +1110,8 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                   // Mark Python Concepts Walkthrough as completed
                   setPythonLabCompleted(true)
                   localStorage.setItem(`python-lab-completed-${lesson.id}`, 'true')
+                  // Update lesson progress
+                  updateLessonProgress(lesson.id, 50, 0, ['knowledge-quest', 'python-concepts'])
                   setCurrentTab('overview')
                   // Update progress
                   onLessonComplete(calculateProgress() + 25) // Add 25% for completing concepts walkthrough
@@ -1107,6 +1125,8 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                   // Mark AI Advisor Lab as completed
                   setAiAdvisorLabCompleted(true)
                   localStorage.setItem(`ai-advisor-lab-completed-${lesson.id}`, 'true')
+                  // Update lesson progress
+                  updateLessonProgress(lesson.id, 75, 0, ['knowledge-quest', 'python-concepts', 'ai-advisor-lab'])
                   setCurrentTab('overview')
                   // Update progress
                   onLessonComplete(calculateProgress() + 25) // Add 25% for completing AI advisor lab
@@ -1271,7 +1291,13 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                     <p className="text-amber-300 mb-8 text-lg">🐍 Python Badge • 🤖 AI Creator • 💎 850 XP Points</p>
                     
                     <button 
-                      onClick={() => onLessonComplete(100)}
+                      onClick={() => {
+                        // Mark lesson as 100% complete
+                        updateLessonProgress(lesson.id, 100, quizState.score, ['knowledge-quest', 'python-concepts', 'ai-advisor-lab', 'quiz', 'final-review', 'completed'])
+                        onLessonComplete(100)
+                        // Also save completion to localStorage for immediate feedback
+                        localStorage.setItem(`lesson-complete-${lesson.id}`, 'true')
+                      }}
                       className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-bold px-12 py-6 rounded-2xl text-2xl hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 transition-all duration-300 transform hover:scale-110 shadow-2xl shadow-yellow-500/50 animate-pulse"
                     >
                       <span className="flex items-center gap-3">
