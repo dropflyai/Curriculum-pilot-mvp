@@ -59,6 +59,7 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const [knowledgeQuestCompleted, setKnowledgeQuestCompleted] = useState(false)
   const [pythonLabCompleted, setPythonLabCompleted] = useState(false)
   const [aiAdvisorLabCompleted, setAiAdvisorLabCompleted] = useState(false)
+  const [lessonFullyComplete, setLessonFullyComplete] = useState(false)
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -144,30 +145,29 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     }
   }
 
-  // Calculate progress
+  // Calculate progress based on actual mission completion
   const calculateProgress = () => {
     let completed = 0
-    let total = 6 // learn, code, tests, quiz, checklist, submit
+    let total = 6 // Total missions: Knowledge Quest, Python Concepts, AI Advisor Lab, Quiz, Checklist, Submit
 
-    // Learn tab is automatically completed when visited
-    if (currentTab !== 'learn' && currentTab !== 'overview') completed += 1
+    // Mission 1: Knowledge Quest
+    if (knowledgeQuestCompleted) completed += 1
 
-    // Code tab completed when code is executed
-    if (codeExecuted) completed += 1
+    // Mission 2: Python Concepts
+    if (pythonLabCompleted) completed += 1
 
-    // Tests completed when all tests are marked done
-    const testsCompleted = currentModeData.tests_ui.every(test => testState.completed[test.id])
-    if (testsCompleted) completed += 1
+    // Mission 3: AI Advisor Lab
+    if (aiAdvisorLabCompleted) completed += 1
 
-    // Quiz completed when submitted
+    // Mission 4: Quiz completed when submitted with passing score
     if (quizState.submitted) completed += 1
 
-    // Checklist completed when all items checked
+    // Mission 5: Checklist completed when all items checked
     const checklistCompleted = currentModeData.checklist.every((_, index) => checklistState.completed[index])
     if (checklistCompleted) completed += 1
 
-    // Submission completed when text is provided
-    if (submissionText.length > 50) completed += 1
+    // Mission 6: Final submission (Victory Ceremony)
+    if (lessonFullyComplete) completed += 1
 
     return (completed / total) * 100
   }
@@ -191,6 +191,12 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
     const aiCompleted = localStorage.getItem(`ai-advisor-lab-completed-${lesson.id}`)
     if (aiCompleted === 'true') {
       setAiAdvisorLabCompleted(true)
+    }
+    
+    // Load final lesson completion status
+    const lessonComplete = localStorage.getItem(`lesson-complete-${lesson.id}`)
+    if (lessonComplete === 'true') {
+      setLessonFullyComplete(true)
     }
   }, [])
 
@@ -481,7 +487,18 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
         {/* Mission-specific progress mini-bars */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
           {missions.map((mission, index) => {
-            const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
+            // Check actual completion status for each mission
+            const isCompleted = (() => {
+              switch (mission.id) {
+                case 'learn': return knowledgeQuestCompleted
+                case 'code': return pythonLabCompleted
+                case 'tests': return aiAdvisorLabCompleted
+                case 'quiz': return quizState.submitted
+                case 'checklist': return currentModeData.checklist.every((_, i) => checklistState.completed[i])
+                case 'submit': return lessonFullyComplete
+                default: return false
+              }
+            })()
             const isCurrent = currentTab === mission.id
             
             return (
@@ -546,7 +563,18 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
           {/* Mission Navigation Cards */}
           <div className="relative z-10 space-y-6">
             {missions.map((mission, index) => {
-              const isCompleted = index < Math.floor(missions.length * (calculateProgress() / 100))
+              // Check actual completion status for each mission
+              const isCompleted = (() => {
+                switch (mission.id) {
+                  case 'learn': return knowledgeQuestCompleted
+                  case 'code': return pythonLabCompleted
+                  case 'tests': return aiAdvisorLabCompleted
+                  case 'quiz': return quizState.submitted
+                  case 'checklist': return currentModeData.checklist.every((_, i) => checklistState.completed[i])
+                  case 'submit': return lessonFullyComplete
+                  default: return false
+                }
+              })()
               const isActive = currentTab === mission.id
               // Progressive unlock logic: each mission unlocks the next
               const isLocked = (() => {
@@ -1297,6 +1325,7 @@ Now you understand how each type of help works behind the scenes. Time to bring 
                         onLessonComplete(100)
                         // Also save completion to localStorage for immediate feedback
                         localStorage.setItem(`lesson-complete-${lesson.id}`, 'true')
+                        setLessonFullyComplete(true)
                       }}
                       className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-bold px-12 py-6 rounded-2xl text-2xl hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 transition-all duration-300 transform hover:scale-110 shadow-2xl shadow-yellow-500/50 animate-pulse"
                     >
