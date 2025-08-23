@@ -65,12 +65,12 @@ export default function AIClassifierTrainer({
       { name: "Red Pencil", description: "Red wooden pencil for marking", features: ["Red wooden body", "Silver text", "Pointed tip"], difficulty: 'easy' as const },
     ]
 
-    // Erasers - different shapes and colors  
+    // Erasers - different shapes and colors with enhanced visual distinction
     const eraserTypes = [
-      { name: "Pink Block Eraser", description: "Traditional rectangular pink eraser", features: ["Rectangular shape", "Pink color", "Soft texture"], difficulty: 'easy' as const },
-      { name: "White Eraser", description: "White rectangular eraser", features: ["White color", "Rectangular shape", "Clean edges"], difficulty: 'easy' as const },
-      { name: "Kneaded Eraser", description: "Gray moldable eraser", features: ["Gray color", "Irregular shape", "Soft and moldable"], difficulty: 'hard' as const },
-      { name: "Pencil Cap Eraser", description: "Small blue cap eraser", features: ["Blue color", "Round shape", "Fits on pencil"], difficulty: 'medium' as const },
+      { name: "Pink Block Eraser", description: "Bright hot pink rectangular eraser with 'ERASER' text", features: ["Hot pink color", "Large rectangular shape", "White text label"], difficulty: 'easy' as const },
+      { name: "White Eraser", description: "Clean white rectangular eraser with dark border", features: ["Pure white color", "Dark border outline", "Blue-tinted surface"], difficulty: 'easy' as const },
+      { name: "Kneaded Eraser", description: "Textured gray moldable eraser with radial lines", features: ["Light gray color", "Irregular blob shape", "Visible texture lines"], difficulty: 'hard' as const },
+      { name: "Pencil Cap Eraser", description: "Bright blue circular cap eraser with highlight", features: ["Vibrant blue color", "Perfect circle shape", "Central hole"], difficulty: 'medium' as const },
     ]
 
     // Markers - different colors and types
@@ -220,40 +220,97 @@ export default function AIClassifierTrainer({
 
   const drawEraser = (ctx: CanvasRenderingContext2D, name: string, index: number) => {
     if (name.includes('Pink Block')) {
-      // Pink rectangular eraser
-      ctx.fillStyle = '#f9a8d4'
-      ctx.fillRect(-30, -15, 60, 30)
-      // Shadow
-      ctx.fillStyle = '#ec4899'
-      ctx.fillRect(-28, -13, 56, 3)
-    } else if (name.includes('White')) {
-      // White eraser
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(-30, -15, 60, 30)
-      ctx.strokeStyle = '#e5e7eb'
-      ctx.strokeRect(-30, -15, 60, 30)
-    } else if (name.includes('Kneaded')) {
-      // Gray kneaded eraser (irregular shape)
-      ctx.fillStyle = '#6b7280'
+      // Pink rectangular eraser - brighter and more distinct
+      ctx.fillStyle = '#ff69b4'  // Hot pink for better visibility
+      ctx.fillRect(-35, -18, 70, 36)
+      // Draw rounded rectangle manually for better compatibility
       ctx.beginPath()
-      ctx.moveTo(-25, -10)
-      ctx.lineTo(20, -15)
-      ctx.lineTo(30, 5)
-      ctx.lineTo(15, 20)
-      ctx.lineTo(-20, 15)
-      ctx.lineTo(-30, -5)
+      ctx.moveTo(-27, -18)
+      ctx.lineTo(27, -18)
+      ctx.quadraticCurveTo(35, -18, 35, -10)
+      ctx.lineTo(35, 10)
+      ctx.quadraticCurveTo(35, 18, 27, 18)
+      ctx.lineTo(-27, 18)
+      ctx.quadraticCurveTo(-35, 18, -35, 10)
+      ctx.lineTo(-35, -10)
+      ctx.quadraticCurveTo(-35, -18, -27, -18)
       ctx.closePath()
       ctx.fill()
-    } else if (name.includes('Cap')) {
-      // Blue cap eraser
-      ctx.fillStyle = '#3b82f6'
+      // Highlight for 3D effect
+      ctx.fillStyle = '#ffb3da'
+      ctx.fillRect(-33, -16, 66, 8)
+      // Shadow for depth
+      ctx.fillStyle = '#d1477a'
+      ctx.fillRect(-33, 10, 66, 6)
+      // Brand text
+      ctx.fillStyle = '#fff'
+      ctx.font = 'bold 8px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('ERASER', 0, 3)
+    } else if (name.includes('White')) {
+      // White eraser - cleaner with better definition
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(-32, -16, 64, 32)
+      // Strong border for visibility
+      ctx.strokeStyle = '#374151'
+      ctx.lineWidth = 2
+      ctx.strokeRect(-32, -16, 64, 32)
+      // Subtle blue tint for better contrast
+      ctx.fillStyle = '#f8faff'
+      ctx.fillRect(-30, -14, 60, 28)
+      // Highlight
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(-30, -14, 60, 6)
+      // Text
+      ctx.fillStyle = '#374151'
+      ctx.font = 'bold 7px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('WHITE', 0, 3)
+    } else if (name.includes('Kneaded')) {
+      // Gray kneaded eraser - more defined and textured
+      ctx.fillStyle = '#8b92a3'  // Lighter gray for better visibility
       ctx.beginPath()
-      ctx.arc(0, 0, 18, 0, Math.PI * 2)
+      ctx.moveTo(-28, -12)
+      ctx.lineTo(25, -16)
+      ctx.lineTo(32, 8)
+      ctx.lineTo(18, 22)
+      ctx.lineTo(-22, 18)
+      ctx.lineTo(-32, -8)
+      ctx.closePath()
       ctx.fill()
-      // Hole
+      // Add texture lines for kneaded appearance
+      ctx.strokeStyle = '#6b7280'
+      ctx.lineWidth = 1
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * Math.PI * 2) / 8
+        const x1 = Math.cos(angle) * 10
+        const y1 = Math.sin(angle) * 10
+        const x2 = Math.cos(angle) * 20
+        const y2 = Math.sin(angle) * 20
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.stroke()
+      }
+    } else if (name.includes('Cap')) {
+      // Blue cap eraser - more vibrant and defined
+      ctx.fillStyle = '#4f9eff'  // Brighter blue
+      ctx.beginPath()
+      ctx.arc(0, 0, 20, 0, Math.PI * 2)
+      ctx.fill()
+      // Outer ring for definition
+      ctx.strokeStyle = '#2563eb'
+      ctx.lineWidth = 3
+      ctx.stroke()
+      // Inner hole with gradient effect
       ctx.fillStyle = '#1e40af'
       ctx.beginPath()
-      ctx.arc(0, 0, 8, 0, Math.PI * 2)
+      ctx.arc(0, 0, 10, 0, Math.PI * 2)
+      ctx.fill()
+      // Highlight on top
+      ctx.fillStyle = '#93c5fd'
+      ctx.beginPath()
+      ctx.arc(-5, -5, 6, 0, Math.PI * 2)
       ctx.fill()
     }
   }
