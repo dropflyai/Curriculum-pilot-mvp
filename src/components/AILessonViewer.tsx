@@ -855,32 +855,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {/* Show traditional learn content for week-01 and other lessons */}
-                {lesson.id !== 'week-02' ? (
-                  <>
-                    <div className="bg-gradient-to-r from-blue-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="text-8xl">📚</div>
-                        <div>
-                          <h2 className="text-5xl font-bold text-white mb-2">Learn</h2>
-                          <p className="text-blue-200 text-xl">Understand the concepts</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Learn Content */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                      <div className="prose prose-invert max-w-none">
-                        <ReactMarkdown>{currentModeData.learn_md}</ReactMarkdown>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  // Week-02 uses PythonLessonViewer, this path should never be reached
-                  <div className="bg-yellow-500 text-black p-4 rounded">
-                    NOTE: Week-02 now uses PythonLessonViewer. This section should not be reached.
-                  </div>
-                )}
                 {lesson.id !== 'week-02' && (
                   <>
                     {/* Traditional Knowledge Quest Content (for lessons without slides) */}
