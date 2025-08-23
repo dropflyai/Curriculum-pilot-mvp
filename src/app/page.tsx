@@ -200,21 +200,21 @@ function CourseOverview() {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl p-8 border border-gray-700/50">
+      <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 border border-purple-500/30 shadow-2xl">
         {overviewTab === 'overview' && (
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-4">Course Description</h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Transform from coding newbie to Python programmer! This comprehensive course introduces 9th-grade students to programming fundamentals through hands-on projects, interactive lessons, and real-world applications. Students build confidence through gamified learning while teachers track progress with powerful analytics.
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">Course Description</h2>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Transform from coding newbie to Python programmer! This comprehensive course introduces 9th-grade students to programming fundamentals through hands-on projects, interactive lessons, and real-world applications. Students build confidence through gamified learning while teachers track progress with powerful analytics. ✨
               </p>
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">Learning Outcomes</h2>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent mb-6">Learning Outcomes</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-blue-400">🎯 Students Will:</h3>
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">🎯 Students Will:</h3>
                   <ul className="space-y-2 text-gray-300">
                     <li>• Master Python fundamentals (variables, functions, loops)</li>
                     <li>• Build interactive applications and games</li>
@@ -224,7 +224,7 @@ function CourseOverview() {
                   </ul>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-purple-400">📚 Teachers Will:</h3>
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">📚 Teachers Will:</h3>
                   <ul className="space-y-2 text-gray-300">
                     <li>• Monitor real-time student progress</li>
                     <li>• Access comprehensive analytics dashboard</li>
@@ -237,9 +237,9 @@ function CourseOverview() {
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-white mb-4">Course Philosophy</h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Learning to code should be engaging, accessible, and fun! CodeFly uses project-based learning where students immediately see their code come to life. Every lesson connects programming concepts to real-world applications students understand and enjoy.
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">Course Philosophy</h2>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Learning to code should be engaging, accessible, and fun! CodeFly uses project-based learning where students immediately see their code come to life. Every lesson connects programming concepts to real-world applications students understand and enjoy. 🚀
               </p>
             </div>
           </div>
@@ -247,10 +247,10 @@ function CourseOverview() {
 
         {overviewTab === 'projects' && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white mb-6">🚀 What You'll Build</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center">🚀 What You'll Build</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 p-6 rounded-lg border border-blue-400/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🎱 Magic 8-Ball App</h3>
+              <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">🎱 Magic 8-Ball App</h3>
                 <p className="text-gray-300 mb-3">Interactive fortune-telling application with custom responses and beautiful animations.</p>
                 <ul className="text-sm text-gray-400 space-y-1">
                   <li>• Random number generation</li>
@@ -259,8 +259,8 @@ function CourseOverview() {
                   <li>• List operations</li>
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-green-900/50 to-emerald-900/50 p-6 rounded-lg border border-green-400/30">
-                <h3 className="text-xl font-bold text-green-400 mb-3">🧮 Smart Calculator</h3>
+              <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-100">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">🧮 Smart Calculator</h3>
                 <p className="text-gray-300 mb-3">Advanced calculator with memory functions, history, and scientific operations.</p>
                 <ul className="text-sm text-gray-400 space-y-1">
                   <li>• Mathematical operations</li>
@@ -269,8 +269,8 @@ function CourseOverview() {
                   <li>• Data persistence</li>
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 p-6 rounded-lg border border-purple-400/30">
-                <h3 className="text-xl font-bold text-purple-400 mb-3">🎮 Adventure Game</h3>
+              <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">🎮 Adventure Game</h3>
                 <p className="text-gray-300 mb-3">Text-based adventure with player choices, inventory system, and story progression.</p>
                 <ul className="text-sm text-gray-400 space-y-1">
                   <li>• Object-oriented programming</li>
@@ -279,8 +279,8 @@ function CourseOverview() {
                   <li>• User experience flow</li>
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-orange-900/50 to-red-900/50 p-6 rounded-lg border border-orange-400/30">
-                <h3 className="text-xl font-bold text-orange-400 mb-3">📊 Personal Portfolio</h3>
+              <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-pink-100">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-3">📊 Personal Portfolio</h3>
                 <p className="text-gray-300 mb-3">Showcase all projects in a professional coding portfolio with live demos.</p>
                 <ul className="text-sm text-gray-400 space-y-1">
                   <li>• Project documentation</li>
@@ -295,7 +295,7 @@ function CourseOverview() {
 
         {overviewTab === 'schedule' && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white mb-6">📅 18-Week Learning Journey</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent mb-6 text-center">📅 18-Week Learning Journey</h2>
             <div className="space-y-4">
               {[
                 { weeks: "Weeks 1-3", title: "🌱 Foundation Building", topics: "Variables, Input/Output, Basic Operations, Debugging" },
@@ -305,10 +305,10 @@ function CourseOverview() {
                 { weeks: "Weeks 13-15", title: "🎮 Game Development", topics: "Object-Oriented Programming, Classes, Game Logic" },
                 { weeks: "Weeks 16-18", title: "🏆 Portfolio Creation", topics: "Project Refinement, Documentation, Presentation Skills" }
               ].map((phase, index) => (
-                <div key={index} className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 p-6 rounded-lg border border-gray-600/50">
+                <div key={index} className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-bold text-white">{phase.weeks}: {phase.title}</h3>
+                      <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{phase.weeks}: {phase.title}</h3>
                       <p className="text-gray-300 mt-2">{phase.topics}</p>
                     </div>
                     <div className="text-2xl">{index < 2 ? '🟢' : index < 4 ? '🟡' : '🔴'}</div>
@@ -322,10 +322,10 @@ function CourseOverview() {
         {overviewTab === 'requirements' && (
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">📋 Course Requirements</h2>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 text-center">📋 Course Requirements</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-xl font-semibold text-green-400 mb-4">✅ Student Requirements</h3>
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">✅ Student Requirements</h3>
                   <ul className="space-y-2 text-gray-300">
                     <li>• No prior programming experience needed</li>
                     <li>• Computer with internet access</li>
@@ -335,7 +335,7 @@ function CourseOverview() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-blue-400 mb-4">🎯 Teacher Requirements</h3>
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">🎯 Teacher Requirements</h3>
                   <ul className="space-y-2 text-gray-300">
                     <li>• Basic computer skills (no coding required)</li>
                     <li>• Access to teacher dashboard</li>
@@ -348,29 +348,29 @@ function CourseOverview() {
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">🏆 Assessment Methods</h2>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6 text-center">🏆 Assessment Methods</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-blue-900/30 p-6 rounded-lg border border-blue-400/30">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-3">📝 Interactive Quizzes (30%)</h3>
+                <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">📝 Interactive Quizzes (30%)</h3>
                   <p className="text-gray-300 text-sm">Auto-graded concept checks with immediate feedback</p>
                 </div>
-                <div className="bg-purple-900/30 p-6 rounded-lg border border-purple-400/30">
-                  <h3 className="text-lg font-semibold text-purple-400 mb-3">💻 Coding Projects (50%)</h3>
+                <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">💻 Coding Projects (50%)</h3>
                   <p className="text-gray-300 text-sm">Hands-on applications demonstrating programming skills</p>
                 </div>
-                <div className="bg-pink-900/30 p-6 rounded-lg border border-pink-400/30">
-                  <h3 className="text-lg font-semibold text-pink-400 mb-3">🎯 Participation (20%)</h3>
+                <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-pink-100">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-red-500 bg-clip-text text-transparent mb-3">🎯 Participation (20%)</h3>
                   <p className="text-gray-300 text-sm">Active engagement and progress tracking</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">📈 Success Metrics</h2>
-              <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 p-6 rounded-lg border border-gray-600/50">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-6 text-center">📈 Success Metrics</h2>
+              <div className="bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-purple-500/30">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-green-400 mb-3">🎓 Student Success Indicators</h3>
+                    <h3 className="text-lg font-semibold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">🎓 Student Success Indicators</h3>
                     <ul className="space-y-1 text-gray-300 text-sm">
                       <li>• 80%+ completion rate on coding projects</li>
                       <li>• Ability to debug simple programming errors</li>
@@ -379,7 +379,7 @@ function CourseOverview() {
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-blue-400 mb-3">📊 Teacher Dashboard Features</h3>
+                    <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">📊 Teacher Dashboard Features</h3>
                     <ul className="space-y-1 text-gray-300 text-sm">
                       <li>• Real-time progress monitoring</li>
                       <li>• Automated grading and feedback</li>
