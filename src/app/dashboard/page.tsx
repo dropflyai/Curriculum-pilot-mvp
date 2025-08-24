@@ -8,6 +8,7 @@ import { getLessonProgress, getWeek02CompletionStatus, getAllLessonProgress } fr
 import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
+import Leaderboard from '@/components/Leaderboard'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -463,6 +464,11 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Leaderboard */}
+        <div className="mb-8">
+          <Leaderboard />
         </div>
 
         {/* Lessons Grid */}
