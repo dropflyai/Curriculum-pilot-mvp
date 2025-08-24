@@ -74,10 +74,10 @@ export default function Home() {
             <br />
             <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent animate-gradient">Take Flight! ✈️</span>
           </h1>
-          <p className="text-2xl text-gray-700 mb-8 max-w-3xl mx-auto font-medium animate-fade-in">
+          <p className="text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-medium animate-fade-in">
             Master Python programming through fun, interactive projects! 🎆
             <br />
-            <span className="text-lg text-gray-600 mt-2 block">From Magic 8-Ball apps to awesome games - coding has never been this exciting! 🚀</span>
+            <span className="text-lg text-gray-300 mt-2 block">From Magic 8-Ball apps to awesome games - coding has never been this exciting! 🚀</span>
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -105,7 +105,7 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
                 <Code className="h-8 w-8 text-white animate-pulse" />
               </div>
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\u2728</div>
+              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 text-center">Interactive Coding</h3>
             <p className="text-gray-300 text-center font-medium">
