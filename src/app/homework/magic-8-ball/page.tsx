@@ -101,19 +101,15 @@ export default function Magic8BallHomework() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {enhancementOptions.map((option) => (
-              <div 
+              <Link
                 key={option.id}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
-                  selectedOption === option.id 
-                    ? 'border-blue-400 bg-blue-900/30' 
-                    : 'border-gray-600 bg-gray-700/50 hover:border-gray-500'
-                }`}
-                onClick={() => setSelectedOption(option.id)}
+                href={`/homework/magic-8-ball/${option.id}`}
+                className="p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 border-gray-600 bg-gray-700/50 hover:border-blue-400 hover:bg-blue-900/20 group block"
               >
                 <div className="flex items-start gap-3">
-                  <div className="text-2xl">{option.icon}</div>
+                  <div className="text-2xl group-hover:animate-bounce">{option.icon}</div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-white mb-2">{option.title}</h3>
+                    <h3 className="font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">{option.title}</h3>
                     <p className="text-gray-300 text-sm mb-3">{option.description}</p>
                     <ul className="space-y-1">
                       {option.tasks.map((task, index) => (
@@ -123,9 +119,12 @@ export default function Magic8BallHomework() {
                         </li>
                       ))}
                     </ul>
+                    <div className="mt-3 text-blue-400 text-sm font-medium group-hover:text-blue-300">
+                      Click to start coding →
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
