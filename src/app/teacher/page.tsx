@@ -9,7 +9,8 @@ import {
   Eye, MessageSquare, BarChart3, Zap,
   Timer, Star, Lightbulb, Send, Bell, Volume2,
   BookOpen, CheckCircle, XCircle, Edit3, Award,
-  FileText, PieChart, TrendingUp, Calendar, Printer
+  FileText, PieChart, TrendingUp, Calendar, Printer,
+  Plus
 } from 'lucide-react'
 import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
@@ -833,6 +834,166 @@ CodeFly Computer Science Teacher
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Assignment & Lesson Management Section */}
+        <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-xl p-6 mb-8 border border-purple-500/30">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <BookOpen className="h-8 w-8 text-purple-400 animate-pulse" />
+              <div>
+                <h2 className="text-2xl font-bold text-white">Assignment & Lesson Management</h2>
+                <p className="text-purple-200">Monitor and manage all student assignments and lessons</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                <Bell className="h-4 w-4 inline mr-1" />
+                Set Reminders
+              </button>
+            </div>
+          </div>
+
+          {/* Assignment Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Week 1 Vocabulary Homework */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <h3 className="text-lg font-bold text-white">Week 1: AI Vocabulary</h3>
+                </div>
+                <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full">Active</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-3">Flashcards & Matching Quiz</p>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Completion Rate:</span>
+                  <span className="text-green-400 font-bold">65%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full" style={{ width: '65%' }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>13 of 20 students completed</span>
+                  <span>Due: Tomorrow</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Link
+                  href="/teacher/assignments/vocabulary"
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors text-center"
+                >
+                  <Eye className="h-4 w-4 inline mr-1" />
+                  View Details
+                </Link>
+                <button className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                  <BarChart3 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Python Basics Lesson */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">Lesson 1: Python Basics</h3>
+                </div>
+                <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full">In Progress</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-3">Variables, Input/Output, Print</p>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Progress:</span>
+                  <span className="text-blue-400 font-bold">45%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>9 students active now</span>
+                  <span>Avg time: 25 min</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Link
+                  href="/teacher/lessons/python-basics"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors text-center"
+                >
+                  <Eye className="h-4 w-4 inline mr-1" />
+                  Monitor Progress
+                </Link>
+                <button className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                  <MessageSquare className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Magic 8-Ball Project */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">Project: Magic 8-Ball</h3>
+                </div>
+                <span className="text-xs bg-yellow-600 text-white px-2 py-1 rounded-full">Upcoming</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-3">Interactive Python Project</p>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Ready:</span>
+                  <span className="text-yellow-400 font-bold">Not Started</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>Starts next week</span>
+                  <span>Est: 45 min</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <button className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors">
+                  <Settings className="h-4 w-4 inline mr-1" />
+                  Configure
+                </button>
+                <button className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                  <Calendar className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions Bar */}
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+            <div className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
+                  <Plus className="h-4 w-4 inline mr-1" />
+                  Create Assignment
+                </button>
+                <button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
+                  <FileText className="h-4 w-4 inline mr-1" />
+                  View All Assignments
+                </button>
+                <button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
+                  <Download className="h-4 w-4 inline mr-1" />
+                  Export Grades
+                </button>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-400">Next deadline:</span>
+                <span className="text-yellow-400 font-bold">AI Vocabulary - Tomorrow 11:59 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Real-time Stats Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300">
