@@ -89,7 +89,7 @@ const vocabularyTerms: VocabularyTerm[] = [
 ]
 
 export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps) {
-  const [gameMode, setGameMode] = useState<'study' | 'flashcards' | 'match'>('study')
+  const [gameMode, setGameMode] = useState<'flashcards' | 'match'>('flashcards')
   const [matches, setMatches] = useState<Record<string, string>>({})
   const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
   const [selectedDefinition, setSelectedDefinition] = useState<string | null>(null)
@@ -233,17 +233,28 @@ export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps
     setStudyProgress(prev => new Set([...prev, termId]))
   }
 
-  if (gameMode === 'study') {
+  if (gameMode === 'flashcards') {
+    const filteredTerms = getFilteredTerms()
+    const currentTerm = filteredTerms[currentFlashcard]
+    
+    if (!currentTerm) {
+      return (
+        <div className="text-center p-8">
+          <p className="text-white">No terms available for this category.</p>
+        </div>
+      )
+    }
+
     return (
       <div className="space-y-6">
-        {/* Enhanced Header with Progress */}
+        {/* AI Vocabulary Mastery Center Header */}
         <div className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-lg p-6 border border-indigo-500/30">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Brain className="h-8 w-8 text-indigo-400 animate-pulse" />
               <div>
                 <h3 className="text-2xl font-bold text-white">AI Vocabulary Mastery Center</h3>
-                <p className="text-indigo-200">Interactive learning with progress tracking!</p>
+                <p className="text-indigo-200">Interactive learning with flashcards and quizzes!</p>
               </div>
             </div>
             <div className="text-right">
@@ -268,238 +279,49 @@ export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps
             </div>
           </div>
 
-          {/* Study Mode Options */}
-          <div className="flex gap-3 mb-4">
+          {/* Mode Selection */}
+          <div className="flex gap-3">
             <button
-              onClick={() => setGameMode('flashcards')}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg font-medium"
             >
               🃏 Interactive Flashcards
             </button>
             <button
               onClick={() => setGameMode('match')}
-              className={`text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
-                studyProgress.size >= vocabularyTerms.length * 0.7
-                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500'
-                  : 'bg-gray-600 cursor-not-allowed opacity-50'
-              }`}
-              disabled={studyProgress.size < vocabularyTerms.length * 0.7}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
             >
-              🎯 Take Matching Quiz {studyProgress.size < vocabularyTerms.length * 0.7 && `(Study ${Math.ceil(vocabularyTerms.length * 0.7 - studyProgress.size)} more terms)`}
+              🎯 Take Matching Quiz
             </button>
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <h4 className="text-lg font-bold text-white mb-3">📚 Choose Category to Study:</h4>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { key: 'all', name: 'All Terms', count: vocabularyTerms.length, color: 'from-gray-500 to-gray-600' },
-              { key: 'core', name: 'Core AI/ML', count: vocabularyTerms.filter(t => t.category === 'core').length, color: 'from-blue-500 to-cyan-500' },
-              { key: 'data', name: 'Data & Performance', count: vocabularyTerms.filter(t => t.category === 'data').length, color: 'from-green-500 to-emerald-500' },
-              { key: 'ethics', name: 'Ethics & Fairness', count: vocabularyTerms.filter(t => t.category === 'ethics').length, color: 'from-purple-500 to-pink-500' }
-            ].map(cat => (
-              <button
-                key={cat.key}
-                onClick={() => setCurrentCategory(cat.key as any)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  currentCategory === cat.key
-                    ? `bg-gradient-to-r ${cat.color} text-white`
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                {cat.name} ({cat.count})
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Interactive Terms Grid */}
-        <div className="grid gap-4">
-          {getFilteredTerms().map(term => {
-            const isStudied = studyProgress.has(term.id)
-            const isMastered = masteredTerms.has(term.id)
-            
-            return (
-              <div key={term.id} className={`bg-gray-800 rounded-lg border transition-all duration-500 transform hover:scale-102 ${
-                isMastered 
-                  ? 'border-green-500 bg-green-900/20' 
-                  : isStudied 
-                    ? 'border-blue-500 bg-blue-900/20' 
-                    : 'border-gray-700 hover:border-gray-600'
-              }`}>
-                <div className="p-6">
-                  {/* Term Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        isMastered ? 'bg-green-500 animate-pulse' :
-                        isStudied ? 'bg-blue-500' : 'bg-gray-500'
-                      }`} />
-                      <h5 className={`text-xl font-bold bg-gradient-to-r ${getCategoryColor(term.category)} bg-clip-text text-transparent`}>
-                        {term.term}
-                      </h5>
-                      <span className="text-xs px-2 py-1 bg-gray-700 text-gray-300 rounded-full">
-                        {getCategoryName(term.category)}
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      {!isStudied && (
-                        <button
-                          onClick={() => markTermAsStudied(term.id)}
-                          className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full transition-colors"
-                        >
-                          📖 Mark as Studied
-                        </button>
-                      )}
-                      {isStudied && !isMastered && (
-                        <button
-                          onClick={() => markTermAsMastered(term.id)}
-                          className="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-full transition-colors"
-                        >
-                          ✅ I Know This!
-                        </button>
-                      )}
-                      {isMastered && (
-                        <span className="text-xs bg-green-500 text-white px-3 py-1 rounded-full animate-pulse">
-                          🏆 Mastered
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Definition with Interactive Features */}
-                  <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-                    <p className="text-gray-300 mb-3 leading-relaxed">{term.definition}</p>
-                    
-                    {/* Memory Aid */}
-                    <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-3 border border-purple-500/30 mb-3">
-                      <h6 className="text-purple-300 font-semibold text-sm mb-1">💡 Memory Tip:</h6>
-                      <p className="text-purple-200 text-sm">
-                        {term.id === 'ml' && "Think: Machine = Computer, Learning = Getting smarter from practice"}
-                        {term.id === 'ai' && "Think: AI = Artificial (fake) Intelligence (smart) - computers acting smart"}
-                        {term.id === 'training' && "Think: Like training for sports - practice makes perfect!"}
-                        {term.id === 'inference' && "Think: Like a detective making inferences from clues"}
-                        {term.id === 'dataset' && "Think: Like a textbook collection - lots of examples to learn from"}
-                        {term.id === 'labels' && "Think: Like name tags at a party - tells you who is who"}
-                        {term.id === 'accuracy' && "Think: Like your test score - how many did you get right?"}
-                        {term.id === 'confusion-matrix' && "Think: A report card showing exactly where you got confused"}
-                        {term.id === 'representativeness' && "Think: Making sure everyone is included and represented fairly"}
-                        {term.id === 'bias' && "Think: Being unfairly better at helping some people than others"}
-                        {term.id === 'fairness' && "Think: Treating everyone equally - like fair rules in a game"}
-                      </p>
-                    </div>
-
-                    {/* Real-World Example */}
-                    <div className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-lg p-3 border border-cyan-500/30">
-                      <h6 className="text-cyan-300 font-semibold text-sm mb-1">🌍 Real-World Example:</h6>
-                      <p className="text-cyan-200 text-sm">
-                        {term.id === 'ml' && "Netflix recommending movies you'll like based on what you've watched before"}
-                        {term.id === 'ai' && "Your phone's face unlock, Siri understanding speech, or GPS finding the best route"}
-                        {term.id === 'training' && "Showing AI thousands of cat photos so it can recognize cats in new pictures"}
-                        {term.id === 'inference' && "After training, testing if AI can recognize a cat it's never seen before"}
-                        {term.id === 'dataset' && "The millions of photos Google uses to train their image search"}
-                        {term.id === 'labels' && "Tags on photos like 'dog', 'cat', 'car' that teach AI what things are"}
-                        {term.id === 'accuracy' && "If AI looks at 100 photos and gets 85 right, that's 85% accuracy"}
-                        {term.id === 'confusion-matrix' && "Report showing AI confuses 'husky' with 'wolf' 30% of the time"}
-                        {term.id === 'representativeness' && "Making sure AI training includes people of all ages, races, and backgrounds"}
-                        {term.id === 'bias' && "When face recognition works better on light skin than dark skin"}
-                        {term.id === 'fairness' && "Ensuring AI hiring tools don't discriminate based on gender or race"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Study Completion Celebration */}
-        {studyProgress.size === vocabularyTerms.length && (
-          <div className="bg-gradient-to-r from-green-800/30 to-emerald-800/30 rounded-lg p-6 border border-green-500/30 text-center">
-            <div className="text-6xl mb-4 animate-bounce">🎉</div>
-            <h4 className="text-2xl font-bold text-green-300 mb-2">All Terms Studied!</h4>
-            <p className="text-green-200 mb-4">
-              Congratulations! You've reviewed all {vocabularyTerms.length} AI vocabulary terms.
-            </p>
-            <button
-              onClick={() => setGameMode('match')}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105"
-            >
-              🎯 Ready for the Matching Quiz!
-            </button>
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  if (gameMode === 'flashcards') {
-    const filteredTerms = getFilteredTerms()
-    const currentTerm = filteredTerms[currentFlashcard]
-    
-    if (!currentTerm) {
-      return (
-        <div className="text-center p-8">
-          <p className="text-white">No terms available for this category.</p>
-          <button
-            onClick={() => setGameMode('study')}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Back to Study Mode
-          </button>
-        </div>
-      )
-    }
-
-    return (
-      <div className="space-y-6">
-        {/* Flashcard Header */}
-        <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30">
-          <div className="flex items-center justify-between mb-4">
+        {/* Flashcard Section Header */}
+        <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-4 border border-purple-500/30">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="text-3xl animate-pulse">🃏</div>
+              <div className="text-2xl">🃏</div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Interactive Flashcards</h3>
-                <p className="text-purple-200">Click to flip and test your memory!</p>
+                <h4 className="text-xl font-bold text-white">Flashcard Study Mode</h4>
+                <p className="text-purple-200 text-sm">Click cards to flip • Use arrows to navigate</p>
               </div>
             </div>
             <div className="text-right">
               <div className="text-lg font-bold text-purple-300">
-                {currentFlashcard + 1} / {filteredTerms.length}
+                Card {currentFlashcard + 1} of {filteredTerms.length}
               </div>
               <div className="text-sm text-purple-400">{getCategoryName(currentTerm.category)}</div>
             </div>
           </div>
-
-          {/* Navigation */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => setGameMode('study')}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              📚 Back to Study
-            </button>
-            <button
-              onClick={() => setGameMode('match')}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              🎯 Take Quiz
-            </button>
-          </div>
         </div>
 
         {/* Interactive Flashcard */}
-        <div className="relative mx-auto max-w-2xl">
+        <div className="flip-card-container mx-auto max-w-2xl">
           <div 
-            className={`relative w-full h-80 cursor-pointer transition-transform duration-700 transform-style-preserve-3d ${showDefinition ? 'rotate-y-180' : ''}`}
+            className={`flip-card w-full min-h-[400px] cursor-pointer ${showDefinition ? 'flipped' : ''}`}
             onClick={() => setShowDefinition(!showDefinition)}
           >
             {/* Front of Card - Term */}
-            <div className={`absolute inset-0 w-full h-full rounded-2xl p-8 border-2 backface-hidden ${
-              showDefinition ? 'opacity-0' : 'opacity-100'
-            } bg-gradient-to-br ${getCategoryColor(currentTerm.category)} shadow-2xl flex items-center justify-center`}>
+            <div className={`flip-card-front rounded-2xl p-8 border-2 bg-gradient-to-br ${getCategoryColor(currentTerm.category)} shadow-2xl flex items-center justify-center min-h-[400px]`}>
               <div className="text-center">
                 <div className="text-6xl mb-4 animate-pulse">🧠</div>
                 <h4 className="text-4xl font-bold text-white mb-4">{currentTerm.term}</h4>
@@ -508,14 +330,41 @@ export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps
             </div>
 
             {/* Back of Card - Definition */}
-            <div className={`absolute inset-0 w-full h-full rounded-2xl p-8 border-2 backface-hidden ${
-              showDefinition ? 'opacity-100' : 'opacity-0'
-            } bg-gradient-to-br from-gray-800 to-gray-900 border-gray-600 shadow-2xl flex items-center justify-center`}>
-              <div className="text-center">
-                <h5 className="text-2xl font-bold text-white mb-4">{currentTerm.term}</h5>
-                <p className="text-gray-300 text-lg leading-relaxed mb-4">{currentTerm.definition}</p>
-                <div className="text-sm text-gray-400">
-                  Click to flip back ← | Swipe for next card →
+            <div className="flip-card-back rounded-2xl p-6 border-2 bg-gradient-to-br from-gray-800 to-gray-900 border-gray-600 shadow-2xl flex flex-col justify-center min-h-[400px]">
+              <div className="space-y-4">
+                {/* Term Header */}
+                <div className="text-center mb-2">
+                  <span className={`text-xs px-3 py-1 rounded-full bg-gradient-to-r ${getCategoryColor(currentTerm.category)} text-white font-medium`}>
+                    {getCategoryName(currentTerm.category)}
+                  </span>
+                </div>
+                <h5 className="text-2xl font-bold text-white text-center mb-4">{currentTerm.term}</h5>
+                
+                {/* Definition Box */}
+                <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+                  <p className="text-gray-200 text-base leading-relaxed">{currentTerm.definition}</p>
+                </div>
+                
+                {/* Memory Tip */}
+                <div className="bg-purple-900/30 rounded-lg p-3 border border-purple-500/30">
+                  <h6 className="text-purple-300 font-semibold text-sm mb-1">💡 Remember:</h6>
+                  <p className="text-purple-200 text-sm">
+                    {currentTerm.id === 'ml' && "Machine = Computer, Learning = Getting smarter"}
+                    {currentTerm.id === 'ai' && "Artificial (fake) + Intelligence (smart)"}
+                    {currentTerm.id === 'training' && "Like training for sports - practice!"}
+                    {currentTerm.id === 'inference' && "Detective making inferences from clues"}
+                    {currentTerm.id === 'dataset' && "Collection of examples to learn from"}
+                    {currentTerm.id === 'labels' && "Name tags that tell you who is who"}
+                    {currentTerm.id === 'accuracy' && "Your test score - how many correct?"}
+                    {currentTerm.id === 'confusion-matrix' && "Report card showing where you got confused"}
+                    {currentTerm.id === 'representativeness' && "Everyone is included fairly"}
+                    {currentTerm.id === 'bias' && "Unfairly better for some than others"}
+                    {currentTerm.id === 'fairness' && "Treating everyone equally"}
+                  </p>
+                </div>
+                
+                <div className="text-xs text-gray-400 text-center mt-2">
+                  Click to flip back ← | Use arrows for navigation →
                 </div>
               </div>
             </div>
@@ -589,36 +438,62 @@ export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30">
-        <div className="flex items-center justify-between">
+      {/* AI Vocabulary Mastery Center Header */}
+      <div className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-lg p-6 border border-indigo-500/30">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Trophy className="h-8 w-8 text-purple-400" />
+            <Brain className="h-8 w-8 text-indigo-400 animate-pulse" />
             <div>
-              <h3 className="text-2xl font-bold text-white">Vocabulary Matching Challenge</h3>
-              <p className="text-purple-200">Match each term with its correct definition</p>
+              <h3 className="text-2xl font-bold text-white">AI Vocabulary Mastery Center</h3>
+              <p className="text-indigo-200">Interactive learning with flashcards and quizzes!</p>
             </div>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setGameMode('study')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              📚 Study Mode
-            </button>
-            <button
-              onClick={resetGame}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Reset
-            </button>
+          <div className="text-right">
+            <div className="text-2xl font-bold text-indigo-300">
+              {correctMatches.size}/{vocabularyTerms.length}
+            </div>
+            <div className="text-sm text-indigo-400">Correct Matches</div>
           </div>
+        </div>
+
+        {/* Mode Selection */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => setGameMode('flashcards')}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+          >
+            🃏 Interactive Flashcards
+          </button>
+          <button
+            className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg font-medium"
+          >
+            🎯 Take Matching Quiz
+          </button>
+        </div>
+      </div>
+
+      {/* Quiz Section Header */}
+      <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-4 border border-purple-500/30">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Trophy className="h-6 w-6 text-purple-400" />
+            <div>
+              <h4 className="text-xl font-bold text-white">Vocabulary Matching Challenge</h4>
+              <p className="text-purple-200 text-sm">Match each term with its correct definition</p>
+            </div>
+          </div>
+          <button
+            onClick={resetGame}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 text-sm"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Reset Quiz
+          </button>
         </div>
 
         {/* Progress */}
         <div className="mt-4 flex items-center gap-4">
-          <div className="text-white">
+          <div className="text-white text-sm">
             Progress: {correctMatches.size}/{vocabularyTerms.length} correct
           </div>
           <div className="flex-1 bg-gray-700 rounded-full h-2">
