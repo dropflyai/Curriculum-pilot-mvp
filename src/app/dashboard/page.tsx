@@ -452,10 +452,10 @@ export default function Dashboard() {
                         <span className="text-gray-300 text-sm">Est. Time: 60 min</span>
                       </div>
                       <Link
-                        href="/lesson/week-02"
+                        href="/homework/magic-8-ball"
                         className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
                       >
-                        View Assignment
+                        Start Homework
                       </Link>
                     </div>
                   </div>
