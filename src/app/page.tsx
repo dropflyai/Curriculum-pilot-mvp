@@ -170,7 +170,7 @@ function CourseOverview() {
       </h1>
       <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 border border-purple-500/30 shadow-2xl max-w-4xl mx-auto">
         <p className="text-2xl text-gray-200 leading-relaxed font-medium mb-6">
-          By the end of this course, students will have mastered Python programming fundamentals, built interactive projects like a Magic 8-Ball app and number guessing game, developed problem-solving skills, and created a personal coding portfolio to showcase their programming achievements. 🎯✨
+          By completing hands-on projects like AI vocabulary mastery, Magic 8-Ball apps, and interactive games, students will have learned essential AI concepts including <span className="text-purple-300 font-semibold">machine learning fundamentals</span>, <span className="text-blue-300 font-semibold">data classification</span>, <span className="text-cyan-300 font-semibold">pattern recognition</span>, and <span className="text-pink-300 font-semibold">algorithmic thinking</span> - all while building real Python applications that demonstrate their understanding of artificial intelligence principles. 🤖✨
         </p>
       </div>
     </div>
