@@ -365,8 +365,8 @@ export default function Dashboard() {
             <div className="flex items-center gap-3 mb-6">
               <div className="text-4xl">📚</div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Section 1 - Homework</h3>
-                <p className="text-purple-200">Complete these assignments to master AI fundamentals</p>
+                <h3 className="text-2xl font-bold text-white">Homework</h3>
+                <p className="text-purple-200">Complete these portfolio assignments to showcase your learning</p>
               </div>
             </div>
 
@@ -377,7 +377,7 @@ export default function Dashboard() {
                 <div className="flex items-start gap-4">
                   <div className="text-3xl group-hover:animate-bounce">🧠</div>
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-white mb-2">AI Vocabulary Mastery</h4>
+                    <h4 className="text-xl font-bold text-white mb-2">Lesson 1: AI Vocabulary Mastery</h4>
                     <p className="text-purple-200 text-sm mb-4">
                       Learn and master essential AI terminology through interactive study and matching games.
                     </p>
@@ -417,17 +417,46 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Future Assignment Placeholder */}
-              <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600 opacity-60">
+              {/* Lesson 2 Homework - Magic 8-Ball Portfolio */}
+              <div className="bg-blue-800/20 rounded-lg p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
-                  <div className="text-3xl">🔒</div>
+                  <div className="text-3xl group-hover:animate-bounce">🎱</div>
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-gray-400 mb-2">Next Assignment</h4>
-                    <p className="text-gray-500 text-sm mb-4">
-                      Additional homework assignments will be unlocked as you progress through the lessons.
+                    <h4 className="text-xl font-bold text-white mb-2">Lesson 2: Magic 8-Ball Portfolio</h4>
+                    <p className="text-blue-200 text-sm mb-4">
+                      Enhance your Magic 8-Ball project and create a portfolio entry to share with peers.
                     </p>
-                    <div className="bg-gray-700/50 rounded-lg p-3">
-                      <span className="text-gray-500 text-sm">Complete AI Classifier lesson to unlock</span>
+                    
+                    {/* Assignment Details */}
+                    <div className="bg-blue-900/30 rounded-lg p-3 mb-4">
+                      <div className="text-blue-300 text-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span>⚡</span>
+                          <span>Choose 1 of 4 enhancement options</span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span>📱</span>
+                          <span>Document project in digital portfolio</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>🤝</span>
+                          <span>Prepare for peer gallery walk</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Assignment Status */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 text-sm">⏱️</span>
+                        <span className="text-gray-300 text-sm">Est. Time: 60 min</span>
+                      </div>
+                      <Link
+                        href="/lesson/week-02"
+                        className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
+                      >
+                        View Assignment
+                      </Link>
                     </div>
                   </div>
                 </div>
