@@ -1,6 +1,6 @@
 'use client'
 
-import { BookOpen, Code, Users, Target, Calendar, Award } from 'lucide-react'
+import { BookOpen, Code, Users, Target, Calendar, Award, Bot } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -99,7 +99,7 @@ export default function Home() {
         </div>
 
         {/* Features */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
             <div className="mb-6 relative">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
@@ -123,6 +123,19 @@ export default function Home() {
             <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4 text-center">Project-Based Learning</h3>
             <p className="text-gray-300 text-center font-medium">
               Build real apps like Magic 8-Ball, calculators, and games while learning. Learning by doing! \ud83c\udfae
+            </p>
+          </div>
+          
+          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-cyan-100">
+            <div className="mb-6 relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
+                <Bot className="h-8 w-8 text-white animate-pulse" />
+              </div>
+              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">🤖</div>
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-4 text-center">AI Study Buddy</h3>
+            <p className="text-gray-300 text-center font-medium">
+              Your personal AI coding companion! Get instant help, debugging support, and personalized guidance 24/7! 🚀
             </p>
           </div>
           
@@ -168,6 +181,9 @@ function CourseOverview() {
           <div className="bg-pink-600/20 backdrop-blur-sm px-6 py-3 rounded-lg border border-pink-400/30">
             <span className="text-pink-400 font-bold text-lg">Real Portfolio</span>
           </div>
+          <div className="bg-cyan-600/20 backdrop-blur-sm px-6 py-3 rounded-lg border border-cyan-400/30">
+            <span className="text-cyan-400 font-bold text-lg">AI Study Buddy</span>
+          </div>
           <div className="bg-green-600/20 backdrop-blur-sm px-6 py-3 rounded-lg border border-green-400/30">
             <span className="text-green-400 font-bold text-lg">No Prerequisites</span>
           </div>
@@ -208,6 +224,38 @@ function CourseOverview() {
               <p className="text-xl text-gray-300 leading-relaxed">
                 Transform from coding newbie to Python programmer! This comprehensive course introduces 9th-grade students to programming fundamentals through hands-on projects, interactive lessons, and real-world applications. Students build confidence through gamified learning while teachers track progress with powerful analytics. ✨
               </p>
+            </div>
+
+            <div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-6">🤖 AI Study Buddy - Your Personal Coding Companion</h2>
+              <div className="bg-gradient-to-r from-cyan-900/20 to-blue-900/20 p-6 rounded-xl border border-cyan-400/30 mb-8">
+                <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                  Starting in Lesson 3, every student gains access to their personal AI Study Buddy - a revolutionary learning companion powered by advanced artificial intelligence. This isn't just a chatbot; it's your 24/7 coding mentor, debugger, and encourager rolled into one!
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-semibold text-cyan-400">🌟 Instant Code Assistance</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• Real-time debugging help when your code isn't working</li>
+                      <li>• Step-by-step explanations of programming concepts</li>
+                      <li>• Personalized hints that guide without giving away answers</li>
+                      <li>• Code optimization suggestions to level up your skills</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-semibold text-blue-400">💡 Personalized Learning Support</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• Adapts to your learning pace and style</li>
+                      <li>• Celebrates your victories and motivates through challenges</li>
+                      <li>• Provides alternative explanations when concepts are tricky</li>
+                      <li>• Available anytime - late night coding sessions included!</li>
+                    </ul>
+                  </div>
+                </div>
+                <p className="text-lg text-cyan-300 mt-6 text-center font-semibold">
+                  🚀 Your AI Study Buddy makes learning to code feel like having a patient, knowledgeable friend by your side throughout your entire coding journey!
+                </p>
+              </div>
             </div>
 
             <div>
