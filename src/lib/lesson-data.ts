@@ -1338,13 +1338,52 @@ print("\\n💡 Ready to enhance your Magic 8-Ball? The magic is in your hands!")
           "I can identify real-world applications of random number generation."
         ],
         submit: {
-          prompt: `**Creative Showcase (20 min):** Transform your Magic 8-Ball into something unique!
-Choose one major enhancement:
-1) **Themed Versions** - Create specialized 8-Balls (Academic Advisor, Sports Oracle, Career Guide)
-2) **Question Intelligence** - Make responses adapt to question type ("Will I...?", "Should I...?", "When will...?")
-3) **Persistence Features** - Save questions/answers to files, load custom response sets
-4) **Interactive Experience** - Add ASCII animations, typing effects, or themed interfaces
-**Turn in:** Enhanced code + demonstration + explanation of your creative choices.`,
+          prompt: `**📝 Magic 8-Ball Portfolio Homework (60 minutes)**
+
+**PART 1: Personal Enhancement Project (25 min)**
+Transform your Magic 8-Ball with ONE major feature:
+
+🎯 **Option A: Themed Magic 8-Balls**
+- Create 3 specialized versions (Study Buddy Ball, Sports Oracle, Future Career Guide)
+- Each with custom responses matching the theme
+- Document why you chose these themes
+
+🧠 **Option B: Smart Question Analysis** 
+- Make responses adapt to question types ("Will I...?", "Should I...?", "What if...?")
+- Add confidence levels to responses ("Very likely", "Probably not")
+- Track and display question patterns
+
+💾 **Option C: Data Persistence System**
+- Save all questions and answers to a text file
+- Load custom response sets from files
+- Create a "My History" feature showing past predictions
+
+🎨 **Option D: Interactive Experience**
+- Add ASCII art animations and visual effects
+- Include typing animations and suspense building
+- Create themed user interfaces with colors and emojis
+
+**PART 2: Portfolio Documentation (20 min)**
+Create a digital portfolio entry including:
+- 📸 **Screenshots** of your Magic 8-Ball in action
+- 💻 **Code Explanation** highlighting your key additions
+- 🎨 **Creative Choices** explaining your design decisions
+- 📊 **Data Analysis** (if you chose persistence option)
+- 🤔 **Reflection** on what you learned about randomness and programming
+
+**PART 3: Peer Comparison Preparation (15 min)**
+Prepare to share with classmates:
+- 🏆 **Feature Demo** - Quick 2-minute demonstration
+- 💡 **Inspiration Board** - What inspired your theme/approach?
+- 🔍 **Technical Highlight** - One cool coding technique you're proud of
+- 🎯 **Future Ideas** - How would you enhance it further?
+
+**📤 PORTFOLIO SUBMISSION:**
+Submit to your digital portfolio with hashtags: #MagicBall #Week2 #PythonProject
+Include: Enhanced code, documentation, screenshots, and reflection essay.
+
+**🤝 PEER INTERACTION:**
+Next class: Gallery walk where students browse each other's portfolios, leave positive comments, and vote on "Most Creative Theme," "Best Code Innovation," and "Coolest Visual Design."`,
           rubric: {
             exceeds: [
               "Enhancement shows deep understanding of programming concepts and user experience design.",
