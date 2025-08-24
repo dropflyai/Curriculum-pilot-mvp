@@ -598,7 +598,7 @@ export default function VocabularyMatcher({ onComplete }: VocabularyMatcherProps
                   Try Again
                 </button>
                 <button
-                  onClick={() => setGameMode('study')}
+                  onClick={() => setGameMode('flashcards')}
                   className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   Study More
