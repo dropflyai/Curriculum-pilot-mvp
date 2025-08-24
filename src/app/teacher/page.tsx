@@ -2013,7 +2013,7 @@ CodeFly Computer Science Teacher
       )}
 
       {/* Enhanced Analytics Modal */}
-      {showAnalyticsModal && predictiveAnalytics && (
+      {showAnalyticsModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-cyan-500/30">
             <div className="p-6 border-b border-cyan-500/30 sticky top-0 bg-gray-800">
@@ -2023,7 +2023,8 @@ CodeFly Computer Science Teacher
                   AI-Powered Class Analytics 🤖
                 </h3>
                 <div className="flex items-center space-x-4">
-                  <div className="flex bg-gray-700 rounded-lg p-1">
+                  {predictiveAnalytics && (
+                    <div className="flex bg-gray-700 rounded-lg p-1">
                     <button
                       onClick={() => setAnalyticsView('risk-assessment')}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -2055,6 +2056,7 @@ CodeFly Computer Science Teacher
                       Learning Patterns
                     </button>
                   </div>
+                  )}
                   <button
                     onClick={() => setShowAnalyticsModal(false)}
                     className="text-gray-400 hover:text-white transition-colors"
@@ -2066,6 +2068,16 @@ CodeFly Computer Science Teacher
             </div>
 
             <div className="p-6">
+              {!predictiveAnalytics ? (
+                <div className="text-center py-12">
+                  <div className="animate-pulse">
+                    <TrendingUp className="h-16 w-16 text-cyan-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-white mb-2">Loading Analytics...</h3>
+                    <p className="text-gray-400">Analyzing student data and generating insights</p>
+                  </div>
+                </div>
+              ) : (
+                <div>
               {analyticsView === 'risk-assessment' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -2312,6 +2324,8 @@ CodeFly Computer Science Teacher
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
                 </div>
               )}
             </div>
