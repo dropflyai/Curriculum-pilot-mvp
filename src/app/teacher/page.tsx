@@ -153,7 +153,7 @@ export default function TeacherDashboard() {
       if (progressError) throw progressError
 
       // Process enhanced student data
-      const studentsWithProgress = (usersData || []).map((user) => {
+      const studentsWithProgress = (usersData || []).map((user: any) => {
         const userProgress = (progressData || []).filter(p => p.user_id === user.id)
         
         // Calculate current activity based on real data
