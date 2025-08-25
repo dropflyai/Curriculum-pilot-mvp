@@ -40,13 +40,13 @@ export default function Home() {
               </button>
               <div className="flex space-x-4 ml-6">
                 <Link 
-                  href="/dashboard" 
+                  href="/auth" 
                   className="text-blue-600 hover:text-blue-800 font-medium"
                 >
                   Student Portal
                 </Link>
                 <Link 
-                  href="/teacher" 
+                  href="/auth" 
                   className="text-gray-600 hover:text-gray-800"
                 >
                   Teacher
@@ -82,14 +82,14 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href="/auth"
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center glow-blue"
             >
               <BookOpen className="h-6 w-6 mr-3 animate-pulse" />
               Start Your Journey! 🎆
             </Link>
             <Link
-              href="/teacher"
+              href="/auth"
               className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center glow-purple"
             >
               <Users className="h-6 w-6 mr-3 animate-bounce" />
