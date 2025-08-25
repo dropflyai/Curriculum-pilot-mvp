@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { User, Lesson, Progress } from '@/lib/supabase'
 import { 
@@ -76,6 +78,8 @@ interface PredictiveAnalytics {
 type FilterType = 'all' | 'active' | 'completed' | 'needs-help' | 'stuck'
 
 export default function TeacherDashboard() {
+  const { user, isAuthenticated, loading: authLoading, isTeacher } = useAuth()
+  const router = useRouter()
   const [students, setStudents] = useState<StudentProgress[]>([])
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [analytics, setAnalytics] = useState<LessonAnalytics[]>([])
@@ -90,6 +94,13 @@ export default function TeacherDashboard() {
   const [messageText, setMessageText] = useState('')
   const [showAnnouncementModal, setShowAnnouncementModal] = useState(false)
   const [announcementText, setAnnouncementText] = useState('')
+
+  // Authentication check
+  useEffect(() => {
+    if (!authLoading && (!isAuthenticated || !isTeacher)) {
+      router.push('/auth?role=teacher')
+    }
+  }, [authLoading, isAuthenticated, isTeacher, router])
   const [messageSending, setMessageSending] = useState(false)
   
   // Grade Book States

@@ -46,10 +46,10 @@ export default function Dashboard() {
 
 
   useEffect(() => {
-    // TEMPORARY: Allow dashboard access for testing
-    // if (!loading && !isAuthenticated) {
-    //   router.push('/auth')
-    // }
+    // Redirect to auth if not authenticated
+    if (!loading && !isAuthenticated) {
+      router.push('/auth')
+    }
   }, [isAuthenticated, loading, router])
 
   const handleSignOut = async () => {

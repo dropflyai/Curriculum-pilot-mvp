@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, signUp } from '@/lib/auth'
-import { Eye, EyeOff, User, Mail, Lock, UserCheck } from 'lucide-react'
+import { Eye, EyeOff, User, Mail, Lock, UserCheck, Play, GraduationCap } from 'lucide-react'
 import Link from 'next/link'
+import { demoLogin } from '@/lib/demo-accounts'
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -49,6 +50,25 @@ export default function AuthPage() {
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDemoLogin = async (accountType: 'student' | 'teacher') => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      await demoLogin(accountType)
+      // Redirect based on account type
+      if (accountType === 'teacher') {
+        router.push('/teacher')
+      } else {
+        router.push('/dashboard')
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Demo login failed')
     } finally {
       setLoading(false)
     }
@@ -198,6 +218,42 @@ export default function AuthPage() {
               }
             </button>
           </form>
+
+          {/* Demo Login Section */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or try a demo account</span>
+              </div>
+            </div>
+            
+            <div className="mt-6 grid grid-cols-1 gap-3">
+              <button
+                onClick={() => handleDemoLogin('student')}
+                disabled={loading}
+                className="w-full flex items-center justify-center px-4 py-3 border border-blue-300 rounded-lg shadow-sm bg-blue-50 text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <GraduationCap className="h-5 w-5 mr-2" />
+                Demo Student Login
+              </button>
+              
+              <button
+                onClick={() => handleDemoLogin('teacher')}
+                disabled={loading}
+                className="w-full flex items-center justify-center px-4 py-3 border border-purple-300 rounded-lg shadow-sm bg-purple-50 text-purple-700 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <UserCheck className="h-5 w-5 mr-2" />
+                Demo Teacher Login
+              </button>
+            </div>
+            
+            <p className="mt-3 text-xs text-gray-500 text-center">
+              Demo accounts are pre-configured with sample data for exploration
+            </p>
+          </div>
 
           {/* Toggle Mode */}
           <div className="mt-6 text-center">
