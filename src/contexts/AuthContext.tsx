@@ -26,20 +26,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial user
-    getCurrentUser().then(({ user }) => {
-      setUser(user)
-      setLoading(false)
-    })
+    // Check for demo authentication first
+    const checkDemoAuth = () => {
+      if (typeof window !== 'undefined') {
+        const demoUser = localStorage.getItem('demo_user')
+        const isDemoAuth = localStorage.getItem('demo_authenticated')
+        
+        if (demoUser && isDemoAuth === 'true') {
+          setUser(JSON.parse(demoUser))
+          setLoading(false)
+          return true
+        }
+      }
+      return false
+    }
 
-    // Listen for auth changes
-    const { data: { subscription } } = onAuthStateChange((user) => {
-      setUser(user)
-      setLoading(false)
-    })
+    // If demo auth found, use it
+    if (checkDemoAuth()) {
+      return
+    }
 
-    return () => {
-      subscription?.unsubscribe()
+    // Otherwise, use Supabase auth if configured
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      // Get initial user
+      getCurrentUser().then(({ user }) => {
+        setUser(user)
+        setLoading(false)
+      })
+
+      // Listen for auth changes
+      const { data: { subscription } } = onAuthStateChange((user) => {
+        setUser(user)
+        setLoading(false)
+      })
+
+      return () => {
+        subscription?.unsubscribe()
+      }
+    } else {
+      // No Supabase configured, just set loading to false
+      setLoading(false)
     }
   }, [])
 

@@ -115,6 +115,24 @@ export async function demoLogin(accountType: 'student' | 'teacher') {
     throw new Error(`Demo ${accountType} account not found`)
   }
 
+  // Check if Supabase is configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    // Fallback: Create mock session in localStorage for demo purposes
+    const mockUser = {
+      id: `demo-${accountType}`,
+      email: account.email,
+      full_name: account.fullName,
+      role: account.role
+    }
+    
+    // Store demo user in localStorage
+    localStorage.setItem('demo_user', JSON.stringify(mockUser))
+    localStorage.setItem('demo_authenticated', 'true')
+    
+    return { user: mockUser }
+  }
+
+  // Normal Supabase authentication
   const supabase = createClient()
   const { data, error } = await supabase.auth.signInWithPassword({
     email: account.email,

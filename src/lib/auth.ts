@@ -68,8 +68,18 @@ export async function signIn(email: string, password: string) {
 // Sign out
 export async function signOut() {
   try {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    // Clear demo authentication if present
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('demo_user')
+      localStorage.removeItem('demo_authenticated')
+    }
+
+    // Clear Supabase auth if configured
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+    }
+    
     return { error: null }
   } catch (error) {
     return { error: error instanceof Error ? error : new Error('Unknown error') }
