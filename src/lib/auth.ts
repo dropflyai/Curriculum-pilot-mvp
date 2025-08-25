@@ -8,11 +8,15 @@ export interface AuthUser {
   role: 'student' | 'teacher' | 'admin'
 }
 
-const supabase = createClient()
+// Create supabase client when needed
+function getSupabase() {
+  return createClient()
+}
 
 // Sign up with role
 export async function signUp(email: string, password: string, fullName: string, role: 'student' | 'teacher' = 'student') {
   try {
+    const supabase = getSupabase()
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -52,6 +56,7 @@ export async function signUp(email: string, password: string, fullName: string, 
 // Sign in
 export async function signIn(email: string, password: string) {
   try {
+    const supabase = getSupabase()
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -76,6 +81,7 @@ export async function signOut() {
 
     // Clear Supabase auth if configured
     if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      const supabase = getSupabase()
       const { error } = await supabase.auth.signOut()
       if (error) throw error
     }
@@ -89,6 +95,7 @@ export async function signOut() {
 // Get current user with profile
 export async function getCurrentUser(): Promise<{ user: AuthUser | null, error: Error | null }> {
   try {
+    const supabase = getSupabase()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError) throw authError
@@ -146,6 +153,7 @@ export async function getCurrentUser(): Promise<{ user: AuthUser | null, error: 
 
 // Listen to auth state changes
 export function onAuthStateChange(callback: (user: AuthUser | null) => void) {
+  const supabase = getSupabase()
   return supabase.auth.onAuthStateChange(async (event, session) => {
     if (session?.user) {
       const { user } = await getCurrentUser()
@@ -172,6 +180,7 @@ export function hasRole(user: AuthUser | null, requiredRole: 'student' | 'teache
 // Reset password
 export async function resetPassword(email: string) {
   try {
+    const supabase = getSupabase()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`
     })

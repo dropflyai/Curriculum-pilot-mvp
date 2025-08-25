@@ -1,10 +1,26 @@
 import { createBrowserClient } from '@supabase/ssr'
 
 export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    // Return a mock client that throws descriptive errors
+    return {
+      auth: {
+        signUp: () => Promise.reject(new Error('Supabase not configured')),
+        signInWithPassword: () => Promise.reject(new Error('Supabase not configured')),
+        signOut: () => Promise.reject(new Error('Supabase not configured')),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
+      },
+      from: () => ({
+        select: () => ({ eq: () => ({ single: () => Promise.reject(new Error('Supabase not configured')) }) }),
+        insert: () => Promise.reject(new Error('Supabase not configured'))
+      })
+    } as any
+  }
+  
+  return createBrowserClient(supabaseUrl, supabaseKey)
 }
 
 // Types for our database tables
