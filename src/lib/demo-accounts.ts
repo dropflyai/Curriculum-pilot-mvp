@@ -1,5 +1,4 @@
 // Demo accounts for CodeFly Platform
-import { createClient } from '@/lib/supabase'
 
 export interface DemoAccount {
   email: string
@@ -26,87 +25,6 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   }
 ]
 
-// Create demo accounts if they don't exist
-export async function createDemoAccounts() {
-  const supabase = createClient()
-  const results = []
-
-  for (const account of DEMO_ACCOUNTS) {
-    try {
-      // Check if account already exists
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', account.email)
-        .single()
-
-      if (existingUser) {
-        results.push({ 
-          email: account.email, 
-          status: 'exists', 
-          message: 'Account already exists' 
-        })
-        continue
-      }
-
-      // Create the account
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: account.email,
-        password: account.password,
-        options: {
-          data: {
-            full_name: account.fullName,
-            role: account.role
-          }
-        }
-      })
-
-      if (authError) {
-        results.push({ 
-          email: account.email, 
-          status: 'error', 
-          message: authError.message 
-        })
-        continue
-      }
-
-      // Create user profile
-      if (authData.user) {
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert([{
-            id: authData.user.id,
-            email: account.email,
-            full_name: account.fullName,
-            role: account.role
-          }])
-
-        if (profileError) {
-          results.push({ 
-            email: account.email, 
-            status: 'partial', 
-            message: 'Auth created but profile failed: ' + profileError.message 
-          })
-        } else {
-          results.push({ 
-            email: account.email, 
-            status: 'created', 
-            message: 'Account created successfully' 
-          })
-        }
-      }
-
-    } catch (error) {
-      results.push({ 
-        email: account.email, 
-        status: 'error', 
-        message: error instanceof Error ? error.message : 'Unknown error' 
-      })
-    }
-  }
-
-  return results
-}
 
 // Quick login function for demo accounts
 export async function demoLogin(accountType: 'student' | 'teacher') {
@@ -115,30 +33,17 @@ export async function demoLogin(accountType: 'student' | 'teacher') {
     throw new Error(`Demo ${accountType} account not found`)
   }
 
-  // Check if Supabase is configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-    // Fallback: Create mock session in localStorage for demo purposes
-    const mockUser = {
-      id: `demo-${accountType}`,
-      email: account.email,
-      full_name: account.fullName,
-      role: account.role
-    }
-    
-    // Store demo user in localStorage
-    localStorage.setItem('demo_user', JSON.stringify(mockUser))
-    localStorage.setItem('demo_authenticated', 'true')
-    
-    return { user: mockUser }
-  }
-
-  // Normal Supabase authentication
-  const supabase = createClient()
-  const { data, error } = await supabase.auth.signInWithPassword({
+  // Always use localStorage for demo accounts to avoid Supabase dependency
+  const mockUser = {
+    id: `demo-${accountType}`,
     email: account.email,
-    password: account.password
-  })
-
-  if (error) throw error
-  return data
+    full_name: account.fullName,
+    role: account.role
+  }
+  
+  // Store demo user in localStorage
+  localStorage.setItem('demo_user', JSON.stringify(mockUser))
+  localStorage.setItem('demo_authenticated', 'true')
+  
+  return { user: mockUser }
 }

@@ -154,13 +154,13 @@ export default function TeacherDashboard() {
 
       // Process enhanced student data
       const studentsWithProgress = (usersData || []).map((user: any) => {
-        const userProgress = (progressData || []).filter(p => p.user_id === user.id)
+        const userProgress = (progressData || []).filter((p: any) => p.user_id === user.id)
         
         // Calculate current activity based on real data
         let currentActivity = undefined
         if (userProgress.length > 0) {
           // Get the most recently updated progress record
-          const latestProgress = userProgress.reduce((latest, current) => 
+          const latestProgress = userProgress.reduce((latest: any, current: any) => 
             new Date(current.updated_at) > new Date(latest.updated_at) ? current : latest
           )
 
