@@ -193,8 +193,8 @@ export default function TeacherDashboard() {
 
         // Extract real code submissions from progress data
         const codeSubmissions = userProgress
-          .filter(p => p.submitted_code)
-          .map(p => ({
+          .filter((p: any) => p.submitted_code)
+          .map((p: any) => ({
             lessonId: p.lesson_id,
             code: p.submitted_code || '',
             result: (p.score && p.score > 0.7 ? 'success' : 'error') as 'success' | 'error',
@@ -204,11 +204,11 @@ export default function TeacherDashboard() {
 
         // Extract real quiz results from progress data
         const quizResults = userProgress
-          .filter(p => p.quiz_answers && Object.keys(p.quiz_answers).length > 0)
-          .map(p => {
+          .filter((p: any) => p.quiz_answers && Object.keys(p.quiz_answers).length > 0)
+          .map((p: any) => {
             const answers = p.quiz_answers as Record<string, { correct?: boolean }>
             const totalQuestions = Object.keys(answers).length
-            const correctAnswers = Object.values(answers).filter(answer => answer.correct).length
+            const correctAnswers = Object.values(answers).filter((answer: any) => answer.correct).length
             
             // Calculate time spent from progress timing
             const startTime = p.started_at ? new Date(p.started_at) : new Date(p.created_at)
@@ -237,42 +237,42 @@ export default function TeacherDashboard() {
       setLessons(lessonsData || [])
 
       // Calculate lesson analytics from real data
-      const lessonAnalytics = (lessonsData || []).map(lesson => {
-        const lessonProgress = studentsWithProgress.flatMap(s => 
-          s.progress.filter(p => p.lesson_id === lesson.id)
+      const lessonAnalytics = (lessonsData || []).map((lesson: any) => {
+        const lessonProgress = studentsWithProgress.flatMap((s: any) => 
+          s.progress.filter((p: any) => p.lesson_id === lesson.id)
         )
-        const completedCount = lessonProgress.filter(p => p.status === 'completed').length
-        const strugglingCount = studentsWithProgress.filter(s => 
+        const completedCount = lessonProgress.filter((p: any) => p.status === 'completed').length
+        const strugglingCount = studentsWithProgress.filter((s: any) => 
           s.currentActivity?.lessonId === lesson.id && s.currentActivity && s.currentActivity.timeSpent > 25
         ).length
 
         // Calculate average time spent from real data
         const timesSpent = lessonProgress
-          .map(p => {
+          .map((p: any) => {
             if (p.started_at && p.completed_at) {
               return (new Date(p.completed_at).getTime() - new Date(p.started_at).getTime()) / 60000
             }
             return null
           })
-          .filter(t => t !== null)
+          .filter((t: any) => t !== null)
         
         const avgTimeSpent = timesSpent.length > 0 
-          ? Math.round(timesSpent.reduce((sum, time) => sum + time, 0) / timesSpent.length)
+          ? Math.round(timesSpent.reduce((sum: any, time: any) => sum + time, 0) / timesSpent.length)
           : 30 // Default estimate
 
         // Extract common errors from code submissions
-        const allCodeSubmissions = studentsWithProgress.flatMap(s => s.codeSubmissions || [])
+        const allCodeSubmissions = studentsWithProgress.flatMap((s: any) => s.codeSubmissions || [])
         const errorMessages = allCodeSubmissions
-          .filter(sub => sub.result === 'error' && sub.errorMessage)
-          .map(sub => sub.errorMessage!)
+          .filter((sub: any) => sub.result === 'error' && sub.errorMessage)
+          .map((sub: any) => sub.errorMessage!)
         
         const commonErrors = errorMessages.length > 0 
           ? [...new Set(errorMessages)].slice(0, 3)
           : ['No errors recorded yet']
 
         // Calculate quiz performance from real data
-        const allQuizResults = studentsWithProgress.flatMap(s => s.quizResults || [])
-        const lessonQuizResults = allQuizResults.filter(quiz => quiz.lessonId === lesson.id)
+        const allQuizResults = studentsWithProgress.flatMap((s: any) => s.quizResults || [])
+        const lessonQuizResults = allQuizResults.filter((quiz: any) => quiz.lessonId === lesson.id)
         
         const avgScore = lessonQuizResults.length > 0
           ? lessonQuizResults.reduce((sum, quiz) => sum + (quiz.score / quiz.totalQuestions), 0) / lessonQuizResults.length
@@ -319,23 +319,23 @@ export default function TeacherDashboard() {
   const getFilterCounts = () => {
     return {
       all: students.length,
-      active: students.filter(s => 
+      active: students.filter((s: any) => 
         s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000
       ).length,
-      completed: students.filter(s => 
+      completed: students.filter((s: any) => 
         s.progress.some(p => p.status === 'completed')
       ).length,
-      'needs-help': students.filter(s => 
+      'needs-help': students.filter((s: any) => 
         s.currentActivity && s.currentActivity.timeSpent > 25 && s.currentActivity.timeSpent <= 35
       ).length,
-      stuck: students.filter(s => 
+      stuck: students.filter((s: any) => 
         s.currentActivity && s.currentActivity.timeSpent > 35
       ).length
     }
   }
 
   // Filter students based on current filter and search
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = students.filter((student: any) => {
     const matchesSearch = student.user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          student.user.email.toLowerCase().includes(searchTerm.toLowerCase())
     
@@ -360,13 +360,13 @@ export default function TeacherDashboard() {
 
   const getProgressStats = () => {
     const totalStudents = students.length
-    const activeStudents = students.filter(s => 
+    const activeStudents = students.filter((s: any) => 
       s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000
     ).length
     const completedCount = students.reduce((acc, student) => 
-      acc + student.progress.filter(p => p.status === 'completed').length, 0
+      acc + student.progress.filter((p: any) => p.status === 'completed').length, 0
     )
-    const needsHelpCount = students.filter(s => 
+    const needsHelpCount = students.filter((s: any) => 
       s.currentActivity && s.currentActivity.timeSpent > 25
     ).length
 
@@ -490,17 +490,17 @@ Generated: ${timestamp}
 CLASS OVERVIEW
 ========================================
 Total Students: ${students.length}
-Active Students: ${students.filter(s => s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000).length}
-Completed Lessons: ${students.reduce((acc, s) => acc + s.progress.filter(p => p.status === 'completed').length, 0)}
+Active Students: ${students.filter((s: any) => s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000).length}
+Completed Lessons: ${students.reduce((acc, s) => acc + s.progress.filter((p: any) => p.status === 'completed').length, 0)}
 Average Class Performance: ${analytics.length > 0 ? analytics[0].completionRate.toFixed(1) : 'N/A'}%
 
 ========================================
 STUDENT PERFORMANCE BREAKDOWN
 ========================================
-${students.map(s => {
-  const completedLessons = s.progress.filter(p => p.status === 'completed').length
-  const averageScore = s.progress.filter(p => p.score).length > 0 
-    ? (s.progress.filter(p => p.score).reduce((sum, p) => sum + (p.score || 0), 0) / s.progress.filter(p => p.score).length * 100).toFixed(1)
+${students.map((s: any) => {
+  const completedLessons = s.progress.filter((p: any) => p.status === 'completed').length
+  const averageScore = s.progress.filter((p: any) => p.score).length > 0 
+    ? (s.progress.filter((p: any) => p.score).reduce((sum, p) => sum + (p.score || 0), 0) / s.progress.filter((p: any) => p.score).length * 100).toFixed(1)
     : 'No grades'
   return `${s.user.full_name}: ${completedLessons} lessons completed, Average: ${averageScore}%`
 }).join('\n')}
@@ -508,19 +508,19 @@ ${students.map(s => {
 ========================================
 LESSON ANALYTICS
 ========================================
-${analytics.map(a => `${a.title}: ${a.completionRate.toFixed(1)}% completion, ${a.strugglingStudents} students need help`).join('\n')}
+${analytics.map((a: any) => `${a.title}: ${a.completionRate.toFixed(1)}% completion, ${a.strugglingStudents} students need help`).join('\n')}
 
 ========================================
 RECOMMENDATIONS
 ========================================
-- Students needing extra support: ${students.filter(s => s.currentActivity && s.currentActivity.timeSpent > 35).length}
+- Students needing extra support: ${students.filter((s: any) => s.currentActivity && s.currentActivity.timeSpent > 35).length}
 - Consider review sessions for challenging concepts
 - Celebrate high performers to maintain motivation
 `
 
       case 'individual-student':
         if (!student) return 'Error: No student selected'
-        const studentGrades = student.progress.filter(p => p.score).map(p => Math.round((p.score || 0) * 100))
+        const studentGrades = student.progress.filter((p: any) => p.score).map((p: any) => Math.round((p.score || 0) * 100))
         const studentAverage = studentGrades.length > 0 ? (studentGrades.reduce((sum, grade) => sum + grade, 0) / studentGrades.length).toFixed(1) : 'No grades'
         
         return `CODEFLY INDIVIDUAL STUDENT REPORT
@@ -537,14 +537,14 @@ Current Status: ${student.currentActivity ? 'Active' : 'Offline'}
 ACADEMIC PERFORMANCE
 ========================================
 Overall Average: ${studentAverage}%
-Lessons Completed: ${student.progress.filter(p => p.status === 'completed').length}/${lessons.length}
-Assignments Submitted: ${student.progress.filter(p => p.submitted_code).length}
+Lessons Completed: ${student.progress.filter((p: any) => p.status === 'completed').length}/${lessons.length}
+Assignments Submitted: ${student.progress.filter((p: any) => p.submitted_code).length}
 Quiz Performance: ${student.quizResults?.length || 0} quizzes completed
 
 ========================================
 DETAILED PROGRESS
 ========================================
-${student.progress.map(p => {
+${student.progress.map((p: any) => {
   const lesson = lessons.find(l => l.id === p.lesson_id)
   const score = p.score ? Math.round(p.score * 100) + '%' : 'Not graded'
   return `${lesson?.title || 'Unknown Lesson'}: ${p.status} (Score: ${score})`
@@ -566,12 +566,12 @@ Areas for Improvement:
 ========================================
 TEACHER COMMENTS
 ========================================
-${student.progress.map(p => p.teacher_feedback).filter(f => f).join('\n') || 'No specific feedback recorded yet.'}
+${student.progress.map((p: any) => p.teacher_feedback).filter((f: any) => f).join('\n') || 'No specific feedback recorded yet.'}
 `
 
       case 'parent-report':
         if (!student) return 'Error: No student selected'
-        const parentGrades = student.progress.filter(p => p.score).map(p => Math.round((p.score || 0) * 100))
+        const parentGrades = student.progress.filter((p: any) => p.score).map((p: any) => Math.round((p.score || 0) * 100))
         const parentAverage = parentGrades.length > 0 ? (parentGrades.reduce((sum, grade) => sum + grade, 0) / parentGrades.length).toFixed(1) : 'No grades'
         
         return `CODEFLY PARENT PROGRESS REPORT
@@ -587,7 +587,7 @@ SUMMARY OF PROGRESS
 Your child is doing ${parentAverage >= '80' ? 'excellent' : parentAverage >= '70' ? 'good' : 'satisfactory'} work in computer science!
 
 Current Grade Average: ${parentAverage}%
-Lessons Completed: ${student.progress.filter(p => p.status === 'completed').length} out of ${lessons.length} available
+Lessons Completed: ${student.progress.filter((p: any) => p.status === 'completed').length} out of ${lessons.length} available
 Participation Level: ${student.currentActivity ? 'Actively engaged' : 'Regular attendance'}
 
 ========================================
@@ -601,8 +601,8 @@ SKILLS DEVELOPMENT
 ========================================
 RECENT ACHIEVEMENTS
 ========================================
-${student.progress.filter(p => p.status === 'completed').length > 0 
-  ? `- Successfully completed ${student.progress.filter(p => p.status === 'completed').length} programming lessons
+${student.progress.filter((p: any) => p.status === 'completed').length > 0 
+  ? `- Successfully completed ${student.progress.filter((p: any) => p.status === 'completed').length} programming lessons
 - Demonstrated understanding of Python basics
 - Active participation in class activities`
   : '- Getting started with programming fundamentals\n- Learning development environment\n- Building foundational skills'}
@@ -648,7 +648,7 @@ CodeFly Computer Science Teacher
   // Enhanced Analytics Functions
   const generatePredictiveAnalytics = (studentsData: StudentProgress[]): PredictiveAnalytics => {
     // Risk Assessment Algorithm
-    const riskStudents = studentsData.map(student => {
+    const riskStudents = studentsData.map((student: any) => {
       let riskScore = 0
       const riskFactors: string[] = []
       const interventionSuggestions: string[] = []
@@ -662,7 +662,7 @@ CodeFly Computer Science Teacher
 
       // Factor 2: Completion rate
       const completionRate = student.progress.length > 0 
-        ? (student.progress.filter(p => p.status === 'completed').length / student.progress.length) * 100 
+        ? (student.progress.filter((p: any) => p.status === 'completed').length / student.progress.length) * 100 
         : 0
       if (completionRate < 50) {
         riskScore += 2
@@ -671,7 +671,7 @@ CodeFly Computer Science Teacher
       }
 
       // Factor 3: Grade performance
-      const grades = student.progress.filter(p => p.score).map(p => (p.score || 0) * 100)
+      const grades = student.progress.filter((p: any) => p.score).map((p: any) => (p.score || 0) * 100)
       const avgGrade = grades.length > 0 ? grades.reduce((sum, grade) => sum + grade, 0) / grades.length : 0
       if (avgGrade < 70 && grades.length > 0) {
         riskScore += 2
@@ -708,15 +708,15 @@ CodeFly Computer Science Teacher
         riskFactors,
         interventionSuggestions
       }
-    }).filter(r => r.riskLevel !== 'low') // Only show medium and high risk students
+    }).filter((r: any) => r.riskLevel !== 'low') // Only show medium and high risk students
 
     // Class Insights Analysis
-    const totalCompletions = studentsData.reduce((sum, s) => sum + s.progress.filter(p => p.status === 'completed').length, 0)
+    const totalCompletions = studentsData.reduce((sum, s) => sum + s.progress.filter((p: any) => p.status === 'completed').length, 0)
     const avgCompletionRate = studentsData.length > 0 ? totalCompletions / studentsData.length : 0
     
     const engagementTrend: 'increasing' | 'stable' | 'decreasing' = 
-      studentsData.filter(s => s.currentActivity).length / studentsData.length > 0.7 ? 'increasing' :
-      studentsData.filter(s => s.currentActivity).length / studentsData.length > 0.4 ? 'stable' : 'decreasing'
+      studentsData.filter((s: any) => s.currentActivity).length / studentsData.length > 0.7 ? 'increasing' :
+      studentsData.filter((s: any) => s.currentActivity).length / studentsData.length > 0.4 ? 'stable' : 'decreasing'
 
     const performanceTrend: 'improving' | 'stable' | 'declining' = 
       avgCompletionRate > 0.8 ? 'improving' :
@@ -735,8 +735,8 @@ CodeFly Computer Science Teacher
     const peakHours = ['10:00 AM - 11:00 AM', '2:00 PM - 3:00 PM'] // Simulated based on typical patterns
     
     const strugglingConcepts = [
-      ...new Set(studentsData.flatMap(s => 
-        s.codeSubmissions?.filter(sub => sub.result === 'error').map(() => 'Variable naming') || []
+      ...new Set(studentsData.flatMap((s: any) => 
+        s.codeSubmissions?.filter((sub: any) => sub.result === 'error').map(() => 'Variable naming') || []
       ))
     ].slice(0, 3)
 
@@ -1071,7 +1071,7 @@ CodeFly Computer Science Teacher
                 <Filter className="h-5 w-5 mr-2 text-purple-400" />
                 Quick Filters 🎯
               </h3>
-              {(['all', 'active', 'completed', 'needs-help', 'stuck'] as FilterType[]).map(filterType => (
+              {(['all', 'active', 'completed', 'needs-help', 'stuck'] as FilterType[]).map((filterType: any) => (
                 <button
                   key={filterType}
                   onClick={() => setFilter(filterType)}
@@ -1251,7 +1251,7 @@ CodeFly Computer Science Teacher
                 {filteredStudents.map((student) => {
                   const status = getStudentStatus(student)
                   const completionRate = lessons.length > 0 ? 
-                    (student.progress.filter(p => p.status === 'completed').length / lessons.length) * 100 : 0
+                    (student.progress.filter((p: any) => p.status === 'completed').length / lessons.length) * 100 : 0
                   
                   return (
                     <tr key={student.user.id} className="hover:bg-gray-700/50 transition-colors">
@@ -1603,12 +1603,12 @@ CodeFly Computer Science Teacher
                     </div>
                     <div className="bg-gradient-to-br from-blue-600 to-cyan-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">Assignments Graded</h4>
-                      <div className="text-2xl font-bold">{students.filter(s => s.progress.some(p => p.score !== undefined)).length}/{students.length}</div>
+                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some(p => p.score !== undefined)).length}/{students.length}</div>
                       <div className="text-blue-100 text-sm">📝 Recent submissions</div>
                     </div>
                     <div className="bg-gradient-to-br from-purple-600 to-pink-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">Needs Review</h4>
-                      <div className="text-2xl font-bold">{students.filter(s => s.progress.some(p => p.status === 'submitted' && !p.score)).length}</div>
+                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some(p => p.status === 'submitted' && !p.score)).length}</div>
                       <div className="text-purple-100 text-sm">⏳ Awaiting grading</div>
                     </div>
                   </div>
@@ -1618,7 +1618,7 @@ CodeFly Computer Science Teacher
                       <thead className="bg-gray-900/50">
                         <tr>
                           <th className="px-4 py-3 text-left text-sm font-medium text-purple-300">Student</th>
-                          {lessons.map(lesson => (
+                          {lessons.map((lesson: any) => (
                             <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
                               {lesson.title.split(':')[0]}
                             </th>
@@ -1627,13 +1627,13 @@ CodeFly Computer Science Teacher
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-700">
-                        {students.map(student => {
-                          const studentGrades = lessons.map(lesson => {
+                        {students.map((student: any) => {
+                          const studentGrades = lessons.map((lesson: any) => {
                             const progress = student.progress.find(p => p.lesson_id === lesson.id)
                             return progress?.score ? Math.round(progress.score * 100) : null
                           })
-                          const average = studentGrades.filter(g => g !== null).length > 0
-                            ? Math.round(studentGrades.filter(g => g !== null).reduce((sum, grade) => sum + (grade || 0), 0) / studentGrades.filter(g => g !== null).length)
+                          const average = studentGrades.filter((g: any) => g !== null).length > 0
+                            ? Math.round(studentGrades.filter((g: any) => g !== null).reduce((sum, grade) => sum + (grade || 0), 0) / studentGrades.filter((g: any) => g !== null).length)
                             : null
 
                           return (
@@ -1690,7 +1690,7 @@ CodeFly Computer Science Teacher
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {students.map(student => (
+                    {students.map((student: any) => (
                       <div
                         key={student.user.id}
                         className="bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer"
@@ -1704,7 +1704,7 @@ CodeFly Computer Science Teacher
                         <div className="text-gray-400 text-sm">{student.user.email}</div>
                         <div className="mt-2 flex items-center justify-between">
                           <span className="text-sm text-gray-300">
-                            {student.progress.filter(p => p.score !== undefined).length} graded
+                            {student.progress.filter((p: any) => p.score !== undefined).length} graded
                           </span>
                           <Award className="h-4 w-4 text-yellow-400" />
                         </div>
@@ -1741,7 +1741,7 @@ CodeFly Computer Science Teacher
             </div>
 
             <div className="p-6 space-y-6">
-              {gradingStudent.progress.map(progress => {
+              {gradingStudent.progress.map((progress: any) => {
                 const lesson = lessons.find(l => l.id === progress.lesson_id)
                 if (!lesson) return null
 
@@ -1935,7 +1935,7 @@ CodeFly Computer Science Teacher
                     Select Student:
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                    {students.map(student => (
+                    {students.map((student: any) => (
                       <button
                         key={student.user.id}
                         onClick={() => setSelectedReportStudent(student)}
@@ -2095,14 +2095,14 @@ CodeFly Computer Science Teacher
                     <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">High Risk Students</h4>
                       <div className="text-2xl font-bold">
-                        {predictiveAnalytics.riskStudents.filter(r => r.riskLevel === 'high').length}
+                        {predictiveAnalytics.riskStudents.filter((r: any) => r.riskLevel === 'high').length}
                       </div>
                       <div className="text-red-100 text-sm">🚨 Immediate attention needed</div>
                     </div>
                     <div className="bg-gradient-to-br from-yellow-600 to-orange-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">Medium Risk Students</h4>
                       <div className="text-2xl font-bold">
-                        {predictiveAnalytics.riskStudents.filter(r => r.riskLevel === 'medium').length}
+                        {predictiveAnalytics.riskStudents.filter((r: any) => r.riskLevel === 'medium').length}
                       </div>
                       <div className="text-yellow-100 text-sm">⚠️ Monitor closely</div>
                     </div>
