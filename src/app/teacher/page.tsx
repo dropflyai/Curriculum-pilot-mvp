@@ -500,7 +500,7 @@ STUDENT PERFORMANCE BREAKDOWN
 ${students.map((s: any) => {
   const completedLessons = s.progress.filter((p: any) => p.status === 'completed').length
   const averageScore = s.progress.filter((p: any) => p.score).length > 0 
-    ? (s.progress.filter((p: any) => p.score).reduce((sum, p) => sum + (p.score || 0), 0) / s.progress.filter((p: any) => p.score).length * 100).toFixed(1)
+    ? (s.progress.filter((p: any) => p.score).reduce((sum: number, p: any) => sum + (p.score || 0), 0) / s.progress.filter((p: any) => p.score).length * 100).toFixed(1)
     : 'No grades'
   return `${s.user.full_name}: ${completedLessons} lessons completed, Average: ${averageScore}%`
 }).join('\n')}
@@ -672,7 +672,7 @@ CodeFly Computer Science Teacher
 
       // Factor 3: Grade performance
       const grades = student.progress.filter((p: any) => p.score).map((p: any) => (p.score || 0) * 100)
-      const avgGrade = grades.length > 0 ? grades.reduce((sum, grade) => sum + grade, 0) / grades.length : 0
+      const avgGrade = grades.length > 0 ? grades.reduce((sum: number, grade: number) => sum + grade, 0) / grades.length : 0
       if (avgGrade < 70 && grades.length > 0) {
         riskScore += 2
         riskFactors.push('Below-average grade performance (< 70%)')
