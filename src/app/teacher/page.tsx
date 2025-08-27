@@ -691,7 +691,7 @@ CodeFly Computer Science Teacher
       }
 
       // Factor 5: Error patterns
-      const hasErrors = student.codeSubmissions?.some(sub => sub.result === 'error') || false
+      const hasErrors = student.codeSubmissions?.some((sub: any) => sub.result === 'error') || false
       if (hasErrors) {
         riskScore += 1
         riskFactors.push('Frequent code execution errors')
@@ -1603,12 +1603,12 @@ CodeFly Computer Science Teacher
                     </div>
                     <div className="bg-gradient-to-br from-blue-600 to-cyan-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">Assignments Graded</h4>
-                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some(p => p.score !== undefined)).length}/{students.length}</div>
+                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some((p: any) => p.score !== undefined)).length}/{students.length}</div>
                       <div className="text-blue-100 text-sm">📝 Recent submissions</div>
                     </div>
                     <div className="bg-gradient-to-br from-purple-600 to-pink-700 rounded-xl p-4 text-white">
                       <h4 className="font-semibold mb-2">Needs Review</h4>
-                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some(p => p.status === 'submitted' && !p.score)).length}</div>
+                      <div className="text-2xl font-bold">{students.filter((s: any) => s.progress.some((p: any) => p.status === 'submitted' && !p.score)).length}</div>
                       <div className="text-purple-100 text-sm">⏳ Awaiting grading</div>
                     </div>
                   </div>
