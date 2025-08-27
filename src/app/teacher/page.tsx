@@ -1629,11 +1629,11 @@ CodeFly Computer Science Teacher
                       <tbody className="divide-y divide-gray-700">
                         {students.map((student: any) => {
                           const studentGrades = lessons.map((lesson: any) => {
-                            const progress = student.progress.find(p => p.lesson_id === lesson.id)
+                            const progress = student.progress.find((p: any) => p.lesson_id === lesson.id)
                             return progress?.score ? Math.round(progress.score * 100) : null
                           })
                           const average = studentGrades.filter((g: any) => g !== null).length > 0
-                            ? Math.round(studentGrades.filter((g: any) => g !== null).reduce((sum, grade) => sum + (grade || 0), 0) / studentGrades.filter((g: any) => g !== null).length)
+                            ? Math.round(studentGrades.filter((g: any) => g !== null).reduce((sum: number, grade: any) => sum + (grade || 0), 0) / studentGrades.filter((g: any) => g !== null).length)
                             : null
 
                           return (
