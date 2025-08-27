@@ -714,71 +714,118 @@ export default function SalesDemo() {
         </div>
       </div>
 
-      {/* Live Demo Modal */}
+      {/* Functional Live Demo Section */}
       {showLiveDemo && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-white/10">
-            <div className="p-6 border-b border-white/10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">Live Platform Demo</h3>
-                <button 
-                  onClick={() => setShowLiveDemo(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition"
-                >
-                  ✕
-                </button>
-              </div>
+        <div className="bg-gradient-to-br from-gray-900 to-gray-800 border-t border-white/10">
+          <div className="container mx-auto px-6 py-16">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-3xl font-bold">🎬 Interactive Platform Demo</h3>
+              <button 
+                onClick={() => setShowLiveDemo(false)}
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition"
+              >
+                ← Back to Overview
+              </button>
             </div>
             
-            <div className="p-6">
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
-                <button className="p-6 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl hover:from-blue-500/30 hover:to-blue-600/30 transition">
-                  <Users className="w-12 h-12 text-blue-400 mb-3" />
-                  <div className="text-lg font-semibold">Student Experience</div>
-                  <div className="text-sm text-gray-400 mt-2">See the gamified learning journey</div>
-                </button>
-                
-                <button className="p-6 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl hover:from-purple-500/30 hover:to-purple-600/30 transition">
-                  <BarChart className="w-12 h-12 text-purple-400 mb-3" />
-                  <div className="text-lg font-semibold">Teacher Dashboard</div>
-                  <div className="text-sm text-gray-400 mt-2">Real-time classroom management</div>
-                </button>
-                
-                <button className="p-6 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl hover:from-green-500/30 hover:to-green-600/30 transition">
-                  <Activity className="w-12 h-12 text-green-400 mb-3" />
-                  <div className="text-lg font-semibold">Live Classroom</div>
-                  <div className="text-sm text-gray-400 mt-2">Watch AI help students now</div>
-                </button>
+            {/* Demo Navigation */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <a 
+                href="/auth?demo=student" 
+                className="block p-6 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl hover:from-blue-500/30 hover:to-blue-600/30 transition border border-blue-500/30"
+              >
+                <Users className="w-12 h-12 text-blue-400 mb-3" />
+                <div className="text-lg font-semibold">Live Student Experience</div>
+                <div className="text-sm text-gray-400 mt-2">Navigate the actual student dashboard, take lessons, write code</div>
+                <div className="mt-4 flex items-center text-blue-400">
+                  <span className="text-sm">Try Demo Account →</span>
+                </div>
+              </a>
+              
+              <a 
+                href="/auth?demo=teacher" 
+                className="block p-6 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl hover:from-purple-500/30 hover:to-purple-600/30 transition border border-purple-500/30"
+              >
+                <BarChart className="w-12 h-12 text-purple-400 mb-3" />
+                <div className="text-lg font-semibold">Live Teacher Dashboard</div>
+                <div className="text-sm text-gray-400 mt-2">Manage real classroom data, monitor students, send messages</div>
+                <div className="mt-4 flex items-center text-purple-400">
+                  <span className="text-sm">Try Demo Account →</span>
+                </div>
+              </a>
+              
+              <div className="p-6 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-500/30">
+                <Activity className="w-12 h-12 text-green-400 mb-3" />
+                <div className="text-lg font-semibold">Live Classroom Simulation</div>
+                <div className="text-sm text-gray-400 mt-2">Watch real-time student activity and AI interventions</div>
+              </div>
+            </div>
+
+            {/* Live Classroom Simulation */}
+            <div className="mb-8">
+              <h4 className="text-2xl font-bold mb-4">🏫 Real-Time Classroom Management</h4>
+              <LiveClassroomDemo />
+            </div>
+
+            {/* Demo Instructions */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white/5 rounded-xl p-6">
+                <h4 className="text-xl font-bold mb-4 text-blue-400">👨‍🎓 Student Demo Experience</h4>
+                <div className="space-y-3 text-gray-300">
+                  <div>✅ <strong>Login instantly</strong> with demo account (student@codefly.demo)</div>
+                  <div>✅ <strong>Navigate real dashboard</strong> with XP, achievements, progress</div>
+                  <div>✅ <strong>Take actual lessons</strong> with interactive content</div>
+                  <div>✅ <strong>Write Python code</strong> that executes in real-time</div>
+                  <div>✅ <strong>Get AI assistance</strong> when you make mistakes</div>
+                  <div>✅ <strong>Complete quizzes</strong> with auto-grading</div>
+                </div>
+                <div className="mt-6">
+                  <a 
+                    href="/auth?demo=student"
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
+                  >
+                    🚀 Launch Student Demo
+                  </a>
+                </div>
               </div>
 
-              {/* AI-Guided Platform Demo */}
-              <AIGuidedDemo />
-              
-              <div className="mt-8">
-                {/* Live Classroom Simulation */}
-                <div className="mb-8">
-                  <h4 className="text-2xl font-bold mb-4 text-center">🏫 Real-Time Classroom Management</h4>
-                  <LiveClassroomDemo />
+              <div className="bg-white/5 rounded-xl p-6">
+                <h4 className="text-xl font-bold mb-4 text-purple-400">👩‍🏫 Teacher Demo Experience</h4>
+                <div className="space-y-3 text-gray-300">
+                  <div>✅ <strong>Monitor live classroom</strong> with 25+ demo students</div>
+                  <div>✅ <strong>View real-time analytics</strong> and progress tracking</div>
+                  <div>✅ <strong>Receive AI alerts</strong> when students need help</div>
+                  <div>✅ <strong>Send messages</strong> and provide interventions</div>
+                  <div>✅ <strong>Grade assignments</strong> and review student code</div>
+                  <div>✅ <strong>Generate reports</strong> for parents and administrators</div>
                 </div>
-                
-                <div className="bg-black/40 rounded-xl p-8 text-center">
-                  <div className="text-6xl mb-4">🚀</div>
-                  <h4 className="text-xl font-semibold mb-2">Ready to Experience CodeFly?</h4>
-                  <p className="text-gray-400 mb-6">Try the full platform with demo accounts or schedule a personalized walkthrough</p>
-                  <div className="flex justify-center space-x-4">
-                    <a 
-                      href="/auth"
-                      className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
-                    >
-                      Launch Student Demo
-                    </a>
-                    <a 
-                      href="/auth"
-                      className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:from-green-600 hover:to-emerald-700 transition"
-                    >
-                      Launch Teacher Demo
-                    </a>
-                  </div>
+                <div className="mt-6">
+                  <a 
+                    href="/auth?demo=teacher"
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg hover:from-purple-600 hover:to-pink-700 transition"
+                  >
+                    📊 Launch Teacher Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Access */}
+            <div className="mt-8 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/30 text-center">
+              <h4 className="text-xl font-bold text-green-400 mb-4">🎯 Quick Demo Access</h4>
+              <p className="text-gray-300 mb-6">
+                No signup required! Use these demo accounts to explore the full platform immediately:
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="font-semibold text-blue-400">Student Account</div>
+                  <div className="text-sm text-gray-400 mt-1">Email: student@codefly.demo</div>
+                  <div className="text-sm text-gray-400">Password: demo123</div>
+                </div>
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="font-semibold text-purple-400">Teacher Account</div>
+                  <div className="text-sm text-gray-400 mt-1">Email: teacher@codefly.demo</div>
+                  <div className="text-sm text-gray-400">Password: demo123</div>
                 </div>
               </div>
             </div>

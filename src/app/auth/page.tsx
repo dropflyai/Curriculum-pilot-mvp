@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, signUp } from '@/lib/auth'
 import { Eye, EyeOff, User, Mail, Lock, UserCheck, Play, GraduationCap } from 'lucide-react'
 import Link from 'next/link'
@@ -20,6 +20,16 @@ export default function AuthPage() {
   })
   
   const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  // Auto-login demo accounts
+  useEffect(() => {
+    const demoType = searchParams.get('demo')
+    if (demoType === 'student' || demoType === 'teacher') {
+      handleDemoLogin(demoType)
+    }
+  }, [searchParams])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,12 +70,14 @@ export default function AuthPage() {
     setError(null)
 
     try {
-      await demoLogin(accountType)
-      // Redirect based on account type
-      if (accountType === 'teacher') {
-        router.push('/teacher')
-      } else {
-        router.push('/dashboard')
+      const { user } = await demoLogin(accountType)
+      if (user) {
+        // Redirect based on account type
+        if (accountType === 'teacher') {
+          router.push('/teacher')
+        } else {
+          router.push('/dashboard')
+        }
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Demo login failed')
