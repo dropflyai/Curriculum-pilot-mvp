@@ -13,8 +13,6 @@ export default function SalesDemo() {
   const [studentCount, setStudentCount] = useState(500)
   const [showLiveDemo, setShowLiveDemo] = useState(false)
   const [selectedMetric, setSelectedMetric] = useState('engagement')
-  const [showStudentDashboard, setShowStudentDashboard] = useState(false)
-  const [showTeacherDashboard, setShowTeacherDashboard] = useState(false)
   
   // Auto-play demo
   useEffect(() => {
@@ -770,59 +768,54 @@ export default function SalesDemo() {
               <LiveClassroomDemo />
             </div>
 
-            {/* Dashboard Previews */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white/5 rounded-xl p-6">
-                <h4 className="text-xl font-bold mb-4 text-blue-400">👨‍🎓 Student Dashboard Preview</h4>
-                <div className="space-y-3 text-gray-300">
-                  <div>👀 <strong>View assignment dashboard</strong> with XP and progress</div>
-                  <div>🎯 <strong>See upcoming assignments</strong> and deadlines</div>
-                  <div>🏆 <strong>Check achievement badges</strong> and learning streaks</div>
-                  <div>📊 <strong>Review completed work</strong> and grades</div>
-                  <div>⚡ <strong>Monitor learning analytics</strong> and time spent</div>
-                  <div>🔒 <strong>Dashboard preview only</strong> - no lesson access</div>
+            {/* Interactive Demo Access */}
+            <div className="text-center">
+              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-8 border border-green-500/30">
+                <h4 className="text-3xl font-bold text-green-400 mb-4">🚀 Full Interactive Demo</h4>
+                <p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
+                  Experience the complete CodeFly platform with navigable dashboards, AI assistant interactions, 
+                  and realistic classroom scenarios. Perfect for administrator evaluations.
+                </p>
+                
+                <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
+                  <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
+                    <div className="text-blue-400 font-semibold mb-2">👨‍🎓 Student Experience</div>
+                    <div className="text-gray-300 text-sm">Navigate assignments, see XP progress, chat with AI assistant</div>
+                  </div>
+                  <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
+                    <div className="text-purple-400 font-semibold mb-2">👩‍🏫 Teacher Dashboard</div>
+                    <div className="text-gray-300 text-sm">Monitor students, view analytics, see AI teaching insights</div>
+                  </div>
+                  <div className="bg-cyan-500/10 rounded-lg p-4 border border-cyan-500/30">
+                    <div className="text-cyan-400 font-semibold mb-2">📊 AI Analytics</div>
+                    <div className="text-gray-300 text-sm">Comprehensive AI impact metrics and performance data</div>
+                  </div>
                 </div>
-                <div className="mt-6">
-                  <button 
-                    onClick={() => setShowStudentDashboard(!showStudentDashboard)}
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
-                  >
-                    👀 {showStudentDashboard ? 'Hide' : 'Show'} Student Dashboard
-                  </button>
-                </div>
-              </div>
 
-              <div className="bg-white/5 rounded-xl p-6">
-                <h4 className="text-xl font-bold mb-4 text-purple-400">👩‍🏫 Teacher Dashboard Preview</h4>
-                <div className="space-y-3 text-gray-300">
-                  <div>📋 <strong>View class assignments</strong> and student progress</div>
-                  <div>📊 <strong>Monitor completion rates</strong> and grade distribution</div>
-                  <div>⚠️ <strong>See students needing help</strong> with alerts</div>
-                  <div>📈 <strong>Track class performance</strong> and analytics</div>
-                  <div>📝 <strong>Review grade book</strong> and assignment details</div>
-                  <div>🔒 <strong>Dashboard preview only</strong> - no full management access</div>
-                </div>
-                <div className="mt-6">
-                  <button 
-                    onClick={() => setShowTeacherDashboard(!showTeacherDashboard)}
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg hover:from-purple-600 hover:to-pink-700 transition"
-                  >
-                    📊 {showTeacherDashboard ? 'Hide' : 'Show'} Teacher Dashboard
-                  </button>
-                </div>
+                <a 
+                  href="/interactive-demo"
+                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:from-green-600 hover:to-emerald-700 transition transform hover:scale-105 text-xl font-semibold space-x-3"
+                >
+                  <span>🎮 Launch Interactive Demo</span>
+                  <ArrowRight className="w-6 h-6" />
+                </a>
+                
+                <p className="text-gray-400 text-sm mt-4">
+                  Full platform navigation • Realistic data • AI interactions • No signup required
+                </p>
               </div>
             </div>
 
             {/* Preview Info */}
             <div className="mt-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/30 text-center">
-              <h4 className="text-xl font-bold text-blue-400 mb-4">ℹ️ Dashboard Preview Information</h4>
+              <h4 className="text-xl font-bold text-blue-400 mb-4">💡 Why Interactive Demo?</h4>
               <p className="text-gray-300 mb-4">
-                The dashboard previews above show realistic assignment data and interface mockups. 
-                These are read-only previews demonstrating the student and teacher experience.
+                The interactive demo provides a complete, navigable platform experience with realistic data and AI interactions. 
+                Perfect for administrators who want to evaluate the full CodeFly ecosystem.
               </p>
               <p className="text-gray-400 text-sm">
-                <strong>For full platform access</strong> including lesson interaction, code execution, and classroom management tools, 
-                please schedule a personalized demonstration with our education team.
+                <strong>For customized demonstrations</strong> tailored to your school's specific needs, 
+                schedule a personalized session with our education team.
               </p>
             </div>
 
