@@ -316,8 +316,8 @@ export default function AIGuidedDemo() {
               <div className="text-green-400">name = "Sarah Chen"</div>
               <div className="text-blue-400">grade = 9</div>
               <div className="text-purple-400">favorite_subject = "Art"</div>
-              <div className="text-yellow-400 mt-2">print(f"Hi! I'm {name}, a grade {grade} student!")</div>
-              <div className="text-red-400 mt-2">print(f"I love {favorite_subjec}!")  # ❌ Typo here!</div>
+              <div className="text-yellow-400 mt-2">print(f"Hi! I'm &#123;name&#125;, a grade &#123;grade&#125; student!")</div>
+              <div className="text-red-400 mt-2">print(f"I love &#123;favorite_subjec&#125;!")  # ❌ Typo here!</div>
             </div>
           </div>
         </div>
