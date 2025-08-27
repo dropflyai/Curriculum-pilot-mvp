@@ -154,7 +154,7 @@ export async function getCurrentUser(): Promise<{ user: AuthUser | null, error: 
 // Listen to auth state changes
 export function onAuthStateChange(callback: (user: AuthUser | null) => void) {
   const supabase = getSupabase()
-  return supabase.auth.onAuthStateChange(async (event, session) => {
+  return supabase.auth.onAuthStateChange(async (event: any, session: any) => {
     if (session?.user) {
       const { user } = await getCurrentUser()
       callback(user)
