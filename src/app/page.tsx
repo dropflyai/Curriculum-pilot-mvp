@@ -40,6 +40,12 @@ export default function Home() {
               </button>
               <div className="flex space-x-4 ml-6">
                 <Link 
+                  href="/demo" 
+                  className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition transform hover:scale-105"
+                >
+                  🏫 School Demo
+                </Link>
+                <Link 
                   href="/auth" 
                   className="text-blue-600 hover:text-blue-800 font-medium"
                 >
