@@ -275,7 +275,7 @@ export default function TeacherDashboard() {
         const lessonQuizResults = allQuizResults.filter((quiz: any) => quiz.lessonId === lesson.id)
         
         const avgScore = lessonQuizResults.length > 0
-          ? lessonQuizResults.reduce((sum, quiz) => sum + (quiz.score / quiz.totalQuestions), 0) / lessonQuizResults.length
+          ? lessonQuizResults.reduce((sum: number, quiz: any) => sum + (quiz.score / quiz.totalQuestions), 0) / lessonQuizResults.length
           : 0
 
         return {
@@ -323,7 +323,7 @@ export default function TeacherDashboard() {
         s.currentActivity && new Date(s.currentActivity.lastSeen).getTime() > Date.now() - 300000
       ).length,
       completed: students.filter((s: any) => 
-        s.progress.some(p => p.status === 'completed')
+        s.progress.some((p: any) => p.status === 'completed')
       ).length,
       'needs-help': students.filter((s: any) => 
         s.currentActivity && s.currentActivity.timeSpent > 25 && s.currentActivity.timeSpent <= 35
@@ -346,7 +346,7 @@ export default function TeacherDashboard() {
         return student.currentActivity && 
                new Date(student.currentActivity.lastSeen).getTime() > Date.now() - 300000 // 5 minutes
       case 'completed':
-        return student.progress.some(p => p.status === 'completed')
+        return student.progress.some((p: any) => p.status === 'completed')
       case 'needs-help':
         return student.currentActivity && student.currentActivity.timeSpent > 25 && student.currentActivity.timeSpent <= 35
       case 'stuck':
