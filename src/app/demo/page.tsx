@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight, Check, TrendingUp, Users, Award, Clock, DollarSign, Zap, Play, Pause, ChevronRight, School, BookOpen, Target, Shield, Sparkles, Globe, Heart, Star, BarChart, PieChart, Activity } from 'lucide-react'
 import LiveClassroomDemo from '@/components/LiveClassroomDemo'
+import AIGuidedDemo from '@/components/AIGuidedDemo'
 
 export default function SalesDemo() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -750,26 +751,34 @@ export default function SalesDemo() {
                 </button>
               </div>
 
-              {/* Live Classroom Simulation */}
-              <LiveClassroomDemo />
+              {/* AI-Guided Platform Demo */}
+              <AIGuidedDemo />
               
-              <div className="mt-8 bg-black/40 rounded-xl p-8 text-center">
-                <div className="text-6xl mb-4">🚀</div>
-                <h4 className="text-xl font-semibold mb-2">Ready to Experience CodeFly?</h4>
-                <p className="text-gray-400 mb-6">Try the full platform with demo accounts or schedule a personalized walkthrough</p>
-                <div className="flex justify-center space-x-4">
-                  <a 
-                    href="/auth"
-                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
-                  >
-                    Launch Student Demo
-                  </a>
-                  <a 
-                    href="/auth"
-                    className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:from-green-600 hover:to-emerald-700 transition"
-                  >
-                    Launch Teacher Demo
-                  </a>
+              <div className="mt-8">
+                {/* Live Classroom Simulation */}
+                <div className="mb-8">
+                  <h4 className="text-2xl font-bold mb-4 text-center">🏫 Real-Time Classroom Management</h4>
+                  <LiveClassroomDemo />
+                </div>
+                
+                <div className="bg-black/40 rounded-xl p-8 text-center">
+                  <div className="text-6xl mb-4">🚀</div>
+                  <h4 className="text-xl font-semibold mb-2">Ready to Experience CodeFly?</h4>
+                  <p className="text-gray-400 mb-6">Try the full platform with demo accounts or schedule a personalized walkthrough</p>
+                  <div className="flex justify-center space-x-4">
+                    <a 
+                      href="/auth"
+                      className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
+                    >
+                      Launch Student Demo
+                    </a>
+                    <a 
+                      href="/auth"
+                      className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:from-green-600 hover:to-emerald-700 transition"
+                    >
+                      Launch Teacher Demo
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
