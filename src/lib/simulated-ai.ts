@@ -170,9 +170,9 @@ class SimulatedAI {
     
     if (lesson && context.errorType) {
       const errorKey = this.detectErrorType(context.errorType)
-      const errorInfo = lesson.commonErrors[errorKey as keyof typeof lesson.commonErrors]
+      const errorInfo = lesson.commonErrors[errorKey as keyof typeof lesson.commonErrors] as any
       
-      if (errorInfo) {
+      if (errorInfo && errorInfo.responses) {
         return {
           message: errorInfo.responses[0],
           type: 'hint',
@@ -195,9 +195,9 @@ class SimulatedAI {
     if (lesson) {
       // Find relevant concept hint
       const concept = this.detectConcept(context.currentCode || '')
-      const hints = lesson.hints[concept as keyof typeof lesson.hints]
+      const hints = lesson.hints[concept as keyof typeof lesson.hints] as any
       
-      if (hints) {
+      if (hints && Array.isArray(hints)) {
         return {
           message: hints[1] || hints[0],
           type: 'hint',
