@@ -12,6 +12,8 @@ export default function SalesDemo() {
   const [studentCount, setStudentCount] = useState(500)
   const [showLiveDemo, setShowLiveDemo] = useState(false)
   const [selectedMetric, setSelectedMetric] = useState('engagement')
+  const [showStudentDashboard, setShowStudentDashboard] = useState(false)
+  const [showTeacherDashboard, setShowTeacherDashboard] = useState(false)
   
   // Auto-play demo
   useEffect(() => {
@@ -767,68 +769,246 @@ export default function SalesDemo() {
               <LiveClassroomDemo />
             </div>
 
-            {/* Demo Instructions */}
+            {/* Dashboard Previews */}
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white/5 rounded-xl p-6">
-                <h4 className="text-xl font-bold mb-4 text-blue-400">👨‍🎓 Student Demo Experience</h4>
+                <h4 className="text-xl font-bold mb-4 text-blue-400">👨‍🎓 Student Dashboard Preview</h4>
                 <div className="space-y-3 text-gray-300">
-                  <div>✅ <strong>Login instantly</strong> with demo account (student@codefly.demo)</div>
-                  <div>✅ <strong>Navigate real dashboard</strong> with XP, achievements, progress</div>
-                  <div>✅ <strong>Take actual lessons</strong> with interactive content</div>
-                  <div>✅ <strong>Write Python code</strong> that executes in real-time</div>
-                  <div>✅ <strong>Get AI assistance</strong> when you make mistakes</div>
-                  <div>✅ <strong>Complete quizzes</strong> with auto-grading</div>
+                  <div>👀 <strong>View assignment dashboard</strong> with XP and progress</div>
+                  <div>🎯 <strong>See upcoming assignments</strong> and deadlines</div>
+                  <div>🏆 <strong>Check achievement badges</strong> and learning streaks</div>
+                  <div>📊 <strong>Review completed work</strong> and grades</div>
+                  <div>⚡ <strong>Monitor learning analytics</strong> and time spent</div>
+                  <div>🔒 <strong>Dashboard preview only</strong> - no lesson access</div>
                 </div>
                 <div className="mt-6">
-                  <a 
-                    href="/auth?demo=student"
+                  <button 
+                    onClick={() => setShowStudentDashboard(!showStudentDashboard)}
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition"
                   >
-                    🚀 Launch Student Demo
-                  </a>
+                    👀 {showStudentDashboard ? 'Hide' : 'Show'} Student Dashboard
+                  </button>
                 </div>
               </div>
 
               <div className="bg-white/5 rounded-xl p-6">
-                <h4 className="text-xl font-bold mb-4 text-purple-400">👩‍🏫 Teacher Demo Experience</h4>
+                <h4 className="text-xl font-bold mb-4 text-purple-400">👩‍🏫 Teacher Dashboard Preview</h4>
                 <div className="space-y-3 text-gray-300">
-                  <div>✅ <strong>Monitor live classroom</strong> with 25+ demo students</div>
-                  <div>✅ <strong>View real-time analytics</strong> and progress tracking</div>
-                  <div>✅ <strong>Receive AI alerts</strong> when students need help</div>
-                  <div>✅ <strong>Send messages</strong> and provide interventions</div>
-                  <div>✅ <strong>Grade assignments</strong> and review student code</div>
-                  <div>✅ <strong>Generate reports</strong> for parents and administrators</div>
+                  <div>📋 <strong>View class assignments</strong> and student progress</div>
+                  <div>📊 <strong>Monitor completion rates</strong> and grade distribution</div>
+                  <div>⚠️ <strong>See students needing help</strong> with alerts</div>
+                  <div>📈 <strong>Track class performance</strong> and analytics</div>
+                  <div>📝 <strong>Review grade book</strong> and assignment details</div>
+                  <div>🔒 <strong>Dashboard preview only</strong> - no full management access</div>
                 </div>
                 <div className="mt-6">
-                  <a 
-                    href="/auth?demo=teacher"
+                  <button 
+                    onClick={() => setShowTeacherDashboard(!showTeacherDashboard)}
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg hover:from-purple-600 hover:to-pink-700 transition"
                   >
-                    📊 Launch Teacher Demo
-                  </a>
+                    📊 {showTeacherDashboard ? 'Hide' : 'Show'} Teacher Dashboard
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* Quick Access */}
-            <div className="mt-8 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/30 text-center">
-              <h4 className="text-xl font-bold text-green-400 mb-4">🎯 Quick Demo Access</h4>
-              <p className="text-gray-300 mb-6">
-                No signup required! Use these demo accounts to explore the full platform immediately:
+            {/* Preview Info */}
+            <div className="mt-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/30 text-center">
+              <h4 className="text-xl font-bold text-blue-400 mb-4">ℹ️ Dashboard Preview Information</h4>
+              <p className="text-gray-300 mb-4">
+                The dashboard previews above show realistic assignment data and interface mockups. 
+                These are read-only previews demonstrating the student and teacher experience.
               </p>
-              <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="font-semibold text-blue-400">Student Account</div>
-                  <div className="text-sm text-gray-400 mt-1">Email: student@codefly.demo</div>
-                  <div className="text-sm text-gray-400">Password: demo123</div>
+              <p className="text-gray-400 text-sm">
+                <strong>For full platform access</strong> including lesson interaction, code execution, and classroom management tools, 
+                please schedule a personalized demonstration with our education team.
+              </p>
+            </div>
+
+            {/* Student Dashboard Preview */}
+            {showStudentDashboard && (
+              <div className="mt-8 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-xl p-8 border border-white/10">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-xl font-bold">
+                      SC
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">Welcome back, Sarah Chen! ✈️</h3>
+                      <p className="text-purple-300">Ready to continue your coding adventure?</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-purple-400">2,450 XP</div>
+                    <div className="text-sm text-gray-400">Level 5 Coder</div>
+                  </div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="font-semibold text-purple-400">Teacher Account</div>
-                  <div className="text-sm text-gray-400 mt-1">Email: teacher@codefly.demo</div>
-                  <div className="text-sm text-gray-400">Password: demo123</div>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-400">8/10</div>
+                      <div className="text-sm text-gray-400">Assignments Done</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-400">94%</div>
+                      <div className="text-sm text-gray-400">Average Grade</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-400">12 🔥</div>
+                      <div className="text-sm text-gray-400">Day Streak</div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-400">15.2h</div>
+                      <div className="text-sm text-gray-400">Time Coding</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Assignments */}
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white flex items-center">
+                    📚 Current Assignments
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <div>
+                          <div className="font-semibold text-white">Python Lists & Loops</div>
+                          <div className="text-sm text-gray-400">Due: Tomorrow 11:59 PM</div>
+                        </div>
+                      </div>
+                      <div className="text-orange-400">In Progress</div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <div>
+                          <div className="font-semibold text-white">Quiz: Functions & Parameters</div>
+                          <div className="text-sm text-gray-400">Due: Friday 3:00 PM</div>
+                        </div>
+                      </div>
+                      <div className="text-red-400">Not Started</div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div>
+                          <div className="font-semibold text-white">Variables & User Input</div>
+                          <div className="text-sm text-gray-400">Submitted: 2 days ago</div>
+                        </div>
+                      </div>
+                      <div className="text-green-400">Grade: 96/100</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Teacher Dashboard Preview */}
+            {showTeacherDashboard && (
+              <div className="mt-8 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 rounded-xl p-8 border border-white/10">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-white">👩‍🏫 Ms. Johnson's Period 3 - Computer Science</h3>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-green-400 text-sm">23 students online</span>
+                  </div>
+                </div>
+
+                {/* Class Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-blue-500/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-400">23/25</div>
+                      <div className="text-sm text-gray-400">Students Active</div>
+                    </div>
+                  </div>
+                  <div className="bg-green-500/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-400">18</div>
+                      <div className="text-sm text-gray-400">Assignments Submitted</div>
+                    </div>
+                  </div>
+                  <div className="bg-yellow-500/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-yellow-400">5</div>
+                      <div className="text-sm text-gray-400">Need Help</div>
+                    </div>
+                  </div>
+                  <div className="bg-purple-500/20 rounded-xl p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-400">89%</div>
+                      <div className="text-sm text-gray-400">Class Average</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current Assignment */}
+                <div className="bg-white/5 rounded-xl p-6 mb-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white">📋 Current Assignment: Python Lists & Loops</h4>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="bg-green-500/10 rounded-lg p-4">
+                      <div className="text-lg font-bold text-green-400">18 Completed</div>
+                      <div className="text-sm text-gray-400">Average: 92/100</div>
+                    </div>
+                    <div className="bg-orange-500/10 rounded-lg p-4">
+                      <div className="text-lg font-bold text-orange-400">5 In Progress</div>
+                      <div className="text-sm text-gray-400">Average time: 28 min</div>
+                    </div>
+                    <div className="bg-red-500/10 rounded-lg p-4">
+                      <div className="text-lg font-bold text-red-400">2 Not Started</div>
+                      <div className="text-sm text-gray-400">Due: Tomorrow</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Student List */}
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white">👥 Student Activity</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <div>
+                          <div className="font-semibold text-white">Sarah Chen</div>
+                          <div className="text-sm text-gray-400">Lists & Loops - 85% complete</div>
+                        </div>
+                      </div>
+                      <div className="text-green-400">Grade: 96/100</div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div>
+                          <div className="font-semibold text-white">Michael Rodriguez</div>
+                          <div className="text-sm text-gray-400">Stuck on problem #3 for 8 minutes</div>
+                        </div>
+                      </div>
+                      <div className="text-yellow-400">⚠️ Needs Help</div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <div>
+                          <div className="font-semibold text-white">Emma Thompson</div>
+                          <div className="text-sm text-gray-400">Just started - reviewing lesson content</div>
+                        </div>
+                      </div>
+                      <div className="text-blue-400">Reading</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
