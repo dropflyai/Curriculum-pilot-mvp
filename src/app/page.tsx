@@ -102,6 +102,35 @@ export default function Home() {
               Teacher Portal 🎯
             </Link>
           </div>
+
+          {/* School Administrator Section */}
+          <div className="mt-12 p-8 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-2xl border border-green-500/30 backdrop-blur-sm">
+            <div className="text-center">
+              <div className="text-4xl mb-3">🏫</div>
+              <h3 className="text-2xl font-bold text-green-400 mb-3">School Administrators & Teachers</h3>
+              <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+                See how CodeFly transforms computer science education with 94% student completion rates, 
+                $60,000+ annual savings, and zero teacher training required.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/demo"
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition transform hover:scale-105 flex items-center justify-center"
+                >
+                  📊 View Sales Demo & ROI Calculator
+                </Link>
+                <Link
+                  href="/auth"
+                  className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl text-lg font-bold transition backdrop-blur-sm border border-white/20"
+                >
+                  🎯 Try Teacher Dashboard
+                </Link>
+              </div>
+              <div className="mt-4 text-sm text-gray-400">
+                ✅ Used by 127+ schools nationwide • ✅ FERPA compliant • ✅ State standards aligned
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Features */}
