@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { ArrowRight, Check, TrendingUp, Users, Award, Clock, DollarSign, Zap, Play, Pause, ChevronRight, School, BookOpen, Target, Shield, Sparkles, Globe, Heart, Star, BarChart, PieChart, Activity } from 'lucide-react'
 import LiveClassroomDemo from '@/components/LiveClassroomDemo'
 import AIGuidedDemo from '@/components/AIGuidedDemo'
+import AIAssistant from '@/components/AIAssistant'
 
 export default function SalesDemo() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -825,6 +826,12 @@ export default function SalesDemo() {
               </p>
             </div>
 
+            {/* AI Assistant Analytics */}
+            <div className="mt-8">
+              <h4 className="text-2xl font-bold mb-4 text-center">🤖 AI Teaching Assistant in Action</h4>
+              <AIAssistant showAnalytics={true} />
+            </div>
+
             {/* Student Dashboard Preview */}
             {showStudentDashboard && (
               <div className="mt-8 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-xl p-8 border border-white/10">
@@ -909,6 +916,18 @@ export default function SalesDemo() {
                       <div className="text-green-400">Grade: 96/100</div>
                     </div>
                   </div>
+                </div>
+
+                {/* AI Helper Section */}
+                <div className="bg-white/5 rounded-xl p-6 mt-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white flex items-center">
+                    🤖 AI Assistant Chat
+                  </h4>
+                  <AIAssistant 
+                    studentName="Sarah Chen" 
+                    lessonTitle="Python Lists & Loops" 
+                    isTeacherView={true}
+                  />
                 </div>
               </div>
             )}
@@ -1005,6 +1024,38 @@ export default function SalesDemo() {
                       </div>
                       <div className="text-blue-400">Reading</div>
                     </div>
+                  </div>
+                </div>
+
+                {/* AI Insights for Teachers */}
+                <div className="bg-white/5 rounded-xl p-6 mt-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white">🤖 AI Teaching Insights</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-cyan-500/10 rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></div>
+                        <span className="text-cyan-400 text-sm font-semibold">AI Active This Hour</span>
+                      </div>
+                      <div className="text-lg font-bold text-white">47 Interactions</div>
+                      <div className="text-sm text-gray-400">12 students helped with variables</div>
+                    </div>
+                    <div className="bg-purple-500/10 rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                        <span className="text-purple-400 text-sm font-semibold">Success Rate</span>
+                      </div>
+                      <div className="text-lg font-bold text-white">91% Resolved</div>
+                      <div className="text-sm text-gray-400">Without teacher intervention</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                    <div className="flex items-center space-x-2 text-green-400">
+                      <span className="text-sm font-semibold">💡 AI Recommendation</span>
+                    </div>
+                    <p className="text-gray-300 text-sm mt-1">
+                      Consider reviewing list indexing with the class. AI detected 8 students struggling with IndexError in the last 30 minutes.
+                    </p>
                   </div>
                 </div>
               </div>
