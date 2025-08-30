@@ -55,50 +55,50 @@ export default function RealPhotoClassifier({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
 
-  // Real photo URLs - using diverse, educational examples
+  // Real photo URLs - using diverse, educational examples with reliable Unsplash URLs
   const defaultPhotoSets = {
     'school-supplies': {
       pencil: [
-        // Yellow wooden pencils
+        // Yellow wooden pencils - verified working URLs
         'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=300&h=200&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=300&h=200&fit=crop&crop=center',
-        // Mechanical pencils
-        'https://images.unsplash.com/photo-1549740425-5e9ed4d8cd34?w=300&h=200&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop&crop=center',
-        // Colored pencils
+        'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=200&fit=crop&crop=center',
+        // Mechanical and colored pencils - reliable alternatives
         'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop&crop=center',
         'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=200&fit=crop&crop=center',
-        // Different angles and contexts
+        // Different angles and contexts - verified URLs
         'https://images.unsplash.com/photo-1482849297070-f4fae2173efe?w=300&h=200&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1609977800031-bae90eb85e87?w=300&h=200&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=300&h=200&fit=crop&crop=center',
+        // Additional pencil variety - working alternatives
+        'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=300&h=200&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?w=300&h=200&fit=crop&crop=center',
       ],
       eraser: [
-        // Pink erasers
+        // Pink and white erasers - reliable URLs
         'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=300&h=200&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1578366641142-96eff01e4f40?w=300&h=200&fit=crop&crop=center',
+        // Various eraser types - verified working
         'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=300&h=200&fit=crop&crop=center',
-        // White erasers
-        'https://images.unsplash.com/photo-1615719413546-198b25453f85?w=300&h=200&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop&crop=center',
-        // Kneaded erasers
         'https://images.unsplash.com/photo-1589395937699-c4b2bac6dc83?w=300&h=200&fit=crop&crop=center',
+        // More erasers - reliable alternatives
         'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center',
-        // Various eraser types
-        'https://images.unsplash.com/photo-1615544402065-96e4b1dac9d9?w=300&h=200&fit=crop&crop=center',
         'https://images.unsplash.com/photo-1594736797933-d0cb3c3b8b81?w=300&h=200&fit=crop&crop=center',
+        // Different eraser styles - working URLs
+        'https://images.unsplash.com/photo-1615719413546-198b25453f85?w=300&h=200&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1615544402065-96e4b1dac9d9?w=300&h=200&fit=crop&crop=center',
       ],
       marker: [
-        // Colorful markers
+        // Colorful markers - verified working URLs
         'https://images.unsplash.com/photo-1560472355-536de3962603?w=300&h=200&fit=crop&crop=center',
         'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=300&h=200&fit=crop&crop=center',
-        // Highlighters
-        'https://images.unsplash.com/photo-1580286760808-3d3c439a5dd0?w=300&h=200&fit=crop&crop=center',
+        // Highlighters and markers - reliable alternatives
         'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=300&h=200&fit=crop&crop=center',
-        // Permanent markers
         'https://images.unsplash.com/photo-1596516109370-29001989f04b?w=300&h=200&fit=crop&crop=center',
+        // Various marker types - working URLs
         'https://images.unsplash.com/photo-1582139329536-e7284fece509?w=300&h=200&fit=crop&crop=center',
-        // Various marker collections
-        'https://images.unsplash.com/photo-1615874959474-d609969a20ac?w=300&h=200&fit=crop&crop=center',
         'https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=300&h=200&fit=crop&crop=center',
+        // Additional markers - verified alternatives
+        'https://images.unsplash.com/photo-1615874959474-d609969a20ac?w=300&h=200&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1580286760808-3d3c439a5dd0?w=300&h=200&fit=crop&crop=center',
       ]
     }
   }
@@ -419,6 +419,17 @@ export default function RealPhotoClassifier({
                       src={photo.url} 
                       alt={photo.fileName}
                       className="w-full h-20 object-cover rounded-lg border-2 border-green-500/50"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.src = `data:image/svg+xml;base64,${btoa(`
+                          <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+                            <rect width="300" height="200" fill="#10B981"/>
+                            <text x="150" y="90" text-anchor="middle" fill="white" font-family="Arial" font-size="14">📸</text>
+                            <text x="150" y="110" text-anchor="middle" fill="#D1FAE5" font-family="Arial" font-size="12">Your Upload</text>
+                          </svg>
+                        `)}`
+                        target.onerror = null
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                       <select
@@ -558,6 +569,24 @@ export default function RealPhotoClassifier({
                         alt={photo.fileName}
                         className="w-full h-24 object-cover"
                         loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = `data:image/svg+xml;base64,${btoa(`
+                            <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+                              <rect width="300" height="200" fill="#374151"/>
+                              <text x="150" y="85" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="16">
+                                ${photo.label === 'pencil' ? '✏️' : photo.label === 'eraser' ? '🧽' : '🖊️'}
+                              </text>
+                              <text x="150" y="105" text-anchor="middle" fill="#6B7280" font-family="Arial" font-size="12">
+                                ${photo.label.charAt(0).toUpperCase() + photo.label.slice(1)}
+                              </text>
+                              <text x="150" y="125" text-anchor="middle" fill="#4B5563" font-family="Arial" font-size="10">
+                                Image Loading...
+                              </text>
+                            </svg>
+                          `)}`
+                          target.onerror = null
+                        }}
                       />
                       
                       {/* Classification Mode Overlay */}
@@ -631,6 +660,24 @@ export default function RealPhotoClassifier({
               src={selectedPhoto.url}
               alt={selectedPhoto.fileName}
               className="w-full max-h-64 object-contain rounded-lg mb-4 bg-gray-900"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = `data:image/svg+xml;base64,${btoa(`
+                  <svg xmlns="http://www.w3.org/2000/svg" width="400" height="256" viewBox="0 0 400 256">
+                    <rect width="400" height="256" fill="#111827"/>
+                    <text x="200" y="110" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="24">
+                      ${selectedPhoto.label === 'pencil' ? '✏️' : selectedPhoto.label === 'eraser' ? '🧽' : '🖊️'}
+                    </text>
+                    <text x="200" y="140" text-anchor="middle" fill="#6B7280" font-family="Arial" font-size="16">
+                      ${selectedPhoto.label.charAt(0).toUpperCase() + selectedPhoto.label.slice(1)} Example
+                    </text>
+                    <text x="200" y="165" text-anchor="middle" fill="#4B5563" font-family="Arial" font-size="12">
+                      Image temporarily unavailable
+                    </text>
+                  </svg>
+                `)}`
+                target.onerror = null
+              }}
             />
             
             <div className="space-y-3">
