@@ -352,16 +352,12 @@ export default function LessonViewer({ title, description, sections, lessonId, o
               {showPremiumFeatures ? (
                 /* Premium Interactive Coding Playground */
                 <InteractiveCodingPlayground
-                  initialChallenge={{
-                    title: currentSectionData.title,
-                    description: currentSectionData.codeChallenge.description,
-                    startingCode: currentSectionData.codeChallenge.startingCode,
-                    goal: `Complete this challenge: ${currentSectionData.codeChallenge.description}`,
-                    hints: currentSectionData.codeChallenge.hints || []
-                  }}
-                  onComplete={(code, attempts) => {
-                    setCurrentCode(code)
-                    handleCodeChallengeComplete(code)
+                  lessonId={`lesson-section-${currentSection}`}
+                  projectName={`${currentSectionData.title} - Challenge`}
+                  initialCode={currentSectionData.codeChallenge?.startingCode || ''}
+                  onProjectComplete={(project) => {
+                    setCurrentCode(project.code)
+                    handleCodeChallengeComplete(project.code)
                   }}
                 />
               ) : (

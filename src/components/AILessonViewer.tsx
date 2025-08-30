@@ -8,6 +8,30 @@ const AIClassifierTrainer = dynamic(() => import('./AIClassifierTrainer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading AI Classifier...</div>
 })
+const RealPhotoClassifier = dynamic(() => import('./RealPhotoClassifier'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Real Photo Classifier...</div>
+})
+const AIFoundationExperience = dynamic(() => import('./AIFoundationExperience'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading AI Foundation...</div>
+})
+const InteractiveCodingPlayground = dynamic(() => import('./InteractiveCodingPlayground'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Coding Playground...</div>
+})
+const StudentProjectGallery = dynamic(() => import('./StudentProjectGallery'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Project Gallery...</div>
+})
+const AdvancedChatbotBuilder = dynamic(() => import('./AdvancedChatbotBuilder'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Chatbot Builder...</div>
+})
+const ConversationFlowDesigner = dynamic(() => import('./ConversationFlowDesigner'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Flow Designer...</div>
+})
 const VocabularyMatcher = dynamic(() => import('./VocabularyMatcher'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Vocabulary Matcher...</div>
@@ -54,7 +78,8 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentTab, setCurrentTab] = useState<'overview' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit'>('overview')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'foundation' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit' | 'gallery'>('foundation')
+  const [foundationCompleted, setFoundationCompleted] = useState(false)
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
@@ -153,6 +178,9 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   // Check if specific sections are completed
   const isSectionCompleted = (sectionId: string) => {
     switch (sectionId) {
+      case 'foundation':
+        // Foundation is completed when user finishes the experience
+        return foundationCompleted
       case 'learn':
         // Learn is completed when user has visited and spent some time (auto-completed when leaving)
         return currentTab !== 'learn' || localStorage.getItem(`lesson-${lesson.id}-learn-visited`) === 'true'
@@ -171,6 +199,9 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       case 'checklist':
         // Checklist completed when all items checked
         return currentModeData.checklist.every((_, index) => checklistState.completed[index])
+      case 'gallery':
+        // Gallery is always available after checklist (optional section)
+        return true
       case 'submit':
         // Submission is always available after checklist
         return true
@@ -182,9 +213,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   // Calculate progress
   const calculateProgress = () => {
     let completed = 0
-    let total = 6 // learn, code, tests, quiz, checklist, submit
+    let total = lesson.id === 'week-01' ? 7 : 6 // foundation + learn, code, tests, quiz, checklist, submit (gallery is optional)
 
-    // Count completed sections
+    // Count completed sections (gallery doesn't count towards completion percentage - it's bonus)
+    if (lesson.id === 'week-01' && isSectionCompleted('foundation')) completed += 1
     if (isSectionCompleted('learn')) completed += 1
     if (isSectionCompleted('code')) completed += 1
     if (isSectionCompleted('tests')) completed += 1
@@ -297,6 +329,19 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
 
   // Build missions dynamically based on lesson content
   const baseMissions = [
+    ...(lesson.id === 'week-01' ? [{
+      id: 'foundation',
+      title: 'Foundation Experience',
+      subtitle: 'Enter the World of AI Magic',
+      icon: Sparkles,
+      color: 'purple',
+      emoji: '🔮',
+      difficulty: 'Starter',
+      estimatedTime: '10 min',
+      xpReward: 150,
+      description: 'Experience the wonder of AI and build your foundational understanding',
+      objectives: ['See AI magic in action', 'Try interactive demos', 'Understand core concepts']
+    }] : []),
     { 
       id: 'learn', 
       title: 'Knowledge Quest', 
@@ -382,6 +427,19 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       xpReward: 75,
       description: 'Review all your accomplishments and ensure everything is ready for submission',
       objectives: ['Review all completed tasks', 'Check code quality', 'Prepare final submission']
+    },
+    { 
+      id: 'gallery', 
+      title: 'Project Gallery', 
+      subtitle: 'Share Your Creation',
+      icon: Upload, 
+      color: 'pink', 
+      emoji: '🎨',
+      difficulty: 'Social',
+      estimatedTime: '8 min',
+      xpReward: 100,
+      description: 'Showcase your AI project and explore amazing creations from your classmates',
+      objectives: ['Upload your project', 'View peer projects', 'Get feedback and inspiration']
     },
     { 
       id: 'submit', 
@@ -708,7 +766,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                 const isCompleted = isSectionCompleted(mission.id)
                 const isActive = currentTab === mission.id
                 // Lock missions based on previous section completion
-                const isLocked = index > 0 && !isSectionCompleted(missions[index - 1].id)
+                // For Lesson 1, foundation must be complete before other missions
+                const isLocked = lesson.id === 'week-01' 
+                  ? (mission.id !== 'foundation' && !foundationCompleted) || (index > 0 && !isSectionCompleted(missions[index - 1].id))
+                  : index > 0 && !isSectionCompleted(missions[index - 1].id)
                 const isEven = index % 2 === 0
                 
 
@@ -890,11 +951,130 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           {/* Mission Content */}
           <div className="max-w-7xl mx-auto p-8">
             
+            {currentTab === 'foundation' && lesson.id === 'week-01' && (
+              <div className="space-y-8">
+                {/* AI Foundation Experience Content */}
+                <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🔮</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">AI Foundation Experience</h2>
+                      <p className="text-purple-200 text-xl">Your Journey Into Artificial Intelligence Begins</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                    <h3 className="text-purple-300 font-bold text-xl mb-4">🚀 Foundation Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">✨</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Experience the Magic</h4>
+                        <p className="text-purple-300/80 text-sm">See AI in action with amazing demonstrations</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🎮</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Try It Yourself</h4>
+                        <p className="text-purple-300/80 text-sm">Interact with AI through hands-on demos</p>
+                      </div>
+                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🧠</div>
+                        <h4 className="text-purple-200 font-semibold mb-1">Understand How It Works</h4>
+                        <p className="text-purple-300/80 text-sm">Build your foundational knowledge of AI concepts</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Foundation Experience Component */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <AIFoundationExperience 
+                    onComplete={() => {
+                      setFoundationCompleted(true)
+                      setCurrentTab('overview')
+                      // Update progress to reflect foundation completion (25% of lesson)
+                      const foundationProgress = 25
+                      onLessonComplete(foundationProgress)
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            
             {currentTab === 'learn' && (
               <div className="space-y-8">
-                {lesson.id !== 'week-02' && (
+                {lesson.id === 'week-02' ? (
                   <>
-                    {/* Traditional Knowledge Quest Content (for lessons without slides) */}
+                    {/* Lesson 2 - Chatbot Learning Content */}
+                    <div className="bg-gradient-to-r from-indigo-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-indigo-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl animate-pulse">🎓</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Chatbot Academy</h2>
+                          <p className="text-indigo-200 text-xl">Master the Art of AI Conversation</p>
+                        </div>
+                      </div>
+                      
+                      {/* Mission Objectives */}
+                      <div className="bg-indigo-900/40 rounded-2xl p-6 border border-indigo-500/30">
+                        <h3 className="text-indigo-300 font-bold text-xl mb-4">🎯 Learning Objectives</h3>
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">💬</div>
+                            <h4 className="text-indigo-200 font-semibold mb-1">Conversation Design</h4>
+                            <p className="text-indigo-300/80 text-sm">Learn how AI understands and responds to human language</p>
+                          </div>
+                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🤖</div>
+                            <h4 className="text-indigo-200 font-semibold mb-1">NLP Fundamentals</h4>
+                            <p className="text-indigo-300/80 text-sm">Understand natural language processing concepts</p>
+                          </div>
+                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🔄</div>
+                            <h4 className="text-indigo-200 font-semibold mb-1">Flow Design</h4>
+                            <p className="text-indigo-300/80 text-sm">Create sophisticated conversation flows and logic</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Conversation Flow Designer for Advanced Learning */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <h3 className="text-indigo-300 font-bold text-xl mb-6 flex items-center gap-2">
+                        <Zap className="h-6 w-6" />
+                        Conversation Flow Designer 🎛️
+                      </h3>
+                      <p className="text-gray-300 mb-6">
+                        Design sophisticated conversation flows with visual drag-and-drop interfaces. Learn how professional chatbots handle complex interactions.
+                      </p>
+                      <ConversationFlowDesigner 
+                        onFlowComplete={(flowData) => {
+                          console.log('Conversation flow completed:', flowData)
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Interactive Coding Playground for Chatbot Practice */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <h3 className="text-indigo-300 font-bold text-xl mb-6 flex items-center gap-2">
+                        <Code className="h-6 w-6" />
+                        Chatbot Coding Playground 🎮
+                      </h3>
+                      <p className="text-gray-300 mb-6">
+                        Practice building chatbot logic with hands-on Python exercises and real-time testing.
+                      </p>
+                      <InteractiveCodingPlayground 
+                        lessonId={lesson.id}
+                        projectName={`${lesson.title} - Chatbot Challenge`}
+                        onProjectComplete={(project) => {
+                          console.log(`Chatbot project completed:`, project)
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Traditional Knowledge Quest Content (for Lesson 1) */}
                     <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
                       <div className="flex items-center gap-4 mb-6">
                         <div className="text-8xl animate-pulse">🏛️</div>
@@ -936,79 +1116,155 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         onReturnToMap={() => setCurrentTab('overview')}
                       />
                     </div>
+                    
+                    {/* Interactive Coding Playground for Advanced Practice */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <h3 className="text-emerald-300 font-bold text-xl mb-6 flex items-center gap-2">
+                        <Code className="h-6 w-6" />
+                        Interactive Coding Playground 🎮
+                      </h3>
+                      <p className="text-gray-300 mb-6">
+                        Practice your programming skills with hands-on challenges and real-time feedback.
+                      </p>
+                      <InteractiveCodingPlayground 
+                        lessonId={lesson.id}
+                        projectName={`${lesson.title} - AI Challenge`}
+                        onProjectComplete={(project) => {
+                          console.log(`AI project completed:`, project)
+                        }}
+                      />
+                    </div>
                   </>
                 )}
-
-                {/* Vocabulary assignment moved to dedicated homework section on dashboard */}
               </div>
             )}
 
 
             {currentTab === 'code' && (
               <div className="space-y-8">
-                {/* Coding Laboratory Content */}
-                <div className="bg-gradient-to-r from-blue-800/30 to-cyan-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="text-8xl animate-pulse">⚗️</div>
-                    <div>
-                      <h2 className="text-5xl font-bold text-white mb-2">Coding Laboratory</h2>
-                      <p className="text-blue-200 text-xl">Build Your First AI Creation</p>
+                {/* Lesson 2 - Chatbot Builder */}
+                {lesson.id === 'week-02' ? (
+                  <>
+                    {/* Chatbot Laboratory Content */}
+                    <div className="bg-gradient-to-r from-purple-800/30 to-pink-800/30 rounded-3xl p-8 border-2 border-purple-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl animate-pulse">🤖</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Chatbot Laboratory</h2>
+                          <p className="text-purple-200 text-xl">Build Your AI School Advisor</p>
+                        </div>
+                      </div>
+                      
+                      {/* Mission Objectives */}
+                      <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                        <h3 className="text-purple-300 font-bold text-xl mb-4">🤖 Bot Building Objectives</h3>
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">💬</div>
+                            <h4 className="text-purple-200 font-semibold mb-1">Design Conversations</h4>
+                            <p className="text-purple-300/80 text-sm">Create natural dialogue flows and responses</p>
+                          </div>
+                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🧠</div>
+                            <h4 className="text-purple-200 font-semibold mb-1">Train Response Engine</h4>
+                            <p className="text-purple-300/80 text-sm">Build intelligent categorization and response generation</p>
+                          </div>
+                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">✅</div>
+                            <h4 className="text-purple-200 font-semibold mb-1">Test & Refine</h4>
+                            <p className="text-purple-300/80 text-sm">Validate your chatbot with real conversations</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  
-                  {/* Mission Objectives */}
-                  <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
-                    <h3 className="text-blue-300 font-bold text-xl mb-4">⚗️ Laboratory Objectives</h3>
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-blue-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🔧</div>
-                        <h4 className="text-blue-200 font-semibold mb-1">Set Up Workspace</h4>
-                        <p className="text-blue-300/80 text-sm">Configure your AI development environment</p>
-                      </div>
-                      <div className="bg-blue-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🤖</div>
-                        <h4 className="text-blue-200 font-semibold mb-1">Train AI Model</h4>
-                        <p className="text-blue-300/80 text-sm">Create and train your first machine learning model</p>
-                      </div>
-                      <div className="bg-blue-800/30 p-4 rounded-xl">
-                        <div className="text-3xl mb-2">🧪</div>
-                        <h4 className="text-blue-200 font-semibold mb-1">Test Your Creation</h4>
-                        <p className="text-blue-300/80 text-sm">Validate your AI model with real data</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* AI Classifier Trainer */}
-                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                  <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
-                    <Zap className="h-6 w-6" />
-                    AI Model Configuration 🔧
-                  </h3>
-                  <div className="bg-black/30 p-6 rounded-xl border border-cyan-500/20 mb-6">
-                    <pre className="text-green-300 text-sm overflow-x-auto">
-                      {currentModeData.code.starter}
-                    </pre>
-                  </div>
-                  
-                  <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-4">
-                    <AIClassifierTrainer
-                      dataset={currentModeData.dataset}
-                      labels={currentModeData.labels}
-                      onMetricsUpdate={setMetrics}
-                      onTrainingComplete={(success) => {
-                        if (success) {
-                          handleTestComplete('dataset_loaded')
-                          handleTestComplete('trained_once')
+                    
+                    {/* Advanced Chatbot Builder */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <h3 className="text-purple-300 font-bold text-xl mb-6 flex items-center gap-2">
+                        <Brain className="h-6 w-6" />
+                        Advanced Chatbot Builder 🚀
+                      </h3>
+                      <AdvancedChatbotBuilder
+                        lessonId={lesson.id}
+                        onProjectComplete={(botProject) => {
+                          console.log('Chatbot completed:', botProject)
+                          handleTestComplete('chatbot_built')
+                          handleTestComplete('responses_tested')
                           // Notify parent component about code execution
                           if (onCodeExecution) {
                             onCodeExecution()
                           }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Default AI Classifier Content for Lesson 1 */}
+                    <div className="bg-gradient-to-r from-blue-800/30 to-cyan-800/30 rounded-3xl p-8 border-2 border-blue-500/30">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="text-8xl animate-pulse">⚗️</div>
+                        <div>
+                          <h2 className="text-5xl font-bold text-white mb-2">Coding Laboratory</h2>
+                          <p className="text-blue-200 text-xl">Build Your First AI Creation</p>
+                        </div>
+                      </div>
+                      
+                      {/* Mission Objectives */}
+                      <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
+                        <h3 className="text-blue-300 font-bold text-xl mb-4">⚗️ Laboratory Objectives</h3>
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🔧</div>
+                            <h4 className="text-blue-200 font-semibold mb-1">Set Up Workspace</h4>
+                            <p className="text-blue-300/80 text-sm">Configure your AI development environment</p>
+                          </div>
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🤖</div>
+                            <h4 className="text-blue-200 font-semibold mb-1">Train AI Model</h4>
+                            <p className="text-blue-300/80 text-sm">Create and train your first machine learning model</p>
+                          </div>
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
+                            <div className="text-3xl mb-2">🧪</div>
+                            <h4 className="text-blue-200 font-semibold mb-1">Test Your Creation</h4>
+                            <p className="text-blue-300/80 text-sm">Validate your AI model with real data</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* AI Classifier Trainer */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                      <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
+                        <Zap className="h-6 w-6" />
+                        AI Model Configuration 🔧
+                      </h3>
+                      <div className="bg-black/30 p-6 rounded-xl border border-cyan-500/20 mb-6">
+                        <pre className="text-green-300 text-sm overflow-x-auto">
+                          {currentModeData.code.starter}
+                        </pre>
+                      </div>
+                      
+                      <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-4">
+                        <RealPhotoClassifier
+                          dataset={currentModeData.dataset}
+                          labels={currentModeData.labels}
+                          onMetricsUpdate={setMetrics}
+                          onTrainingComplete={(success) => {
+                            if (success) {
+                              handleTestComplete('dataset_loaded')
+                              handleTestComplete('trained_once')
+                              // Notify parent component about code execution
+                              if (onCodeExecution) {
+                                onCodeExecution()
+                              }
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -1475,6 +1731,48 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'gallery' && (
+              <div className="space-y-8">
+                {/* Student Project Gallery Content */}
+                <div className="bg-gradient-to-r from-pink-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-pink-500/30">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="text-8xl animate-pulse">🎨</div>
+                    <div>
+                      <h2 className="text-5xl font-bold text-white mb-2">Project Gallery</h2>
+                      <p className="text-pink-200 text-xl">Showcase Your AI Creations</p>
+                    </div>
+                  </div>
+                  
+                  {/* Mission Objectives */}
+                  <div className="bg-pink-900/40 rounded-2xl p-6 border border-pink-500/30">
+                    <h3 className="text-pink-300 font-bold text-xl mb-4">🎨 Gallery Objectives</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-pink-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">📂</div>
+                        <h4 className="text-pink-200 font-semibold mb-1">View Student Projects</h4>
+                        <p className="text-pink-300/80 text-sm">Explore amazing AI projects created by your peers</p>
+                      </div>
+                      <div className="bg-pink-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">💡</div>
+                        <h4 className="text-pink-200 font-semibold mb-1">Get Inspired</h4>
+                        <p className="text-pink-300/80 text-sm">Discover new ideas and approaches for your own projects</p>
+                      </div>
+                      <div className="bg-pink-800/30 p-4 rounded-xl">
+                        <div className="text-3xl mb-2">🤝</div>
+                        <h4 className="text-pink-200 font-semibold mb-1">Share & Collaborate</h4>
+                        <p className="text-pink-300/80 text-sm">Upload your own projects and get feedback from classmates</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Student Project Gallery Component */}
+                <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                  <StudentProjectGallery />
                 </div>
               </div>
             )}

@@ -7,19 +7,40 @@ import { useRouter } from 'next/navigation'
 import { getAILesson } from '@/lib/lesson-data'
 import AILessonViewer from '@/components/AILessonViewer'
 import PythonLessonViewer from '@/components/PythonLessonViewer'
-import RewardSystem, { getBadgesEarned } from '@/components/RewardSystem'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+
+// Dynamic import for RewardSystem to avoid SSR issues
+import dynamic from 'next/dynamic'
+const RewardSystem = dynamic(() => import('@/components/RewardSystem').then(mod => ({ default: mod.default })), {
+  ssr: false,
+  loading: () => null
+})
+
+// Dynamic import for getBadgesEarned utility
+const getBadgesEarnedUtil = dynamic(() => import('@/components/RewardSystem').then(mod => ({ default: mod.getBadgesEarned })), {
+  ssr: false
+})
 
 export default function LessonPage() {
   const params = useParams()
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lesson] = useState(getAILesson(params.id as string))
+  const [lesson, setLesson] = useState<any>(null)
   const [showRewards, setShowRewards] = useState(false)
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [quizScore, setQuizScore] = useState<number | undefined>()
   const [codeExecuted, setCodeExecuted] = useState(false)
+
+  useEffect(() => {
+    try {
+      const lessonData = getAILesson(params.id as string)
+      setLesson(lessonData)
+    } catch (error) {
+      console.error('Failed to load lesson:', error)
+      setLesson(null)
+    }
+  }, [params.id])
 
   useEffect(() => {
     // TEMPORARY: Allow lesson access for testing
@@ -28,16 +49,21 @@ export default function LessonPage() {
     // }
   }, [isAuthenticated, loading, router])
 
-  const handleLessonComplete = (progress: number) => {
+  const handleLessonComplete = async (progress: number) => {
     console.log(`Lesson progress: ${progress}%`)
     
-    // Determine which badges should be earned based on progress
-    const badges = getBadgesEarned(progress, quizScore, codeExecuted)
-    setEarnedBadges(badges)
-    
-    // Show rewards modal when lesson is completed (100%)
-    if (progress >= 100) {
-      setShowRewards(true)
+    // Dynamically import getBadgesEarned when needed
+    try {
+      const { getBadgesEarned } = await import('@/components/RewardSystem')
+      const badges = getBadgesEarned(progress, quizScore, codeExecuted)
+      setEarnedBadges(badges)
+      
+      // Show rewards modal when lesson is completed (100%)
+      if (progress >= 100) {
+        setShowRewards(true)
+      }
+    } catch (error) {
+      console.error('Failed to load reward system:', error)
     }
     
     // Here you would save progress to Supabase
