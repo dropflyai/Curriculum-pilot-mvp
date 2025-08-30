@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllLessons, Lesson } from '@/lib/lesson-data'
 import { getLessonProgress, getWeek02CompletionStatus, getAllLessonProgress } from '@/lib/progress-utils'
-import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle } from 'lucide-react'
+import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
 import Leaderboard from '@/components/Leaderboard'
@@ -22,7 +22,14 @@ export default function Dashboard() {
   const [userScores, setUserScores] = useState<Record<string, number>>({})
   const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
+  const [showLeaderboard, setShowLeaderboard] = useState(false)
+  const [showHomework, setShowHomework] = useState(false)
   
+  // 18-week course structure (you can modify this based on actual course plan)
+  const totalWeeks = 18
+  const currentWeek = 2 // This could be calculated based on actual progress
+  const weeklyProgress = (currentWeek / totalWeeks) * 100
+
   // Learning Progress Data
   const [totalLearningTime] = useState(8.5) // hours this week
   const [recentActivity] = useState([
@@ -31,19 +38,6 @@ export default function Dashboard() {
     { action: 'Achieved 85% on Week 1 Quiz', time: '1 hour ago', type: 'quiz' },
     { action: 'Ready to Start Week 2 - Python!', time: 'Now', type: 'lesson' }
   ])
-  
-  // Learning Analytics
-  const [learningAnalytics] = useState({
-    timePerConcept: {
-      'variables': 12, // minutes
-      'loops': 18,
-      'functions': 15,
-      'input-output': 8
-    },
-    topicsToReview: ['loops', 'functions'],
-    strongAreas: ['variables', 'input-output']
-  })
-
 
   useEffect(() => {
     // Redirect to auth if not authenticated
@@ -175,11 +169,6 @@ export default function Dashboard() {
     )
   }
 
-  // TEMPORARY: Skip auth check for testing
-  // if (!isAuthenticated) {
-  //   return null
-  // }
-
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Header */}
@@ -220,103 +209,89 @@ export default function Dashboard() {
           <p className="text-lg text-gray-400">Continue your Python programming journey</p>
         </div>
 
-        {/* Learning Stats Cards */}
+        {/* 18-Week Course Progress Bar */}
+        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 border border-blue-500/30 mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="text-4xl">🎯</div>
+            <div>
+              <h3 className="text-2xl font-bold text-white">Course Progress</h3>
+              <p className="text-blue-200">18-Week Python & AI Programming Course</p>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-blue-300">Week {currentWeek} of {totalWeeks}</span>
+              <span className="text-sm font-bold text-white">{Math.round(weeklyProgress)}% Complete</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-3">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
+                style={{ width: `${weeklyProgress}%` }}
+              />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              <div className="bg-blue-800/30 rounded-lg p-3">
+                <div className="text-blue-300 text-sm font-medium">Weeks Completed</div>
+                <div className="text-white text-xl font-bold">{currentWeek - 1}</div>
+              </div>
+              <div className="bg-purple-800/30 rounded-lg p-3">
+                <div className="text-purple-300 text-sm font-medium">Current Week</div>
+                <div className="text-white text-xl font-bold">{currentWeek}</div>
+              </div>
+              <div className="bg-green-800/30 rounded-lg p-3">
+                <div className="text-green-300 text-sm font-medium">Weeks Remaining</div>
+                <div className="text-white text-xl font-bold">{totalWeeks - currentWeek}</div>
+              </div>
+              <div className="bg-yellow-800/30 rounded-lg p-3">
+                <div className="text-yellow-300 text-sm font-medium">Est. Completion</div>
+                <div className="text-white text-xl font-bold">May 2025</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Lessons Card */}
           <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-blue-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Total Lessons</p>
+                <p className="text-sm font-medium text-gray-400">Available Lessons</p>
                 <p className="text-2xl font-bold text-white">{lessons.length}</p>
-                <p className="text-xs text-gray-500">Available to learn</p>
               </div>
             </div>
           </div>
-
-          {/* Completed Lessons Card */}
           <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-green-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-400">Completed</p>
                 <p className="text-2xl font-bold text-white">{lessons.filter(l => getProgressForLesson(l.id) === 100).length}</p>
-                <p className="text-xs text-gray-500">Lessons finished</p>
               </div>
             </div>
           </div>
-
-          {/* In Progress Card */}
           <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
               <Clock className="h-8 w-8 text-yellow-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-400">In Progress</p>
                 <p className="text-2xl font-bold text-white">{lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length}</p>
-                <p className="text-xs text-gray-500">Currently learning</p>
               </div>
             </div>
           </div>
-
-          {/* Average Score Card */}
           <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
             <div className="flex items-center">
               <Award className="h-8 w-8 text-purple-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-400">Average Score</p>
                 <p className="text-2xl font-bold text-white">{getAverageScore()}%</p>
-                <p className="text-xs text-gray-500">Quiz performance</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Learning Progress Overview */}
-        <div className="mb-8 bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-xl font-bold text-white mb-4">Your Learning Progress</h3>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-400">Overall Course Progress</span>
-                <span className="text-sm font-bold text-white">
-                  {Math.round((lessons.filter(l => getProgressForLesson(l.id) === 100).length / lessons.length) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
-                <div 
-                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(lessons.filter(l => getProgressForLesson(l.id) === 100).length / lessons.length) * 100}%` }}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="bg-gray-700/50 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-400 mb-2">Strong Areas</h4>
-                <div className="space-y-2">
-                  {learningAnalytics.strongAreas.map((area, index) => (
-                    <div key={index} className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                      <span className="text-white capitalize">{area}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-gray-700/50 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-400 mb-2">Topics to Review</h4>
-                <div className="space-y-2">
-                  {learningAnalytics.topicsToReview.map((topic, index) => (
-                    <div key={index} className="flex items-center">
-                      <Clock className="h-4 w-4 text-yellow-500 mr-2" />
-                      <span className="text-white capitalize">{topic}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions & Recommendations */}
+        {/* Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Next Recommended Lesson */}
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
@@ -358,123 +333,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-
-
-        {/* Section 1 Homework */}
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="text-4xl">📚</div>
-              <div>
-                <h3 className="text-2xl font-bold text-white">Homework</h3>
-                <p className="text-purple-200">Complete these portfolio assignments to showcase your learning</p>
-              </div>
-            </div>
-
-            {/* Homework Assignment Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Vocabulary Assignment */}
-              <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 group">
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl group-hover:animate-bounce">🧠</div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-bold text-white mb-2">Lesson 1: AI Vocabulary Mastery</h4>
-                    <p className="text-purple-200 text-sm mb-4">
-                      Learn and master essential AI terminology through interactive study and matching games.
-                    </p>
-                    
-                    {/* Assignment Details */}
-                    <div className="bg-purple-900/30 rounded-lg p-3 mb-4">
-                      <div className="text-purple-300 text-sm">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span>📖</span>
-                          <span>Study 11 key AI terms with definitions</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span>🎯</span>
-                          <span>Complete interactive matching quiz</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span>🏆</span>
-                          <span>Score 80% or higher to complete</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Assignment Status */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-yellow-400 text-sm">⏱️</span>
-                        <span className="text-gray-300 text-sm">Est. Time: 10-15 min</span>
-                      </div>
-                      <Link
-                        href="/homework/vocabulary"
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
-                      >
-                        Start Assignment
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Lesson 2 Homework - Magic 8-Ball Portfolio */}
-              <div className="bg-blue-800/20 rounded-lg p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 group">
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl group-hover:animate-bounce">🎱</div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-bold text-white mb-2">Lesson 2: Magic 8-Ball Portfolio</h4>
-                    <p className="text-blue-200 text-sm mb-4">
-                      Enhance your Magic 8-Ball project and create a portfolio entry to share with peers.
-                    </p>
-                    
-                    {/* Assignment Details */}
-                    <div className="bg-blue-900/30 rounded-lg p-3 mb-4">
-                      <div className="text-blue-300 text-sm">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span>⚡</span>
-                          <span>Choose 1 of 4 enhancement options</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span>📱</span>
-                          <span>Document project in digital portfolio</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span>🤝</span>
-                          <span>Prepare for peer gallery walk</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Assignment Status */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-yellow-400 text-sm">⏱️</span>
-                        <span className="text-gray-300 text-sm">Est. Time: 60 min</span>
-                      </div>
-                      <Link
-                        href="/homework/magic-8-ball"
-                        className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
-                      >
-                        Start Homework
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Leaderboard */}
-        <div className="mb-8">
-          <Leaderboard />
-        </div>
-
-        {/* Lessons Grid */}
+        {/* Main Lessons Grid - NOW PROMINENT */}
         <div className="mb-8">
           <div className="mb-6">
-            <h3 className="text-2xl font-bold text-white mb-6">Available Lessons</h3>
+            <h3 className="text-2xl font-bold text-white mb-6">Your Lessons</h3>
             
             {/* Progress Tabs */}
             <div className="flex flex-wrap gap-3 mb-6">
@@ -517,42 +379,6 @@ export default function Dashboard() {
                 }`}
               >
                 Not Started ({lessons.filter(l => getProgressForLesson(l.id) === 0).length})
-              </button>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center mb-6">
-            <h4 className="text-lg font-medium text-gray-400">Filter by Difficulty:</h4>
-            <div className="flex space-x-2">
-              <button 
-                onClick={() => setSelectedDifficulty('all')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedDifficulty === 'all' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                All ({lessons.length})
-              </button>
-              <button 
-                onClick={() => setSelectedDifficulty('beginner')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedDifficulty === 'beginner' 
-                    ? 'bg-green-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                Beginner ({lessons.filter(l => l.difficulty === 'beginner').length})
-              </button>
-              <button 
-                onClick={() => setSelectedDifficulty('intermediate')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedDifficulty === 'intermediate' 
-                    ? 'bg-yellow-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                Intermediate ({lessons.filter(l => l.difficulty === 'intermediate').length})
               </button>
             </div>
           </div>
@@ -658,6 +484,114 @@ export default function Dashboard() {
               )
             })}
           </div>
+        </div>
+
+        {/* Collapsible Homework Section */}
+        <div className="mb-8">
+          <button 
+            onClick={() => setShowHomework(!showHomework)}
+            className="w-full bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">📚</div>
+                <div className="text-left">
+                  <h3 className="text-2xl font-bold text-white">Homework Assignments</h3>
+                  <p className="text-purple-200">Complete these portfolio assignments to showcase your learning</p>
+                </div>
+              </div>
+              {showHomework ? 
+                <ChevronUp className="h-6 w-6 text-purple-300" /> : 
+                <ChevronDown className="h-6 w-6 text-purple-300" />
+              }
+            </div>
+          </button>
+
+          {showHomework && (
+            <div className="mt-4 bg-purple-900/10 rounded-lg p-6 border border-purple-500/20">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Vocabulary Assignment */}
+                <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="text-3xl group-hover:animate-bounce">🧠</div>
+                    <div className="flex-1">
+                      <h4 className="text-xl font-bold text-white mb-2">Lesson 1: AI Vocabulary Mastery</h4>
+                      <p className="text-purple-200 text-sm mb-4">
+                        Learn and master essential AI terminology through interactive study and matching games.
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-yellow-400 text-sm">⏱️</span>
+                          <span className="text-gray-300 text-sm">Est. Time: 10-15 min</span>
+                        </div>
+                        <Link
+                          href="/homework/vocabulary"
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
+                        >
+                          Start Assignment
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Magic 8-Ball Portfolio */}
+                <div className="bg-blue-800/20 rounded-lg p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="text-3xl group-hover:animate-bounce">🎱</div>
+                    <div className="flex-1">
+                      <h4 className="text-xl font-bold text-white mb-2">Lesson 2: Magic 8-Ball Portfolio</h4>
+                      <p className="text-blue-200 text-sm mb-4">
+                        Enhance your Magic 8-Ball project and create a portfolio entry to share with peers.
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-yellow-400 text-sm">⏱️</span>
+                          <span className="text-gray-300 text-sm">Est. Time: 60 min</span>
+                        </div>
+                        <Link
+                          href="/homework/magic-8-ball"
+                          className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
+                        >
+                          Start Homework
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Collapsible Leaderboard */}
+        <div className="mb-8">
+          <button 
+            onClick={() => setShowLeaderboard(!showLeaderboard)}
+            className="w-full bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-lg p-4 border border-yellow-500/30 hover:border-yellow-400/50 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">🏆</div>
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-white">Class Leaderboard</h3>
+                  <p className="text-yellow-200">See how you rank among your classmates</p>
+                </div>
+              </div>
+              {showLeaderboard ? 
+                <ChevronUp className="h-6 w-6 text-yellow-300" /> : 
+                <ChevronDown className="h-6 w-6 text-yellow-300" />
+              }
+            </div>
+          </button>
+
+          {showLeaderboard && (
+            <div className="mt-4">
+              <Leaderboard />
+            </div>
+          )}
         </div>
 
       </div>
