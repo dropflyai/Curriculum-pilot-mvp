@@ -28,6 +28,11 @@ const AIAdvisorLab = dynamic(() => import('./AIAdvisorLab'), {
   loading: () => <div className="text-white">Loading AI Advisor Lab...</div>
 })
 
+const AITutorPanel = dynamic(() => import('./AITutorPanel'), {
+  ssr: false,
+  loading: () => null
+})
+
 interface PythonLessonViewerProps {
   lesson: AILesson
   onLessonComplete: (progress: number) => void
@@ -60,6 +65,7 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const [pythonLabCompleted, setPythonLabCompleted] = useState(false)
   const [aiAdvisorLabCompleted, setAiAdvisorLabCompleted] = useState(false)
   const [lessonFullyComplete, setLessonFullyComplete] = useState(false)
+  const [showAITutor, setShowAITutor] = useState(false)
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -1347,6 +1353,14 @@ Now you understand how each type of help works behind the scenes. Time to bring 
           </div>
         </div>
       )}
+
+      {/* AI Tutor Panel */}
+      <AITutorPanel
+        currentLesson={lesson.title}
+        currentSection={currentTab}
+        isOpen={showAITutor}
+        onToggle={() => setShowAITutor(!showAITutor)}
+      />
     </div>
   )
 }

@@ -48,6 +48,10 @@ const SlideViewer = dynamic(() => import('./SlideViewer'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Slides...</div>
 })
+const AITutorPanel = dynamic(() => import('./AITutorPanel'), {
+  ssr: false,
+  loading: () => null
+})
 const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Learning Options...</div>
@@ -89,6 +93,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   const [showEthicsNote, setShowEthicsNote] = useState(false)
   const [metrics, setMetrics] = useState<any>(null)
   const [submissionText, setSubmissionText] = useState('')
+  const [showAITutor, setShowAITutor] = useState(false)
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -1855,6 +1860,14 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
           </div>
         </div>
       )}
+
+      {/* AI Tutor Panel */}
+      <AITutorPanel
+        currentLesson={lesson.title}
+        currentSection={currentTab}
+        isOpen={showAITutor}
+        onToggle={() => setShowAITutor(!showAITutor)}
+      />
     </div>
   )
 }
