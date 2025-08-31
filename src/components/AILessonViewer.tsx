@@ -20,6 +20,10 @@ const StudentProjectGallery = dynamic(() => import('./StudentProjectGallery'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Project Gallery...</div>
 })
+const StepByStepCoding = dynamic(() => import('./StepByStepCoding'), {
+  ssr: false,
+  loading: () => <div className="text-white">Loading Step-by-Step Coding...</div>
+})
 const AdvancedChatbotBuilder = dynamic(() => import('./AdvancedChatbotBuilder'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Chatbot Builder...</div>
@@ -1199,17 +1203,33 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                     </div>
                     
-                    {/* AI Classifier Trainer */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
+                    {/* Interactive Step-by-Step Coding */}
+                    <StepByStepCoding
+                      lessonId={lesson.id}
+                      onStepComplete={(stepId) => {
+                        console.log(`Step completed: ${stepId}`)
+                        // Mark various tests as complete based on the step
+                        if (stepId === 'setup-data') handleTestComplete('dataset_loaded')
+                        if (stepId === 'train-model') handleTestComplete('trained_once')
+                        if (stepId === 'test-predictions') handleTestComplete('metrics_compared')
+                      }}
+                      onAllStepsComplete={() => {
+                        console.log('All coding steps completed!')
+                        if (onCodeExecution) {
+                          onCodeExecution()
+                        }
+                      }}
+                    />
+                    
+                    {/* Advanced AI Trainer (After completing steps) */}
+                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 mt-8">
                       <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
                         <Zap className="h-6 w-6" />
-                        AI Model Configuration 🔧
+                        Advanced AI Trainer 🔧
                       </h3>
-                      <div className="bg-black/30 p-6 rounded-xl border border-cyan-500/20 mb-6">
-                        <pre className="text-green-300 text-sm overflow-x-auto">
-                          {currentModeData.code.starter}
-                        </pre>
-                      </div>
+                      <p className="text-gray-300 mb-4">
+                        Ready for the real thing? Use this advanced trainer to experiment with different datasets and configurations.
+                      </p>
                       
                       <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-4">
                         <RealPhotoClassifier
@@ -1220,7 +1240,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                             if (success) {
                               handleTestComplete('dataset_loaded')
                               handleTestComplete('trained_once')
-                              // Notify parent component about code execution
                               if (onCodeExecution) {
                                 onCodeExecution()
                               }
