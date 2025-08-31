@@ -56,6 +56,25 @@ export async function signUp(email: string, password: string, fullName: string, 
 // Sign in
 export async function signIn(email: string, password: string) {
   try {
+    // Check if this is a demo account
+    if (email === 'student@codefly.demo' || email === 'teacher@codefly.demo') {
+      const role = email === 'teacher@codefly.demo' ? 'teacher' : 'student'
+      const mockUser = {
+        id: `demo-${role}`,
+        email: email,
+        full_name: role === 'teacher' ? 'Ms. Sarah Demo Teacher' : 'Alex Demo Student',
+        role: role as 'student' | 'teacher'
+      }
+      
+      // Store in localStorage for demo
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('demo_user', JSON.stringify(mockUser))
+        localStorage.setItem('demo_authenticated', 'true')
+      }
+      
+      return { user: mockUser as any, error: null }
+    }
+
     const supabase = getSupabase()
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -95,6 +114,16 @@ export async function signOut() {
 // Get current user with profile
 export async function getCurrentUser(): Promise<{ user: AuthUser | null, error: Error | null }> {
   try {
+    // Check for demo user first
+    if (typeof window !== 'undefined') {
+      const demoUser = localStorage.getItem('demo_user')
+      const isDemoAuth = localStorage.getItem('demo_authenticated')
+      
+      if (demoUser && isDemoAuth === 'true') {
+        return { user: JSON.parse(demoUser), error: null }
+      }
+    }
+
     const supabase = getSupabase()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
