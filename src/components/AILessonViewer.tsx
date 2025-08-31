@@ -16,10 +16,6 @@ const AIFoundationExperience = dynamic(() => import('./AIFoundationExperience'),
   ssr: false,
   loading: () => <div className="text-white">Loading AI Foundation...</div>
 })
-const InteractiveCodingPlayground = dynamic(() => import('./InteractiveCodingPlayground'), {
-  ssr: false,
-  loading: () => <div className="text-white">Loading Coding Playground...</div>
-})
 const StudentProjectGallery = dynamic(() => import('./StudentProjectGallery'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Project Gallery...</div>
@@ -1059,55 +1055,37 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         }}
                       />
                     </div>
-                    
-                    {/* Interactive Coding Playground for Chatbot Practice */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                      <h3 className="text-indigo-300 font-bold text-xl mb-6 flex items-center gap-2">
-                        <Code className="h-6 w-6" />
-                        Chatbot Coding Playground 🎮
-                      </h3>
-                      <p className="text-gray-300 mb-6">
-                        Practice building chatbot logic with hands-on Python exercises and real-time testing.
-                      </p>
-                      <InteractiveCodingPlayground 
-                        lessonId={lesson.id}
-                        projectName={`${lesson.title} - Chatbot Challenge`}
-                        onProjectComplete={(project) => {
-                          console.log(`Chatbot project completed:`, project)
-                        }}
-                      />
-                    </div>
                   </>
                 ) : (
                   <>
                     {/* Traditional Knowledge Quest Content (for Lesson 1) */}
-                    <div className="bg-gradient-to-r from-emerald-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-emerald-500/30">
+                    <div className="bg-gradient-to-r from-green-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-green-500/30">
                       <div className="flex items-center gap-4 mb-6">
                         <div className="text-8xl animate-pulse">🏛️</div>
                         <div>
                           <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
-                          <p className="text-emerald-200 text-xl">Discover the Ancient Secrets of AI</p>
+                          <p className="text-green-200 text-xl">Discover the Ancient Secrets of AI</p>
                         </div>
                       </div>
                       
                       {/* Mission Objectives */}
                       <div className="bg-green-900/40 rounded-2xl p-6 border border-green-500/30">
-                        <h3 className="text-emerald-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
+                        <h3 className="text-green-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
                         <div className="grid md:grid-cols-3 gap-4">
                           <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">📚</div>
-                            <h4 className="text-emerald-200 font-semibold mb-1">Learn Core AI Concepts</h4>
-                            <p className="text-emerald-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
+                            <h4 className="text-green-200 font-semibold mb-1">Learn Core AI Concepts</h4>
+                            <p className="text-green-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
                           </div>
                           <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">🎓</div>
-                            <h4 className="text-emerald-200 font-semibold mb-1">Understand Terminology</h4>
-                            <p className="text-emerald-300/80 text-sm">Learn the language of AI and machine learning</p>
+                            <h4 className="text-green-200 font-semibold mb-1">Understand Terminology</h4>
+                            <p className="text-green-300/80 text-sm">Learn the language of AI and machine learning</p>
                           </div>
                           <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">✅</div>
-                            <h4 className="text-emerald-200 font-semibold mb-1">Complete Checkpoints</h4>
-                            <p className="text-emerald-300/80 text-sm">Verify your understanding with interactive quizzes</p>
+                            <h4 className="text-green-200 font-semibold mb-1">Complete Checkpoints</h4>
+                            <p className="text-green-300/80 text-sm">Verify your understanding with interactive quizzes</p>
                           </div>
                         </div>
                       </div>
@@ -1120,24 +1098,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                           console.log(`Section ${sectionIndex} completed`)
                         }}
                         onReturnToMap={() => setCurrentTab('overview')}
-                      />
-                    </div>
-                    
-                    {/* Interactive Coding Playground for Advanced Practice */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                      <h3 className="text-emerald-300 font-bold text-xl mb-6 flex items-center gap-2">
-                        <Code className="h-6 w-6" />
-                        Interactive Coding Playground 🎮
-                      </h3>
-                      <p className="text-gray-300 mb-6">
-                        Practice your programming skills with hands-on challenges and real-time feedback.
-                      </p>
-                      <InteractiveCodingPlayground 
-                        lessonId={lesson.id}
-                        projectName={`${lesson.title} - AI Challenge`}
-                        onProjectComplete={(project) => {
-                          console.log(`AI project completed:`, project)
-                        }}
                       />
                     </div>
                   </>
