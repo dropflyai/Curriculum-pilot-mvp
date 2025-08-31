@@ -321,9 +321,24 @@ captured_output.getvalue()
           newCompleted[currentStep] = true
           setStepCompleted(newCompleted)
           
+          // Add success message to output
+          setOutput(result + '\n\n🎉 Excellent work! Your code is correct! Moving to next step...')
+          
           if (onStepComplete) {
             onStepComplete(step.id)
           }
+          
+          // Auto-advance to next step after celebration delay
+          setTimeout(() => {
+            if (currentStep < codingSteps.length - 1) {
+              setCurrentStep(currentStep + 1)
+              setShowHint(false)
+              setShowSolution(false)
+              setOutput('') // Clear output for fresh start
+            } else if (onAllStepsComplete) {
+              onAllStepsComplete()
+            }
+          }, 2000) // 2 second delay to let them see the success
         }
       }
     } catch (error) {
