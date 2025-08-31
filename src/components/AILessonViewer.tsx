@@ -465,7 +465,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Lesson Header */}
-      <div className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 rounded-2xl p-8 mb-8 border border-purple-500/30 shadow-2xl overflow-hidden">
+      <div className="relative bg-gradient-to-br from-blue-900 to-slate-900 rounded-2xl p-8 mb-8 border border-blue-500/30 shadow-2xl overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-4 right-4 animate-pulse">
@@ -481,10 +481,10 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
         
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-2 rounded-xl">
+            <div className="bg-gradient-to-r from-blue-400 to-blue-500 p-2 rounded-xl">
               <Brain className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               {lesson.title}
             </h1>
             <div className="flex-1"></div>
@@ -552,7 +552,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       </div>
 
       {/* Mission Progress Bar - Right after lesson overview */}
-      <div className="relative bg-gradient-to-r from-slate-800 to-gray-800 rounded-2xl p-6 mb-8 border border-cyan-500/30 shadow-xl overflow-hidden">
+      <div className="relative bg-gradient-to-r from-slate-800 to-gray-800 rounded-2xl p-6 mb-8 border border-blue-500/30 shadow-xl overflow-hidden">
         {/* Animated background particles */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-4 right-12 animate-ping">
@@ -570,7 +570,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
         <div className="relative flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="text-2xl animate-bounce">🚀</div>
-            <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-300 to-emerald-300 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
               Adventure Progress
             </h3>
             <div className="text-2xl animate-pulse delay-300">⭐</div>
@@ -595,7 +595,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             
             {/* Progress fill with gradient and animation */}
             <div 
-              className="relative h-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-600 transition-all duration-1000 ease-out"
+              className="relative h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-1000 ease-out"
               style={{ width: `${calculateProgress()}%` }}
             >
               {/* Shimmer effect */}
@@ -641,7 +641,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
             return (
               <div key={mission.id} className={`relative p-2 rounded-lg border transition-all duration-300 ${
                 isCompleted 
-                  ? 'bg-emerald-500/20 border-emerald-500/40' 
+                  ? 'bg-green-500/20 border-emerald-500/40' 
                   : isCurrent 
                     ? 'bg-cyan-500/20 border-cyan-500/40' 
                     : 'bg-gray-700/50 border-gray-600/50'
@@ -657,7 +657,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     <div 
                       className={`h-full transition-all duration-500 ${
                         isCompleted 
-                          ? 'bg-emerald-500 w-full' 
+                          ? 'bg-green-500 w-full' 
                           : isCurrent 
                             ? 'bg-cyan-500 w-3/4' 
                             : 'bg-gray-500 w-0'
@@ -711,7 +711,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       </div>
 
       {/* Adventure Map - Navigation Style */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 rounded-3xl p-8 mb-8 border-2 border-cyan-500/30 shadow-2xl overflow-hidden">
+      <div className="relative bg-gradient-to-r from-slate-900 to-gray-900 rounded-3xl p-8 mb-8 border-2 border-blue-500/30 shadow-2xl overflow-hidden">
         {/* Fantasy Background */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-4 right-12 text-6xl animate-pulse">🏔️</div>
@@ -723,7 +723,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
         <div className="relative z-10">
           {/* Adventure Map Title */}
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
               🗺️ Adventure Map 🗺️
             </h2>
             <p className="text-cyan-200 text-lg">Navigate to your missions and complete your adventure!</p>
@@ -800,7 +800,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         isLocked
                           ? 'from-gray-800 to-gray-900 border-gray-600 opacity-50 cursor-not-allowed'
                           : isCompleted 
-                            ? 'from-emerald-600 to-green-700 border-emerald-400 shadow-emerald-500/25'
+                            ? 'from-green-600 to-green-700 border-green-400 shadow-green-500/25'
                             : isActive 
                               ? `from-${mission.color}-600 to-${mission.color}-700 border-${mission.color}-400 shadow-${mission.color}-500/25`
                               : `from-${mission.color}-800/30 to-${mission.color}-900/30 border-${mission.color}-500/50 hover:border-${mission.color}-400`
@@ -817,7 +817,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                             🔒 LOCKED
                           </div>
                         ) : isCompleted ? (
-                          <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                          <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
                             ✅ COMPLETE
                           </div>
                         ) : (
@@ -832,7 +832,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                         {/* Mission Icon */}
                         <div className={`relative p-4 rounded-xl bg-gradient-to-r ${
                           isCompleted 
-                            ? 'from-emerald-500 to-green-600' 
+                            ? 'from-green-500 to-green-600' 
                             : `from-${mission.color}-500 to-${mission.color}-600`
                         } ${!isLocked ? 'group-hover:animate-pulse' : ''}`}>
                           <div className="text-4xl">{mission.emoji}</div>
@@ -844,7 +844,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                           <div className="flex items-center gap-2 mb-1">
                             <h3 className="text-xl font-bold text-white">{mission.title}</h3>
                             {false && (
-                              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse">
+                              <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse">
                                 BONUS
                               </div>
                             )}
@@ -872,8 +872,8 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                             isLocked
                               ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                               : isCompleted
-                                ? 'bg-emerald-600 text-white'
-                                : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white group-hover:from-cyan-400 group-hover:to-blue-500'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white group-hover:from-blue-400 group-hover:to-blue-500'
                           }`}>
                             {false 
                               ? '🎁 Complete Main Quest to Unlock'
@@ -970,20 +970,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   </div>
                   
                   {/* Mission Objectives */}
-                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                  <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
                     <h3 className="text-purple-300 font-bold text-xl mb-4">🚀 Foundation Objectives</h3>
                     <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">✨</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Experience the Magic</h4>
                         <p className="text-purple-300/80 text-sm">See AI in action with amazing demonstrations</p>
                       </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">🎮</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Try It Yourself</h4>
                         <p className="text-purple-300/80 text-sm">Interact with AI through hands-on demos</p>
                       </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">🧠</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Understand How It Works</h4>
                         <p className="text-purple-300/80 text-sm">Build your foundational knowledge of AI concepts</p>
@@ -1022,20 +1022,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                       
                       {/* Mission Objectives */}
-                      <div className="bg-indigo-900/40 rounded-2xl p-6 border border-indigo-500/30">
+                      <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
                         <h3 className="text-indigo-300 font-bold text-xl mb-4">🎯 Learning Objectives</h3>
                         <div className="grid md:grid-cols-3 gap-4">
-                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">💬</div>
                             <h4 className="text-indigo-200 font-semibold mb-1">Conversation Design</h4>
                             <p className="text-indigo-300/80 text-sm">Learn how AI understands and responds to human language</p>
                           </div>
-                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">🤖</div>
                             <h4 className="text-indigo-200 font-semibold mb-1">NLP Fundamentals</h4>
                             <p className="text-indigo-300/80 text-sm">Understand natural language processing concepts</p>
                           </div>
-                          <div className="bg-indigo-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">🔄</div>
                             <h4 className="text-indigo-200 font-semibold mb-1">Flow Design</h4>
                             <p className="text-indigo-300/80 text-sm">Create sophisticated conversation flows and logic</p>
@@ -1091,20 +1091,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                       
                       {/* Mission Objectives */}
-                      <div className="bg-emerald-900/40 rounded-2xl p-6 border border-emerald-500/30">
+                      <div className="bg-green-900/40 rounded-2xl p-6 border border-green-500/30">
                         <h3 className="text-emerald-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
                         <div className="grid md:grid-cols-3 gap-4">
-                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                          <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">📚</div>
                             <h4 className="text-emerald-200 font-semibold mb-1">Learn Core AI Concepts</h4>
                             <p className="text-emerald-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
                           </div>
-                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                          <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">🎓</div>
                             <h4 className="text-emerald-200 font-semibold mb-1">Understand Terminology</h4>
                             <p className="text-emerald-300/80 text-sm">Learn the language of AI and machine learning</p>
                           </div>
-                          <div className="bg-emerald-800/30 p-4 rounded-xl">
+                          <div className="bg-green-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">✅</div>
                             <h4 className="text-emerald-200 font-semibold mb-1">Complete Checkpoints</h4>
                             <p className="text-emerald-300/80 text-sm">Verify your understanding with interactive quizzes</p>
@@ -1162,20 +1162,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       </div>
                       
                       {/* Mission Objectives */}
-                      <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                      <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
                         <h3 className="text-purple-300 font-bold text-xl mb-4">🤖 Bot Building Objectives</h3>
                         <div className="grid md:grid-cols-3 gap-4">
-                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">💬</div>
                             <h4 className="text-purple-200 font-semibold mb-1">Design Conversations</h4>
                             <p className="text-purple-300/80 text-sm">Create natural dialogue flows and responses</p>
                           </div>
-                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">🧠</div>
                             <h4 className="text-purple-200 font-semibold mb-1">Train Response Engine</h4>
                             <p className="text-purple-300/80 text-sm">Build intelligent categorization and response generation</p>
                           </div>
-                          <div className="bg-purple-800/30 p-4 rounded-xl">
+                          <div className="bg-blue-800/30 p-4 rounded-xl">
                             <div className="text-3xl mb-2">✅</div>
                             <h4 className="text-purple-200 font-semibold mb-1">Test & Refine</h4>
                             <p className="text-purple-300/80 text-sm">Validate your chatbot with real conversations</p>
@@ -1551,20 +1551,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   </div>
                   
                   {/* Mission Objectives */}
-                  <div className="bg-purple-900/40 rounded-2xl p-6 border border-purple-500/30">
+                  <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
                     <h3 className="text-purple-300 font-bold text-xl mb-4">🔮 Trial Objectives</h3>
                     <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">❓</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Answer Concept Questions</h4>
                         <p className="text-purple-300/80 text-sm">Test your theoretical knowledge</p>
                       </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">🧩</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Solve Practical Problems</h4>
                         <p className="text-purple-300/80 text-sm">Apply your learning to real scenarios</p>
                       </div>
-                      <div className="bg-purple-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">📊</div>
                         <h4 className="text-purple-200 font-semibold mb-1">Score 70%+ to Pass</h4>
                         <p className="text-purple-300/80 text-sm">Demonstrate your mastery</p>
@@ -1604,7 +1604,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     {!quizState.submitted && (
                       <button
                         onClick={handleQuizSubmit}
-                        className="w-full bg-gradient-to-r from-purple-600 to-violet-600 text-white font-bold py-4 rounded-lg hover:from-purple-500 hover:to-violet-500 transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold py-4 rounded-lg hover:from-blue-500 hover:to-cyan-500 transition-all duration-300"
                       >
                         Submit Wisdom Trial 🔮
                       </button>
@@ -1639,20 +1639,20 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   </div>
                   
                   {/* Mission Objectives */}
-                  <div className="bg-indigo-900/40 rounded-2xl p-6 border border-indigo-500/30">
+                  <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
                     <h3 className="text-indigo-300 font-bold text-xl mb-4">🎴 Study Objectives</h3>
                     <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">📚</div>
                         <h4 className="text-indigo-200 font-semibold mb-1">Review Core Concepts</h4>
                         <p className="text-indigo-300/80 text-sm">Study organized topics with interactive flashcards</p>
                       </div>
-                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">🧠</div>
                         <h4 className="text-indigo-200 font-semibold mb-1">Test Your Memory</h4>
                         <p className="text-indigo-300/80 text-sm">Practice recall and reinforce learning</p>
                       </div>
-                      <div className="bg-indigo-800/30 p-4 rounded-xl">
+                      <div className="bg-blue-800/30 p-4 rounded-xl">
                         <div className="text-3xl mb-2">🎯</div>
                         <h4 className="text-indigo-200 font-semibold mb-1">Track Progress</h4>
                         <p className="text-indigo-300/80 text-sm">Monitor which concepts you've mastered</p>
@@ -1824,7 +1824,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
 
                   <div className="relative z-10">
                     <div className="text-8xl mb-4 animate-bounce">🎉</div>
-                    <h3 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
+                    <h3 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent mb-4">
                       Adventure Complete!
                     </h3>
                     <p className="text-yellow-200 text-xl mb-2">You've mastered the concepts and deserve recognition!</p>
@@ -1832,7 +1832,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                     
                     <button 
                       onClick={() => onLessonComplete(100)}
-                      className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-bold px-12 py-6 rounded-2xl text-2xl hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 transition-all duration-300 transform hover:scale-110 shadow-2xl shadow-yellow-500/50 animate-pulse"
+                      className="relative bg-gradient-to-r from-green-500 to-green-600 text-white font-bold px-12 py-6 rounded-2xl text-2xl hover:from-green-400 hover:to-green-500 transition-all duration-300 transform hover:scale-110 shadow-2xl shadow-green-500/50 animate-pulse"
                     >
                       {/* Button glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl blur-xl opacity-50 -z-10"></div>
