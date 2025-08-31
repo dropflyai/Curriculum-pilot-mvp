@@ -70,8 +70,8 @@ export default function TestDemoLogin() {
           <div className="p-4 bg-gray-800/50 rounded-lg">
             <p className="text-gray-300 font-semibold mb-2">localStorage Contents:</p>
             <div className="text-sm text-gray-400">
-              <p>demo_user: {localStorage.getItem('demo_user') ? '✓ Present' : '✗ Not found'}</p>
-              <p>demo_authenticated: {localStorage.getItem('demo_authenticated') || 'Not set'}</p>
+              <p>demo_user: {typeof window !== 'undefined' && localStorage.getItem('demo_user') ? '✓ Present' : '✗ Not found'}</p>
+              <p>demo_authenticated: {typeof window !== 'undefined' ? (localStorage.getItem('demo_authenticated') || 'Not set') : 'Not available (SSR)'}</p>
             </div>
           </div>
           
