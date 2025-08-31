@@ -120,7 +120,7 @@ function AuthPageContent() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                   placeholder="student@school.edu"
                 />
               </div>
@@ -139,7 +139,7 @@ function AuthPageContent() {
                     required
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                     placeholder="Your full name"
                   />
                 </div>
@@ -193,7 +193,7 @@ function AuthPageContent() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                   placeholder="Your password"
                   minLength={6}
                 />
@@ -243,23 +243,21 @@ function AuthPageContent() {
             </div>
             
             <div className="mt-6 grid grid-cols-1 gap-3">
-              <button
-                onClick={() => handleDemoLogin('student')}
-                disabled={loading}
-                className="w-full flex items-center justify-center px-4 py-3 border border-blue-300 rounded-lg shadow-sm bg-blue-50 text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              <Link
+                href="/auth/demo-redirect?type=student"
+                className="w-full flex items-center justify-center px-4 py-3 border border-blue-300 rounded-lg shadow-sm bg-blue-50 text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 <GraduationCap className="h-5 w-5 mr-2" />
                 Demo Student Login
-              </button>
+              </Link>
               
-              <button
-                onClick={() => handleDemoLogin('teacher')}
-                disabled={loading}
-                className="w-full flex items-center justify-center px-4 py-3 border border-purple-300 rounded-lg shadow-sm bg-purple-50 text-purple-700 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              <Link
+                href="/auth/demo-redirect?type=teacher"
+                className="w-full flex items-center justify-center px-4 py-3 border border-purple-300 rounded-lg shadow-sm bg-purple-50 text-purple-700 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
               >
                 <UserCheck className="h-5 w-5 mr-2" />
                 Demo Teacher Login
-              </button>
+              </Link>
             </div>
             
             <p className="mt-3 text-xs text-gray-500 text-center">
