@@ -96,8 +96,55 @@ export default function AIFoundationExperience({ onComplete }: AIFoundationExper
     setIsProcessing(false)
   }
 
+  // Updated content - show the actual lesson content instead of old foundation
   const PhaseOne = () => (
     <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 p-8 rounded-2xl border border-blue-400/30">
+        <h1 className="text-4xl font-bold text-white mb-4">🤖 AI Classifier - School Supplies</h1>
+        <p className="text-blue-200 text-lg mb-6">
+          Learn how to train your first AI image classifier using school supplies and discover how machine learning works!
+        </p>
+        
+        <div className="space-y-6">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <h2 className="text-2xl font-bold text-cyan-300 mb-4">🧠 What Exactly IS Machine Learning?</h2>
+            <p className="text-gray-200 mb-4">
+              Imagine trying to teach your little cousin to recognize different dog breeds. You wouldn't sit down and write a list of rules like "if it's small and fluffy, it's a Pomeranian" or "if it's big with droopy ears, it's a Bloodhound." Instead, you'd show them hundreds of pictures of different dogs and tell them the breed each time.
+            </p>
+            <p className="text-gray-200 mb-4">
+              <strong className="text-cyan-300">Machine Learning works exactly the same way!</strong> Instead of programming a computer with thousands of specific rules, we show it tons of examples and let it discover the patterns on its own.
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <h2 className="text-2xl font-bold text-green-300 mb-4">🆚 AI vs. Machine Learning: What's the Real Difference?</h2>
+            <p className="text-gray-200 mb-4">
+              Think of <strong className="text-green-300">Artificial Intelligence (AI)</strong> like the concept of "being smart." It's any computer system that can do things we normally think require human intelligence - like recognizing faces, understanding speech, or making decisions.
+            </p>
+            <p className="text-gray-200">
+              <strong className="text-green-300">Machine Learning (ML)</strong> is one specific way to create AI. It's like teaching intelligence through practice and examples, rather than programming every single rule by hand.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-purple-500/20 rounded-xl p-4 border border-purple-400/30">
+              <Eye className="w-8 h-8 text-purple-300 mb-2" />
+              <h3 className="font-bold text-purple-300">AI Can SEE</h3>
+              <p className="text-gray-300 text-sm">Recognize objects in photos, just like your eyes do</p>
+            </div>
+            <div className="bg-blue-500/20 rounded-xl p-4 border border-blue-400/30">
+              <Brain className="w-8 h-8 text-blue-300 mb-2" />
+              <h3 className="font-bold text-blue-300">AI Can THINK</h3>
+              <p className="text-gray-300 text-sm">Process information and make smart decisions</p>
+            </div>
+            <div className="bg-green-500/20 rounded-xl p-4 border border-green-400/30">
+              <Zap className="w-8 h-8 text-green-300 mb-2" />
+              <h3 className="font-bold text-green-300">AI Can LEARN</h3>
+              <p className="text-gray-300 text-sm">Get better through practice and examples</p>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Hook - The Magic Moment */}
       <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-8 border border-purple-500/30 text-center">
         <h2 className="text-4xl font-bold text-white mb-4">🔮 Welcome to the Age of AI Magic!</h2>
@@ -146,10 +193,13 @@ export default function AIFoundationExperience({ onComplete }: AIFoundationExper
 
       <div className="text-center">
         <button
-          onClick={() => setCurrentPhase(2)}
-          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all transform hover:scale-105"
+          onClick={() => {
+            if (onComplete) onComplete()
+            setCurrentPhase(2)
+          }}
+          className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all transform hover:scale-105"
         >
-          I'm Ready to Learn How This Works! →
+          Start Building My AI Classifier! 🚀
         </button>
       </div>
     </div>
