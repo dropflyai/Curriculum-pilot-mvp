@@ -82,7 +82,7 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentTab, setCurrentTab] = useState<'overview' | 'foundation' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit' | 'gallery'>('foundation')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'foundation' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit' | 'gallery'>('overview')
   const [foundationCompleted, setFoundationCompleted] = useState(false)
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
