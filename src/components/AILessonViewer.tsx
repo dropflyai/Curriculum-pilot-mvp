@@ -94,6 +94,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   const [metrics, setMetrics] = useState<any>(null)
   const [submissionText, setSubmissionText] = useState('')
   const [showAITutor, setShowAITutor] = useState(false)
+  const [studentCode, setStudentCode] = useState('')
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -1865,6 +1866,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       <AITutorPanel
         currentLesson={lesson.title}
         currentSection={currentTab}
+        studentCode={studentCode}
         isOpen={showAITutor}
         onToggle={() => setShowAITutor(!showAITutor)}
       />

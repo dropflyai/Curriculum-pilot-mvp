@@ -9,6 +9,7 @@ import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle, ChevronD
 import Link from 'next/link'
 import { signOut } from '@/lib/auth'
 import Leaderboard from '@/components/Leaderboard'
+import PortfolioPreview from '@/components/PortfolioPreview'
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -24,6 +25,7 @@ export default function Dashboard() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [showHomework, setShowHomework] = useState(false)
+  const [showPortfolio, setShowPortfolio] = useState(false)
   
   // 18-week course structure (you can modify this based on actual course plan)
   const totalWeeks = 18
@@ -566,6 +568,37 @@ export default function Dashboard() {
           )}
         </div>
 
+        {/* Portfolio Preview Section */}
+        <div className="mb-8">
+          <button 
+            onClick={() => setShowPortfolio(!showPortfolio)}
+            className="w-full bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">🎨</div>
+                <div className="text-left">
+                  <h3 className="text-2xl font-bold text-white">My Portfolio</h3>
+                  <p className="text-blue-200">Showcase your coding projects and achievements</p>
+                </div>
+              </div>
+              {showPortfolio ? 
+                <ChevronUp className="h-6 w-6 text-blue-300" /> : 
+                <ChevronDown className="h-6 w-6 text-blue-300" />
+              }
+            </div>
+          </button>
+
+          {showPortfolio && (
+            <div className="mt-4">
+              <PortfolioPreview 
+                onViewPortfolio={() => router.push('/portfolio')}
+                className=""
+              />
+            </div>
+          )}
+        </div>
+
         {/* Collapsible Leaderboard */}
         <div className="mb-8">
           <button 
@@ -589,7 +622,16 @@ export default function Dashboard() {
 
           {showLeaderboard && (
             <div className="mt-4">
-              <Leaderboard />
+              <Leaderboard userId={user?.id} showTopOnly={true} />
+              <div className="mt-4 text-center">
+                <Link 
+                  href="/leaderboard"
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-lg transition-all duration-300"
+                >
+                  <Award className="w-4 h-4 mr-2" />
+                  View Full Leaderboard
+                </Link>
+              </div>
             </div>
           )}
         </div>

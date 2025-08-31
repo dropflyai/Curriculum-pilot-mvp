@@ -76,3 +76,29 @@ export interface Progress {
   created_at: string
   updated_at: string
 }
+
+export interface AIConversation {
+  id: string
+  user_id: string
+  lesson_id: string
+  lesson_title: string
+  lesson_section: string
+  session_id: string
+  status: 'active' | 'resolved' | 'needs_help' | 'abandoned'
+  started_at: string
+  last_activity: string
+  duration_minutes: number
+  created_at: string
+  updated_at: string
+}
+
+export interface AIMessage {
+  id: string
+  conversation_id: string
+  type: 'user' | 'ai' | 'teacher_intervention'
+  content: string
+  student_code?: string
+  flagged_for_teacher: boolean
+  teacher_reviewed: boolean
+  created_at: string
+}

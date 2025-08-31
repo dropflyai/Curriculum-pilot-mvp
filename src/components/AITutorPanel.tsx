@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X, Send, Bot, User, Lightbulb, Code, BookOpen, Wifi, WifiOff } from 'lucide-react'
 import { claudeAPI, StudentContext, ClaudeResponse, Message } from '@/lib/claude-api'
+import { getAIConversationService } from '@/lib/ai-conversation-service'
+import { useAuth } from '@/contexts/AuthContext'
+import { AIConversation } from '@/lib/supabase'
 
 interface AITutorPanelProps {
   currentLesson?: string
@@ -19,28 +22,76 @@ export default function AITutorPanel({
   isOpen = false,
   onToggle
 }: AITutorPanelProps) {
+  const { user } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [panelWidth, setPanelWidth] = useState(400) // Default width in pixels
   const [apiStatus, setApiStatus] = useState(claudeAPI.getStatus())
+  const [currentConversation, setCurrentConversation] = useState<AIConversation | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const conversationService = getAIConversationService()
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Focus input when panel opens
+  // Focus input when panel opens and initialize conversation
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && user) {
       setTimeout(() => inputRef.current?.focus(), 100)
+      initializeConversation()
     }
-  }, [isOpen])
+  }, [isOpen, currentLesson, currentSection])
 
-  // Initialize with welcome message
-  useEffect(() => {
+  // Initialize or get existing conversation
+  const initializeConversation = async () => {
+    if (!user?.id) return
+
+    try {
+      const conversation = await conversationService.getOrCreateActiveConversation(
+        user.id,
+        currentLesson, // Using lesson title as ID for now
+        currentLesson,
+        currentSection
+      )
+      
+      if (conversation) {
+        setCurrentConversation(conversation)
+        
+        // Load existing messages if conversation exists
+        const existingMessages = await conversationService.getConversationMessages(conversation.id)
+        
+        // Convert AIMessage format to our Message format
+        const convertedMessages: Message[] = existingMessages.map(msg => ({
+          id: msg.id,
+          type: msg.type === 'teacher_intervention' ? 'ai' : msg.type,
+          content: msg.content,
+          timestamp: new Date(msg.created_at),
+          context: msg.student_code ? {
+            lessonId: currentLesson,
+            lessonTitle: currentLesson,
+            currentSection: currentSection,
+            studentCode: msg.student_code
+          } : undefined
+        }))
+        
+        if (convertedMessages.length > 0) {
+          setMessages(convertedMessages)
+        } else {
+          // Only show welcome message if no existing messages
+          initializeWelcomeMessage()
+        }
+      }
+    } catch (error) {
+      console.error('Failed to initialize conversation:', error)
+      initializeWelcomeMessage()
+    }
+  }
+
+  const initializeWelcomeMessage = () => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
         id: '1',
@@ -58,15 +109,17 @@ Feel free to ask about:
       }
       setMessages([welcomeMessage])
     }
-  }, [currentLesson, currentSection, messages.length])
+  }
+
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return
+    if (!inputMessage.trim() || isLoading || !currentConversation) return
 
+    const messageContent = inputMessage.trim()
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputMessage.trim(),
+      content: messageContent,
       timestamp: new Date(),
       context: {
         lessonId: currentLesson,
@@ -80,6 +133,18 @@ Feel free to ask about:
     setInputMessage('')
     setIsLoading(true)
 
+    // Save user message to database
+    try {
+      await conversationService.addMessage(
+        currentConversation.id,
+        'user',
+        messageContent,
+        studentCode
+      )
+    } catch (error) {
+      console.error('Failed to save user message:', error)
+    }
+
     try {
       // Build context for Claude API
       const context: StudentContext = {
@@ -91,7 +156,7 @@ Feel free to ask about:
       }
 
       // Get response from Claude API
-      const claudeResponse = await claudeAPI.getClaudeResponse(inputMessage.trim(), context)
+      const claudeResponse = await claudeAPI.getClaudeResponse(messageContent, context)
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -102,10 +167,28 @@ Feel free to ask about:
 
       setMessages(prev => [...prev, aiMessage])
 
+      // Save AI message to database
+      try {
+        await conversationService.addMessage(
+          currentConversation.id,
+          'ai',
+          claudeResponse.content,
+          studentCode,
+          claudeResponse.flagForTeacher || false
+        )
+      } catch (error) {
+        console.error('Failed to save AI message:', error)
+      }
+
       // Handle teacher flags if needed
       if (claudeResponse.flagForTeacher) {
         console.log('🚨 Teacher notification: Student may need additional help')
-        // TODO: Implement teacher notification system
+        // Update conversation status to needs_help
+        try {
+          await conversationService.updateConversationStatus(currentConversation.id, 'needs_help')
+        } catch (error) {
+          console.error('Failed to update conversation status:', error)
+        }
       }
 
     } catch (error) {

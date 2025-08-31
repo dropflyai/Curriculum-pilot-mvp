@@ -1,256 +1,328 @@
 'use client'
 
-import { useState } from 'react'
-import { Trophy, Medal, Crown, Star, Zap, Users, Calendar, TrendingUp, Award, Target, Flame, Brain } from 'lucide-react'
-import { getMockLeaderboardData, StudentPoints, type LeaderboardData } from '@/lib/points-system'
+import React, { useState, useEffect } from 'react'
+import { LeaderboardEntry, LeaderboardConfig, generateCurrentWeekLeaderboard, getStudentLeaderboardPosition } from '@/lib/leaderboard-engine'
+import { TrendingUp, TrendingDown, Minus, Trophy, Medal, Award, Crown, Star, Zap, Target, Users, Eye, EyeOff } from 'lucide-react'
 
-export default function Leaderboard() {
-  const [activeTab, setActiveTab] = useState<'all-time' | 'weekly' | 'special'>('weekly')
-  const [leaderboardData] = useState<LeaderboardData>(getMockLeaderboardData())
+interface LeaderboardProps {
+  userId?: string
+  initialShadowMode?: boolean
+  showTopOnly?: boolean
+  category?: 'xp' | 'badges' | 'streaks' | 'completion'
+  className?: string
+}
+
+export default function Leaderboard({ 
+  userId, 
+  initialShadowMode = false, 
+  showTopOnly = false,
+  category = 'xp',
+  className = '' 
+}: LeaderboardProps) {
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([])
+  const [shadowMode, setShadowMode] = useState(initialShadowMode)
+  const [selectedCategory, setSelectedCategory] = useState<'xp' | 'badges' | 'streaks' | 'completion'>(category)
+  const [userPosition, setUserPosition] = useState<{ rank: number; total_participants: number; rank_change: number } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<string>('')
+
+  // Load leaderboard data
+  useEffect(() => {
+    loadLeaderboardData()
+  }, [shadowMode, selectedCategory])
+
+  const loadLeaderboardData = async () => {
+    setIsLoading(true)
+    try {
+      // Load main leaderboard
+      const data = await generateCurrentWeekLeaderboard(shadowMode)
+      
+      // Sort by selected category
+      const sortedData = sortByCategory(data, selectedCategory)
+      
+      // Apply top-only filter if needed
+      const displayData = showTopOnly ? sortedData.slice(0, 10) : sortedData
+      setLeaderboardData(displayData)
+
+      // Get user position if userId provided
+      if (userId) {
+        const position = await getStudentLeaderboardPosition(userId, shadowMode)
+        setUserPosition(position)
+      }
+
+      setLastUpdated(new Date().toLocaleString())
+    } catch (error) {
+      console.error('Error loading leaderboard:', error)
+      setLeaderboardData([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const sortByCategory = (data: LeaderboardEntry[], category: string): LeaderboardEntry[] => {
+    const sorted = [...data]
+    switch (category) {
+      case 'xp':
+        return sorted.sort((a, b) => b.total_xp - a.total_xp)
+      case 'badges':
+        return sorted.sort((a, b) => b.badge_count - a.badge_count)
+      case 'streaks':
+        return sorted.sort((a, b) => b.current_streak - a.current_streak)
+      case 'completion':
+        return sorted.sort((a, b) => b.assignments_completed - a.assignments_completed)
+      default:
+        return sorted
+    }
+  }
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
-      case 1: return <Crown className="h-6 w-6 text-yellow-400" />
-      case 2: return <Medal className="h-6 w-6 text-gray-300" />
-      case 3: return <Medal className="h-6 w-6 text-orange-400" />
-      default: return <span className="text-gray-400 font-bold text-lg">#{rank}</span>
+      case 1: return <Crown className="w-6 h-6 text-yellow-400" />
+      case 2: return <Medal className="w-6 h-6 text-gray-400" />
+      case 3: return <Award className="w-6 h-6 text-amber-600" />
+      default: return <span className="w-6 h-6 flex items-center justify-center text-gray-600 font-bold">#{rank}</span>
     }
   }
 
-  const getRankBadge = (rank: number) => {
+  const getRankChangeIcon = (change: number) => {
+    if (change > 0) return <TrendingUp className="w-4 h-4 text-green-500" />
+    if (change < 0) return <TrendingDown className="w-4 h-4 text-red-500" />
+    return <Minus className="w-4 h-4 text-gray-400" />
+  }
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'xp': return <Zap className="w-4 h-4" />
+      case 'badges': return <Star className="w-4 h-4" />
+      case 'streaks': return <Target className="w-4 h-4" />
+      case 'completion': return <Trophy className="w-4 h-4" />
+      default: return <Zap className="w-4 h-4" />
+    }
+  }
+
+  const getCategoryValue = (entry: LeaderboardEntry, category: string) => {
+    switch (category) {
+      case 'xp': return `${entry.total_xp.toLocaleString()} XP`
+      case 'badges': return `${entry.badge_count} badges`
+      case 'streaks': return `${entry.current_streak} day streak`
+      case 'completion': return `${entry.assignments_completed} completed`
+      default: return `${entry.total_xp.toLocaleString()} XP`
+    }
+  }
+
+  const getRankBgColor = (rank: number) => {
     switch (rank) {
-      case 1: return 'bg-gradient-to-r from-yellow-500 to-yellow-600'
-      case 2: return 'bg-gradient-to-r from-gray-400 to-gray-500'
-      case 3: return 'bg-gradient-to-r from-orange-500 to-orange-600'
-      default: return 'bg-gradient-to-r from-blue-600 to-purple-600'
+      case 1: return 'bg-gradient-to-r from-yellow-400/20 to-orange-500/20 border-yellow-400/30'
+      case 2: return 'bg-gradient-to-r from-gray-400/20 to-slate-500/20 border-gray-400/30'
+      case 3: return 'bg-gradient-to-r from-amber-600/20 to-orange-700/20 border-amber-600/30'
+      default: return 'bg-gray-900/40 border-gray-700/30'
     }
   }
 
-  const getTopStudents = () => {
-    switch (activeTab) {
-      case 'weekly': return leaderboardData.weekly.slice(0, 10)
-      case 'all-time': return leaderboardData.allTime.slice(0, 10)
-      case 'special': return leaderboardData.allTime.slice(0, 6) // For special categories display
-      default: return leaderboardData.weekly.slice(0, 10)
-    }
+  if (isLoading) {
+    return (
+      <div className={`bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/30 p-6 ${className}`}>
+        <div className="flex items-center justify-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
+          <span className="text-gray-400 ml-3">Loading leaderboard...</span>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl border border-purple-500/30 overflow-hidden">
+    <div className={`bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700/30 p-6 ${className}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 p-6 border-b border-purple-500/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Trophy className="h-8 w-8 text-yellow-400" />
-            <div>
-              <h2 className="text-2xl font-bold text-white">CodeFly Leaderboard 🏆</h2>
-              <p className="text-purple-200">Friendly competition to celebrate learning!</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-yellow-400 font-bold text-lg">Weekly Challenge</div>
-            <div className="text-purple-200 text-sm">Complete 2 lessons + homework</div>
-          </div>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <Trophy className="w-6 h-6 text-yellow-400" />
+          <h2 className="text-xl font-bold text-white">
+            Weekly Leaderboard
+            {shadowMode && <span className="text-cyan-400 ml-2">👤 Shadow Mode</span>}
+          </h2>
         </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="bg-gray-900/50 p-4 border-b border-gray-700">
-        <div className="flex space-x-4">
+        
+        {/* Controls */}
+        <div className="flex items-center space-x-3">
+          {/* Shadow Mode Toggle */}
           <button
-            onClick={() => setActiveTab('weekly')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${
-              activeTab === 'weekly' 
-                ? 'bg-purple-600 text-white shadow-lg' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            onClick={() => setShadowMode(!shadowMode)}
+            className={`p-2 rounded-lg border transition-all ${
+              shadowMode 
+                ? 'bg-cyan-500/20 border-cyan-400/30 text-cyan-400' 
+                : 'bg-gray-700/30 border-gray-600/30 text-gray-400 hover:border-cyan-400/30'
             }`}
+            title={shadowMode ? 'Show real names' : 'Enable shadow mode'}
           >
-            <Calendar className="h-4 w-4" />
-            This Week
+            {shadowMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
-          <button
-            onClick={() => setActiveTab('all-time')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${
-              activeTab === 'all-time' 
-                ? 'bg-purple-600 text-white shadow-lg' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            <TrendingUp className="h-4 w-4" />
-            All Time
-          </button>
-          <button
-            onClick={() => setActiveTab('special')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${
-              activeTab === 'special' 
-                ? 'bg-purple-600 text-white shadow-lg' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            <Star className="h-4 w-4" />
-            Special Awards
-          </button>
-        </div>
-      </div>
 
-      {/* Content */}
-      <div className="p-6">
-        {activeTab === 'special' ? (
-          /* Special Categories */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-lg p-4 border border-pink-500/30">
-              <h3 className="font-bold text-pink-300 mb-3 flex items-center">
-                <Target className="h-5 w-5 mr-2" />
-                🎨 Creative Coders
-              </h3>
-              <div className="space-y-2">
-                {leaderboardData.specialCategories.creativeCoders.map((student, index) => (
-                  <div key={student.studentId} className="flex items-center justify-between bg-pink-800/20 rounded p-2">
-                    <span className="text-white">{student.studentName}</span>
-                    <span className="text-pink-300 text-sm">{student.totalXP} XP</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-lg p-4 border border-green-500/30">
-              <h3 className="font-bold text-green-300 mb-3 flex items-center">
-                <Users className="h-5 w-5 mr-2" />
-                🤝 Helpful Classmates
-              </h3>
-              <div className="space-y-2">
-                {leaderboardData.specialCategories.helpfulClassmates.map((student, index) => (
-                  <div key={student.studentId} className="flex items-center justify-between bg-green-800/20 rounded p-2">
-                    <span className="text-white">{student.studentName}</span>
-                    <span className="text-green-300 text-sm">{student.totalXP} XP</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-lg p-4 border border-blue-500/30">
-              <h3 className="font-bold text-blue-300 mb-3 flex items-center">
-                <Zap className="h-5 w-5 mr-2" />
-                🚀 Speed Learners
-              </h3>
-              <div className="space-y-2">
-                {leaderboardData.specialCategories.speedLearners.map((student, index) => (
-                  <div key={student.studentId} className="flex items-center justify-between bg-blue-800/20 rounded p-2">
-                    <span className="text-white">{student.studentName}</span>
-                    <span className="text-blue-300 text-sm">{student.totalXP} XP</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-indigo-900/30 to-violet-900/30 rounded-lg p-4 border border-indigo-500/30">
-              <h3 className="font-bold text-indigo-300 mb-3 flex items-center">
-                <Brain className="h-5 w-5 mr-2" />
-                🧠 Deep Thinkers
-              </h3>
-              <div className="space-y-2">
-                {leaderboardData.specialCategories.deepThinkers.map((student, index) => (
-                  <div key={student.studentId} className="flex items-center justify-between bg-indigo-800/20 rounded p-2">
-                    <span className="text-white">{student.studentName}</span>
-                    <span className="text-indigo-300 text-sm">{student.totalXP} XP</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Regular Leaderboard */
-          <div className="space-y-4">
-            {getTopStudents().map((student, index) => (
-              <div 
-                key={student.studentId} 
-                className={`p-4 rounded-lg border-2 transition-all duration-300 hover:scale-[1.02] ${
-                  index < 3 
-                    ? `${getRankBadge(index + 1)} border-transparent text-white shadow-lg` 
-                    : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
+          {/* Category Selector */}
+          <div className="flex bg-gray-800/50 rounded-lg p-1">
+            {(['xp', 'badges', 'streaks', 'completion'] as const).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1 rounded-md text-xs font-medium transition-all flex items-center space-x-1 ${
+                  selectedCategory === cat
+                    ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-400/30'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      {getRankIcon(index + 1)}
-                      {index < 3 && <div className="text-2xl">
-                        {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
-                      </div>}
-                    </div>
+                {getCategoryIcon(cat)}
+                <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* User Position (if provided) */}
+      {userId && userPosition && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-400/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                {getRankIcon(userPosition.rank)}
+                <span className="text-white font-semibold">Your Rank: #{userPosition.rank}</span>
+              </div>
+              <span className="text-gray-400">of {userPosition.total_participants}</span>
+              {getRankChangeIcon(userPosition.rank_change)}
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-400">Rank Change</div>
+              <div className={`font-semibold ${
+                userPosition.rank_change > 0 ? 'text-green-400' : 
+                userPosition.rank_change < 0 ? 'text-red-400' : 'text-gray-400'
+              }`}>
+                {userPosition.rank_change > 0 ? `+${userPosition.rank_change}` : userPosition.rank_change || 'No change'}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Leaderboard List */}
+      <div className="space-y-3">
+        {leaderboardData.map((entry, index) => {
+          const actualRank = index + 1
+          const isCurrentUser = userId === entry.user_id
+          
+          return (
+            <div
+              key={entry.user_id}
+              className={`p-4 rounded-lg border transition-all ${getRankBgColor(actualRank)} ${
+                isCurrentUser ? 'ring-2 ring-purple-400/50' : ''
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                {/* Left Side: Rank, Avatar, Name */}
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    {getRankIcon(actualRank)}
+                    {getRankChangeIcon(entry.rank_change)}
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{entry.avatar_emoji}</span>
                     <div>
-                      <h3 className={`font-bold text-lg ${index < 3 ? 'text-white' : 'text-white'}`}>
-                        {student.studentName}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className={index < 3 ? 'text-white/80' : 'text-gray-300'}>
-                          Level {student.level}
-                        </span>
-                        {student.currentStreak > 0 && (
-                          <span className={`flex items-center gap-1 ${index < 3 ? 'text-white/80' : 'text-orange-400'}`}>
-                            <Flame className="h-4 w-4" />
-                            {student.currentStreak} day streak
+                      <div className={`font-semibold ${isCurrentUser ? 'text-purple-300' : 'text-white'}`}>
+                        {entry.display_name}
+                        {entry.is_shadow && (
+                          <span className="ml-2 text-xs px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
+                            Shadow
                           </span>
                         )}
-                        <span className={index < 3 ? 'text-white/60' : 'text-gray-400'}>
-                          {student.lastActivity}
-                        </span>
+                        {isCurrentUser && (
+                          <span className="ml-2 text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full">
+                            You
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-400">
+                        Level {entry.current_level} • {getCategoryValue(entry, selectedCategory)}
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="text-right">
-                    <div className={`font-bold text-xl ${index < 3 ? 'text-white' : 'text-purple-300'}`}>
-                      {activeTab === 'weekly' ? student.weeklyXP : student.totalXP} XP
-                    </div>
-                    <div className="flex gap-1 mt-1">
-                      {student.badges.slice(0, 3).map((badge, badgeIndex) => (
-                        <span 
-                          key={badgeIndex}
-                          className={`px-2 py-1 rounded text-xs ${
-                            index < 3 ? 'bg-white/20 text-white' : 'bg-purple-600/50 text-purple-200'
-                          }`}
-                        >
-                          {badge}
-                        </span>
-                      ))}
-                      {student.badges.length > 3 && (
-                        <span className={`px-2 py-1 rounded text-xs ${
-                          index < 3 ? 'bg-white/20 text-white' : 'bg-gray-600 text-gray-300'
-                        }`}>
-                          +{student.badges.length - 3}
-                        </span>
-                      )}
-                    </div>
+                </div>
+
+                {/* Right Side: Stats */}
+                <div className="text-right">
+                  <div className="text-lg font-bold text-white">
+                    {getCategoryValue(entry, selectedCategory)}
+                  </div>
+                  <div className="text-xs text-gray-400 space-x-4">
+                    <span>🏆 {entry.badge_count}</span>
+                    <span>🔥 {entry.current_streak}d</span>
+                    <span>✅ {entry.assignments_completed}</span>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          )
+        })}
       </div>
 
-      {/* Footer Stats */}
-      <div className="bg-gray-900/50 p-4 border-t border-gray-700">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-purple-400 font-bold text-lg">{leaderboardData.allTime.length}</div>
-            <div className="text-gray-400 text-sm">Active Students</div>
-          </div>
-          <div>
-            <div className="text-green-400 font-bold text-lg">
-              {leaderboardData.allTime.reduce((sum, s) => sum + s.totalXP, 0).toLocaleString()}
-            </div>
-            <div className="text-gray-400 text-sm">Total Class XP</div>
-          </div>
-          <div>
-            <div className="text-blue-400 font-bold text-lg">
-              {Math.round(leaderboardData.allTime.reduce((sum, s) => sum + s.totalXP, 0) / leaderboardData.allTime.length)}
-            </div>
-            <div className="text-gray-400 text-sm">Average XP</div>
+      {/* Footer */}
+      {leaderboardData.length === 0 ? (
+        <div className="text-center py-8">
+          <Users className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+          <p className="text-gray-400">No leaderboard data available yet.</p>
+          <p className="text-gray-500 text-sm">Complete some assignments to join the rankings!</p>
+        </div>
+      ) : (
+        <div className="mt-6 pt-4 border-t border-gray-700/30">
+          <div className="flex items-center justify-between text-xs text-gray-400">
+            <span>Last updated: {lastUpdated}</span>
+            <span>{leaderboardData.length} participants</span>
           </div>
         </div>
-      </div>
+      )}
     </div>
+  )
+}
+
+// Sub-components for specialized leaderboards
+export function WeeklyLeaderboard({ userId, className }: { userId?: string; className?: string }) {
+  return (
+    <Leaderboard 
+      userId={userId}
+      category="xp"
+      className={className}
+      showTopOnly={false}
+    />
+  )
+}
+
+export function TopPerformersLeaderboard({ shadowMode = true, className }: { shadowMode?: boolean; className?: string }) {
+  return (
+    <Leaderboard 
+      initialShadowMode={shadowMode}
+      category="xp"
+      className={className}
+      showTopOnly={true}
+    />
+  )
+}
+
+export function BadgeLeaderboard({ userId, className }: { userId?: string; className?: string }) {
+  return (
+    <Leaderboard 
+      userId={userId}
+      category="badges"
+      className={className}
+      showTopOnly={false}
+    />
+  )
+}
+
+export function StreakLeaderboard({ userId, className }: { userId?: string; className?: string }) {
+  return (
+    <Leaderboard 
+      userId={userId}
+      category="streaks"
+      className={className}
+      showTopOnly={false}
+    />
   )
 }

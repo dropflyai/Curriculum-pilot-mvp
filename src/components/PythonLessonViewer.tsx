@@ -66,6 +66,7 @@ export default function PythonLessonViewer({ lesson, onLessonComplete, onQuizCom
   const [aiAdvisorLabCompleted, setAiAdvisorLabCompleted] = useState(false)
   const [lessonFullyComplete, setLessonFullyComplete] = useState(false)
   const [showAITutor, setShowAITutor] = useState(false)
+  const [studentCode, setStudentCode] = useState('')
 
   // Progress persistence utilities
   const getProgressKey = () => `lesson-progress-${lesson.id}`
@@ -1358,6 +1359,7 @@ Now you understand how each type of help works behind the scenes. Time to bring 
       <AITutorPanel
         currentLesson={lesson.title}
         currentSection={currentTab}
+        studentCode={studentCode}
         isOpen={showAITutor}
         onToggle={() => setShowAITutor(!showAITutor)}
       />
