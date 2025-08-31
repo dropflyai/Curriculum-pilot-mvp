@@ -997,7 +997,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   <AIFoundationExperience 
                     onComplete={() => {
                       setFoundationCompleted(true)
-                      setCurrentTab('overview')
+                      setCurrentTab('learn')  // Go directly to Learn tab instead of overview
                       // Update progress to reflect foundation completion (25% of lesson)
                       const foundationProgress = 25
                       onLessonComplete(foundationProgress)
