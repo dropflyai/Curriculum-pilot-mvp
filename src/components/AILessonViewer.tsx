@@ -56,7 +56,7 @@ const LearningModeSelector = dynamic(() => import('./LearningModeSelector'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Learning Options...</div>
 })
-import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock } from 'lucide-react'
+import { BookOpen, Code, CheckSquare, HelpCircle, Upload, Award, Sparkles, Brain, Zap, Target, Clock, Lock, CheckCircle } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import InteractiveLessonContent from './InteractiveLessonContent'
 
@@ -87,6 +87,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
   const [testState, setTestState] = useState<TestState>({ completed: {} })
+  const [codingStepsCompleted, setCodingStepsCompleted] = useState(false)
   const [confusionAnswers, setConfusionAnswers] = useState<string[]>(['', '', ''])
   const [ethicsNote, setEthicsNote] = useState('')
   const [showConfusionQuestions, setShowConfusionQuestions] = useState(false)
@@ -1215,39 +1216,76 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                       }}
                       onAllStepsComplete={() => {
                         console.log('All coding steps completed!')
+                        setCodingStepsCompleted(true)
                         if (onCodeExecution) {
                           onCodeExecution()
                         }
                       }}
                     />
                     
-                    {/* Advanced AI Trainer (After completing steps) */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 mt-8">
-                      <h3 className="text-cyan-300 font-bold text-xl mb-6 flex items-center gap-2">
-                        <Zap className="h-6 w-6" />
-                        Advanced AI Trainer 🔧
-                      </h3>
-                      <p className="text-gray-300 mb-4">
-                        Ready for the real thing? Use this advanced trainer to experiment with different datasets and configurations.
-                      </p>
-                      
-                      <div className="border-2 border-dashed border-blue-500/30 rounded-xl p-4">
-                        <RealPhotoClassifier
-                          dataset={currentModeData.dataset}
-                          labels={currentModeData.labels}
-                          onMetricsUpdate={setMetrics}
-                          onTrainingComplete={(success) => {
-                            if (success) {
-                              handleTestComplete('dataset_loaded')
-                              handleTestComplete('trained_once')
-                              if (onCodeExecution) {
-                                onCodeExecution()
+                    {/* Advanced AI Trainer (Only after completing coding steps) */}
+                    {codingStepsCompleted ? (
+                      <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 mt-8">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="bg-green-500 rounded-full p-2">
+                            <CheckCircle className="w-6 h-6 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-cyan-300 font-bold text-xl flex items-center gap-2">
+                              <Zap className="h-6 w-6" />
+                              🎉 UNLOCKED: Advanced AI Photo Classifier 
+                            </h3>
+                            <p className="text-green-300 text-sm">Great job completing all coding steps!</p>
+                          </div>
+                        </div>
+                        
+                        <p className="text-gray-300 mb-4">
+                          🚀 Now you can train AI on REAL IMAGES! Use everything you learned in the coding steps to experiment with actual photo classification.
+                        </p>
+                        
+                        <div className="border-2 border-green-500/30 rounded-xl p-4 bg-green-900/10">
+                          <RealPhotoClassifier
+                            dataset={currentModeData.dataset}
+                            labels={currentModeData.labels}
+                            onMetricsUpdate={setMetrics}
+                            onTrainingComplete={(success) => {
+                              if (success) {
+                                handleTestComplete('dataset_loaded')
+                                handleTestComplete('trained_once')
+                                if (onCodeExecution) {
+                                  onCodeExecution()
+                                }
                               }
-                            }
-                          }}
-                        />
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600 mt-8 opacity-50">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="bg-gray-600 rounded-full p-2">
+                            <Lock className="w-6 h-6 text-gray-400" />
+                          </div>
+                          <div>
+                            <h3 className="text-gray-400 font-bold text-xl flex items-center gap-2">
+                              <Zap className="h-6 w-6" />
+                              🔒 LOCKED: Advanced AI Photo Classifier
+                            </h3>
+                            <p className="text-gray-400 text-sm">Complete all 5 coding steps above to unlock!</p>
+                          </div>
+                        </div>
+                        
+                        <p className="text-gray-500 mb-4">
+                          📚 First master the fundamentals by completing the step-by-step coding challenges above, then you'll be ready for real photo classification!
+                        </p>
+                        
+                        <div className="border-2 border-dashed border-gray-600/30 rounded-xl p-8 bg-gray-900/30 text-center">
+                          <div className="text-6xl mb-4">🔒</div>
+                          <p className="text-gray-400 font-medium">Complete the coding tutorial first!</p>
+                          <p className="text-gray-500 text-sm mt-2">Learn → Practice → Apply</p>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
