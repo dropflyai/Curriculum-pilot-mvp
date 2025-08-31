@@ -82,7 +82,7 @@ interface TestState {
 }
 
 export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplete, onCodeExecution }: AILessonViewerProps) {
-  const [currentTab, setCurrentTab] = useState<'overview' | 'foundation' | 'learn' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit' | 'gallery'>('overview')
+  const [currentTab, setCurrentTab] = useState<'overview' | 'foundation' | 'code' | 'tests' | 'quiz' | 'flashcards' | 'checklist' | 'submit' | 'gallery'>('overview')
   const [foundationCompleted, setFoundationCompleted] = useState(false)
   const [quizState, setQuizState] = useState<QuizState>({ answers: {}, submitted: false, score: 0 })
   const [checklistState, setChecklistState] = useState<ChecklistState>({ completed: {} })
@@ -188,9 +188,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       case 'foundation':
         // Foundation is completed when user finishes the experience
         return foundationCompleted
-      case 'learn':
-        // Learn is completed when user has visited and spent some time (auto-completed when leaving)
-        return currentTab !== 'learn' || localStorage.getItem(`lesson-${lesson.id}-learn-visited`) === 'true'
       case 'code':
         // Code is completed when model is trained
         return metrics !== null
@@ -261,18 +258,11 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
     }
   }, [checklistState, currentTab, lesson.modes])
 
-  // Track learn section completion
+  // Track section visits
   useEffect(() => {
-    if (currentTab === 'learn') {
-      // Mark as visited after 10 seconds or when leaving
-      const timer = setTimeout(() => {
-        localStorage.setItem(`lesson-${lesson.id}-learn-visited`, 'true')
-      }, 10000)
-      
-      return () => clearTimeout(timer)
-    } else if (currentTab !== 'overview') {
-      // Mark learn as visited when moving to any other section
-      localStorage.setItem(`lesson-${lesson.id}-learn-visited`, 'true')
+    if (currentTab !== 'overview') {
+      // Mark sections as visited
+      localStorage.setItem(`lesson-${lesson.id}-${currentTab}-visited`, 'true')
     }
   }, [currentTab, lesson.id])
 
@@ -349,19 +339,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
       description: 'Experience the wonder of AI and build your foundational understanding',
       objectives: ['See AI magic in action', 'Try interactive demos', 'Understand core concepts']
     }] : []),
-    { 
-      id: 'learn', 
-      title: 'Knowledge Quest', 
-      subtitle: 'Discover the Ancient Secrets of AI',
-      icon: BookOpen, 
-      color: 'emerald', 
-      emoji: '🏛️',
-      difficulty: 'Beginner',
-      estimatedTime: '15 min',
-      xpReward: 100,
-      description: 'Explore the fundamental concepts and unlock the mysteries of artificial intelligence',
-      objectives: ['Learn core AI concepts', 'Understand key terminology', 'Complete knowledge checkpoints']
-    },
     { 
       id: 'code', 
       title: 'Coding Laboratory', 
@@ -998,7 +975,7 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
                   <AIFoundationExperience 
                     onComplete={() => {
                       setFoundationCompleted(true)
-                      setCurrentTab('learn')  // Go directly to Learn tab instead of overview
+                      setCurrentTab('code')  // Go directly to Code tab for hands-on practice
                       // Update progress to reflect foundation completion (25% of lesson)
                       const foundationProgress = 25
                       onLessonComplete(foundationProgress)
@@ -1008,107 +985,6 @@ export default function AILessonViewer({ lesson, onLessonComplete, onQuizComplet
               </div>
             )}
             
-            {currentTab === 'learn' && (
-              <div className="space-y-8">
-                {lesson.id === 'week-02' ? (
-                  <>
-                    {/* Lesson 2 - Chatbot Learning Content */}
-                    <div className="bg-gradient-to-r from-indigo-800/30 to-purple-800/30 rounded-3xl p-8 border-2 border-indigo-500/30">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="text-8xl animate-pulse">🎓</div>
-                        <div>
-                          <h2 className="text-5xl font-bold text-white mb-2">Chatbot Academy</h2>
-                          <p className="text-indigo-200 text-xl">Master the Art of AI Conversation</p>
-                        </div>
-                      </div>
-                      
-                      {/* Mission Objectives */}
-                      <div className="bg-blue-900/40 rounded-2xl p-6 border border-blue-500/30">
-                        <h3 className="text-indigo-300 font-bold text-xl mb-4">🎯 Learning Objectives</h3>
-                        <div className="grid md:grid-cols-3 gap-4">
-                          <div className="bg-blue-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">💬</div>
-                            <h4 className="text-indigo-200 font-semibold mb-1">Conversation Design</h4>
-                            <p className="text-indigo-300/80 text-sm">Learn how AI understands and responds to human language</p>
-                          </div>
-                          <div className="bg-blue-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">🤖</div>
-                            <h4 className="text-indigo-200 font-semibold mb-1">NLP Fundamentals</h4>
-                            <p className="text-indigo-300/80 text-sm">Understand natural language processing concepts</p>
-                          </div>
-                          <div className="bg-blue-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">🔄</div>
-                            <h4 className="text-indigo-200 font-semibold mb-1">Flow Design</h4>
-                            <p className="text-indigo-300/80 text-sm">Create sophisticated conversation flows and logic</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Conversation Flow Designer for Advanced Learning */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                      <h3 className="text-indigo-300 font-bold text-xl mb-6 flex items-center gap-2">
-                        <Zap className="h-6 w-6" />
-                        Conversation Flow Designer 🎛️
-                      </h3>
-                      <p className="text-gray-300 mb-6">
-                        Design sophisticated conversation flows with visual drag-and-drop interfaces. Learn how professional chatbots handle complex interactions.
-                      </p>
-                      <ConversationFlowDesigner 
-                        onFlowComplete={(flowData) => {
-                          console.log('Conversation flow completed:', flowData)
-                        }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* Traditional Knowledge Quest Content (for Lesson 1) */}
-                    <div className="bg-gradient-to-r from-green-800/30 to-green-800/30 rounded-3xl p-8 border-2 border-green-500/30">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="text-8xl animate-pulse">🏛️</div>
-                        <div>
-                          <h2 className="text-5xl font-bold text-white mb-2">Knowledge Quest</h2>
-                          <p className="text-green-200 text-xl">Discover the Ancient Secrets of AI</p>
-                        </div>
-                      </div>
-                      
-                      {/* Mission Objectives */}
-                      <div className="bg-green-900/40 rounded-2xl p-6 border border-green-500/30">
-                        <h3 className="text-green-300 font-bold text-xl mb-4">🎯 Mission Objectives</h3>
-                        <div className="grid md:grid-cols-3 gap-4">
-                          <div className="bg-green-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">📚</div>
-                            <h4 className="text-green-200 font-semibold mb-1">Learn Core AI Concepts</h4>
-                            <p className="text-green-300/80 text-sm">Master the fundamentals of artificial intelligence</p>
-                          </div>
-                          <div className="bg-green-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">🎓</div>
-                            <h4 className="text-green-200 font-semibold mb-1">Understand Terminology</h4>
-                            <p className="text-green-300/80 text-sm">Learn the language of AI and machine learning</p>
-                          </div>
-                          <div className="bg-green-800/30 p-4 rounded-xl">
-                            <div className="text-3xl mb-2">✅</div>
-                            <h4 className="text-green-200 font-semibold mb-1">Complete Checkpoints</h4>
-                            <p className="text-green-300/80 text-sm">Verify your understanding with interactive quizzes</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Interactive Lesson Content */}
-                    <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-600">
-                      <InteractiveLessonContent 
-                        onSectionComplete={(sectionIndex) => {
-                          console.log(`Section ${sectionIndex} completed`)
-                        }}
-                        onReturnToMap={() => setCurrentTab('overview')}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
 
 
             {currentTab === 'code' && (
