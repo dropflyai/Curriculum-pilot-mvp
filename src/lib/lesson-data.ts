@@ -204,21 +204,141 @@ Click on the **Code** tab to start your journey into machine learning. You're ab
 
 **Let's teach a computer to be smart! 🧠✨**`,
         code: {
-          starter: `# 🚀 Your AI Configuration
-# This tells the AI what to learn!
+          starter: `# 🚀 AI Image Classifier Training Simulator
+# Learn how machine learning works by coding your own training process!
 
-DATASET = "school-supplies"  # The folder with all our training images
-LABELS = ["pencil", "eraser", "marker"]  # What we're teaching the AI to recognize
+import random
+import time
 
-# 🎮 Your Training Mission:
-# 1) Click "Train Model" to start teaching your AI
-# 2) Watch the metrics to see how smart it gets!
-# 3) Find and remove at least 5 bad images (blurry/duplicates)
-# 4) Train again and see if you improved it
-# 5) Take a screenshot of your best results!
+# 🎯 STEP 1: Set up your dataset
+DATASET = "school-supplies"  
+LABELS = ["pencil", "eraser", "marker"] 
+print(f"📁 Dataset: {DATASET}")
+print(f"🏷️  Labels: {LABELS}")
 
-# 💡 Pro tip: Look for images that might confuse the AI
-# Like a marker that looks like a pencil, or a blurry eraser`
+# Sample data - imagine these are real images with labels
+training_data = [
+    {"image": "pencil_001.jpg", "label": "pencil", "quality": "good"},
+    {"image": "eraser_001.jpg", "label": "eraser", "quality": "blurry"},
+    {"image": "marker_001.jpg", "label": "marker", "quality": "good"},
+    {"image": "pencil_002.jpg", "label": "pencil", "quality": "good"},
+    {"image": "eraser_002.jpg", "label": "eraser", "quality": "good"},
+    {"image": "marker_002.jpg", "label": "marker", "quality": "duplicate"},
+]
+
+print(f"\\n📊 Training data loaded: {len(training_data)} images")
+
+# 🎮 CODING CHALLENGE 1: Data Quality Check
+# TODO: Write a function that counts how many images we have for each label
+def count_labels(data):
+    """Count how many examples we have for each label"""
+    # YOUR CODE HERE: Create a dictionary to count each label
+    # Hint: Loop through data and count data[i]["label"]
+    pass
+
+# Test your function
+print("\\n🧮 Label counts:")
+# count_labels(training_data)
+
+# 🎮 CODING CHALLENGE 2: Clean the Dataset  
+# TODO: Write a function to remove bad quality images
+def clean_dataset(data):
+    """Remove blurry and duplicate images"""
+    # YOUR CODE HERE: Return only images with quality == "good"
+    # Hint: Use a list comprehension or for loop
+    pass
+
+# 🎮 CODING CHALLENGE 3: AI Training Simulation
+def train_ai_model(clean_data):
+    """Simulate training an AI model and return accuracy"""
+    print("\\n🤖 Training AI model...")
+    
+    # Simulate training process
+    for epoch in range(3):
+        print(f"⚡ Epoch {epoch + 1}/3: Learning patterns...")
+        time.sleep(1)  # Simulate processing time
+    
+    # Calculate accuracy based on data quality
+    num_clean_images = len(clean_data)
+    base_accuracy = 0.7  # 70% base accuracy
+    improvement_per_image = 0.05  # 5% improvement per clean image
+    
+    accuracy = min(0.95, base_accuracy + (num_clean_images * improvement_per_image))
+    return accuracy
+
+# 🎮 CODING CHALLENGE 4: Confusion Matrix Simulation
+def show_confusion_matrix():
+    """Show which items the AI confuses with each other"""
+    print("\\n📈 Confusion Matrix (What AI gets wrong):")
+    print("         Predicted")
+    print("       P   E   M")
+    print("A  P  [8]  1   0   <- 8 pencils correct, 1 mistaken for eraser")  
+    print("c  E   2  [6]  1   <- 2 erasers mistaken for pencils")
+    print("t  M   0   1  [7]  <- 1 marker mistaken for eraser")
+    print("u")
+    print("a")
+    print("l")
+
+# 🎯 YOUR CODING MISSIONS:
+print("\\n" + "="*50)
+print("🎯 YOUR CODING MISSIONS:")
+print("1. Complete the count_labels() function")
+print("2. Complete the clean_dataset() function") 
+print("3. Run the full training pipeline")
+print("4. Experiment with different data scenarios")
+print("="*50)
+
+# 🚀 BONUS CHALLENGES:
+# 1. Add a function to calculate per-class accuracy
+# 2. Create a function to add new training data
+# 3. Simulate what happens with biased data (all pencils, no erasers)
+# 4. Add a predict_new_image() function that guesses labels
+
+# 💡 Real-world connection: This simulates how actual AI systems work!
+# Companies like Google and Apple train models on millions of images
+# The same principles apply: good data = better AI performance
+
+# 🏆 MINI-CHALLENGES TO TRY:
+print("\\n🏆 QUICK WINS - Try these mini-challenges:")
+print("1. 📊 Add a 'metal' label and some metal object data")
+print("2. 🧹 Create a function that finds only 'duplicate' quality images")
+print("3. 🎯 Write code to show which label has the most examples")
+print("4. 🚀 Predict what would happen with 1000 images vs 10 images")
+print("5. ⚡ Time how long different training scenarios take")
+
+# ✅ SOLUTION EXAMPLES (Uncomment to see working code):
+'''
+# Solution for Challenge 1: Count labels function
+def count_labels(data):
+    counts = {}
+    for item in data:
+        label = item["label"]
+        if label in counts:
+            counts[label] += 1
+        else:
+            counts[label] = 1
+    
+    for label, count in counts.items():
+        print(f"{label}: {count} images")
+    return counts
+
+# Solution for Challenge 2: Clean dataset function  
+def clean_dataset(data):
+    clean_data = []
+    for item in data:
+        if item["quality"] == "good":
+            clean_data.append(item)
+    print(f"Cleaned dataset: {len(clean_data)} good images")
+    return clean_data
+
+# Uncomment these lines to test the solutions:
+# print("\\n🧮 Label counts:")
+# count_labels(training_data)
+# clean_data = clean_dataset(training_data)
+# accuracy = train_ai_model(clean_data)
+# print(f"\\n🎯 Final AI accuracy: {accuracy:.2%}")
+# show_confusion_matrix()
+'''`
         },
         tests_ui: [
           {
@@ -747,24 +867,103 @@ for message in test_messages:
     print(f"Advisor: {advisor.get_response(message)}")
     print("-" * 30)
 
-# 🚀 YOUR CODING CHALLENGES:
-# Challenge 1: Add at least 3 more responses to each category
-# Challenge 2: Create a new category (like 'test_anxiety' or 'time_management')
-# Challenge 3: Improve the keyword detection to be more accurate
-# Challenge 4: Add a conversation history feature
-# Challenge 5: Make the responses more personalized
-# Challenge 6: Add emoji reactions based on the sentiment
-# Challenge 7: Create a "daily motivation" feature
+# 🎯 YOUR STEP-BY-STEP CODING CHALLENGES:
 
-print("\\n💡 Remember the 7 Steps:")
-print("1. ✅ Set up the advisor framework")
-print("2. ✅ Create response categories")
-print("3. ✅ Build a message classifier")
-print("4. ✅ Design response templates")
-print("5. ✅ Add personality elements")
-print("6. ✅ Test with realistic scenarios")
-print("7. ✅ Implement safety features")
-print("\\n🎯 Your goal: Create an AI that makes school life better for everyone!")`,
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 1: Enhance Response Variety")
+print("="*60)
+print("TODO: Add 3 more responses to the 'encouragement' category")
+print("Hint: Think about different ways to encourage a struggling student")
+print("Example: 'Every mistake is a step closer to understanding! 🌱'")
+print("\\nYour turn - add new responses to self.responses['encouragement']")
+
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 2: Create Test Anxiety Category")
+print("="*60)
+print("TODO: Add a new category called 'test_anxiety' to self.responses")
+print("Include responses like:")
+print("- 'Take 3 deep breaths. You know more than you think! 🌬️'")
+print("- 'Try the brain dump technique: write everything you know first'")
+print("\\nAlso add 'anxiety', 'nervous', 'panic' to keyword detection")
+
+print("\\n" + "="*60) 
+print("🎯 CODING CHALLENGE 3: Smart Keyword Detection")
+print("="*60)
+print("TODO: Improve the analyze_message function")
+print("Current problem: 'test' matches both study_tips AND test_anxiety")
+print("Solution: Add priority scoring or phrase matching")
+print("Hint: Check for 'test anxiety' before checking for 'test'")
+
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 4: Conversation Memory")
+print("="*60)
+print("TODO: Add a conversation history feature")
+print("1. Add self.conversation_history = [] to __init__")
+print("2. Store each message and response in the history")
+print("3. Create a show_conversation() method")
+print("4. Make responses aware of previous conversations")
+
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 5: Personal Touch")
+print("="*60)
+print("TODO: Make responses more personalized")
+print("1. Ask for the student's name when first created")
+print("2. Use their name in responses occasionally")
+print("3. Remember their main challenges")
+print("4. Give responses based on their past questions")
+
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 6: Emoji Reactions") 
+print("="*60)
+print("TODO: Add emotion-based emoji reactions")
+print("Create an add_emoji_reaction() function that:")
+print("- Uses 😊 for encouragement responses")
+print("- Uses 📚 for study_tips responses") 
+print("- Uses 💪 for motivation responses")
+print("- Uses 🎯 for goal_setting responses")
+
+print("\\n" + "="*60)
+print("🎯 CODING CHALLENGE 7: Daily Motivation Feature")
+print("="*60)
+print("TODO: Create a daily_motivation() method")
+print("Include motivational quotes, study tips for the day,")
+print("goal reminders, or achievement celebrations")
+print("Make it change based on the day of the week")
+
+# 🧪 TESTING YOUR ENHANCEMENTS
+print("\\n" + "="*60)
+print("🧪 TEST YOUR AI ADVISOR:")
+print("="*60)
+print("Run these test messages after making your improvements:")
+
+enhanced_test_messages = [
+    "I'm really anxious about the math test tomorrow",
+    "I failed again and feel stupid",
+    "I keep procrastinating on my essay",
+    "I want to get better grades",
+    "I'm nervous about presenting to the class",
+    "What should I do today to improve my study habits?"
+]
+
+print("\\nTest these scenarios:")
+for i, msg in enumerate(enhanced_test_messages, 1):
+    print(f"{i}. '{msg}'")
+
+print("\\n💡 SUCCESS CRITERIA:")
+print("✅ Your AI gives different responses for 'test anxiety' vs 'study tips'")
+print("✅ Responses include the student's name when possible") 
+print("✅ Each response category has at least 5 different options")
+print("✅ Conversation history shows past interactions")
+print("✅ Daily motivation feature provides fresh content")
+print("✅ All responses feel encouraging and actionable")
+
+print("\\n🎯 BONUS MISSION: Real-World Connection")
+print("Research actual school counseling techniques and add them!")
+print("Examples: Growth mindset language, stress reduction methods,")
+print("time management strategies, study group suggestions")
+
+print("\\n🌟 Remember: You're building something that could actually")
+print("help students succeed in school. Make it count!")`,
         },
         tests_ui: [
           {
