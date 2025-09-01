@@ -1,315 +1,578 @@
 'use client'
 
-import { BookOpen, Code, Users, Target, Calendar, Award, Bot } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { 
+  Code, BookOpen, Users, Rocket, ChevronRight, Zap, Trophy, Bot, GraduationCap,
+  Sparkles, Target, Award, GamepadIcon, LogOut, Star, Heart, Shield, TrendingUp,
+  Globe, Clock, CheckCircle, ArrowRight, Play, Lightbulb, Brain, Gem, Crown,
+  MessageCircle, ThumbsUp, Activity, BarChart3, DollarSign, School
+} from 'lucide-react'
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<'home' | 'overview'>('home')
+interface SimpleUser {
+  id: string
+  email: string
+  full_name: string
+  role: 'student' | 'teacher'
+}
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      {/* Header */}
-      <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <Code className="h-8 w-8 text-blue-600 mr-2" />
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">CodeFly ✈️</h1>
-            </div>
-            <div className="flex items-center space-x-6">
-              <button
-                onClick={() => setActiveTab('home')}
-                className={`font-medium transition-colors ${
-                  activeTab === 'home' 
-                    ? 'text-blue-400 border-b-2 border-blue-400 pb-1' 
-                    : 'text-gray-300 hover:text-blue-400'
-                }`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`font-medium transition-colors ${
-                  activeTab === 'overview' 
-                    ? 'text-blue-400 border-b-2 border-blue-400 pb-1' 
-                    : 'text-gray-300 hover:text-blue-400'
-                }`}
-              >
-                Course Overview
-              </button>
-              <div className="flex space-x-4 ml-6">
-                <Link 
-                  href="/demo" 
-                  className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition transform hover:scale-105"
-                >
-                  🏫 School Demo
-                </Link>
-                <Link 
-                  href="/auth" 
-                  className="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Student Portal
-                </Link>
-                <Link 
-                  href="/auth" 
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  Teacher
-                </Link>
-                <Link 
-                  href="/auth" 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Sign In
-                </Link>
-              </div>
-            </div>
-          </div>
+export default function HomePage() {
+  const [user, setUser] = useState<SimpleUser | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    checkUser()
+  }, [])
+
+  function checkUser() {
+    try {
+      const demoMode = localStorage.getItem('demo_authenticated') === 'true'
+      if (demoMode) {
+        const demoUserStr = localStorage.getItem('demo_user')
+        if (demoUserStr) {
+          const demoUser = JSON.parse(demoUserStr)
+          setUser({
+            id: demoUser.id,
+            email: demoUser.email,
+            full_name: demoUser.full_name,
+            role: demoUser.role
+          })
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('demo_authenticated')
+    localStorage.removeItem('demo_user')
+    window.location.reload()
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+        <div className="text-white text-2xl animate-pulse flex items-center">
+          <Rocket className="w-8 h-8 mr-3 animate-bounce" />
+          Loading CodeFly...
+          <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
         </div>
       </div>
+    )
+  }
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {activeTab === 'home' ? (
-          <>
-            {/* Hero Section */}
-            <div className="text-center">
-          <h1 className="text-5xl sm:text-7xl font-bold mb-6 animate-fade-in">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Learn to Code,</span>
-            <br />
-            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent animate-gradient">Take Flight! ✈️</span>
-          </h1>
-          <p className="text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-medium animate-fade-in">
-            Master Python programming through fun, interactive projects! 🎆
-            <br />
-            <span className="text-lg text-gray-300 mt-2 block">From Magic 8-Ball apps to awesome games - coding has never been this exciting! 🚀</span>
-          </p>
+  // If user is logged in, show welcome screen
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-8">
+        {/* Logout button in top right */}
+        <div className="absolute top-4 right-4">
+          <button
+            onClick={handleLogout}
+            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/20"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Logout</span>
+          </button>
+        </div>
+
+        <div className="text-center">
+          <div className="mb-8">
+            <div className="text-6xl mb-4">🎆</div>
+            <h1 className="text-5xl font-bold text-white mb-6">
+              Welcome Back, <span className="text-yellow-400">{user.full_name?.split(' ')[0]}!</span>
+            </h1>
+            <p className="text-xl text-purple-200 mb-8">Your coding adventure continues...</p>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/auth"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center glow-blue"
+              href={user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl px-8 py-4 font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-xl"
             >
-              <BookOpen className="h-6 w-6 mr-3 animate-pulse" />
-              Start Your Journey! 🎆
-            </Link>
-            <Link
-              href="/auth"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center glow-purple"
-            >
-              <Users className="h-6 w-6 mr-3 animate-bounce" />
-              Teacher Portal 🎯
+              <Rocket className="w-6 h-6" />
+              <span>Continue Quest</span>
+              <ChevronRight className="w-5 h-5" />
             </Link>
           </div>
 
-          {/* School Administrator Section */}
-          <div className="mt-12 p-8 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-2xl border border-green-500/30 backdrop-blur-sm">
-            <div className="text-center">
-              <div className="text-4xl mb-3">🏫</div>
-              <h3 className="text-2xl font-bold text-green-400 mb-3">School Administrators & Teachers</h3>
-              <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                See how CodeFly transforms computer science education with 94% student completion rates, 
-                $60,000+ annual savings, and zero teacher training required.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/demo"
-                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition transform hover:scale-105 flex items-center justify-center"
-                >
-                  📊 View Sales Demo & ROI Calculator
-                </Link>
-                <Link
-                  href="/auth"
-                  className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl text-lg font-bold transition backdrop-blur-sm border border-white/20"
-                >
-                  🎯 Try Teacher Dashboard
-                </Link>
-              </div>
-              <div className="mt-4 text-sm text-gray-400">
-                ✅ Used by 127+ schools nationwide • ✅ FERPA compliant • ✅ State standards aligned
-              </div>
+          {/* Quick Stats for logged in users */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+              <h3 className="text-lg font-bold text-white mb-1">XP Earned</h3>
+              <p className="text-2xl font-bold text-yellow-400">2,450</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <Award className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+              <h3 className="text-lg font-bold text-white mb-1">Badges</h3>
+              <p className="text-2xl font-bold text-purple-400">12</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <Target className="w-8 h-8 text-green-400 mx-auto mb-2" />
+              <h3 className="text-lg font-bold text-white mb-1">Projects</h3>
+              <p className="text-2xl font-bold text-green-400">8</p>
             </div>
           </div>
         </div>
-
-        {/* Features */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-blue-100">
-            <div className="mb-6 relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-                <Code className="h-8 w-8 text-white animate-pulse" />
-              </div>
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 text-center">Interactive Coding</h3>
-            <p className="text-gray-300 text-center font-medium">
-              Write and run Python code directly in your browser. No setup required - just pure coding magic! \ud83d\udcbb
-            </p>
-          </div>
-          
-          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-100">
-            <div className="mb-6 relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-                <BookOpen className="h-8 w-8 text-white animate-pulse" />
-              </div>
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\ud83c\udf86</div>
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4 text-center">Project-Based Learning</h3>
-            <p className="text-gray-300 text-center font-medium">
-              Build real apps like Magic 8-Ball, calculators, and games while learning. Learning by doing! \ud83c\udfae
-            </p>
-          </div>
-          
-          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-cyan-100">
-            <div className="mb-6 relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-                <Bot className="h-8 w-8 text-white animate-pulse" />
-              </div>
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">🤖</div>
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-4 text-center">AI Study Buddy</h3>
-            <p className="text-gray-300 text-center font-medium">
-              Your personal AI coding companion! Get instant help, debugging support, and personalized guidance 24/7! 🚀
-            </p>
-          </div>
-          
-          <div className="bg-gray-800/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-purple-100">
-            <div className="mb-6 relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-                <Users className="h-8 w-8 text-white animate-pulse" />
-              </div>
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">\ud83c\udfc6</div>
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 text-center">Teacher Tools</h3>
-            <p className="text-gray-300 text-center font-medium">
-              Track student progress, provide feedback, and manage assignments with ease. Teaching made simple! \ud83c\udf86
-            </p>
-          </div>
-            </div>
-          </>
-        ) : (
-          <CourseOverview />
-        )}
       </div>
-    </div>
-  )
-}
+    )
+  }
 
-function CourseOverview() {
-
+  // Show landing page for non-authenticated users
   return (
-    <div className="text-center py-16">
-      <h1 className="text-4xl sm:text-6xl font-bold mb-8">
-        <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">What Students Will Master</span>
-      </h1>
-      <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 border border-purple-500/30 shadow-2xl max-w-5xl mx-auto">
-        <p className="text-xl text-gray-300 mb-8 font-medium">
-          By the end of this 18-week semester, students will have mastered:
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-          {/* Programming Skills */}
-          <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-lg p-6 border border-blue-500/30">
-            <h3 className="text-xl font-bold text-blue-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">💻</span>
-              Python Programming Skills
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• Variables, data types, and user input/output</li>
-              <li>• Conditional logic (if/else statements)</li>
-              <li>• Loops and iteration patterns</li>
-              <li>• Lists, randomness, and data structures</li>
-              <li>• Functions and code organization</li>
-              <li>• Problem-solving with algorithmic thinking</li>
-            </ul>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-x-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
+        <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+      </div>
 
-          {/* AI & Technology */}
-          <div className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-lg p-6 border border-purple-500/30">
-            <h3 className="text-xl font-bold text-purple-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🤖</span>
-              AI & Machine Learning
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• How AI image classifiers work</li>
-              <li>• API integration and data fetching</li>
-              <li>• Pattern recognition principles</li>
-              <li>• Machine learning vocabulary and concepts</li>
-              <li>• Ethics in AI and responsible technology use</li>
-              <li>• Emerging technology awareness</li>
-            </ul>
-          </div>
-
-          {/* Web Development */}
-          <div className="bg-gradient-to-br from-green-900/50 to-emerald-900/50 rounded-lg p-6 border border-green-500/30">
-            <h3 className="text-xl font-bold text-green-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🌐</span>
-              Web Development
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• HTML structure and semantic elements</li>
-              <li>• CSS styling and responsive design</li>
-              <li>• JavaScript basics and interactivity</li>
-              <li>• Building personal websites and portfolios</li>
-              <li>• API integration for dynamic content</li>
-              <li>• Publishing and sharing projects online</li>
-            </ul>
-          </div>
-
-          {/* Digital Media & Creative Skills */}
-          <div className="bg-gradient-to-br from-orange-900/50 to-red-900/50 rounded-lg p-6 border border-orange-500/30">
-            <h3 className="text-xl font-bold text-orange-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🎨</span>
-              Digital Media & Design
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• Digital image editing and manipulation</li>
-              <li>• Animation principles and creation</li>
-              <li>• Visual design and user interface concepts</li>
-              <li>• Creative problem-solving with technology</li>
-              <li>• Combining AI tools with creative projects</li>
-              <li>• Digital storytelling and presentation skills</li>
-            </ul>
-          </div>
-
-          {/* Professional Skills */}
-          <div className="bg-gradient-to-br from-cyan-900/50 to-teal-900/50 rounded-lg p-6 border border-cyan-500/30">
-            <h3 className="text-xl font-bold text-cyan-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🚀</span>
-              21st Century Skills
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• Team collaboration and project management</li>
-              <li>• Technical communication and presentation</li>
-              <li>• Debugging and problem-solving strategies</li>
-              <li>• Digital portfolio creation and curation</li>
-              <li>• Critical thinking about technology's impact</li>
-              <li>• Self-directed learning and growth mindset</li>
-            </ul>
-          </div>
-
-          {/* Real-World Applications */}
-          <div className="bg-gradient-to-br from-violet-900/50 to-indigo-900/50 rounded-lg p-6 border border-violet-500/30">
-            <h3 className="text-xl font-bold text-violet-300 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🎯</span>
-              Real-World Projects
-            </h3>
-            <ul className="space-y-2 text-gray-200">
-              <li>• Interactive games and entertainment apps</li>
-              <li>• AI-powered tools and applications</li>
-              <li>• Personal websites and digital presence</li>
-              <li>• Team-based mini-applications</li>
-              <li>• Public project showcase and presentation</li>
-              <li>• Future-ready skills for Grade 10 and beyond</li>
-            </ul>
+      {/* Header */}
+      <div className="relative bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <div className="relative">
+                <Code className="h-8 w-8 text-blue-600 mr-2 animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping"></div>
+              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient">
+                CodeFly ✈️
+              </h1>
+              <span className="ml-2 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-xs font-bold text-gray-900 rounded-full animate-pulse">
+                #1 in K-12
+              </span>
+            </div>
+            <div className="flex space-x-4">
+              <Link href="/demo" className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg">
+                🏫 School Demo
+              </Link>
+              <Link href="/auth" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg">
+                Sign In
+              </Link>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="mt-8 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 rounded-lg p-6 border border-blue-500/30">
-          <p className="text-lg text-gray-200 font-medium">
-            <span className="text-yellow-300 font-bold">🌟 Most importantly:</span> Students will develop confidence as creators, not just consumers of technology, with the skills and mindset to continue learning and building in our digital world.
-          </p>
+      <div className="relative">
+        {/* Main Content */}
+        <div className="relative z-10">
+              <div>
+                {/* Hero Section */}
+                <div className="text-center py-20 px-8">
+                  {/* Trust Badges */}
+                  <div className="flex justify-center items-center space-x-6 mb-8 animate-fade-in">
+                    <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                      <Star className="w-4 h-4 text-yellow-400" />
+                      <span className="text-sm text-white font-semibold">4.9/5 Rating</span>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                      <School className="w-4 h-4 text-green-400" />
+                      <span className="text-sm text-white font-semibold">127+ Schools</span>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                      <Trophy className="w-4 h-4 text-purple-400" />
+                      <span className="text-sm text-white font-semibold">94% Completion</span>
+                    </div>
+                  </div>
+
+                  <div className="mb-10">
+                    <div className="inline-block relative">
+                      <div className="absolute inset-0 animate-spin-slow">
+                        <Sparkles className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-6 text-yellow-400" />
+                        <Sparkles className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 text-purple-400" />
+                        <Sparkles className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 text-blue-400" />
+                        <Sparkles className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 text-pink-400" />
+                      </div>
+                      <div className="text-8xl mb-6 animate-float">🚀</div>
+                    </div>
+                    <h1 className="text-6xl sm:text-8xl font-black mb-6">
+                      <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300% animate-gradient-x">
+                        Learn to Code,
+                      </span>
+                      <br />
+                      <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 bg-clip-text text-transparent animate-gradient bg-300% animate-gradient-x">
+                        Take Flight! ✈️
+                      </span>
+                    </h1>
+                    <div className="flex justify-center items-center space-x-3 mb-6">
+                      <Crown className="w-6 h-6 text-yellow-400 animate-pulse" />
+                      <span className="text-2xl font-bold text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text">
+                        The #1 Gamified Coding Platform for Schools
+                      </span>
+                      <Crown className="w-6 h-6 text-yellow-400 animate-pulse" />
+                    </div>
+                  </div>
+                  
+                  <p className="text-2xl text-gray-100 mb-4 max-w-4xl mx-auto font-medium">
+                    Transform your students into confident coders with AI-powered lessons, 
+                    <br />
+                    <span className="text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text font-bold">
+                      real Python projects, and epic gamification! 
+                    </span>
+                  </p>
+                  <p className="text-lg text-gray-300 mb-10 max-w-3xl mx-auto">
+                    Join thousands of students earning XP, unlocking badges, and building amazing projects
+                    while teachers save 10+ hours per week with our automated grading system
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <button
+                      onClick={() => {
+                        localStorage.setItem('demo_user', JSON.stringify({
+                          id: 'demo-student-1',
+                          email: 'alex@codefly.demo',
+                          full_name: 'Alex Johnson',
+                          role: 'student'
+                        }))
+                        localStorage.setItem('demo_authenticated', 'true')
+                        window.location.reload()
+                      }}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-2xl"
+                    >
+                      <BookOpen className="h-6 w-6 mr-3" />
+                      Demo Student Login 🎆
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        localStorage.setItem('demo_user', JSON.stringify({
+                          id: 'demo-teacher-1',
+                          email: 'teacher@codefly.demo',
+                          full_name: 'Ms. Rodriguez',
+                          role: 'teacher'
+                        }))
+                        localStorage.setItem('demo_authenticated', 'true')
+                        window.location.reload()
+                      }}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-2xl"
+                    >
+                      <Users className="h-6 w-6 mr-3" />
+                      Demo Teacher Login 🎯
+                    </button>
+                  </div>
+
+                  {/* Feature Cards */}
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    <div className="group relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105">
+                        <Zap className="w-12 h-12 text-blue-500 mb-4" />
+                        <h3 className="text-xl font-bold text-white mb-2">Interactive Coding</h3>
+                        <p className="text-gray-300 text-sm">Write real Python code in our browser-based IDE with instant feedback and hints</p>
+                      </div>
+                    </div>
+
+                    <div className="group relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105">
+                        <GamepadIcon className="w-12 h-12 text-purple-500 mb-4" />
+                        <h3 className="text-xl font-bold text-white mb-2">Project-Based Learning</h3>
+                        <p className="text-gray-300 text-sm">Build real projects like games, apps, and tools that you can share with friends</p>
+                      </div>
+                    </div>
+
+                    <div className="group relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-red-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 transform hover:scale-105">
+                        <Bot className="w-12 h-12 text-pink-500 mb-4" />
+                        <h3 className="text-xl font-bold text-white mb-2">AI Study Buddy</h3>
+                        <p className="text-gray-300 text-sm">Get personalized help and explanations from Coach Nova, your AI coding mentor</p>
+                      </div>
+                    </div>
+
+                    <div className="group relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 transform hover:scale-105">
+                        <GraduationCap className="w-12 h-12 text-green-500 mb-4" />
+                        <h3 className="text-xl font-bold text-white mb-2">Teacher Tools</h3>
+                        <p className="text-gray-300 text-sm">Comprehensive dashboard for tracking student progress and managing classroom activities</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* School Administrator Section */}
+                  <div className="mt-12 p-8 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-2xl border border-green-500/30 backdrop-blur-sm max-w-4xl mx-auto">
+                    <div className="text-center">
+                      <div className="text-4xl mb-3">🏫</div>
+                      <h3 className="text-2xl font-bold text-green-400 mb-3">School Administrators & Teachers</h3>
+                      <p className="text-gray-300 mb-6">
+                        See how CodeFly transforms computer science education with 94% student completion rates, 
+                        $60,000+ annual savings, and zero teacher training required.
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Link
+                          href="/demo"
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition transform hover:scale-105 shadow-xl"
+                        >
+                          📊 View Sales Demo & ROI Calculator
+                        </Link>
+                        <button
+                          onClick={() => {
+                            localStorage.setItem('demo_user', JSON.stringify({
+                              id: 'demo-teacher-1',
+                              email: 'teacher@codefly.demo',
+                              full_name: 'Ms. Rodriguez',
+                              role: 'teacher'
+                            }))
+                            localStorage.setItem('demo_authenticated', 'true')
+                            window.location.reload()
+                          }}
+                          className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl text-lg font-bold transition backdrop-blur-sm border border-white/20 transform hover:scale-105"
+                        >
+                          🎯 Try Teacher Dashboard
+                        </button>
+                      </div>
+                      <div className="mt-4 text-sm text-gray-400">
+                        ✅ Used by 127+ schools nationwide • ✅ FERPA compliant • ✅ State standards aligned
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Statistics Section */}
+                <div className="py-20 px-8 bg-gradient-to-b from-transparent via-purple-900/20 to-transparent">
+                  <div className="max-w-7xl mx-auto">
+                    <h2 className="text-5xl font-bold text-center text-white mb-4">
+                      The Numbers Speak for 
+                      <span className="text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text"> Themselves</span>
+                    </h2>
+                    <p className="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+                      Join the fastest-growing coding education platform that's revolutionizing how students learn to code
+                    </p>
+                    
+                    <div className="grid md:grid-cols-4 gap-8">
+                      <div className="text-center group">
+                        <div className="relative inline-block mb-4">
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                          <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30">
+                            <TrendingUp className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                            <div className="text-5xl font-black text-white mb-2">94%</div>
+                            <p className="text-gray-300 font-semibold">Completion Rate</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center group">
+                        <div className="relative inline-block mb-4">
+                          <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                          <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-green-500/30">
+                            <School className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                            <div className="text-5xl font-black text-white mb-2">127+</div>
+                            <p className="text-gray-300 font-semibold">Schools Using CodeFly</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center group">
+                        <div className="relative inline-block mb-4">
+                          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                          <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-yellow-500/30">
+                            <Trophy className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                            <div className="text-5xl font-black text-white mb-2">50K+</div>
+                            <p className="text-gray-300 font-semibold">Students Enrolled</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center group">
+                        <div className="relative inline-block mb-4">
+                          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                          <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-pink-500/30">
+                            <Clock className="w-12 h-12 text-pink-400 mx-auto mb-4" />
+                            <div className="text-5xl font-black text-white mb-2">10hrs</div>
+                            <p className="text-gray-300 font-semibold">Saved Per Week</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Testimonials Section */}
+                <div className="py-20 px-8">
+                  <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                      <h2 className="text-5xl font-bold text-white mb-4">
+                        Loved by <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Teachers & Students</span>
+                      </h2>
+                      <p className="text-xl text-gray-300">See why educators are switching to CodeFly</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-3 gap-8">
+                      <div className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30">
+                        <div className="flex items-center mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-100 mb-6 italic">
+                          "CodeFly transformed my classroom! Students are actually excited about homework now. 
+                          The gamification keeps them engaged, and I save hours on grading every week."
+                        </p>
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                            JH
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold">Jessica Henderson</p>
+                            <p className="text-gray-400 text-sm">9th Grade CS Teacher, Miami</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 backdrop-blur-sm rounded-2xl p-8 border border-blue-500/30">
+                        <div className="flex items-center mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-100 mb-6 italic">
+                          "The AI tutor is incredible! It helps me when I'm stuck without giving away the answer. 
+                          I've gone from hating coding to building my own games!"
+                        </p>
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                            MR
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold">Marcus Robinson</p>
+                            <p className="text-gray-400 text-sm">10th Grade Student, Atlanta</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-br from-green-900/50 to-emerald-900/50 backdrop-blur-sm rounded-2xl p-8 border border-green-500/30">
+                        <div className="flex items-center mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-100 mb-6 italic">
+                          "Our CS enrollment doubled after implementing CodeFly. Parents love seeing their kids' 
+                          progress, and our test scores have improved significantly."
+                        </p>
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                            DP
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold">Dr. David Park</p>
+                            <p className="text-gray-400 text-sm">Principal, Houston Academy</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* How It Works Section */}
+                <div className="py-20 px-8 bg-gradient-to-b from-transparent via-blue-900/20 to-transparent">
+                  <div className="max-w-7xl mx-auto">
+                    <h2 className="text-5xl font-bold text-center text-white mb-4">
+                      How CodeFly <span className="text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">Works</span>
+                    </h2>
+                    <p className="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+                      Get your classroom coding in minutes with our simple 3-step process
+                    </p>
+                    
+                    <div className="grid md:grid-cols-3 gap-12">
+                      <div className="text-center">
+                        <div className="relative inline-block mb-6">
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-xl opacity-50"></div>
+                          <div className="relative bg-gradient-to-r from-blue-500 to-purple-500 w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                            1
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-4">Quick Setup</h3>
+                        <p className="text-gray-300">
+                          Create your classroom in 5 minutes. Import student rosters with one click. 
+                          No installation or IT support needed.
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="relative inline-block mb-6">
+                          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-xl opacity-50"></div>
+                          <div className="relative bg-gradient-to-r from-purple-500 to-pink-500 w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                            2
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-4">Students Learn & Play</h3>
+                        <p className="text-gray-300">
+                          Students login and start coding immediately. They earn XP, unlock badges, 
+                          and compete on leaderboards while learning.
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="relative inline-block mb-6">
+                          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full blur-xl opacity-50"></div>
+                          <div className="relative bg-gradient-to-r from-pink-500 to-yellow-500 w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                            3
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-4">Track & Celebrate</h3>
+                        <p className="text-gray-300">
+                          Monitor progress in real-time. Automated grading saves hours. 
+                          Celebrate achievements with built-in rewards system.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Section */}
+                <div className="py-20 px-8">
+                  <div className="max-w-4xl mx-auto">
+                    <div className="bg-gradient-to-r from-purple-900 to-pink-900 rounded-3xl p-12 text-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
+                      <div className="relative z-10">
+                        <h2 className="text-5xl font-bold text-white mb-6">
+                          Ready to Transform Your Classroom?
+                        </h2>
+                        <p className="text-xl text-gray-100 mb-8">
+                          Join 127+ schools already using CodeFly to make coding education magical
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                          <Link
+                            href="/demo"
+                            className="bg-white text-purple-900 px-8 py-4 rounded-xl text-lg font-bold hover:bg-gray-100 transition transform hover:scale-105 shadow-xl"
+                          >
+                            <DollarSign className="inline w-5 h-5 mr-2" />
+                            See Pricing & ROI
+                          </Link>
+                          <button
+                            onClick={() => {
+                              localStorage.setItem('demo_user', JSON.stringify({
+                                id: 'demo-teacher-1',
+                                email: 'teacher@codefly.demo',
+                                full_name: 'Ms. Rodriguez',
+                                role: 'teacher'
+                              }))
+                              localStorage.setItem('demo_authenticated', 'true')
+                              window.location.reload()
+                            }}
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl text-lg font-bold hover:from-blue-600 hover:to-purple-600 transition transform hover:scale-105 shadow-xl"
+                          >
+                            <Play className="inline w-5 h-5 mr-2" />
+                            Start Free Trial
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-200 mt-6">
+                          ✓ No credit card required &nbsp; ✓ 30-day free trial &nbsp; ✓ Full support included
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
       </div>
     </div>
