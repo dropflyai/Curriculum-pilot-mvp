@@ -96,7 +96,7 @@ function Terrain() {
     }
     
     return { heightMap: heights, biomeMap: biomes }
-  })
+  }, [])
 
   useEffect(() => {
     if (meshRef.current) {
@@ -370,7 +370,7 @@ function LocationMarker({
             </mesh>
             <mesh position={[0, 1, 0]}>
               <torusGeometry args={[1.5, 0.1, 8, 32]} />
-              <meshBasicMaterial 
+              <meshStandardMaterial 
                 color="#e91e63" 
                 emissive="#e91e63" 
                 emissiveIntensity={1}
