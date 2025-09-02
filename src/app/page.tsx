@@ -196,39 +196,21 @@ export default function HomePage() {
                   
                   {/* Demo Buttons */}
                   <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
-                    <button
-                      onClick={() => {
-                        localStorage.setItem('demo_user', JSON.stringify({
-                          id: 'demo-student-1',
-                          email: 'alex@codefly.demo',
-                          full_name: 'Alex Johnson',
-                          role: 'student'
-                        }))
-                        localStorage.setItem('demo_authenticated', 'true')
-                        window.location.reload()
-                      }}
+                    <Link
+                      href="/auth"
                       className="bg-gradient-to-r from-green-600/80 to-emerald-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                     >
                       <BookOpen className="h-5 w-5 mr-2" />
                       Try Student Demo 🎆
-                    </button>
+                    </Link>
                     
-                    <button
-                      onClick={() => {
-                        localStorage.setItem('demo_user', JSON.stringify({
-                          id: 'demo-teacher-1',
-                          email: 'teacher@codefly.demo',
-                          full_name: 'Ms. Rodriguez',
-                          role: 'teacher'
-                        }))
-                        localStorage.setItem('demo_authenticated', 'true')
-                        window.location.reload()
-                      }}
+                    <Link
+                      href="/auth"
                       className="bg-gradient-to-r from-purple-600/80 to-pink-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                     >
                       <Users className="h-5 w-5 mr-2" />
                       Try Teacher Demo 🎯
-                    </button>
+                    </Link>
                   </div>
 
                   {/* Feature Cards */}
