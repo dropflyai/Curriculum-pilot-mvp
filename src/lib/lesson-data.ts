@@ -1009,18 +1009,18 @@ print("\\n🎯 Your goal: Create an AI that makes school life better for everyon
         title: 'Classic Magic 8-Ball',
         dataset: 'fortune-responses',
         labels: ['positive', 'negative', 'neutral', 'mysterious'],
-        learn_md: `## 🎱 Build the Classic Magic 8-Ball - But Make It Smart!
+        learn_md: `## 🔐 Decode the Black Cipher's Fortune Protocol
 
-Welcome to a nostalgic coding adventure! Remember those plastic Magic 8-Balls you'd shake for "mystical" answers to life's big questions? Today, you're going to recreate that experience with Python - but with a modern twist that teaches important programming concepts!
+**Agent**, you've infiltrated the mysterious Black Cipher network and discovered their ancient fortune-telling protocol. The organization once used mystical 8-Ball divination to make critical decisions, but their system holds secrets far deeper than simple yes/no answers.
 
-### 🔮 The Magic Behind the Magic
+### ⚫ The Black Cipher's Secret Arsenal
 
-The original Magic 8-Ball was simple genius: 20 different responses floating in blue liquid, revealed randomly when you shook the ball. But your digital version will be so much better:
+The Black Cipher didn't just predict the future - they **programmed** it. Their digital fortune protocol was a sophisticated information system disguised as a simple toy:
 
-**🎯 Smart Response Categories**
-- **Positive** (10 responses): "Yes definitely!", "It is certain!", "Outlook good!"
-- **Negative** (5 responses): "Don't count on it", "My reply is no", "Very doubtful"
-- **Neutral** (5 responses): "Reply hazy, try again", "Ask again later", "Cannot predict now"
+**🔴 Cipher Response Classifications**
+- **POSITIVE INTEL** (10 encoded messages): "Mission confirmed", "Path is clear", "Proceed as planned"
+- **NEGATIVE INTEL** (5 warning signals): "Abort mission", "Security breach detected", "Retreat immediately"
+- **CLASSIFIED** (5 encrypted responses): "Intel pending", "Decode required", "Access level insufficient"
 
 **🧠 Why These Categories Matter**
 The original designers understood psychology! Most people asking questions *want* positive answers, so they weighted the responses accordingly. About 50% positive, 25% negative, 25% neutral - just enough uncertainty to keep it interesting!
@@ -1058,19 +1058,19 @@ You'll master these key concepts:
 - Track the most popular questions
 - Display response distribution
 
-**🎪 Enhanced User Experience**
-- ASCII art Magic 8-Ball animation
-- Typing effect for dramatic response reveals
-- Color-coded responses (green positive, red negative, yellow neutral)
+**🕵️ Black Cipher Interface Protocol**
+- Encrypted terminal animations with cipher symbols
+- Decryption delay effects for authentic espionage feel
+- Color-coded security levels (green=safe, red=danger, yellow=classified)
 
-### 🔬 The Computer Science Behind Fortune Telling
+### 🔐 Cryptographic Science Behind Fortune Protocols
 
-**Random Number Generation**
-Your Magic 8-Ball uses pseudorandom algorithms - mathematical formulas that create sequences that *appear* random but are actually deterministic. Understanding randomness is crucial for:
-- **Game development** (dice rolls, card shuffling)
-- **Cryptography** (secure password generation)  
-- **Simulations** (weather modeling, financial analysis)
-- **Machine learning** (data sampling, neural network initialization)
+**Pseudorandom Cipher Generation**
+The Black Cipher's fortune system uses cryptographic pseudorandom algorithms - mathematical formulas that generate unpredictable sequences essential for secure communications. Mastering randomness is critical for:
+- **Covert operations** (mission outcome probability)
+- **Encryption systems** (secure key generation)  
+- **Intelligence analysis** (pattern recognition, data modeling)
+- **Network security** (authentication protocols, secure communications)
 
 **User Interface Design**
 Even a simple command-line program requires thoughtful UX decisions:
@@ -1122,29 +1122,29 @@ The programming patterns you're learning power:
 - Security testing tools
 - Random audit sampling
 
-### 🎯 Your Coding Mission
+### 🎯 Your Black Cipher Assignment
 
-1. **Build the basic Magic 8-Ball** with authentic responses
-2. **Add response categories** with appropriate weighting
-3. **Create an engaging user interface** with prompts and formatting
-4. **Implement continuous play** with graceful exit options
-5. **Track and display statistics** about response patterns
-6. **Add one creative enhancement** that makes it uniquely yours
+1. **Reverse-engineer the fortune protocol** with authentic cipher responses
+2. **Implement security classifications** with appropriate access levels
+3. **Create an encrypted interface** with covert prompts and cipher formatting
+4. **Enable continuous intel gathering** with secure termination protocols
+5. **Monitor and analyze response patterns** for intelligence purposes
+6. **Add one advanced cipher feature** that demonstrates your hacking prowess
 
-### 🔮 The Philosophy of Randomness
+### 🕵️ The Cryptography of Predictability
 
-Here's a fun thought experiment: Is your digital Magic 8-Ball actually *random*? The computer follows deterministic algorithms, so in theory, if you knew the exact state of the system, you could predict every "random" response.
+Here's the Black Cipher's secret: Is their fortune system truly *random*? Like all digital systems, it follows deterministic algorithms. If an enemy agent knew the exact system state, they could predict every "random" response and compromise missions.
 
-But for practical purposes, pseudorandomness is indistinguishable from true randomness. This concept applies to:
-- **Quantum computing** (true vs. pseudorandom number generation)
-- **Philosophy of free will** (determinism vs. perceived choice)
-- **Game theory** (mixed strategies in competitive scenarios)
+But cryptographically secure pseudorandomness is indistinguishable from true randomness. This principle is essential for:
+- **Secure communications** (encrypted message keys)
+- **Mission planning** (unpredictable operation timing)
+- **Counter-intelligence** (randomized security protocols)
 
-### 🚀 Ready to Code Some Magic?
+### 🔓 Ready to Crack the Cipher?
 
-You're about to create a program that combines nostalgia, psychology, programming fundamentals, and creative expression. Whether users ask serious questions or silly ones, your Magic 8-Ball will provide that perfect mix of guidance and mystery that has entertained people for generations.
+You're about to reverse-engineer a program that combines espionage, psychology, programming mastery, and covert operations. Whether agents ask tactical questions or strategic ones, your Black Cipher Fortune Protocol will provide that perfect mix of intelligence and mystery that has guided secret operations for generations.
 
-**Let's bring the magic of childhood wonder into the digital age!** 🎱✨`,
+**Time to infiltrate the digital shadows and unlock the cipher's secrets!** ⚫🔐`,
         code: {
           starter: `# 🎱 Magic 8-Ball - The Classic Fortune Teller!
 # Let's recreate the nostalgic experience with Python magic!
@@ -1184,9 +1184,9 @@ class Magic8Ball:
             "Concentrate and ask again"
         ]
         
-        # 📊 Track statistics
-        self.total_questions = 0
-        self.response_counts = {"positive": 0, "negative": 0, "neutral": 0}
+        # 📊 Track intelligence logs
+        self.total_queries = 0
+        self.intel_counts = {"positive": 0, "negative": 0, "classified": 0}
     
     def shake(self):
         """Simulate shaking the Magic 8-Ball"""
