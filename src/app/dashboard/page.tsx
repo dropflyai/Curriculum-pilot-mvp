@@ -1,609 +1,659 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { getAllLessons, Lesson } from '@/lib/lesson-data'
-import { getLessonProgress, getWeek02CompletionStatus, getAllLessonProgress } from '@/lib/progress-utils'
-import { BookOpen, Clock, Award, TrendingUp, User, LogOut, CheckCircle, ChevronDown, ChevronUp, Home, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { signOut } from '@/lib/auth'
-import Leaderboard from '@/components/Leaderboard'
+import { 
+  Home, ArrowLeft, Crown, Zap, Flame, Trophy, Star, Target, Rocket, BookOpen, 
+  Clock, Award, TrendingUp, User, LogOut, CheckCircle, Play, Bolt,
+  Sparkles, Brain, Gem, Coffee, Activity, BarChart3, MessageCircle
+} from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+// Enhanced AAA quality 3D map with advanced rendering
+const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full flex items-center justify-center bg-black">
+      <div className="text-center">
+        <div className="mb-4">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+        </div>
+        <div className="text-2xl text-white font-bold mb-2">Loading Unreal-Quality 3D World...</div>
+        <div className="text-gray-400">Initializing advanced shaders and physics...</div>
+      </div>
+    </div>
+  )
+})
+
+interface StudentStats {
+  level: number
+  xp: number
+  nextLevelXP: number
+  streak: number
+  badges: number
+  completedLessons: number
+  totalLessons: number
+  rank: number
+  weeklyXP: number
+}
+
+interface RecentActivity {
+  action: string
+  time: string
+  type: 'lesson' | 'achievement' | 'quiz' | 'streak'
+  xp: number
+}
+
+interface DemoUser {
+  id: string
+  email: string
+  full_name: string
+  role: 'student' | 'teacher'
+  avatar: string
+  stats?: StudentStats
+}
 
 export default function Dashboard() {
-  const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [lessons, setLessons] = useState<Lesson[]>(() => {
-    const allLessons = getAllLessons()
-    console.log('Dashboard loading lessons:', allLessons.length, allLessons.map(l => ({ id: l.id, title: l.title })))
-    return allLessons
-  })
-  const [userProgress, setUserProgress] = useState<Record<string, number>>({})
-  const [userScores, setUserScores] = useState<Record<string, number>>({})
-  const [selectedTab, setSelectedTab] = useState<'all' | 'completed' | 'in-progress' | 'not-started'>('all')
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
-  const [showLeaderboard, setShowLeaderboard] = useState(false)
-  const [showHomework, setShowHomework] = useState(false)
+  const [user, setUser] = useState<DemoUser | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showCelebration, setShowCelebration] = useState(false)
+  const [animateStats, setAnimateStats] = useState(false)
+  const [hoveredLesson, setHoveredLesson] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'overview' | 'questmap' | 'leaderboard'>('questmap')
   
-  // 18-week course structure (you can modify this based on actual course plan)
-  const totalWeeks = 18
-  const currentWeek = 2 // This could be calculated based on actual progress
-  const weeklyProgress = (currentWeek / totalWeeks) * 100
+  // Default stats for demo
+  const defaultStats: StudentStats = {
+    level: 12,
+    xp: 2450,
+    nextLevelXP: 2600,
+    streak: 7,
+    badges: 15,
+    completedLessons: 8,
+    totalLessons: 24,
+    rank: 3,
+    weeklyXP: 340
+  }
 
-  // Learning Progress Data
-  const [totalLearningTime] = useState(8.5) // hours this week
-  const [recentActivity] = useState([
-    { action: 'Completed Week 1 AI Classifier', time: '30 minutes ago', type: 'lesson' },
-    { action: 'Earned AI Classifier Badge', time: '35 minutes ago', type: 'achievement' },
-    { action: 'Achieved 85% on Week 1 Quiz', time: '1 hour ago', type: 'quiz' },
-    { action: 'Ready to Start Week 2 - Python!', time: 'Now', type: 'lesson' }
+  const [recentActivity] = useState<RecentActivity[]>([
+    { action: 'Completed Python Magic 8-Ball! 🎱', time: '30 minutes ago', type: 'lesson', xp: 50 },
+    { action: 'Earned Code Master Badge! 🏆', time: '35 minutes ago', type: 'achievement', xp: 25 },
+    { action: 'Achieved 92% on Python Quiz! ⭐', time: '1 hour ago', type: 'quiz', xp: 40 },
+    { action: '7-day coding streak! 🔥', time: '2 hours ago', type: 'streak', xp: 50 }
   ])
 
-  useEffect(() => {
-    // Redirect to auth if not authenticated
-    if (!loading && !isAuthenticated) {
-      router.push('/auth')
-    }
-  }, [isAuthenticated, loading, router])
+  // Multiplayer/Class data
+  const [classmates] = useState([
+    { name: 'Emma', level: 15, xp: 3200, avatar: '🧙‍♀️', position: { x: 65, y: 30 }, status: 'online' },
+    { name: 'Marcus', level: 10, xp: 2100, avatar: '🦸‍♂️', position: { x: 45, y: 60 }, status: 'online' },
+    { name: 'Zara', level: 13, xp: 2800, avatar: '🧚‍♀️', position: { x: 80, y: 45 }, status: 'away' },
+    { name: 'Diego', level: 8, xp: 1650, avatar: '🤖', position: { x: 25, y: 40 }, status: 'offline' },
+    { name: 'Aisha', level: 14, xp: 3000, avatar: '🧝‍♀️', position: { x: 55, y: 25 }, status: 'online' },
+  ])
 
-  const handleSignOut = async () => {
-    await signOut()
+  // Progressive mission unlocking system
+  const calculateMissionLocks = (completedMissions: number[], allMissions: any[]) => {
+    return allMissions.map(mission => {
+      if (!mission.prerequisite) return { ...mission, locked: false }
+      const prerequisiteCompleted = completedMissions.includes(mission.prerequisite)
+      return { ...mission, locked: !prerequisiteCompleted }
+    })
+  }
+
+  const [completedMissionIds] = useState([1, 2]) // Player has completed first two missions
+  
+  // Original CodeFly Academy storyline - The Digital Realm
+  const baseMissions = [
+    // Chapter 1: Foundation Islands
+    { id: 1, name: 'Binary Shores Academy', completed: true, position: { x: 8, y: 85 }, xp: 250, icon: '🏫', type: 'lesson', region: 'Tutorial Islands', difficulty: 1, prerequisite: null, description: 'Learn the basics of variables and data types' },
+    { id: 2, name: 'Variable Village', completed: true, position: { x: 18, y: 78 }, xp: 300, icon: '🏘️', type: 'lesson', region: 'Tutorial Islands', difficulty: 1, prerequisite: 1, description: 'Master string manipulation and user input' },
+    { id: 3, name: 'Logic Lake Outpost', completed: false, position: { x: 28, y: 70 }, xp: 350, icon: '🏞️', type: 'lesson', region: 'Tutorial Islands', difficulty: 2, prerequisite: 2, description: 'Conditional statements and boolean logic' },
+    
+    // Chapter 2: The Mainland Continent
+    { id: 4, name: 'Loop Canyon Base', completed: false, position: { x: 45, y: 65 }, xp: 400, icon: '🏕️', type: 'lesson', region: 'Central Mainland', difficulty: 2, prerequisite: 3, description: 'Master for and while loops' },
+    { id: 5, name: 'Function Forest Station', completed: false, position: { x: 55, y: 58 }, xp: 450, icon: '🌲', type: 'lesson', region: 'Central Mainland', difficulty: 3, prerequisite: 4, description: 'Create reusable functions and modules' },
+    { id: 6, name: 'Array Mountains Facility', completed: false, position: { x: 40, y: 45 }, xp: 500, icon: '⛰️', type: 'lesson', region: 'Central Mainland', difficulty: 3, prerequisite: 5, description: 'Data structures and list manipulation' },
+    
+    // Chapter 3: Advanced Territories
+    { id: 7, name: 'Object Oasis Complex', completed: false, position: { x: 70, y: 40 }, xp: 600, icon: '🏛️', type: 'lesson', region: 'Advanced Zone', difficulty: 4, prerequisite: 6, description: 'Object-oriented programming fundamentals' },
+    { id: 8, name: 'Algorithm Archipelago', completed: false, position: { x: 85, y: 30 }, xp: 650, icon: '🏝️', type: 'lesson', region: 'Advanced Zone', difficulty: 4, prerequisite: 7, description: 'Sorting and searching algorithms' },
+    
+    // Chapter 4: The Digital Frontier
+    { id: 9, name: 'API Gateway Fortress', completed: false, position: { x: 65, y: 25 }, xp: 700, icon: '🏰', type: 'lesson', region: 'Digital Frontier', difficulty: 5, prerequisite: 8, description: 'REST APIs and web integration' },
+    { id: 10, name: 'Database Depths', completed: false, position: { x: 50, y: 15 }, xp: 750, icon: '🕳️', type: 'lesson', region: 'Digital Frontier', difficulty: 5, prerequisite: 9, description: 'SQL and database design' },
+    
+    // Final Boss
+    { id: 11, name: 'The Core Protocol', completed: false, position: { x: 75, y: 10 }, xp: 1000, icon: '💎', type: 'boss', region: 'The Core', difficulty: 6, prerequisite: 10, description: 'Final capstone project combining all skills' },
+    
+    // Hidden/Bonus Missions
+    { id: 12, name: 'Debug Caves', completed: false, position: { x: 20, y: 50 }, xp: 300, icon: '🕳️', type: 'bonus', region: 'Hidden', difficulty: 2, prerequisite: 3, description: 'Learn debugging techniques and error handling' },
+    { id: 13, name: 'Optimization Overlook', completed: false, position: { x: 90, y: 60 }, xp: 400, icon: '🔭', type: 'bonus', region: 'Hidden', difficulty: 4, prerequisite: 6, description: 'Code optimization and performance tuning' },
+    { id: 14, name: 'Security Stronghold', completed: false, position: { x: 35, y: 20 }, xp: 500, icon: '🛡️', type: 'bonus', region: 'Hidden', difficulty: 5, prerequisite: 8, description: 'Cybersecurity and safe coding practices' },
+  ]
+
+  const [questNodes] = useState(calculateMissionLocks(completedMissionIds, baseMissions))
+
+  // Load user data
+  useEffect(() => {
+    const loadUserData = () => {
+      try {
+        const demoAuth = localStorage.getItem('demo_authenticated')
+        const demoUser = localStorage.getItem('demo_user')
+        if (demoAuth === 'true' && demoUser) {
+          const user = JSON.parse(demoUser)
+          setUser({
+            id: user.id || 'demo-student',
+            email: user.email || 'student@demo.com',
+            full_name: user.full_name || 'Demo Student',
+            role: 'student',
+            avatar: '🧑‍💻',
+            stats: defaultStats
+          })
+        } else {
+          // Redirect to auth if no demo data
+          router.push('/auth')
+          return
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error)
+        router.push('/auth')
+      }
+    }
+
+    // Simulate loading
+    const timer = setTimeout(() => {
+      loadUserData()
+      setIsLoading(false)
+      setAnimateStats(true)
+      
+      // Show celebration for streak achievement
+      setTimeout(() => setShowCelebration(true), 1000)
+      setTimeout(() => setShowCelebration(false), 3000)
+    }, 1500)
+    
+    return () => clearTimeout(timer)
+  }, [router])
+
+  const handleSignOut = () => {
+    localStorage.removeItem('demo_authenticated')
+    localStorage.removeItem('demo_user')
     router.push('/')
   }
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner': return 'bg-green-600 text-white'
-      case 'intermediate': return 'bg-yellow-600 text-white'
-      case 'advanced': return 'bg-red-600 text-white'
-      default: return 'bg-gray-600 text-white'
+  // Adventure progression handler - now connects to actual lessons
+  const handleMissionClick = (mission: any) => {
+    if (mission.locked) {
+      // Show locked adventure message
+      const prerequisiteName = baseMissions.find(m => m.id === mission.prerequisite)?.name
+      alert(`🔒 Adventure Locked!\n\n✨ Complete "${prerequisiteName}" first to unlock this new destination!\n\nEach location builds upon the knowledge from previous adventures.`)
+      return
     }
-  }
 
-  // Load real progress data
-  const loadProgressData = useCallback(() => {
-    const allProgress = getAllLessonProgress()
-    const progressMap: Record<string, number> = {}
-    const scoresMap: Record<string, number> = {}
-    
-    // Add default completed lessons
-    progressMap['week-01'] = 100
-    scoresMap['week-01'] = 85
-    progressMap['python-basics-variables'] = 75
-    scoresMap['python-basics-variables'] = 85
-    progressMap['python-magic-8-ball'] = 100
-    scoresMap['python-magic-8-ball'] = 92
-    progressMap['python-lists-loops'] = 25
-    scoresMap['python-lists-loops'] = 67
-    
-    // Override with real progress for tracked lessons
-    Object.entries(allProgress).forEach(([lessonId, data]) => {
-      if (data.progress > 0) {
-        progressMap[lessonId] = data.progress
-        scoresMap[lessonId] = data.score
+    if (mission.completed) {
+      // Show adventure details or replay option
+      const replayChoice = confirm(`✅ Adventure Complete!\n\n🎉 "${mission.name}" has been mastered!\n\n⚡ XP Earned: ${mission.xp}\n🌍 Region: ${mission.region}\n📚 ${mission.description}\n\nWould you like to replay this adventure to strengthen your skills?`)
+      if (replayChoice) {
+        navigateToLesson(mission)
       }
-    })
-    
-    // Special handling for week-02 (the main lesson we're tracking)
-    const week02Status = getWeek02CompletionStatus()
-    progressMap['week-02'] = week02Status.progress
-    scoresMap['week-02'] = week02Status.score
-    
-    setUserProgress(progressMap)
-    setUserScores(scoresMap)
-  }, [])
-
-  // Load progress on mount and listen for updates
-  useEffect(() => {
-    loadProgressData()
-    
-    // Listen for lesson progress updates
-    const handleProgressUpdate = () => {
-      loadProgressData()
-    }
-    
-    window.addEventListener('lessonProgressUpdate', handleProgressUpdate)
-    return () => window.removeEventListener('lessonProgressUpdate', handleProgressUpdate)
-  }, [loadProgressData])
-
-  const getProgressForLesson = (lessonId: string) => {
-    return userProgress[lessonId] || 0
-  }
-
-  const getScoreForLesson = (lessonId: string) => {
-    return userScores[lessonId] || 0
-  }
-
-  const getAverageScore = () => {
-    const scores = Object.values(userScores)
-    if (scores.length === 0) return 0
-    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
-  }
-  
-  const getNextRecommendedLesson = () => {
-    // Find first lesson that's not completed
-    const incompleteLesson = lessons.find(lesson => getProgressForLesson(lesson.id) < 100)
-    return incompleteLesson || lessons[0]
-  }
-
-  const getLessonsByTab = () => {
-    let filteredLessons = lessons
-
-    // Filter by completion status
-    switch (selectedTab) {
-      case 'completed':
-        filteredLessons = lessons.filter(lesson => getProgressForLesson(lesson.id) === 100)
-        break
-      case 'in-progress':
-        filteredLessons = lessons.filter(lesson => {
-          const progress = getProgressForLesson(lesson.id)
-          return progress > 0 && progress < 100
-        })
-        break
-      case 'not-started':
-        filteredLessons = lessons.filter(lesson => getProgressForLesson(lesson.id) === 0)
-        break
-      default:
-        filteredLessons = lessons
+      return
     }
 
-    // Then filter by difficulty
-    if (selectedDifficulty !== 'all') {
-      filteredLessons = filteredLessons.filter(lesson => lesson.difficulty === selectedDifficulty)
+    // Navigate to actual lesson
+    const confirmMessage = `🚀 Begin Adventure: ${mission.name}?\n\n🌍 Region: ${mission.region}\n⭐ Difficulty: ${mission.difficulty}/6\n⚡ XP Reward: ${mission.xp}\n📚 Goal: ${mission.description}\n\nReady to explore the Digital Realm?`
+    
+    if (confirm(confirmMessage)) {
+      const briefingMessage = mission.type === 'boss' 
+        ? `💎 FINAL CHALLENGE\n\n"${mission.name}"\n\n🎯 This is the ultimate test of all your coding skills!\nCombine everything you've learned to complete your journey through the Digital Realm.\n\nGood luck, master coder! 🌟`
+        : mission.type === 'bonus'
+        ? `🗝️ HIDDEN ADVENTURE\n\n"${mission.name}"\n\n✨ You've discovered a secret location!\n${mission.description}\n\nThese optional challenges will enhance your coding mastery.\n\nReady for the challenge? 💫`
+        : `🎒 Adventure Briefing\n\n"${mission.name}"\n\n📖 ${mission.description}\n\nExplore, learn, and grow stronger as you master new programming concepts!\n\nHappy coding! 🌟`
+        
+      alert(briefingMessage)
+      
+      // Navigate to lesson after briefing
+      setTimeout(() => {
+        navigateToLesson(mission)
+      }, 1000)
     }
-
-    return filteredLessons
   }
 
-  const filteredLessons = getLessonsByTab()
-  const nextLesson = getNextRecommendedLesson()
+  // Navigate to the appropriate lesson based on mission
+  const navigateToLesson = (mission: any) => {
+    // Map adventure locations to actual lessons available in lesson-data.ts
+    const lessonMapping: Record<number, string> = {
+      1: '/lesson/week-01',               // Binary Shores Academy → AI Classifier
+      2: '/lesson/week-02',               // Variable Village → Python Magic 8-Ball
+      3: '/lesson/conditionals-logic',    // Logic Lake Outpost (coming soon)
+      4: '/lesson/loops-iteration',       // Loop Canyon Base (coming soon)
+      5: '/lesson/functions-modules',     // Function Forest Station (coming soon)
+      6: '/lesson/data-structures',       // Array Mountains Facility (coming soon)
+      7: '/lesson/object-oriented',       // Object Oasis Complex (coming soon)
+      8: '/lesson/algorithms',            // Algorithm Archipelago (coming soon)
+      9: '/lesson/apis-web',              // API Gateway Fortress (coming soon)
+      10: '/lesson/databases',            // Database Depths (coming soon)
+      11: '/lesson/capstone-project',     // The Core Protocol (coming soon)
+      12: '/lesson/debugging',            // Debug Caves (coming soon)
+      13: '/lesson/optimization',         // Optimization Overlook (coming soon)
+      14: '/lesson/security'              // Security Stronghold (coming soon)
+    }
 
-  if (loading) {
+    const lessonPath = lessonMapping[mission.id]
+    
+    if (lessonPath) {
+      // Store mission context for the lesson
+      localStorage.setItem('current_adventure', JSON.stringify({
+        missionId: mission.id,
+        missionName: mission.name,
+        region: mission.region,
+        xpReward: mission.xp,
+        difficulty: mission.difficulty
+      }))
+      
+      // Navigate to lesson
+      router.push(lessonPath)
+    } else {
+      // For lessons not yet implemented, show coming soon message
+      if (mission.id <= 2) {
+        // Should not happen now, but fallback
+        alert(`🔧 Technical Issue!\n\nThere seems to be a problem loading "${mission.name}". Please try refreshing the page or contact support.`)
+      } else {
+        // For future lessons
+        alert(`🚧 Adventure Coming Soon!\n\n"${mission.name}" is being crafted by our development team!\n\n✨ Currently Available Adventures:\n• Binary Shores Academy (AI Classifier)\n• Variable Village (Python Magic 8-Ball)\n\nMore coding adventures launching soon! 🚀`)
+      }
+    }
+  }
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center overflow-hidden">
+        {/* Animated Background */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delay"></div>
+          <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        </div>
+        
+        <div className="text-center relative z-10">
+          <div className="mb-8">
+            <div className="relative inline-block">
+              <div className="absolute inset-0 animate-spin-slow">
+                <Sparkles className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-6 text-yellow-400 animate-pulse" />
+                <Sparkles className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 text-purple-400 animate-pulse" />
+                <Sparkles className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 text-blue-400 animate-pulse" />
+                <Sparkles className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 text-pink-400 animate-pulse" />
+              </div>
+              <div className="text-8xl animate-float mb-4">🚀</div>
+            </div>
+          </div>
+          
+          <h1 className="text-4xl font-bold text-white mb-4">
+            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300% animate-gradient-x">
+              Loading Your CodeFly Adventure...
+            </span>
+          </h1>
+          
+          <div className="flex items-center justify-center space-x-2 mb-8">
+            <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+            <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+            <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+          </div>
+          
+          <p className="text-xl text-gray-200 animate-pulse">
+            Preparing your personalized dashboard... ✨
+          </p>
         </div>
       </div>
     )
   }
 
+  if (!user) {
+    return null
+  }
+
+  const studentStats = user.stats || defaultStats
+
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
+        <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+      </div>
+      
+      {/* Celebration Effect */}
+      {showCelebration && (
+        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+          <div className="text-6xl animate-bounce">
+            🎉
+          </div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="text-4xl font-bold text-yellow-400 animate-pulse">
+              STREAK MASTER! 🔥
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
-      <div className="bg-gray-800 shadow-lg border-b border-gray-700">
+      <div className="relative bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link 
                 href="/"
-                className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg transition-all duration-300"
+                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <Home className="h-4 w-4" />
                 <span className="text-sm">Home</span>
               </Link>
               <div className="flex items-center">
-                <BookOpen className="h-8 w-8 text-blue-500 mr-3" />
+                <div className="relative">
+                  <Rocket className="h-8 w-8 text-blue-500 mr-3 animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping"></div>
+                </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white">CodeFly Academy</h1>
-                  <p className="text-sm text-gray-400">Student Learning Dashboard</p>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    CodeFly Academy ✈️
+                  </h1>
+                  <p className="text-sm text-gray-300">Your Coding Adventure Dashboard</p>
                 </div>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-300">
-                <User className="h-4 w-4 mr-1" />
-                {user?.full_name || user?.email || 'Test User'}
+              {/* XP and Level Display */}
+              <div className="flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-purple-500/30">
+                <div className="flex items-center space-x-2">
+                  <Crown className="h-5 w-5 text-yellow-400 animate-pulse" />
+                  <span className="text-white font-bold">Level {studentStats.level}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Zap className="h-4 w-4 text-blue-400" />
+                  <span className="text-blue-400 font-semibold">{studentStats.xp} XP</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Flame className="h-4 w-4 text-orange-400 animate-pulse" />
+                  <span className="text-orange-400 font-semibold">{studentStats.streak} day streak</span>
+                </div>
               </div>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center text-sm text-gray-300 hover:text-white transition-colors"
-              >
-                <LogOut className="h-4 w-4 mr-1" />
-                Sign Out
-              </button>
+              
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center text-sm text-gray-300">
+                  <div className="text-2xl mr-2">{user.avatar}</div>
+                  {user.full_name?.split(' ')[0] || 'Coding Hero'}
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center text-sm text-gray-300 hover:text-white transition-colors bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
+      
+      {/* Main Content Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Welcome back, {user?.full_name?.split(' ')[0] || 'Student'}
-          </h2>
-          <p className="text-lg text-gray-400">Continue your Python programming journey</p>
+        {/* Navigation Tabs */}
+        <div className="flex space-x-2 mb-6">
+          {[
+            { key: 'overview', label: '🏠 Home Base', icon: '🏠' },
+            { key: 'questmap', label: '🗺️ Quest Map', icon: '🗺️' },
+            { key: 'leaderboard', label: '👥 Guild Hall', icon: '👥' }
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key as any)}
+              className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 ${
+                activeTab === tab.key
+                  ? 'bg-white/20 text-white border border-white/30 transform scale-105'
+                  : 'bg-white/5 text-white/70 hover:bg-white/10 hover:transform hover:scale-102'
+              }`}
+            >
+              <span className="text-lg">{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
         </div>
 
-        {/* 18-Week Course Progress Bar */}
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 border border-blue-500/30 mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="text-4xl">🎯</div>
-            <div>
-              <h3 className="text-2xl font-bold text-white">Course Progress</h3>
-              <p className="text-blue-200">18-Week Python & AI Programming Course</p>
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-blue-300">Week {currentWeek} of {totalWeeks}</span>
-              <span className="text-sm font-bold text-white">{Math.round(weeklyProgress)}% Complete</span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${weeklyProgress}%` }}
-              />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              <div className="bg-blue-800/30 rounded-lg p-3">
-                <div className="text-blue-300 text-sm font-medium">Weeks Completed</div>
-                <div className="text-white text-xl font-bold">{currentWeek - 1}</div>
-              </div>
-              <div className="bg-purple-800/30 rounded-lg p-3">
-                <div className="text-purple-300 text-sm font-medium">Current Week</div>
-                <div className="text-white text-xl font-bold">{currentWeek}</div>
-              </div>
-              <div className="bg-green-800/30 rounded-lg p-3">
-                <div className="text-green-300 text-sm font-medium">Weeks Remaining</div>
-                <div className="text-white text-xl font-bold">{totalWeeks - currentWeek}</div>
-              </div>
-              <div className="bg-yellow-800/30 rounded-lg p-3">
-                <div className="text-yellow-300 text-sm font-medium">Est. Completion</div>
-                <div className="text-white text-xl font-bold">May 2025</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-            <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Available Lessons</p>
-                <p className="text-2xl font-bold text-white">{lessons.length}</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-            <div className="flex items-center">
-              <CheckCircle className="h-8 w-8 text-green-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Completed</p>
-                <p className="text-2xl font-bold text-white">{lessons.filter(l => getProgressForLesson(l.id) === 100).length}</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-            <div className="flex items-center">
-              <Clock className="h-8 w-8 text-yellow-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">In Progress</p>
-                <p className="text-2xl font-bold text-white">{lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length}</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-            <div className="flex items-center">
-              <Award className="h-8 w-8 text-purple-500" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-400">Average Score</p>
-                <p className="text-2xl font-bold text-white">{getAverageScore()}%</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Next Recommended Lesson */}
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-            <h3 className="text-xl font-bold text-white mb-4">Continue Learning</h3>
-            <div className="bg-gray-700/50 rounded-lg p-4">
-              <h4 className="text-lg font-bold text-white mb-2">{nextLesson.title}</h4>
-              <p className="text-gray-300 mb-3">{nextLesson.description}</p>
+        {/* Content */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            {/* Welcome Section */}
+            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-500/30">
               <div className="flex items-center justify-between">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${getDifficultyColor(nextLesson.difficulty)}`}>
-                  {nextLesson.difficulty}
-                </span>
-                <Link
-                  href={`/lesson/${nextLesson.id}`}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm"
-                >
-                  Start Lesson
-                </Link>
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Welcome back, {user.full_name?.split(' ')[0] || 'Coding Hero'}! ✨
+                  </h2>
+                  <p className="text-purple-200">Ready to continue your coding adventure?</p>
+                </div>
+                <div className="text-6xl animate-bounce">{user.avatar}</div>
+              </div>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Level Card */}
+              <div className="bg-gradient-to-br from-blue-600/20 to-blue-500/20 backdrop-blur-lg rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all transform hover:scale-105">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
+                  <h3 className="text-lg font-bold text-white">Level</h3>
+                </div>
+                <div className="text-3xl font-bold text-yellow-400 mb-2">{studentStats.level}</div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-1000" 
+                    style={{width: `${Math.min((studentStats.xp % 1000) / 10, 100)}%`}}
+                  ></div>
+                </div>
+                <p className="text-xs text-blue-200 mt-2">{studentStats.xp % 1000} / 1000 XP to Level {studentStats.level + 1}</p>
+              </div>
+
+              {/* XP Card */}
+              <div className="bg-gradient-to-br from-green-600/20 to-emerald-500/20 backdrop-blur-lg rounded-xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all transform hover:scale-105">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Zap className="h-6 w-6 text-blue-400 animate-pulse" />
+                  <h3 className="text-lg font-bold text-white">Experience</h3>
+                </div>
+                <div className="text-3xl font-bold text-blue-400 mb-2">{studentStats.xp.toLocaleString()}</div>
+                <div className="flex items-center space-x-2">
+                  <Bolt className="h-4 w-4 text-green-400" />
+                  <p className="text-xs text-green-200">+50 XP this session!</p>
+                </div>
+              </div>
+
+              {/* Streak Card */}
+              <div className="bg-gradient-to-br from-orange-600/20 to-red-500/20 backdrop-blur-lg rounded-xl p-6 border border-orange-500/30 hover:border-orange-400/50 transition-all transform hover:scale-105">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Flame className="h-6 w-6 text-orange-400 animate-pulse" />
+                  <h3 className="text-lg font-bold text-white">Streak</h3>
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <div className="text-3xl font-bold text-orange-400">{studentStats.streak}</div>
+                  <div className="text-orange-300">days</div>
+                  <div className="text-xl animate-bounce">🔥</div>
+                </div>
+                <p className="text-xs text-orange-200">Keep it up! You're on fire!</p>
+              </div>
+
+              {/* Achievements Card */}
+              <div className="bg-gradient-to-br from-purple-600/20 to-pink-500/20 backdrop-blur-lg rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all transform hover:scale-105">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Trophy className="h-6 w-6 text-purple-400 animate-pulse" />
+                  <h3 className="text-lg font-bold text-white">Achievements</h3>
+                </div>
+                <div className="text-3xl font-bold text-purple-400 mb-2">15</div>
+                <div className="flex items-center space-x-1">
+                  <Star className="h-4 w-4 text-yellow-400" />
+                  <Star className="h-4 w-4 text-yellow-400" />
+                  <Star className="h-4 w-4 text-yellow-400" />
+                  <Star className="h-4 w-4 text-gray-400" />
+                  <Star className="h-4 w-4 text-gray-400" />
+                </div>
+                <p className="text-xs text-purple-200 mt-1">3/5 Beginner badges</p>
+              </div>
+            </div>
+
+            {/* Recent Activity & Next Lesson */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Activity */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Activity className="h-5 w-5 text-green-400" />
+                  <h3 className="text-xl font-bold text-white">Recent Activity</h3>
+                </div>
+                <div className="space-y-3">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          activity.type === 'achievement' ? 'bg-yellow-400' :
+                          activity.type === 'lesson' ? 'bg-blue-400' : 
+                          activity.type === 'streak' ? 'bg-orange-400' : 'bg-green-400'
+                        } animate-pulse`}></div>
+                        <span className="text-white text-sm">{activity.action}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-400">{activity.time}</div>
+                        {activity.xp && <div className="text-xs text-green-400">+{activity.xp} XP</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Next Recommended Lesson */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Target className="h-5 w-5 text-purple-400" />
+                  <h3 className="text-xl font-bold text-white">Continue Learning</h3>
+                </div>
+                <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 rounded-xl p-4 border border-purple-500/30">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="text-2xl">🚀</div>
+                    <div>
+                      <h4 className="text-lg font-bold text-white">Welcome to CodeQuest</h4>
+                      <p className="text-purple-200 text-sm">Your first interactive Python adventure</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4 text-sm text-purple-200">
+                      <span>⏱️ 45 min</span>
+                      <span>⭐ 250 XP</span>
+                      <span>🏆 3 Goals</span>
+                    </div>
+                    <button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center space-x-2">
+                      <Play className="h-4 w-4" />
+                      <span>Start Quest</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Recent Activity */}
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-            <h3 className="text-xl font-bold text-white mb-4">Recent Activity</h3>
-            <div className="space-y-3">
-              {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center bg-gray-700/50 rounded-lg p-3">
-                  <div className={`w-2 h-2 rounded-full mr-3 ${
-                    activity.type === 'lesson' ? 'bg-blue-500' :
-                    activity.type === 'quiz' ? 'bg-green-500' : 'bg-yellow-500'
-                  }`}></div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm">{activity.action}</p>
-                    <p className="text-gray-400 text-xs">{activity.time}</p>
-                  </div>
+        {/* ENHANCED FANTASY ADVENTURE MAP */}
+        {activeTab === 'questmap' && (
+          <div className="space-y-6">
+            {/* Enhanced Map Header */}
+            <div className="bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-500/30">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-2 flex items-center space-x-3">
+                    <span>🗺️</span>
+                    <span>Epic Adventure Realm</span>
+                  </h2>
+                  <p className="text-purple-200">Navigate your coding journey through an immersive fantasy world</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Main Lessons Grid - NOW PROMINENT */}
-        <div className="mb-8">
-          <div className="mb-6">
-            <h3 className="text-2xl font-bold text-white mb-6">Your Lessons</h3>
-            
-            {/* Progress Tabs */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              <button 
-                onClick={() => setSelectedTab('all')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedTab === 'all' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                All Lessons ({lessons.length})
-              </button>
-              <button 
-                onClick={() => setSelectedTab('completed')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedTab === 'completed' 
-                    ? 'bg-green-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                Completed ({lessons.filter(l => getProgressForLesson(l.id) === 100).length})
-              </button>
-              <button 
-                onClick={() => setSelectedTab('in-progress')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedTab === 'in-progress' 
-                    ? 'bg-yellow-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                In Progress ({lessons.filter(l => { const p = getProgressForLesson(l.id); return p > 0 && p < 100; }).length})
-              </button>
-              <button 
-                onClick={() => setSelectedTab('not-started')}
-                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
-                  selectedTab === 'not-started' 
-                    ? 'bg-gray-600 text-white' 
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-              >
-                Not Started ({lessons.filter(l => getProgressForLesson(l.id) === 0).length})
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredLessons.map((lesson) => {
-              const progress = getProgressForLesson(lesson.id)
-              const isCompleted = progress === 100
-              const isStarted = progress > 0
-
-              return (
-                <div key={lesson.id} className="bg-gray-800 border-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border">
-                  <div className="p-6">
-                    {/* Lesson Header */}
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="text-lg font-bold text-white">{lesson.title}</h4>
-                        </div>
-                        <p className="text-sm mb-3 line-clamp-2 text-gray-400">
-                          {lesson.description}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0 ml-2 flex flex-col gap-1">
-                        {isCompleted && (
-                          <CheckCircle className="h-5 w-5 text-green-500" />
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Lesson Meta */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`px-3 py-1 rounded text-xs font-medium ${getDifficultyColor(lesson.difficulty)}`}>
-                        {lesson.difficulty}
-                      </span>
-                      <span className="text-sm text-gray-400 flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {lesson.estimatedTime}
-                      </span>
-                    </div>
-
-                    {/* Progress Bar and Score */}
-                    {isStarted && (
-                      <div className="mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-gray-400">Progress</span>
-                          <span className="text-sm font-bold text-white">{Math.round(progress)}%</span>
-                        </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2 mb-3">
-                          <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                              isCompleted ? 'bg-green-500' : 'bg-blue-500'
-                            }`}
-                            style={{ width: `${progress}%` }}
-                          />
-                        </div>
-                        {getScoreForLesson(lesson.id) > 0 && (
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium text-gray-400">Quiz Score</span>
-                            <span className={`text-sm font-bold ${
-                              getScoreForLesson(lesson.id) >= 90 ? 'text-green-500' :
-                              getScoreForLesson(lesson.id) >= 80 ? 'text-yellow-500' :
-                              getScoreForLesson(lesson.id) >= 70 ? 'text-orange-500' :
-                              'text-red-500'
-                            }`}>
-                              {getScoreForLesson(lesson.id)}%
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Action Button */}
-                    <Link
-                      href={`/lesson/${lesson.id}`}
-                      className={`w-full flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                        isCompleted
-                          ? 'bg-green-600 hover:bg-green-700 text-white'
-                          : isStarted
-                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                            : 'bg-gray-700 hover:bg-gray-600 text-white'
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <>
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Review Lesson
-                        </>
-                      ) : isStarted ? (
-                        <>
-                          <TrendingUp className="h-4 w-4 mr-2" />
-                          Continue
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="h-4 w-4 mr-2" />
-                          Start Lesson
-                        </>
-                      )}
-                    </Link>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Collapsible Homework Section */}
-        <div className="mb-8">
-          <button 
-            onClick={() => setShowHomework(!showHomework)}
-            className="w-full bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-4xl">📚</div>
-                <div className="text-left">
-                  <h3 className="text-2xl font-bold text-white">Homework Assignments</h3>
-                  <p className="text-purple-200">Complete these portfolio assignments to showcase your learning</p>
+                <div className="text-right">
+                  <div className="text-sm text-gray-300 mb-1">Current Quest:</div>
+                  <div className="text-lg font-bold text-yellow-400">⚔️ Master Coder Adventure</div>
                 </div>
               </div>
-              {showHomework ? 
-                <ChevronUp className="h-6 w-6 text-purple-300" /> : 
-                <ChevronDown className="h-6 w-6 text-purple-300" />
-              }
             </div>
-          </button>
 
-          {showHomework && (
-            <div className="mt-4 bg-purple-900/10 rounded-lg p-6 border border-purple-500/20">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Vocabulary Assignment */}
-                <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 group">
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl group-hover:animate-bounce">🧠</div>
+            {/* AAA Quality 3D Map Container */}
+            <div className="relative h-[800px] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-2xl bg-black">
+              <AAAGameMap />
+            </div>
+          </div>
+        )}
+
+        {/* MULTIPLAYER GUILD HALL (LEADERBOARD) */}
+        {activeTab === 'leaderboard' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+            {/* Leaderboard Panel */}
+            <div className="lg:col-span-2 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
+                <span>🏆</span>
+                <span>Class Leaderboard</span>
+              </h2>
+              <div className="space-y-4">
+                {classmates.slice(0, 6).map((player, index) => (
+                  <div key={player.name} className={`flex items-center space-x-4 p-4 rounded-xl transition-all ${
+                    player.name === (user.full_name?.split(' ')[0] || 'You')
+                      ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 border border-purple-500/50 transform scale-105'
+                      : 'bg-white/5 hover:bg-white/10'
+                  }`}>
+                    <div className="text-2xl font-bold text-yellow-400 min-w-[2rem]">
+                      {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                    </div>
+                    <div className="text-3xl animate-pulse">{player.avatar}</div>
                     <div className="flex-1">
-                      <h4 className="text-xl font-bold text-white mb-2">Lesson 1: AI Vocabulary Mastery</h4>
-                      <p className="text-purple-200 text-sm mb-4">
-                        Learn and master essential AI terminology through interactive study and matching games.
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-yellow-400 text-sm">⏱️</span>
-                          <span className="text-gray-300 text-sm">Est. Time: 10-15 min</span>
-                        </div>
-                        <Link
-                          href="/homework/vocabulary"
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
-                        >
-                          Start Assignment
-                        </Link>
-                      </div>
+                      <h4 className="font-bold text-white flex items-center space-x-2">
+                        <span>{player.name}</span>
+                        {player.name === (user.full_name?.split(' ')[0] || 'You') && <span className="text-purple-400">(YOU)</span>}
+                      </h4>
+                      <p className="text-sm text-gray-300">Level {player.level} • {player.xp.toLocaleString()} XP</p>
+                    </div>
+                    <div className={`w-3 h-3 rounded-full ${
+                      player.status === 'online' ? 'bg-green-400 animate-pulse' :
+                      player.status === 'away' ? 'bg-yellow-400' : 'bg-gray-400'
+                    }`}></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Guild Statistics */}
+            <div className="space-y-4">
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center space-x-2">
+                  <span>📊</span>
+                  <span>Class Progress</span>
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm text-white mb-2">
+                      <span>Average Level</span>
+                      <span>12.2</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{width: '61%'}}></div>
                     </div>
                   </div>
-                </div>
-
-                {/* Magic 8-Ball Portfolio */}
-                <div className="bg-blue-800/20 rounded-lg p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 group">
-                  <div className="flex items-start gap-4">
-                    <div className="text-3xl group-hover:animate-bounce">🎱</div>
-                    <div className="flex-1">
-                      <h4 className="text-xl font-bold text-white mb-2">Lesson 2: Magic 8-Ball Portfolio</h4>
-                      <p className="text-blue-200 text-sm mb-4">
-                        Enhance your Magic 8-Ball project and create a portfolio entry to share with peers.
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-yellow-400 text-sm">⏱️</span>
-                          <span className="text-gray-300 text-sm">Est. Time: 60 min</span>
-                        </div>
-                        <Link
-                          href="/homework/magic-8-ball"
-                          className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm font-medium"
-                        >
-                          Start Homework
-                        </Link>
-                      </div>
+                  <div>
+                    <div className="flex justify-between text-sm text-white mb-2">
+                      <span>Lessons Completed</span>
+                      <span>73%</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full" style={{width: '73%'}}></div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Collapsible Leaderboard */}
-        <div className="mb-8">
-          <button 
-            onClick={() => setShowLeaderboard(!showLeaderboard)}
-            className="w-full bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-lg p-4 border border-yellow-500/30 hover:border-yellow-400/50 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">🏆</div>
-                <div className="text-left">
-                  <h3 className="text-xl font-bold text-white">Class Leaderboard</h3>
-                  <p className="text-yellow-200">See how you rank among your classmates</p>
-                </div>
-              </div>
-              {showLeaderboard ? 
-                <ChevronUp className="h-6 w-6 text-yellow-300" /> : 
-                <ChevronDown className="h-6 w-6 text-yellow-300" />
-              }
-            </div>
-          </button>
-
-          {showLeaderboard && (
-            <div className="mt-4">
-              <Leaderboard />
-            </div>
-          )}
-        </div>
-
+          </div>
+        )}
       </div>
     </div>
   )

@@ -31,11 +31,18 @@ export default function LessonPage() {
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [quizScore, setQuizScore] = useState<number | undefined>()
   const [codeExecuted, setCodeExecuted] = useState(false)
+  const [adventureContext, setAdventureContext] = useState<any>(null)
 
   useEffect(() => {
     try {
       const lessonData = getAILesson(params.id as string)
       setLesson(lessonData)
+      
+      // Load adventure context if navigated from quest map
+      const adventureData = localStorage.getItem('current_adventure')
+      if (adventureData) {
+        setAdventureContext(JSON.parse(adventureData))
+      }
     } catch (error) {
       console.error('Failed to load lesson:', error)
       setLesson(null)
@@ -126,6 +133,14 @@ export default function LessonPage() {
               Back to Dashboard
             </Link>
             <div className="flex items-center space-x-4">
+              {/* Adventure Context Display */}
+              {adventureContext && (
+                <div className="flex items-center space-x-2 bg-purple-600/20 border border-purple-500/30 rounded-lg px-3 py-1">
+                  <span className="text-purple-300 text-sm">🗺️ Quest:</span>
+                  <span className="text-purple-100 text-sm font-medium">{adventureContext.missionName}</span>
+                  <span className="text-yellow-400 text-sm">⚡ +{adventureContext.xpReward} XP</span>
+                </div>
+              )}
               <span className={`px-3 py-1 rounded text-sm font-medium ${
                 lesson.difficulty === 'beginner' ? 'bg-green-600 text-white' :
                 lesson.difficulty === 'intermediate' ? 'bg-yellow-600 text-white' :

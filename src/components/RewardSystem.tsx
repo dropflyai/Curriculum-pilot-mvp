@@ -181,7 +181,7 @@ export default function RewardSystem({ onRewardEarned, show, onClose, earnedBadg
                   
                   <div className="relative flex items-center gap-4">
                     <div className={`p-4 rounded-xl bg-gradient-to-r ${badge.bgColor}`}>
-                      <IconComponent className={`h-12 w-12 ${badge.color}`} />
+                      {React.createElement(IconComponent as any, { className: `h-12 w-12 ${badge.color}` })}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
