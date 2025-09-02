@@ -26,13 +26,6 @@ export default function HomePage() {
     checkUser()
   }, [])
 
-  // Redirect logged-in users to their dashboard
-  useEffect(() => {
-    if (user) {
-      const dashboardUrl = user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'
-      router.push(dashboardUrl)
-    }
-  }, [user, router])
 
   function checkUser() {
     try {
