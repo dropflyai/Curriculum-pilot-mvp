@@ -26,6 +26,14 @@ export default function HomePage() {
     checkUser()
   }, [])
 
+  // Redirect logged-in users to their dashboard
+  useEffect(() => {
+    if (user) {
+      const dashboardUrl = user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'
+      router.push(dashboardUrl)
+    }
+  }, [user, router])
+
   function checkUser() {
     try {
       // Check for demo authentication
@@ -66,14 +74,6 @@ export default function HomePage() {
       </div>
     )
   }
-
-  // If user is logged in, redirect to their dashboard
-  useEffect(() => {
-    if (user) {
-      const dashboardUrl = user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'
-      router.push(dashboardUrl)
-    }
-  }, [user, router])
 
   // Show landing page for non-authenticated users
   return (
