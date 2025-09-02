@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Code, BookOpen, Users, Rocket, ChevronRight, Zap, Trophy, Bot, GraduationCap,
@@ -19,6 +20,7 @@ interface SimpleUser {
 export default function HomePage() {
   const [user, setUser] = useState<SimpleUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     checkUser()
@@ -65,63 +67,13 @@ export default function HomePage() {
     )
   }
 
-  // If user is logged in, show welcome screen
-  if (user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-8">
-        {/* Logout button in top right */}
-        <div className="absolute top-4 right-4">
-          <button
-            onClick={handleLogout}
-            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 backdrop-blur-sm border border-white/20"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
-        </div>
-
-        <div className="text-center">
-          <div className="mb-8">
-            <div className="text-6xl mb-4">🎆</div>
-            <h1 className="text-5xl font-bold text-white mb-6">
-              Welcome Back, <span className="text-yellow-400">{user.full_name?.split(' ')[0]}!</span>
-            </h1>
-            <p className="text-xl text-purple-200 mb-8">Your coding adventure continues...</p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl px-8 py-4 font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-xl"
-            >
-              <Rocket className="w-6 h-6" />
-              <span>Continue Quest</span>
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-
-          {/* Quick Stats for logged in users */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-              <h3 className="text-lg font-bold text-white mb-1">XP Earned</h3>
-              <p className="text-2xl font-bold text-yellow-400">2,450</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <Award className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-              <h3 className="text-lg font-bold text-white mb-1">Badges</h3>
-              <p className="text-2xl font-bold text-purple-400">12</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <Target className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <h3 className="text-lg font-bold text-white mb-1">Projects</h3>
-              <p className="text-2xl font-bold text-green-400">8</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // If user is logged in, redirect to their dashboard
+  useEffect(() => {
+    if (user) {
+      const dashboardUrl = user.role === 'teacher' ? '/teacher/console' : '/student/dashboard'
+      router.push(dashboardUrl)
+    }
+  }, [user, router])
 
   // Show landing page for non-authenticated users
   return (
