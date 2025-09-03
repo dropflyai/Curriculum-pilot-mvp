@@ -1,4 +1,8 @@
-// Week 1 — AI Classifier (School Supplies)
+// CodeFly Curriculum - 18 Week Program
+// Phase 1: Shadow Protocol (Weeks 1-4) - Solo Missions
+// Phase 2: Cipher Command (Weeks 5-8) - Team Formation
+// Phase 3: Ghost Protocol (Weeks 9-13) - Team Collaboration  
+// Phase 4: Quantum Breach (Weeks 14-18) - Advanced Team Projects
 // Standards: SC.912.ET.2.2, SC.912.ET.2.3, SC.912.ET.2.5
 
 export interface LessonTest {
@@ -68,10 +72,10 @@ export interface AILesson {
 export const aiLessons: AILesson[] = [
   {
     id: 'week-01',
-    title: 'AI Classifier',
-    description: 'Train your first image classifier using school supplies, learn about fairness and accuracy, and explore real-world applications.',
+    title: 'Binary Shores Academy',
+    description: 'Begin your Shadow Protocol training! Master variables and basic data types in your first coding mission.',
     difficulty: 'beginner',
-    estimatedTime: '60 minutes in class + 60 minutes homework',
+    estimatedTime: '60 minutes - Solo Mission',
     standards: [
       'SC.912.ET.2.2: Describe major branches of AI',
       'SC.912.ET.2.3: Evaluate the application of algorithms to AI',
@@ -80,61 +84,77 @@ export const aiLessons: AILesson[] = [
     modes: [
       {
         type: 'main',
-        title: 'School Supplies Classifier',
-        dataset: 'school-supplies',
-        labels: ['pencil', 'eraser', 'marker'],
-        learn_md: `## 🤖 Do You Want to Know How a Computer Can Tell School Supplies Apart?
+        title: 'Shadow Protocol: Data Intelligence Training',
+        dataset: 'shadow-protocol',
+        labels: ['classified', 'secure', 'verified'],
+        learn_md: `## 🕯️ Welcome to Binary Shores Academy - Your Shadow Protocol Training Begins
 
-Have you ever wondered how your phone can recognize your face in photos? Or how Netflix knows which shows you might like? Or how self-driving cars can spot stop signs from a distance? All of these amazing abilities come from something called **Machine Learning** - and today, you're going to discover exactly how it works by building your own intelligent computer vision system!
+**CLASSIFIED TRANSMISSION - CLEARANCE LEVEL: RECRUIT**
 
-### 🧠 What Exactly IS Machine Learning?
+Congratulations, Agent. You've been selected for the elite **Shadow Protocol** program at Binary Shores Academy. Your mission: master the fundamental building blocks of digital intelligence - **variables and data types** - the very foundation that elite coders use to build secure systems and crack encrypted data.
 
-Imagine trying to teach your little cousin to recognize different dog breeds. You wouldn't sit down and write a list of rules like "if it's small and fluffy, it's a Pomeranian" or "if it's big with droopy ears, it's a Bloodhound." Instead, you'd show them hundreds of pictures of different dogs and tell them the breed each time. Eventually, their brain would start recognizing patterns - the shape of ears, the size of the snout, the texture of fur - and they'd be able to identify new dogs they'd never seen before.
+In the shadowy world of digital espionage, information is power. And the first skill every agent must master is understanding how computers store, categorize, and manipulate different types of data. Today, you'll learn to think like a machine while maintaining the strategic mind of a human operative.
 
-**Machine Learning works exactly the same way!** Instead of programming a computer with thousands of specific rules, we show it tons of examples and let it discover the patterns on its own. It's like teaching a computer to learn from experience, just like humans do.
+### 🧠 Mission Brief: Understanding Data Types
 
-### 🆚 AI vs. Machine Learning: What's the Real Difference?
+Agent, every piece of digital intelligence begins with one fundamental concept: **data types**. Just as a spy must categorize different types of intel (classified documents, intercepted communications, surveillance photos), programmers must understand how computers categorize and store different types of information.
 
-Think of **Artificial Intelligence (AI)** like the concept of "being smart." It's any computer system that can do things we normally think require human intelligence - like recognizing faces, understanding speech, or making decisions.
+Think of variables as **secret containers** where agents store classified information. Each container has a specific type based on what kind of intel it holds:
 
-**Machine Learning (ML)** is one specific way to create AI. It's like teaching intelligence through practice and examples, rather than programming every single rule by hand.
+**Real-world analogy:** Imagine you're organizing evidence in a secret base:
+- **Text files** go in filing cabinets (strings)  
+- **Numeric codes** go in locked safes (integers)
+- **Surveillance photos** go in image vaults (data structures)
+- **True/False reports** go in decision boxes (booleans)
 
-**Here's a perfect analogy:** 
-- **AI** is like "being good at basketball" 
-- **Machine Learning** is like "getting good at basketball by practicing thousands of shots" instead of just memorizing a rulebook
+### 🔐 Essential Intel: The Four Core Data Types
 
-So when you hear about AI recognizing images or recommending music, it's usually Machine Learning doing the heavy lifting behind the scenes!
+Every Shadow Protocol agent must master these fundamental data classifications:
 
-### 📚 Essential Vocabulary: The Building Blocks of ML
+### 📝 Strings: Text-Based Intelligence
 
-Let's break down the key terms you'll be using like a pro by the end of today:
+**Strings** are sequences of characters - letters, numbers, symbols - that represent text data. In the field, strings might contain agent names, location codes, or encrypted messages.
 
-### 🏷️ Labels: The Name Tags of AI
+**Shadow Protocol Example:**
+- Agent codenames: "ShadowWolf", "GhostRider", "CipherKing"
+- Location codes: "Binary Shores Academy", "Variable Village"
+- Status reports: "Mission Complete", "Target Acquired"
 
-**Labels** are like digital name tags that tell the computer what each image shows. Think of them as the "correct answers" we give the AI during learning.
+Think of strings as **digital documents** that can contain any text information your mission requires.
 
-**Real-world analogy:** When you organize your photos on your phone, you might put them in albums labeled "Family," "Vacation," or "School." Labels work the same way - they're categories that help organize and identify things.
+### 🔢 Integers: Numerical Intel
 
-In our project today, we'll use three labels: "pencil," "eraser," and "marker." Every image in our collection has one of these labels attached, so the AI knows what it's looking at during training.
+**Integers** are whole numbers without decimal points. Agents use integers for counting resources, tracking mission progress, or encoding simple numeric data.
 
-### 📁 Datasets: The AI's Textbook Collection
+**Field Applications:**
+- Agent levels: 1, 2, 3, 4, 5
+- Security clearance codes: 007, 101, 256
+- Mission countdown timers: 30, 29, 28, 27...
 
-A **dataset** is like a massive digital textbook filled with examples for the AI to study. Just like you need lots of practice problems to master algebra, AI needs lots of example images to learn patterns.
+Integers are like **digital counters** that track precise quantities and measurements.
 
-**Think of it this way:** If you wanted to become an expert at identifying different car models, you'd want to see thousands of photos of cars - different angles, different lighting, different colors, old ones, new ones, clean ones, muddy ones. The more variety you see, the better you'd get at recognizing cars in any situation.
+### ✅ Booleans: Binary Decisions  
 
-Our dataset contains hundreds of images of school supplies, each one carefully labeled so our AI can learn what makes a pencil look like a pencil versus what makes an eraser look like an eraser.
+**Booleans** represent True/False or Yes/No decisions. In espionage, these are critical for status checks, security verification, and mission parameters.
 
-### 🎓 Training: Teaching Through Repetition
+**Mission Examples:**
+- Security clearance granted: True or False
+- Target identified: True or False  
+- Mission active: True or False
+- Encryption enabled: True or False
 
-**Training** is when the AI studies all the examples in the dataset and starts recognizing patterns. Imagine you're learning to identify different music genres - you'd listen to hundreds of rock songs, pop songs, and classical pieces until you could instantly recognize the style of a new song.
+Booleans are like **digital switches** - either ON or OFF, no middle ground.
 
-During training, our AI looks at thousands of images and notices things like:
-- Pencils are usually long and thin with pointy ends
-- Erasers are often rectangular or cylindrical with smooth surfaces  
-- Markers have caps and are usually colorful
+### 📊 Lists: Intel Collections
 
-The computer doesn't think in words like we do - instead, it notices mathematical patterns in the pixels, colors, shapes, and textures.
+**Lists** (or arrays) store multiple pieces of related data in a single container. Perfect for managing teams, equipment inventories, or target databases.
+
+**Tactical Uses:**
+- Agent team roster: ["ShadowWolf", "GhostRider", "CipherKing"]
+- Mission objectives: ["Infiltrate base", "Extract data", "Escape undetected"]
+- Security codes: [1947, 2001, 2023, 2024]
+
+Lists are like **digital filing systems** that keep related information organized and accessible.
 
 ### 🧪 Inference: The Final Exam
 
@@ -410,21 +430,60 @@ This isn't just a school exercise - these are the exact same challenges faced by
 
 **Your AI decisions today could inspire the recycling solutions of tomorrow! Let's build AI that makes the world better, not just more automated.** 🌍✨`,
         code: {
-          starter: `# 🌍 Save the Planet with AI!
-# Your recycling classifier configuration
+          starter: `# 🕯️ SHADOW PROTOCOL: Binary Shores Academy
+# CLASSIFIED - Agent Training Module 1: Variables & Data Types
 
-DATASET = "recycle-audit"  # Real recycling center images
-LABELS = ["plastic", "paper", "metal"]  # Materials to sort
+# Mission: Create your first intelligence database using Python variables
+# Classification Level: RECRUIT
+# Estimated Completion: 45 minutes
 
-# 🚨 Your Mission:
-# 1) Train your recycling AI and check the metrics
-# 2) Find which material is hardest to classify (hint: confusion matrix!)
-# 3) Remove confusing images (shiny plastics? crumpled paper?)
-# 4) Retrain and see if you reduced contamination errors
-# 5) Document which mistake would be most harmful
+# 🔐 PART 1: Agent Profile Creation
+# Every Shadow Protocol agent needs a secure digital identity
 
-# 💡 Think about it: What happens when plastic ends up in paper recycling?
-# Your AI's mistakes have real environmental impact!`
+# Create variables to store your agent information
+agent_codename = "Enter your codename here"
+agent_level = 1
+mission_active = True
+security_clearance = ["Binary Shores", "Variable Village"]
+
+# 🎯 PART 2: Mission Parameters  
+# Set up the basic mission variables
+
+current_location = "Binary Shores Academy"
+objective = "Master variable data types"
+completion_status = False
+xp_earned = 0
+
+# ⚡ PART 3: Intelligence Collection
+# Practice with different data types
+
+# String intelligence (text data)
+target_intel = "Data types are the foundation of all programming"
+encryption_key = "ShadowProtocol2024"
+
+# Integer intelligence (numeric data)
+agents_deployed = 25
+missions_completed = 2
+security_code = 1947
+
+# Boolean intelligence (true/false decisions)
+stealth_mode = True
+target_acquired = False
+mission_compromised = False
+
+# 🚨 AGENT CHALLENGE:
+# Print a mission report using all your variables
+# Format: "Agent [codename] reporting from [location]"
+#         "Mission: [objective] - Status: [completion_status]"
+#         "Current XP: [xp_earned] | Security Level: [agent_level]"
+
+# Your code here:
+print("🕯️ SHADOW PROTOCOL MISSION REPORT 🕯️")
+print(f"Agent {agent_codename} reporting from {current_location}")
+print(f"Mission: {objective} - Status: {completion_status}")
+print(f"Current XP: {xp_earned} | Security Level: {agent_level}")
+
+# 💡 BONUS CHALLENGE: Create a team roster list with 3 agent codenames`
         },
         tests_ui: [
           {
@@ -500,10 +559,10 @@ Attach a metrics screenshot.`,
   },
   {
     id: 'week-02',
-    title: 'Python: School-Positive Advisor',
-    description: 'Build an AI-powered chatbot that provides encouraging, school-focused advice to help students stay motivated and positive.',
+    title: 'Variable Village Outpost',
+    description: 'Continue your Shadow Protocol journey! Master string manipulation and user input in this solo coding mission.',
     difficulty: 'beginner',
-    estimatedTime: '60 minutes in class + 60 minutes homework',
+    estimatedTime: '60 minutes - Solo Mission',
     standards: [
       'MA.K12.MTR.4.1: Engage in discussions that reflect on the mathematical thinking of self and others',
       'MA.K12.MTR.6.1: Assess the reasonableness of solutions',
@@ -512,46 +571,48 @@ Attach a metrics screenshot.`,
     modes: [
       {
         type: 'main',
-        title: 'School-Positive Advisor Bot',
-        dataset: 'school-advice',
-        labels: ['encouragement', 'study-tips', 'motivation', 'goal-setting'],
+        title: 'Variable Village: String Operations Command Center',
+        dataset: 'string-operations',
+        labels: ['concatenation', 'formatting', 'manipulation', 'validation'],
         learn_slides: [
           {
             id: 'slide-1',
-            title: 'Building Your AI Study Buddy',
-            emoji: '🎓',
-            content: `## 🎓 Build Your Own School Success Advisor!
+            title: 'Variable Village Outpost: Advanced String Operations',
+            emoji: '🏘️',
+            content: `## 🏘️ Welcome to Variable Village Outpost - Mission 2 Begins
 
-### What We're Building Today
+**CLASSIFIED TRANSMISSION - CLEARANCE LEVEL: ADVANCED RECRUIT**
 
-Imagine having a friendly AI buddy who's always there when you need help with school. Whether you're stressed about a test, overwhelmed with homework, or just need some motivation - your AI advisor will know exactly what to say!
+Well done, Agent. Your Binary Shores training is complete. Now you advance to Variable Village Outpost, where Shadow Protocol operatives master the advanced art of **string manipulation and user input processing** - essential skills for creating interactive programs and handling classified communications.
 
-**Your Goal:** Create an AI that makes school life better for everyone by providing personalized encouragement, study tips, and motivation!
+### 🎯 Mission Objective: Communication Systems Mastery
 
-### 🎯 Your 7-Step Coding Mission
+In Variable Village, agents learn to:
+- **Process encrypted messages** using string operations
+- **Create interactive communication terminals** with user input
+- **Build secure data validation systems** for agent information
+- **Master string formatting** for classified report generation
 
-Here's your complete roadmap to building an amazing School Success Advisor. Check off each step as you complete it:
+### 🔐 Your Advanced Training Program
 
-#### ✅ Step 1: Set Up the Advisor Framework
-Create Python classes and methods that can store different types of responses. You'll build the foundation that makes everything else possible!
+#### ✅ Phase 1: String Intelligence Operations
+Master the four core string manipulation techniques used by elite operatives worldwide.
 
-#### ✅ Step 2: Create Response Categories  
-Build separate sections for encouragement, study tips, motivation, and goal setting. Each category will have specialized responses for different situations.
+#### ✅ Phase 2: User Input Processing Systems  
+Build secure terminals that can safely collect and validate agent information.
 
-#### ✅ Step 3: Build a Message Classifier
-Code an intelligent system that can read a student message and figure out what kind of help they need. This is where the "AI" magic happens!
+#### ✅ Phase 3: Interactive Program Construction
+Create your first fully interactive Shadow Protocol communication system.
 
-#### ✅ Step 4: Design Response Templates
-Write encouraging, helpful responses that actually work - not just generic "good luck!" messages. Make them specific and actionable.
+#### ✅ Phase 4: Advanced String Formatting
+Generate professional mission reports using Python's advanced formatting techniques.
 
-#### ✅ Step 5: Add Personality Elements  
-Make your AI sound like a supportive friend, not a robot. Add variety, humor, and warmth to the responses.
+#### ✅ Phase 5: Security Validation Protocols
+Implement robust input validation to protect against unauthorized access and data corruption.
 
-#### ✅ Step 6: Test with Realistic Scenarios
-Try out your AI with real problems students face. Test edge cases and make sure it handles various situations well.
+**Remember, Agent:** Every string operation you master brings you closer to becoming an elite Shadow Protocol operative. The skills you learn at Variable Village Outpost will be essential for your future missions in the digital realm.
 
-#### ✅ Step 7: Implement Safety Features
-Add boundaries so your AI knows when to suggest talking to adults. This is crucial for responsible AI development!`
+Your training starts now. Prepare for advanced string operations, Agent.`
           },
           {
             id: 'slide-2',
@@ -659,27 +720,31 @@ You're about to create technology that could genuinely help students succeed in 
           }
         ],
         code: {
-          starter: `# 🎓 School Success Advisor - Build Your AI Study Buddy!
-# Follow the 7 steps to create an AI that helps students succeed!
+          starter: `# 🏘️ VARIABLE VILLAGE OUTPOST - String Operations Command Center
+# CLASSIFIED - Agent Training Module 2: String Manipulation & User Input
+# Mission: Build an interactive communication terminal for Shadow Protocol agents
 
+# Essential imports for advanced string operations
 import random
+import datetime
 
-# STEP 1: Set up the advisor framework
-class SchoolAdvisor:
+# 🔐 PHASE 1: Communication Terminal Setup
+class ShadowProtocolTerminal:
     def __init__(self):
-        self.name = "StudyBuddy"
+        self.terminal_name = "Variable Village Command"
+        self.classification_level = "ADVANCED RECRUIT"
         
-        # STEP 2: Create response categories
-        self.responses = {
-            'encouragement': [
-                "Remember, every expert was once a beginner! You're growing your brain right now! 🧠",
-                "Mistakes are proof that you're trying. That's actually awesome! 💪",
-                "Your effort matters more than perfection. Keep going! 🌟"
+        # 🎯 PHASE 2: Message Categories & Response Database
+        self.secure_responses = {
+            'status_update': [
+                "🕯️ Shadow Protocol Agent status: OPERATIONAL",
+                "⚡ Mission parameters updated. Proceeding with objectives.",
+                "🔐 Security clearance verified. Access granted to classified intel."
             ],
-            'study_tips': [
-                "Try the Pomodoro Technique: 25 minutes focused study, 5 minute break! ⏰",
-                "Teaching concepts out loud helps your brain remember better! 🗣️", 
-                "Make flashcards or draw diagrams - visual learning rocks! 🎨"
+            'location_intel': [
+                "📍 Current coordinates: Variable Village Outpost, Sector 7",
+                "🏘️ Surveillance indicates all positions secure for operation", 
+                "🗺️ Navigation systems online. Route to next objective calculated."
             ],
             'motivation': [
                 "You've overcome challenges before, and you can do it again! 🚀",

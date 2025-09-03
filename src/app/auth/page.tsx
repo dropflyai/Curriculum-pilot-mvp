@@ -42,7 +42,7 @@ function AuthPageContent() {
         
         if (user) {
           // Redirect based on role (we'll get this from the profile)
-          router.push('/dashboard')
+          router.push('/mission-hq')
         }
       } else {
         const { user, error } = await signUp(
@@ -75,7 +75,7 @@ function AuthPageContent() {
         if (accountType === 'teacher') {
           router.push('/teacher')
         } else {
-          router.push('/dashboard')
+          router.push('/mission-hq')
         }
       }
     } catch (err: unknown) {

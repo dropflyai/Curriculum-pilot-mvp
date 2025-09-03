@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { getAILesson } from '@/lib/lesson-data'
 import AILessonViewer from '@/components/AILessonViewer'
 import PythonLessonViewer from '@/components/PythonLessonViewer'
+import { useProgressTracking } from '@/lib/progress-tracking'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -32,6 +33,9 @@ export default function LessonPage() {
   const [quizScore, setQuizScore] = useState<number | undefined>()
   const [codeExecuted, setCodeExecuted] = useState(false)
   const [adventureContext, setAdventureContext] = useState<any>(null)
+  
+  // Progress tracking
+  const { trackLessonStart, trackSectionComplete, trackCodeExecution, trackQuizSubmission, trackHelpRequest } = useProgressTracking()
 
   useEffect(() => {
     try {
@@ -43,11 +47,18 @@ export default function LessonPage() {
       if (adventureData) {
         setAdventureContext(JSON.parse(adventureData))
       }
+
+      // Track lesson start for teacher dashboard
+      if (lessonData) {
+        const studentId = 'demo-student' // In real app, get from auth context
+        const studentName = 'Demo Student' // In real app, get from auth context
+        trackLessonStart(studentId, studentName, params.id as string, lessonData.title)
+      }
     } catch (error) {
       console.error('Failed to load lesson:', error)
       setLesson(null)
     }
-  }, [params.id])
+  }, [params.id, trackLessonStart])
 
   useEffect(() => {
     // TEMPORARY: Allow lesson access for testing

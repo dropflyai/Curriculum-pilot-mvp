@@ -435,6 +435,23 @@ export default function StudentDashboard() {
               <span>{tab.label}</span>
             </button>
           ))}
+          
+          {/* Navigation Links */}
+          <Link
+            href="/curriculum"
+            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-white border border-green-500/30 hover:border-green-400/50 hover:transform hover:scale-102"
+          >
+            <span className="text-lg">📚</span>
+            <span>Full Curriculum</span>
+          </Link>
+          
+          <Link
+            href="/ai-literacy"
+            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 text-white border border-cyan-500/30 hover:border-cyan-400/50 hover:transform hover:scale-102"
+          >
+            <span className="text-lg">🧠</span>
+            <span>AI Literacy</span>
+          </Link>
         </div>
 
         {/* Content */}
@@ -700,30 +717,10 @@ export default function StudentDashboard() {
           </div>
         )}
 
-        {/* ENHANCED FANTASY ADVENTURE MAP */}
+        {/* ENHANCED QUEST MAP */}
         {activeTab === 'questmap' && (
-          <div className="space-y-6">
-            {/* Enhanced Map Header */}
-            <div className="bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-500/30">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold text-white mb-2 flex items-center space-x-3">
-                    <span>🗺️</span>
-                    <span>Epic Adventure Realm</span>
-                  </h2>
-                  <p className="text-purple-200">Navigate your coding journey through an immersive fantasy world</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-300 mb-1">Current Quest:</div>
-                  <div className="text-lg font-bold text-yellow-400">⚔️ Master Coder Adventure</div>
-                </div>
-              </div>
-            </div>
-
-            {/* AAA Quality 3D Map Container */}
-            <div className="relative h-[800px] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-2xl bg-black">
-              <AAAGameMap />
-            </div>
+          <div className="w-full min-h-screen bg-slate-950">
+            <AAAGameMap />
           </div>
         )}
 

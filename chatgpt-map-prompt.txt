@@ -1,0 +1,82 @@
+**ChatGPT Prompt for CodeFly Quest Map Design**
+
+I need you to create a detailed description for a 2D quest map graphic that will be used in a coding education platform called "CodeFly Academy" for 9th-grade students learning Python programming.
+
+**REQUIRED GRAPHIC SPECIFICATIONS:**
+
+**Map Type:** 2D illustrated quest map in a fantasy/adventure game style
+**Dimensions:** 1200x800 pixels, landscape orientation
+**File Format:** PNG with transparent background for UI overlay elements
+
+**VISUAL STYLE:**
+- Fantasy adventure game aesthetic (similar to World of Warcraft quest maps)
+- Hand-drawn illustrated style with clean, modern vector graphics
+- Bright, engaging colors suitable for teenagers
+- Professional quality but approachable and fun
+
+**MAP LAYOUT - PROGRESS PATH:**
+The map must show a clear learning progression path with 8 connected mission points arranged in a logical trail across a fantasy landscape. The path should guide the eye from left to right, then down, creating a natural "S" curve progression.
+
+**8 MISSION LOCATIONS (in order):**
+
+1. **"CodeFly Academy"** - Starting castle/school building (LEFT SIDE)
+   - Status: COMPLETED (green glow, checkmark badge)
+   - Icon: Castle/academy building with CodeFly flag
+
+2. **"Variable Storage"** - Data warehouse (UPPER CENTER-LEFT) 
+   - Status: COMPLETED (green glow, checkmark badge)
+   - Icon: Warehouse/storage facility with data symbols
+
+3. **"Logic Tower"** - Decision-making tower (UPPER CENTER)
+   - Status: IN PROGRESS (blue glow, half-filled progress ring)
+   - Icon: Tall tower with branching paths/decision symbols
+
+4. **"Loop Systems"** - Automated facility (UPPER RIGHT)
+   - Status: LOCKED (gray/dim, lock symbol)
+   - Icon: Factory with spinning gears/circular arrows
+
+5. **"Function Lab"** - Research laboratory (RIGHT SIDE)
+   - Status: LOCKED (gray/dim, lock symbol)  
+   - Icon: Science laboratory with function f(x) symbols
+
+6. **"Array Center"** - Data organization facility (LOWER RIGHT)
+   - Status: LOCKED (gray/dim, lock symbol)
+   - Icon: Grid-like building with array brackets []
+
+7. **"Object Studio"** - Design workshop (LOWER CENTER)
+   - Status: LOCKED (gray/dim, lock symbol)
+   - Icon: Creative studio with {} object symbols
+
+8. **"Database Ops"** - Secure data vault (LOWER LEFT)
+   - Status: LOCKED (gray/dim, lock symbol)
+   - Icon: Fortress-like building with database cylinder symbols
+
+**PROGRESS PATH REQUIREMENTS:**
+- Dotted/dashed trail connecting all 8 locations in numerical order
+- Path should be clearly visible and guide the eye naturally
+- Completed sections of path are bright/glowing
+- Locked sections are dim/faded
+- Current mission has pulsing/animated trail leading to it
+
+**INTERACTIVE ELEMENTS:**
+- Each mission location needs a circular progress medallion/badge overlay
+- Mission numbers (1-8) clearly displayed on each medallion
+- Status indicators: ✅ for completed, ⚡ for current, 🔒 for locked
+- Hover zones should be obvious for clickable areas
+
+**BACKGROUND LANDSCAPE:**
+- Fantasy terrain with varied environments (forests, mountains, water, cities)
+- Should support the theme of each mission location
+- Not too busy - must not compete with the mission markers
+- Cohesive color palette that works with UI overlays
+
+**TECHNICAL REQUIREMENTS:**
+- All text must be readable at 1200px width
+- Mission markers must be clearly distinguishable at all zoom levels
+- Color palette should work on dark theme backgrounds
+- Leave space for UI overlays (progress bars, student info, etc.)
+
+**INSPIRATION REFERENCES:**
+Think "Zelda: Breath of the Wild" map style meets "Khan Academy" educational design - professional but engaging for teenagers.
+
+Please provide a detailed description of this quest map that I can use with an AI image generator to create the perfect learning progression graphic for our CodeFly Academy platform.
