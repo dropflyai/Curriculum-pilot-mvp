@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeFly - Learn Python Programming",
-  description: "Interactive Python learning platform for 9th grade computer science students - where coding takes flight! ✈️",
+  title: "CodeFly - Revolutionary AI-Powered Coding Education",
+  description: "The ultimate gamified coding education platform with XP, badges, AI tutor Coach Nova, and epic team battles! Where coding becomes an adventure! 🚀",
 };
 
 export default function RootLayout({

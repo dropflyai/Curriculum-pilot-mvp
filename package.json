@@ -1,5 +1,5 @@
 {
-  "name": "coding-pilot-mvp",
+  "name": "codefly",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,15 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.4",
+    "@react-three/fiber": "^9.3.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",
     "canvas-confetti": "^1.9.3",
+    "html-to-image": "^1.11.13",
+    "leva": "^0.10.0",
     "lucide-react": "^0.540.0",
     "next": "15.4.7",
     "react": "19.1.0",
     "react-confetti": "^6.4.0",
     "react-dom": "19.1.0",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "three": "^0.179.1"
   },
   "optionalDependencies": {
     "pyodide": "^0.28.1"
@@ -31,6 +39,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.7",
+    "markdown-pdf": "^11.0.0",
+    "puppeteer": "^24.17.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

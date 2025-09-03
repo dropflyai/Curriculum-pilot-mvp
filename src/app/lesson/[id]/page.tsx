@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { getAILesson } from '@/lib/lesson-data'
 import AILessonViewer from '@/components/AILessonViewer'
 import PythonLessonViewer from '@/components/PythonLessonViewer'
+import { useProgressTracking } from '@/lib/progress-tracking'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -31,16 +32,33 @@ export default function LessonPage() {
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [quizScore, setQuizScore] = useState<number | undefined>()
   const [codeExecuted, setCodeExecuted] = useState(false)
+  const [adventureContext, setAdventureContext] = useState<any>(null)
+  
+  // Progress tracking
+  const { trackLessonStart, trackSectionComplete, trackCodeExecution, trackQuizSubmission, trackHelpRequest } = useProgressTracking()
 
   useEffect(() => {
     try {
       const lessonData = getAILesson(params.id as string)
       setLesson(lessonData)
+      
+      // Load adventure context if navigated from quest map
+      const adventureData = localStorage.getItem('current_adventure')
+      if (adventureData) {
+        setAdventureContext(JSON.parse(adventureData))
+      }
+
+      // Track lesson start for teacher dashboard
+      if (lessonData) {
+        const studentId = 'demo-student' // In real app, get from auth context
+        const studentName = 'Demo Student' // In real app, get from auth context
+        trackLessonStart(studentId, studentName, params.id as string, lessonData.title)
+      }
     } catch (error) {
       console.error('Failed to load lesson:', error)
       setLesson(null)
     }
-  }, [params.id])
+  }, [params.id, trackLessonStart])
 
   useEffect(() => {
     // TEMPORARY: Allow lesson access for testing
@@ -126,6 +144,14 @@ export default function LessonPage() {
               Back to Dashboard
             </Link>
             <div className="flex items-center space-x-4">
+              {/* Adventure Context Display */}
+              {adventureContext && (
+                <div className="flex items-center space-x-2 bg-purple-600/20 border border-purple-500/30 rounded-lg px-3 py-1">
+                  <span className="text-purple-300 text-sm">🗺️ Quest:</span>
+                  <span className="text-purple-100 text-sm font-medium">{adventureContext.missionName}</span>
+                  <span className="text-yellow-400 text-sm">⚡ +{adventureContext.xpReward} XP</span>
+                </div>
+              )}
               <span className={`px-3 py-1 rounded text-sm font-medium ${
                 lesson.difficulty === 'beginner' ? 'bg-green-600 text-white' :
                 lesson.difficulty === 'intermediate' ? 'bg-yellow-600 text-white' :
