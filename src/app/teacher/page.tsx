@@ -18,6 +18,7 @@ import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
+import { getAllLessons } from '@/lib/lesson-data'
 
 interface StudentProgress {
   user: User
@@ -393,61 +394,41 @@ export default function TeacherDashboard() {
       
       setStudents(mockStudentsWithProgress)
       
-      // Set mock lessons
-      setLessons([
-        {
-          id: 'lesson-1',
-          week: 1,
-          title: 'Python Basics: Variables',
-          duration_minutes: 60,
-          unlock_rule: 'available',
-          objectives: [],
-          standards: [],
-          learn_md: '',
-          starter_code: '',
-          tests_py: '',
-          patterns: {},
-          quiz_items: [],
-          checklist: [],
-          submit_prompt: '',
-          rubric: {},
-          badges_on_complete: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 'lesson-2',
-          week: 2,
-          title: 'Magic 8-Ball Project',
-          duration_minutes: 60,
-          unlock_rule: 'available',
-          objectives: [],
-          standards: [],
-          learn_md: '',
-          starter_code: '',
-          tests_py: '',
-          patterns: {},
-          quiz_items: [],
-          checklist: [],
-          submit_prompt: '',
-          rubric: {},
-          badges_on_complete: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ])
+      // Get real lessons from Black Cipher curriculum
+      const realLessons = getAllLessons()
+      const formattedLessons = realLessons.map((lesson, index) => ({
+        id: lesson.id,
+        week: index + 1,
+        title: lesson.title,
+        duration_minutes: 60,
+        unlock_rule: 'available' as const,
+        objectives: [],
+        standards: lesson.standards || [],
+        learn_md: '',
+        starter_code: '',
+        tests_py: '',
+        patterns: {},
+        quiz_items: [],
+        checklist: [],
+        submit_prompt: '',
+        rubric: {},
+        badges_on_complete: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }))
+      setLessons(formattedLessons)
       
-      // Set mock analytics
-      setAnalytics(mockData.lessonProgress.map((lesson: any) => ({
-        lessonId: lesson.lessonId,
-        title: lesson.lessonTitle,
-        avgTimeSpent: lesson.averageTime,
-        completionRate: (lesson.studentsCompleted / lesson.studentsStarted) * 100,
-        strugglingStudents: lesson.strugglingStudents.length,
-        commonErrors: mockData.commonErrors.map((e: any) => e.error),
+      // Set analytics with real lesson data
+      setAnalytics(realLessons.slice(0, 2).map((lesson: any, index: number) => ({
+        lessonId: lesson.id,
+        title: lesson.title,
+        avgTimeSpent: 45 + index * 10, // Simulated data
+        completionRate: index === 0 ? 40 : 20, // Simulated data
+        strugglingStudents: index === 0 ? 2 : 1, // Simulated data
+        commonErrors: ['NameError', 'SyntaxError', 'IndentationError'],
         quizPerformance: {
-          avgScore: lesson.averageScore / 100,
-          hardestQuestion: 'Variable assignment'
+          avgScore: 0.82,
+          hardestQuestion: index === 0 ? 'Agent data encryption' : 'Mission code structure'
         }
       })))
       
