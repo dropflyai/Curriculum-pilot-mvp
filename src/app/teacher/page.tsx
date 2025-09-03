@@ -185,13 +185,29 @@ export default function TeacherDashboard() {
 
       if (usersError) throw usersError
 
-      // Fetch lessons
-      const { data: lessonsData, error: lessonsError } = await supabase
-        .from('lessons')
-        .select('*')
-        .order('week', { ascending: true })
-
-      if (lessonsError) throw lessonsError
+      // Force use of Black Cipher lessons from getAllLessons() instead of database
+      // This ensures teacher dashboard shows current Black Cipher curriculum
+      const realLessons = getAllLessons()
+      const lessonsData = realLessons.map((lesson, index) => ({
+        id: lesson.id,
+        week: index + 1,
+        title: lesson.title,
+        duration_minutes: 60,
+        unlock_rule: 'available' as const,
+        objectives: [],
+        standards: lesson.standards || [],
+        learn_md: '',
+        starter_code: '',
+        tests_py: '',
+        patterns: {},
+        quiz_items: [],
+        checklist: [],
+        submit_prompt: '',
+        rubric: {},
+        badges_on_complete: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }))
 
       // Fetch all progress with detailed information
       const { data: progressData, error: progressError } = await supabase
