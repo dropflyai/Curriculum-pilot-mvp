@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { 
   Home, ArrowLeft, Crown, Zap, Flame, Trophy, Star, Target, Rocket, BookOpen, 
   Clock, Award, TrendingUp, User, LogOut, CheckCircle, Play, Bolt,
-  Sparkles, Brain, Gem, Coffee, Activity, BarChart3, MessageCircle
+  Sparkles, Brain, Gem, Coffee, Activity, BarChart3, MessageCircle, AlertTriangle
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -329,12 +329,58 @@ export default function StudentDashboard() {
   const studentStats = user.stats || defaultStats
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-        <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
-        <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+      {/* Tactical HUD Overlay */}
+      <div className="absolute inset-0 pointer-events-none z-30">
+        {/* Top HUD Bar */}
+        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
+          <div className="flex items-center justify-between text-green-400 font-mono text-sm">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <span>[CODEFLY HQ] BLACK CIPHER STUDENT PORTAL</span>
+              </div>
+              <div className="text-xs">
+                STATUS: <span className="font-bold text-green-400">ACTIVE</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-xs">XP: {studentStats.xp}</div>
+              <div className="text-xs">LEVEL: {studentStats.level}</div>
+              <div className="text-xs">SECURE LINK: ACTIVE</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Corner HUD Elements */}
+        <div className="absolute top-4 left-4">
+          <div className="w-16 h-16 border-2 border-green-400 bg-black/60 flex items-center justify-center">
+            <div className="text-green-400 font-mono text-xs text-center">
+              <div className="font-bold">BSA</div>
+              <div>HQ</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-4 left-4">
+          <div className="bg-black/80 border border-green-400/40 p-2 font-mono text-xs">
+            <div className="text-green-400 mb-2">[LEGEND]</div>
+            <div className="space-y-1 text-gray-300">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span>Completed</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                <span>Current</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                <span>Locked</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       {/* Celebration Effect */}
@@ -414,22 +460,23 @@ export default function StudentDashboard() {
       </div>
       
       {/* Main Content Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         {/* Navigation Tabs */}
         <div className="flex space-x-2 mb-6">
           {[
-            { key: 'overview', label: '🏠 Home Base', icon: '🏠' },
-            { key: 'questmap', label: '🗺️ Quest Map', icon: '🗺️' },
-            { key: 'leaderboard', label: '👥 Guild Hall', icon: '👥' }
+            { key: 'overview', label: '🏠 Agent Command', icon: '🏠' },
+            { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
+            { key: 'leaderboard', label: '👥 Field Ops Center', icon: '👥' }
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 ${
+              className={`px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 border-2 pointer-events-auto ${
                 activeTab === tab.key
-                  ? 'bg-white/20 text-white border border-white/30 transform scale-105'
-                  : 'bg-white/5 text-white/70 hover:bg-white/10 hover:transform hover:scale-102'
+                  ? 'bg-green-400/20 text-green-400 border-green-400/60 transform scale-105'
+                  : 'bg-black/40 text-green-300/70 border-green-400/30 hover:bg-green-400/10 hover:transform hover:scale-102'
               }`}
+              style={{clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'}}
             >
               <span className="text-lg">{tab.icon}</span>
               <span>{tab.label}</span>
@@ -439,7 +486,7 @@ export default function StudentDashboard() {
           {/* Navigation Links */}
           <Link
             href="/curriculum"
-            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-white border border-green-500/30 hover:border-green-400/50 hover:transform hover:scale-102"
+            className="px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 bg-black/40 text-green-300 border-2 border-green-400/30 hover:bg-green-400/10 hover:border-green-400/50 hover:transform hover:scale-102 pointer-events-auto"
           >
             <span className="text-lg">📚</span>
             <span>Full Curriculum</span>
@@ -447,7 +494,7 @@ export default function StudentDashboard() {
           
           <Link
             href="/ai-literacy"
-            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 text-white border border-cyan-500/30 hover:border-cyan-400/50 hover:transform hover:scale-102"
+            className="px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 bg-black/40 text-cyan-300 border-2 border-cyan-400/30 hover:bg-cyan-400/10 hover:border-cyan-400/50 hover:transform hover:scale-102 pointer-events-auto"
           >
             <span className="text-lg">🧠</span>
             <span>AI Literacy</span>
@@ -457,133 +504,189 @@ export default function StudentDashboard() {
         {/* Content */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-500/30">
-              <div className="flex items-center justify-between">
+            {/* Agent Status Header */}
+            <div className="bg-black/60 backdrop-blur-lg border-2 border-green-400/40 p-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    Welcome back, {user.full_name?.split(' ')[0] || 'Coding Hero'}! ✨
+                  <h2 className="text-2xl font-bold text-green-400 mb-2 font-mono">
+                    [AGENT STATUS] CLASSIFIED - EYES ONLY
                   </h2>
-                  <p className="text-purple-200">Ready to continue your coding adventure?</p>
+                  <div className="flex items-center space-x-4 font-mono text-sm">
+                    <span className="text-green-300">CALLSIGN: Agent {user.full_name?.split(' ')[0] || 'Cipher'}</span>
+                    <span className="text-yellow-400">CLEARANCE: LEVEL {studentStats.level}</span>
+                    <span className="text-cyan-400">STATUS: ACTIVE</span>
+                  </div>
                 </div>
-                <div className="text-6xl animate-bounce">{user.avatar}</div>
+                <div className="text-right">
+                  <div className="text-4xl mb-2">{user.avatar}</div>
+                  <div className="text-xs text-green-400 font-mono">BIOMETRIC: VERIFIED</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 text-center font-mono text-xs">
+                <div className="bg-green-900/30 border border-green-400/30 p-2">
+                  <div className="text-green-400 font-bold">INFILTRATION XP</div>
+                  <div className="text-white text-lg">{studentStats.xp}</div>
+                </div>
+                <div className="bg-orange-900/30 border border-orange-400/30 p-2">
+                  <div className="text-orange-400 font-bold">MISSION STREAK</div>
+                  <div className="text-white text-lg">{studentStats.streak} DAYS</div>
+                </div>
+                <div className="bg-blue-900/30 border border-blue-400/30 p-2">
+                  <div className="text-blue-400 font-bold">OPS COMPLETE</div>
+                  <div className="text-white text-lg">{studentStats.completedLessons}/{studentStats.totalLessons}</div>
+                </div>
+                <div className="bg-purple-900/30 border border-purple-400/30 p-2">
+                  <div className="text-purple-400 font-bold">INTEL BADGES</div>
+                  <div className="text-white text-lg">{studentStats.badges}</div>
+                </div>
               </div>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Level Card */}
-              <div className="bg-gradient-to-br from-blue-600/20 to-blue-500/20 backdrop-blur-lg rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all transform hover:scale-105">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Crown className="h-6 w-6 text-yellow-400 animate-pulse" />
-                  <h3 className="text-lg font-bold text-white">Level</h3>
-                </div>
-                <div className="text-3xl font-bold text-yellow-400 mb-2">{studentStats.level}</div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-1000" 
-                    style={{width: `${Math.min((studentStats.xp % 1000) / 10, 100)}%`}}
-                  ></div>
-                </div>
-                <p className="text-xs text-blue-200 mt-2">{studentStats.xp % 1000} / 1000 XP to Level {studentStats.level + 1}</p>
-              </div>
-
-              {/* XP Card */}
-              <div className="bg-gradient-to-br from-green-600/20 to-emerald-500/20 backdrop-blur-lg rounded-xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all transform hover:scale-105">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Zap className="h-6 w-6 text-blue-400 animate-pulse" />
-                  <h3 className="text-lg font-bold text-white">Experience</h3>
-                </div>
-                <div className="text-3xl font-bold text-blue-400 mb-2">{studentStats.xp.toLocaleString()}</div>
-                <div className="flex items-center space-x-2">
-                  <Bolt className="h-4 w-4 text-green-400" />
-                  <p className="text-xs text-green-200">+50 XP this session!</p>
-                </div>
-              </div>
-
-              {/* Streak Card */}
-              <div className="bg-gradient-to-br from-orange-600/20 to-red-500/20 backdrop-blur-lg rounded-xl p-6 border border-orange-500/30 hover:border-orange-400/50 transition-all transform hover:scale-105">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Flame className="h-6 w-6 text-orange-400 animate-pulse" />
-                  <h3 className="text-lg font-bold text-white">Streak</h3>
-                </div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="text-3xl font-bold text-orange-400">{studentStats.streak}</div>
-                  <div className="text-orange-300">days</div>
-                  <div className="text-xl animate-bounce">🔥</div>
-                </div>
-                <p className="text-xs text-orange-200">Keep it up! You're on fire!</p>
-              </div>
-
-              {/* Achievements Card */}
-              <div className="bg-gradient-to-br from-purple-600/20 to-pink-500/20 backdrop-blur-lg rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all transform hover:scale-105">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Trophy className="h-6 w-6 text-purple-400 animate-pulse" />
-                  <h3 className="text-lg font-bold text-white">Achievements</h3>
-                </div>
-                <div className="text-3xl font-bold text-purple-400 mb-2">15</div>
-                <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-yellow-400" />
-                  <Star className="h-4 w-4 text-yellow-400" />
-                  <Star className="h-4 w-4 text-yellow-400" />
-                  <Star className="h-4 w-4 text-gray-400" />
-                  <Star className="h-4 w-4 text-gray-400" />
-                </div>
-                <p className="text-xs text-purple-200 mt-1">3/5 Beginner badges</p>
-              </div>
-            </div>
-
-            {/* Recent Activity & Next Lesson */}
+            {/* Field Operations Dashboard */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Activity */}
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+              {/* Mission Progress Panel */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-amber-400/40 p-6">
+                <div className="flex items-center mb-4">
+                  <Target className="h-5 w-5 text-amber-400 mr-3 animate-pulse" />
+                  <h3 className="text-xl font-bold text-amber-400 font-mono">[MISSION PROGRESS]</h3>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm font-mono mb-2">
+                      <span className="text-gray-300">DIGITAL FORTRESS INFILTRATION</span>
+                      <span className="text-green-400">{Math.round((studentStats.completedLessons / studentStats.totalLessons) * 100)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-700 h-2">
+                      <div 
+                        className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 transition-all duration-1000" 
+                        style={{width: `${(studentStats.completedLessons / studentStats.totalLessons) * 100}%`}}
+                      ></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm font-mono mb-2">
+                      <span className="text-gray-300">CLEARANCE PROGRESSION</span>
+                      <span className="text-yellow-400">{studentStats.xp % 1000}/1000 XP</span>
+                    </div>
+                    <div className="w-full bg-gray-700 h-2">
+                      <div 
+                        className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 transition-all duration-1000" 
+                        style={{width: `${(studentStats.xp % 1000) / 10}%`}}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-400 font-mono">{studentStats.completedLessons}</div>
+                      <div className="text-xs text-green-300 font-mono">ZONES BREACHED</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-400 font-mono">{studentStats.totalLessons - studentStats.completedLessons}</div>
+                      <div className="text-xs text-red-300 font-mono">ZONES SECURED</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tactical Assessment */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-red-400/40 p-6">
+                <div className="flex items-center mb-4">
+                  <AlertTriangle className="h-5 w-5 text-red-400 mr-3 animate-pulse" />
+                  <h3 className="text-xl font-bold text-red-400 font-mono">[THREAT ASSESSMENT]</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-red-900/20 border border-red-400/30 p-3">
+                    <div className="text-red-400 font-mono text-sm mb-2">BLACK CIPHER STATUS</div>
+                    <div className="text-white font-mono text-lg">ACTIVE THREAT</div>
+                    <div className="text-red-300 text-xs font-mono mt-1">AI system operational in Digital Fortress</div>
+                  </div>
+                  <div className="bg-yellow-900/20 border border-yellow-400/30 p-3">
+                    <div className="text-yellow-400 font-mono text-sm mb-2">SECURITY LEVEL</div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-white font-mono text-lg">EXTREME</div>
+                      <div className="flex space-x-1">
+                        {[1,2,3,4,5].map(level => (
+                          <div key={level} className={`w-2 h-4 ${level <= 4 ? 'bg-yellow-500' : 'bg-gray-600'}`}></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-green-900/20 border border-green-400/30 p-3">
+                    <div className="text-green-400 font-mono text-sm mb-2">AGENT READINESS</div>
+                    <div className="text-white font-mono text-lg">{studentStats.level >= 10 ? 'FIELD READY' : 'IN TRAINING'}</div>
+                    <div className="text-green-300 text-xs font-mono mt-1">Clearance Level {studentStats.level} verified</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Intelligence Feed & Current Operation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Field Intelligence Feed */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-cyan-400/40 p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Activity className="h-5 w-5 text-green-400" />
-                  <h3 className="text-xl font-bold text-white">Recent Activity</h3>
+                  <Activity className="h-5 w-5 text-cyan-400 animate-pulse" />
+                  <h3 className="text-xl font-bold text-cyan-400 font-mono">[FIELD INTEL FEED]</h3>
                 </div>
                 <div className="space-y-3">
                   {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                    <div key={index} className="flex items-center justify-between p-3 bg-black/40 border border-cyan-400/20 font-mono text-xs">
                       <div className="flex items-center space-x-3">
-                        <div className={`w-2 h-2 rounded-full ${
+                        <div className={`w-2 h-2 rounded-full animate-pulse ${
                           activity.type === 'achievement' ? 'bg-yellow-400' :
                           activity.type === 'lesson' ? 'bg-blue-400' : 
                           activity.type === 'streak' ? 'bg-orange-400' : 'bg-green-400'
-                        } animate-pulse`}></div>
-                        <span className="text-white text-sm">{activity.action}</span>
+                        }`}></div>
+                        <span className="text-white text-sm">[{activity.type.toUpperCase()}] {activity.action}</span>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-gray-400">{activity.time}</div>
-                        {activity.xp && <div className="text-xs text-green-400">+{activity.xp} XP</div>}
+                        <div className="text-cyan-300">{activity.time}</div>
+                        {activity.xp && <div className="text-green-400">+{activity.xp} XP</div>}
                       </div>
                     </div>
                   ))}
                 </div>
+                <div className="mt-4 text-center">
+                  <div className="text-xs text-cyan-400 font-mono">⚡ LIVE FEED - CLASSIFIED</div>
+                </div>
               </div>
 
-              {/* Next Recommended Lesson */}
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+              {/* Priority Operation */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-orange-400/40 p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Target className="h-5 w-5 text-purple-400" />
-                  <h3 className="text-xl font-bold text-white">Continue Learning</h3>
+                  <Target className="h-5 w-5 text-orange-400 animate-pulse" />
+                  <h3 className="text-xl font-bold text-orange-400 font-mono">[PRIORITY OPERATION]</h3>
                 </div>
-                <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 rounded-xl p-4 border border-purple-500/30">
+                <div className="bg-gradient-to-r from-orange-600/20 to-red-600/20 border border-orange-400/30 p-4">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="text-2xl">🚀</div>
+                    <div className="text-2xl">🎯</div>
                     <div>
-                      <h4 className="text-lg font-bold text-white">Welcome to CodeQuest</h4>
-                      <p className="text-purple-200 text-sm">Your first interactive Python adventure</p>
+                      <h4 className="text-lg font-bold text-white font-mono">OPERATION: BINARY BREACH</h4>
+                      <p className="text-orange-200 text-sm font-mono">Infiltrate outer perimeter security</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-purple-200">
-                      <span>⏱️ 45 min</span>
-                      <span>⭐ 250 XP</span>
-                      <span>🏆 3 Goals</span>
+                  <div className="grid grid-cols-2 gap-4 mb-4 text-xs font-mono">
+                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
+                      <div className="text-yellow-400">DURATION</div>
+                      <div className="text-white">45 MIN</div>
                     </div>
-                    <button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center space-x-2">
+                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
+                      <div className="text-green-400">XP REWARD</div>
+                      <div className="text-white">250 XP</div>
+                    </div>
+                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
+                      <div className="text-blue-400">OBJECTIVES</div>
+                      <div className="text-white">3 GOALS</div>
+                    </div>
+                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
+                      <div className="text-red-400">PRIORITY</div>
+                      <div className="text-white">HIGH</div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center">
+                    <button className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-6 py-3 font-mono font-bold transition-all transform hover:scale-105 flex items-center space-x-2 border-2 border-red-400/50">
                       <Play className="h-4 w-4" />
-                      <span>Start Quest</span>
+                      <span>DEPLOY AGENT</span>
                     </button>
                   </div>
                 </div>
@@ -729,9 +832,9 @@ export default function StudentDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
             {/* Leaderboard Panel */}
             <div className="lg:col-span-2 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 font-mono">
                 <span>🏆</span>
-                <span>Class Leaderboard</span>
+                <span>Agent Rankings</span>
               </h2>
               <div className="space-y-4">
                 {classmates.slice(0, 6).map((player, index) => (
@@ -763,14 +866,14 @@ export default function StudentDashboard() {
             {/* Guild Statistics */}
             <div className="space-y-4">
               <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center space-x-2">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center space-x-2 font-mono">
                   <span>📊</span>
-                  <span>Class Progress</span>
+                  <span>Operation Status</span>
                 </h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm text-white mb-2">
-                      <span>Average Level</span>
+                      <span>Avg Clearance</span>
                       <span>12.2</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
@@ -779,7 +882,7 @@ export default function StudentDashboard() {
                   </div>
                   <div>
                     <div className="flex justify-between text-sm text-white mb-2">
-                      <span>Lessons Completed</span>
+                      <span>Operations Complete</span>
                       <span>73%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
