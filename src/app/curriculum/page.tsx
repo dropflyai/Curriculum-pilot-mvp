@@ -143,7 +143,7 @@ export default function CurriculumOverview() {
                   <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     CodeFly Curriculum ✈️
                   </h1>
-                  <p className="text-sm text-gray-300">18-Week Coding Mastery Program</p>
+                  <p className="text-sm text-gray-300">Black Cipher - 18-Week Spy Coding Adventure</p>
                 </div>
               </div>
             </div>
