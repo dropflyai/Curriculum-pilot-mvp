@@ -18,6 +18,7 @@ import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
+import { useRealtimeProgress } from '@/hooks/useRealtimeProgress'
 import { getAllLessons } from '@/lib/lesson-data'
 
 interface StudentProgress {
@@ -89,12 +90,19 @@ export default function TeacherDashboard() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('all')
   const [searchTerm, setSearchTerm] = useState('')
-  const [realTimeEnabled, setRealTimeEnabled] = useState(true)
   
-  // Real-time progress tracking states
-  const [liveProgress, setLiveProgress] = useState<LessonProgress[]>([])
-  const [recentActivities, setRecentActivities] = useState<StudentActivity[]>([])
-  const [studentsNeedingHelp, setStudentsNeedingHelp] = useState<LessonProgress[]>([])
+  // Real-time progress data from custom hook
+  const {
+    allProgress: liveProgress,
+    recentActivities,
+    studentsNeedingHelp,
+    stuckStudents,
+    isLoading: progressLoading,
+    isConnected: realtimeConnected,
+    lastUpdated,
+    refreshData: refreshProgressData,
+    markHelpProvided
+  } = useRealtimeProgress()
   
   // Communication System States
   const [showMessageModal, setShowMessageModal] = useState(false)
@@ -123,35 +131,60 @@ export default function TeacherDashboard() {
     }
   }, [authLoading, isAuthenticated, isTeacher, router])
 
-  // Real-time progress tracking
+  // Convert live progress to student progress format for existing components
   useEffect(() => {
-    const updateProgressData = () => {
-      // Load fresh data from progress tracker
-      progressTracker.loadFromStorage()
+    if (liveProgress.length > 0) {
+      const convertedStudents: StudentProgress[] = liveProgress.map(progress => ({
+        user: {
+          id: progress.studentId,
+          email: `${progress.studentName.toLowerCase().replace(' ', '.')}@demo.com`,
+          full_name: progress.studentName,
+          role: 'student' as const,
+          created_at: progress.createdAt || new Date().toISOString(),
+          updated_at: progress.updatedAt || new Date().toISOString()
+        },
+        progress: [{
+          id: progress.id || '',
+          user_id: progress.studentId,
+          lesson_id: progress.lessonId,
+          status: progress.completionStatus,
+          submitted_code: '',
+          quiz_answers: progress.quizScore ? { score: progress.quizScore } : {},
+          checklist_completed: progress.sectionsCompleted.map(() => true),
+          submit_response: '',
+          teacher_feedback: '',
+          score: progress.quizScore ? Math.round(progress.quizScore * 100) : undefined,
+          started_at: progress.startTime,
+          submitted_at: progress.completionStatus === 'completed' ? progress.lastActivity : undefined,
+          completed_at: progress.completionStatus === 'completed' ? progress.lastActivity : undefined,
+          created_at: progress.createdAt || new Date().toISOString(),
+          updated_at: progress.updatedAt || new Date().toISOString()
+        }],
+        currentActivity: {
+          lessonId: progress.lessonId,
+          sectionType: progress.currentSection,
+          timeSpent: progress.timeSpent,
+          lastSeen: progress.lastActivity
+        },
+        codeSubmissions: progress.errors.map((error, index) => ({
+          lessonId: progress.lessonId,
+          code: '',
+          result: 'error' as const,
+          timestamp: progress.lastActivity,
+          errorMessage: error
+        })),
+        quizResults: progress.quizScore ? [{
+          lessonId: progress.lessonId,
+          score: Math.round(progress.quizScore * 100),
+          totalQuestions: 10,
+          timeSpent: progress.timeSpent,
+          timestamp: progress.lastActivity
+        }] : []
+      }))
       
-      const allProgress = progressTracker.getAllProgress()
-      const activities = progressTracker.getRecentActivities(20)
-      const helpNeeded = progressTracker.getStudentsNeedingHelp()
-      const stuckStudents = progressTracker.getStuckStudents(20)
-      
-      setLiveProgress(allProgress)
-      setRecentActivities(activities)
-      setStudentsNeedingHelp([...helpNeeded, ...stuckStudents])
+      setStudents(convertedStudents)
     }
-
-    // Initial load
-    updateProgressData()
-    
-    // Set up real-time updates if enabled
-    let interval: NodeJS.Timeout | null = null
-    if (realTimeEnabled) {
-      interval = setInterval(updateProgressData, 5000) // Update every 5 seconds
-    }
-
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [realTimeEnabled])
+  }, [liveProgress])
 
   const [messageSending, setMessageSending] = useState(false)
   
@@ -474,14 +507,7 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     fetchData()
-    
-    // Set up real-time updates every 30 seconds
-    const interval = realTimeEnabled ? setInterval(fetchData, 30000) : null
-    
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [fetchData, realTimeEnabled])
+  }, [fetchData])
 
   // Helper function to get filter counts
   const getFilterCounts = () => {
@@ -965,19 +991,34 @@ CodeFly Computer Science Teacher
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 CodeFly Teacher Portal ✈️🎯
               </h1>
-              <p className="mt-1 text-lg text-purple-300 font-medium">9th Grade Computer Science • Real-time Classroom Management</p>
+              <p className="mt-1 text-lg text-purple-300 font-medium">
+                9th Grade Computer Science • Real-time Classroom Management
+                {realtimeConnected && (
+                  <span className="ml-2 text-green-400 font-bold animate-pulse">● LIVE</span>
+                )}
+              </p>
             </div>
             <div className="flex space-x-3">
+              <div className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 flex items-center ${
+                realtimeConnected 
+                  ? 'bg-green-600 text-white shadow-lg' 
+                  : 'bg-red-600 text-white'
+              }`}>
+                <Zap className={`h-4 w-4 mr-2 ${realtimeConnected ? 'animate-pulse' : ''}`} />
+                {realtimeConnected ? 'Live Connected 🟢' : 'Connecting... 🔄'}
+                {lastUpdated && (
+                  <span className="ml-2 text-xs opacity-75">
+                    {lastUpdated.toLocaleTimeString()}
+                  </span>
+                )}
+              </div>
               <button
-                onClick={() => setRealTimeEnabled(!realTimeEnabled)}
-                className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 flex items-center ${
-                  realTimeEnabled 
-                    ? 'bg-green-600 text-white shadow-lg hover:bg-green-700' 
-                    : 'bg-gray-600 text-gray-300 hover:bg-gray-700'
-                }`}
+                onClick={refreshProgressData}
+                className="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 flex items-center"
+                disabled={progressLoading}
               >
-                <Zap className="h-4 w-4 mr-2" />
-                Live Updates {realTimeEnabled ? '🟢' : '⚫'}
+                <Eye className={`h-4 w-4 mr-2 ${progressLoading ? 'animate-spin' : ''}`} />
+                {progressLoading ? 'Refreshing...' : 'Refresh Data'}
               </button>
               <button
                 onClick={() => setShowAnnouncementModal(true)}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useStudentProgress } from '@/hooks/useRealtimeProgress'
+import { useProgressTracking } from '@/lib/progress-tracking'
 import { 
   Home, ArrowLeft, Crown, Zap, Flame, Trophy, Star, Target, Rocket, BookOpen, 
   Clock, Award, TrendingUp, User, LogOut, CheckCircle, Play, Bolt,
@@ -58,6 +60,10 @@ export default function StudentDashboard() {
   const router = useRouter()
   const [user, setUser] = useState<DemoUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  
+  // Real-time progress tracking
+  const { progress: studentProgress, isLoading: progressLoading } = useStudentProgress(user?.id || '')
+  const { trackLessonStart, addRealtimeListener } = useProgressTracking()
   const [showCelebration, setShowCelebration] = useState(false)
   const [animateStats, setAnimateStats] = useState(false)
   const [hoveredLesson, setHoveredLesson] = useState<string | null>(null)
@@ -134,6 +140,18 @@ export default function StudentDashboard() {
 
   const [questNodes] = useState(calculateMissionLocks(completedMissionIds, baseMissions))
 
+  // Real-time progress updates
+  useEffect(() => {
+    if (user?.id) {
+      const unsubscribe = addRealtimeListener((data) => {
+        console.log('Student received real-time update:', data)
+        // Could trigger UI updates here if needed
+      })
+      
+      return unsubscribe
+    }
+  }, [user?.id, addRealtimeListener])
+  
   // Load user data
   useEffect(() => {
     const loadUserData = () => {
@@ -234,7 +252,7 @@ export default function StudentDashboard() {
   }
 
   // Navigate to the appropriate lesson based on mission
-  const navigateToLesson = (mission: any) => {
+  const navigateToLesson = async (mission: any) => {
     // Map adventure locations to actual lessons available in lesson-data.ts
     const lessonMapping: Record<number, string> = {
       1: '/lesson/week-01',               // Binary Shores Academy → AI Classifier
@@ -255,7 +273,19 @@ export default function StudentDashboard() {
 
     const lessonPath = lessonMapping[mission.id]
     
-    if (lessonPath) {
+    if (lessonPath && user) {
+      // Track lesson start for real-time monitoring
+      try {
+        await trackLessonStart(
+          user.id,
+          user.full_name || 'Student',
+          `week-${mission.id.toString().padStart(2, '0')}`,
+          mission.name
+        )
+      } catch (error) {
+        console.error('Failed to track lesson start:', error)
+      }
+      
       // Store mission context for the lesson
       localStorage.setItem('current_adventure', JSON.stringify({
         missionId: mission.id,
@@ -326,7 +356,13 @@ export default function StudentDashboard() {
     return null
   }
 
-  const studentStats = user.stats || defaultStats
+  // Merge real-time progress with default stats
+  const studentStats = user.stats || {
+    ...defaultStats,
+    // Update with real progress data if available
+    completedLessons: studentProgress.filter(p => p.completionStatus === 'completed').length,
+    // Could calculate other stats from real progress here
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
@@ -494,7 +530,12 @@ export default function StudentDashboard() {
                   <Zap className="h-6 w-6 text-blue-400 animate-pulse" />
                   <h3 className="text-lg font-bold text-white">Experience</h3>
                 </div>
-                <div className="text-3xl font-bold text-blue-400 mb-2">{studentStats.xp.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-blue-400 mb-2">
+                  {studentStats.xp.toLocaleString()}
+                  {!progressLoading && studentProgress.length > 0 && (
+                    <span className="text-xs text-green-400 ml-2">● SYNCED</span>
+                  )}
+                </div>
                 <div className="flex items-center space-x-2">
                   <Bolt className="h-4 w-4 text-green-400" />
                   <p className="text-xs text-green-200">+50 XP this session!</p>
