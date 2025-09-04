@@ -19,6 +19,7 @@ import TeacherPlaybook from '@/components/TeacherPlaybook'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
 import { useRealtimeProgress } from '@/hooks/useRealtimeProgress'
+import { useDynamicMonitoring } from '@/hooks/useDynamicMonitoring'
 import { getAllLessons } from '@/lib/lesson-data'
 
 interface StudentProgress {
@@ -103,6 +104,17 @@ export default function TeacherDashboard() {
     refreshData: refreshProgressData,
     markHelpProvided
   } = useRealtimeProgress()
+  
+  // Dynamic monitoring that adapts to any lesson structure
+  const {
+    lessons: dynamicLessons,
+    lessonProgress: dynamicLessonProgress,
+    activeStudents: dynamicActiveStudents,
+    studentsNeedingHelp: dynamicStudentsNeedingHelp,
+    recentActivities: dynamicRecentActivities,
+    lessonFormat,
+    refreshData: refreshDynamicData
+  } = useDynamicMonitoring()
   
   // Communication System States
   const [showMessageModal, setShowMessageModal] = useState(false)
@@ -1068,6 +1080,161 @@ CodeFly Computer Science Teacher
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Dynamic Lesson Monitoring - Works with ANY lesson structure */}
+        <div className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-xl p-6 mb-8 border border-blue-500/30">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <BarChart3 className="h-8 w-8 text-blue-400 animate-pulse" />
+              <div>
+                <h2 className="text-2xl font-bold text-white">Dynamic Lesson Progress Monitor</h2>
+                <p className="text-blue-200">
+                  Automatically tracking {dynamicLessons.length} lessons • Format: {lessonFormat}
+                  {dynamicLessons.length > 0 && (
+                    <span className="ml-2 text-green-400">✓ Auto-detected</span>
+                  )}
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={refreshDynamicData}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              Refresh
+            </button>
+          </div>
+
+          {/* Lesson Cards - Dynamically generated for ANY lessons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {dynamicLessonProgress.map((lessonStat) => {
+              const progressPercent = lessonStat.averageProgress
+              const isActive = lessonStat.studentsInProgress > 0
+              const needsAttention = lessonStat.studentsNeedingHelp > 0
+              
+              return (
+                <div 
+                  key={lessonStat.lesson.id}
+                  className={`relative bg-gray-800/50 rounded-lg p-4 border transition-all hover:transform hover:scale-105 ${
+                    needsAttention ? 'border-red-500/50 animate-pulse' : 
+                    isActive ? 'border-green-500/50' : 
+                    'border-gray-600'
+                  }`}
+                >
+                  {/* Status indicator */}
+                  <div className="absolute top-2 right-2">
+                    {needsAttention && (
+                      <span className="flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                      </span>
+                    )}
+                    {!needsAttention && isActive && (
+                      <span className="flex h-3 w-3">
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mb-3">
+                    <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2">
+                      {lessonStat.lesson.title}
+                    </h3>
+                    <p className="text-gray-400 text-xs">
+                      Week {lessonStat.lesson.week || 'N/A'} • {lessonStat.lesson.id}
+                    </p>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-xs text-gray-400 mb-1">
+                      <span>Avg Progress</span>
+                      <span>{Math.round(progressPercent)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-gray-700/50 rounded px-2 py-1">
+                      <span className="text-gray-400">Started:</span>
+                      <span className="text-white ml-1 font-semibold">
+                        {lessonStat.studentsStarted}
+                      </span>
+                    </div>
+                    <div className="bg-gray-700/50 rounded px-2 py-1">
+                      <span className="text-gray-400">Done:</span>
+                      <span className="text-green-400 ml-1 font-semibold">
+                        {lessonStat.studentsCompleted}
+                      </span>
+                    </div>
+                    <div className={`rounded px-2 py-1 ${
+                      lessonStat.studentsInProgress > 0 ? 'bg-blue-900/30' : 'bg-gray-700/50'
+                    }`}>
+                      <span className="text-gray-400">Active:</span>
+                      <span className="text-blue-400 ml-1 font-semibold">
+                        {lessonStat.studentsInProgress}
+                      </span>
+                    </div>
+                    <div className={`rounded px-2 py-1 ${
+                      lessonStat.studentsNeedingHelp > 0 ? 'bg-red-900/30' : 'bg-gray-700/50'
+                    }`}>
+                      <span className="text-gray-400">Help:</span>
+                      <span className="text-red-400 ml-1 font-semibold">
+                        {lessonStat.studentsNeedingHelp}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Time info */}
+                  <div className="mt-2 pt-2 border-t border-gray-700">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-400">
+                        Avg time: {Math.round(lessonStat.averageTimeSpent)} min
+                      </span>
+                      {lessonStat.lastActivity && (
+                        <span className="text-gray-500">
+                          {new Date(lessonStat.lastActivity).toLocaleTimeString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+            
+            {/* Empty state */}
+            {dynamicLessonProgress.length === 0 && (
+              <div className="col-span-full text-center py-8">
+                <BookOpen className="h-12 w-12 text-gray-500 mx-auto mb-3" />
+                <p className="text-gray-400">No lesson progress yet.</p>
+                <p className="text-gray-500 text-sm mt-1">
+                  Progress will appear automatically when students start lessons.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* System info */}
+          <div className="mt-4 pt-4 border-t border-gray-700 flex items-center justify-between text-xs text-gray-400">
+            <div>
+              Monitoring {dynamicActiveStudents.length} active students across all lessons
+            </div>
+            <div className="flex items-center gap-4">
+              <span>Auto-detecting lesson format: <code className="text-blue-400">{lessonFormat}</code></span>
+              {dynamicStudentsNeedingHelp.length > 0 && (
+                <span className="text-red-400 font-semibold">
+                  ⚠️ {dynamicStudentsNeedingHelp.length} students need help
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Assignment & Lesson Management Section */}
         <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-xl p-6 mb-8 border border-purple-500/30">
           <div className="flex items-center justify-between mb-6">
