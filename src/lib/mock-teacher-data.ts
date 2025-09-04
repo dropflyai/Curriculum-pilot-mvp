@@ -143,35 +143,35 @@ export const mockRecentActivity = [
   {
     student: 'Sarah Chen',
     action: 'Started quiz',
-    lesson: 'Python Basics',
+    lesson: 'Operation Beacon',
     time: 'Just now',
     type: 'quiz' as const
   },
   {
     student: 'Alex Thompson',
     action: 'Submitted code',
-    lesson: 'Python Basics',
+    lesson: 'Operation Beacon',
     time: '2 minutes ago',
     type: 'code' as const
   },
   {
     student: 'James Wilson',
     action: 'Requested help',
-    lesson: 'Python Basics',
+    lesson: 'Operation Beacon',
     time: '5 minutes ago',
     type: 'help' as const
   },
   {
     student: 'Michael Brown',
     action: 'Encountered error',
-    lesson: 'Magic 8-Ball',
+    lesson: 'Variable Village Outpost',
     time: '8 minutes ago',
     type: 'error' as const
   },
   {
     student: 'Maria Garcia',
     action: 'Completed lesson',
-    lesson: 'Magic 8-Ball',
+    lesson: 'Variable Village Outpost',
     time: '15 minutes ago',
     type: 'complete' as const
   }
