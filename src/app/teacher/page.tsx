@@ -994,19 +994,22 @@ CodeFly Computer Science Teacher
       {/* Header */}
       <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                CodeFly Teacher Portal ✈️🎯
-              </h1>
-              <p className="mt-1 text-lg text-purple-300 font-medium">
-                9th Grade Computer Science • Real-time Classroom Management
-                {realtimeConnected && (
-                  <span className="ml-2 text-green-400 font-bold animate-pulse">● LIVE</span>
-                )}
-              </p>
-            </div>
-            <div className="flex space-x-3">
+          {/* Title Section */}
+          <div className="py-6 text-center">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              CodeFly Teacher Portal ✈️🎯
+            </h1>
+            <p className="mt-1 text-lg text-purple-300 font-medium">
+              9th Grade Computer Science • Real-time Classroom Management
+              {realtimeConnected && (
+                <span className="ml-2 text-green-400 font-bold animate-pulse">● LIVE</span>
+              )}
+            </p>
+          </div>
+          
+          {/* Navigation Tabs - Full Width */}
+          <div className="pb-6">
+            <div className="flex flex-wrap gap-3 justify-center">
               <div className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 flex items-center ${
                 realtimeConnected 
                   ? 'bg-green-600 text-white shadow-lg' 
