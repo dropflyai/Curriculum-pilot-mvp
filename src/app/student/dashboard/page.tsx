@@ -2,15 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { 
-  Home, ArrowLeft, Crown, Zap, Flame, Trophy, Star, Target, Rocket, BookOpen, 
-  Clock, Award, TrendingUp, User, LogOut, CheckCircle, Play, Bolt,
-  Sparkles, Brain, Gem, Coffee, Activity, BarChart3, MessageCircle, AlertTriangle
-} from 'lucide-react'
 import dynamic from 'next/dynamic'
 
-// Enhanced AAA quality 3D map with advanced rendering
+// Enhanced AAA quality 3D map with advanced rendering - YOUR CUSTOM MAP
 const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
   ssr: false,
   loading: () => (
@@ -20,876 +14,1044 @@ const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
         </div>
         <div className="text-2xl text-white font-bold mb-2">Loading Unreal-Quality 3D World...</div>
-        <div className="text-gray-400">Initializing advanced shaders and physics...</div>
+        <p className="text-gray-400 animate-pulse">Rendering Black Cipher missions... 🎮</p>
       </div>
     </div>
   )
 })
 
-interface StudentStats {
-  level: number
-  xp: number
-  nextLevelXP: number
-  streak: number
-  badges: number
-  completedLessons: number
-  totalLessons: number
-  rank: number
-  weeklyXP: number
-}
+// XP-based badge progression system
+const badgeSystem = [
+  { name: 'Recruit', xpRequired: 0, icon: '🔰', unlocks: ['Basic Avatar'], color: 'gray' },
+  { name: 'Agent', xpRequired: 500, icon: '🕵️', unlocks: ['Spy Avatars'], color: 'blue' },
+  { name: 'Field Operative', xpRequired: 1200, icon: '🎯', unlocks: ['Mission Hints'], color: 'green' },
+  { name: 'Senior Agent', xpRequired: 2000, icon: '⭐', unlocks: ['Code Shortcuts'], color: 'purple' },
+  { name: 'Master Spy', xpRequired: 3500, icon: '👑', unlocks: ['Custom Themes'], color: 'gold' },
+  { name: 'Shadow Legend', xpRequired: 5000, icon: '🏆', unlocks: ['Exclusive Characters'], color: 'rainbow' },
+]
 
-interface RecentActivity {
-  action: string
-  time: string
-  type: 'lesson' | 'achievement' | 'quiz' | 'streak'
-  xp: number
-}
-
-interface DemoUser {
-  id: string
-  email: string
-  full_name: string
-  role: 'student' | 'teacher'
-  avatar: string
-  stats?: StudentStats
-}
+// Competitive agent data with full stats
+const courseAgents = [
+  { id: 1, codename: 'Agent Phoenix', name: 'Alex Chen', xp: 2150, level: 5, fastestTime: 8.2, perfectScores: 12, weeklyXP: 380, streak: 7, completionRate: 94, avatar: '🔥' },
+  { id: 2, codename: 'Shadow Viper', name: 'Maya Singh', xp: 2890, level: 6, fastestTime: 6.8, perfectScores: 18, weeklyXP: 420, streak: 12, completionRate: 98, avatar: '🐍' },
+  { id: 3, codename: 'Cipher Wolf', name: 'Jordan Kim', xp: 3200, level: 7, fastestTime: 7.1, perfectScores: 22, weeklyXP: 510, streak: 15, completionRate: 96, avatar: '🐺' },
+  { id: 4, codename: 'Binary Ghost', name: 'Sam Rivera', xp: 1980, level: 4, fastestTime: 9.5, perfectScores: 8, weeklyXP: 280, streak: 4, completionRate: 87, avatar: '👻' },
+  { id: 5, codename: 'Quantum Raven', name: 'Riley Park', xp: 2750, level: 6, fastestTime: 7.8, perfectScores: 15, weeklyXP: 390, streak: 9, completionRate: 92, avatar: '🐦‍⬛' },
+  { id: 6, codename: 'Stealth Tiger', name: 'Casey Liu', xp: 1750, level: 4, fastestTime: 10.2, perfectScores: 6, weeklyXP: 240, streak: 3, completionRate: 82, avatar: '🐅' },
+  { id: 7, codename: 'Hack Falcon', name: 'Avery Chen', xp: 2450, level: 5, fastestTime: 8.9, perfectScores: 14, weeklyXP: 360, streak: 6, completionRate: 90, avatar: '🦅' },
+  { id: 8, codename: 'Code Panther', name: 'Morgan Davis', xp: 3100, level: 7, fastestTime: 6.4, perfectScores: 20, weeklyXP: 480, streak: 11, completionRate: 97, avatar: '🐆' },
+  { id: 9, codename: 'Data Shark', name: 'Sage Wilson', xp: 1650, level: 3, fastestTime: 11.1, perfectScores: 4, weeklyXP: 200, streak: 2, completionRate: 78, avatar: '🦈' },
+  { id: 10, codename: 'Logic Dragon', name: 'Rowan Taylor', xp: 2600, level: 5, fastestTime: 7.6, perfectScores: 16, weeklyXP: 410, streak: 8, completionRate: 93, avatar: '🐲' }
+]
 
 export default function StudentDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<DemoUser | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [showCelebration, setShowCelebration] = useState(false)
-  const [animateStats, setAnimateStats] = useState(false)
-  const [hoveredLesson, setHoveredLesson] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'overview' | 'questmap' | 'leaderboard'>('overview')
-  
-  // Default stats for demo
-  const defaultStats: StudentStats = {
-    level: 12,
-    xp: 2450,
-    nextLevelXP: 2600,
-    streak: 7,
-    badges: 15,
-    completedLessons: 8,
-    totalLessons: 24,
-    rank: 3,
-    weeklyXP: 340
-  }
+  const [leaderboardView, setLeaderboardView] = useState<'course' | 'weekly' | 'speed' | 'perfect'>('course')
+  const [notifications, setNotifications] = useState<Array<{id: string, type: string, message: string, timestamp: Date}>>([])
+  const [missionStatus, setMissionStatus] = useState({
+    currentMission: 'Shadow Protocol',
+    progress: 73,
+    timeRemaining: '12:34',
+    objectivesComplete: 12,
+    totalObjectives: 15
+  })
 
-  const [recentActivity] = useState<RecentActivity[]>([
-    { action: 'Completed Python Magic 8-Ball! 🎱', time: '30 minutes ago', type: 'lesson', xp: 50 },
-    { action: 'Earned Code Master Badge! 🏆', time: '35 minutes ago', type: 'achievement', xp: 25 },
-    { action: 'Achieved 92% on Python Quiz! ⭐', time: '1 hour ago', type: 'quiz', xp: 40 },
-    { action: '7-day coding streak! 🔥', time: '2 hours ago', type: 'streak', xp: 50 }
-  ])
+  const currentAgent = courseAgents[0] // Agent Phoenix (current user)
+  const currentBadge = badgeSystem.reverse().find(badge => currentAgent.xp >= badge.xpRequired) || badgeSystem[0]
 
-  // Multiplayer/Class data
-  const [classmates] = useState([
-    { name: 'Emma', level: 15, xp: 3200, avatar: '🧙‍♀️', position: { x: 65, y: 30 }, status: 'online' },
-    { name: 'Marcus', level: 10, xp: 2100, avatar: '🦸‍♂️', position: { x: 45, y: 60 }, status: 'online' },
-    { name: 'Zara', level: 13, xp: 2800, avatar: '🧚‍♀️', position: { x: 80, y: 45 }, status: 'away' },
-    { name: 'Diego', level: 8, xp: 1650, avatar: '🤖', position: { x: 25, y: 40 }, status: 'offline' },
-    { name: 'Aisha', level: 14, xp: 3000, avatar: '🧝‍♀️', position: { x: 55, y: 25 }, status: 'online' },
-  ])
+  // Personalized learning recommendations based on performance
+  const getLearningRecommendations = () => {
+    const weakestSkill = [
+      { skill: 'LOOPS', level: 65, priority: 'HIGH' },
+      { skill: 'FUNCTIONS', level: 78, priority: 'MEDIUM' },
+      { skill: 'CONDITIONALS', level: 88, priority: 'LOW' },
+      { skill: 'VARIABLES', level: 95, priority: 'COMPLETE' }
+    ].sort((a, b) => a.level - b.level)[0]
 
-  // Progressive mission unlocking system
-  const calculateMissionLocks = (completedMissions: number[], allMissions: any[]) => {
-    return allMissions.map(mission => {
-      if (!mission.prerequisite) return { ...mission, locked: false }
-      const prerequisiteCompleted = completedMissions.includes(mission.prerequisite)
-      return { ...mission, locked: !prerequisiteCompleted }
-    })
-  }
-
-  const [completedMissionIds] = useState([1, 2]) // Player has completed first two missions
-  
-  // Original CodeFly Academy storyline - The Digital Realm
-  const baseMissions = [
-    // Chapter 1: Foundation Islands
-    { id: 1, name: 'Binary Shores Academy', completed: true, position: { x: 8, y: 85 }, xp: 250, icon: '🏫', type: 'lesson', region: 'Tutorial Islands', difficulty: 1, prerequisite: null, description: 'Learn the basics of variables and data types' },
-    { id: 2, name: 'Variable Village', completed: true, position: { x: 18, y: 78 }, xp: 300, icon: '🏘️', type: 'lesson', region: 'Tutorial Islands', difficulty: 1, prerequisite: 1, description: 'Master string manipulation and user input' },
-    { id: 3, name: 'Logic Lake Outpost', completed: false, position: { x: 28, y: 70 }, xp: 350, icon: '🏞️', type: 'lesson', region: 'Tutorial Islands', difficulty: 2, prerequisite: 2, description: 'Conditional statements and boolean logic' },
-    
-    // Chapter 2: The Mainland Continent
-    { id: 4, name: 'Loop Canyon Base', completed: false, position: { x: 45, y: 65 }, xp: 400, icon: '🏕️', type: 'lesson', region: 'Central Mainland', difficulty: 2, prerequisite: 3, description: 'Master for and while loops' },
-    { id: 5, name: 'Function Forest Station', completed: false, position: { x: 55, y: 58 }, xp: 450, icon: '🌲', type: 'lesson', region: 'Central Mainland', difficulty: 3, prerequisite: 4, description: 'Create reusable functions and modules' },
-    { id: 6, name: 'Array Mountains Facility', completed: false, position: { x: 40, y: 45 }, xp: 500, icon: '⛰️', type: 'lesson', region: 'Central Mainland', difficulty: 3, prerequisite: 5, description: 'Data structures and list manipulation' },
-    
-    // Chapter 3: Advanced Territories
-    { id: 7, name: 'Object Oasis Complex', completed: false, position: { x: 70, y: 40 }, xp: 600, icon: '🏛️', type: 'lesson', region: 'Advanced Zone', difficulty: 4, prerequisite: 6, description: 'Object-oriented programming fundamentals' },
-    { id: 8, name: 'Algorithm Archipelago', completed: false, position: { x: 85, y: 30 }, xp: 650, icon: '🏝️', type: 'lesson', region: 'Advanced Zone', difficulty: 4, prerequisite: 7, description: 'Sorting and searching algorithms' },
-    
-    // Chapter 4: The Digital Frontier
-    { id: 9, name: 'API Gateway Fortress', completed: false, position: { x: 65, y: 25 }, xp: 700, icon: '🏰', type: 'lesson', region: 'Digital Frontier', difficulty: 5, prerequisite: 8, description: 'REST APIs and web integration' },
-    { id: 10, name: 'Database Depths', completed: false, position: { x: 50, y: 15 }, xp: 750, icon: '🕳️', type: 'lesson', region: 'Digital Frontier', difficulty: 5, prerequisite: 9, description: 'SQL and database design' },
-    
-    // Final Boss
-    { id: 11, name: 'The Core Protocol', completed: false, position: { x: 75, y: 10 }, xp: 1000, icon: '💎', type: 'boss', region: 'The Core', difficulty: 6, prerequisite: 10, description: 'Final capstone project combining all skills' },
-    
-    // Hidden/Bonus Missions
-    { id: 12, name: 'Debug Caves', completed: false, position: { x: 20, y: 50 }, xp: 300, icon: '🕳️', type: 'bonus', region: 'Hidden', difficulty: 2, prerequisite: 3, description: 'Learn debugging techniques and error handling' },
-    { id: 13, name: 'Optimization Overlook', completed: false, position: { x: 90, y: 60 }, xp: 400, icon: '🔭', type: 'bonus', region: 'Hidden', difficulty: 4, prerequisite: 6, description: 'Code optimization and performance tuning' },
-    { id: 14, name: 'Security Stronghold', completed: false, position: { x: 35, y: 20 }, xp: 500, icon: '🛡️', type: 'bonus', region: 'Hidden', difficulty: 5, prerequisite: 8, description: 'Cybersecurity and safe coding practices' },
-  ]
-
-  const [questNodes] = useState(calculateMissionLocks(completedMissionIds, baseMissions))
-
-  // Load user data
-  useEffect(() => {
-    const loadUserData = () => {
-      try {
-        const demoMode = localStorage.getItem('codefly_demo_mode') === 'true'
-        if (demoMode) {
-          const userData = localStorage.getItem('codefly_demo_user')
-          if (userData) {
-            const parsedUser = JSON.parse(userData) as DemoUser
-            setUser({
-              ...parsedUser,
-              stats: parsedUser.stats || defaultStats
-            })
-          }
-        } else {
-          // Check for old demo format
-          const oldDemoAuth = localStorage.getItem('demo_authenticated')
-          const oldDemoUser = localStorage.getItem('demo_user')
-          if (oldDemoAuth === 'true' && oldDemoUser) {
-            const oldUser = JSON.parse(oldDemoUser)
-            setUser({
-              id: oldUser.id || 'demo-student',
-              email: oldUser.email || 'student@demo.com',
-              full_name: oldUser.full_name || 'Demo Student',
-              role: 'student',
-              avatar: '🧑‍💻',
-              stats: defaultStats
-            })
-          } else {
-            // Redirect to signin if no demo data
-            router.push('/signin?role=student')
-            return
-          }
+    return {
+      primaryFocus: weakestSkill,
+      recommendations: [
+        {
+          type: 'SKILL_BOOST',
+          title: `Master ${weakestSkill.skill} Fundamentals`,
+          description: 'Complete 3 focused practice sessions',
+          xpReward: 250,
+          estimatedTime: '15 min',
+          urgency: weakestSkill.priority
+        },
+        {
+          type: 'SPEED_TRAINING',
+          title: 'Code Velocity Challenge',
+          description: 'Improve your fastest completion time',
+          xpReward: 200,
+          estimatedTime: '10 min',
+          urgency: 'MEDIUM'
+        },
+        {
+          type: 'PEER_LEARNING',
+          title: 'Agent Collaboration Mission',
+          description: 'Team up with a higher-ranked agent',
+          xpReward: 300,
+          estimatedTime: '20 min',
+          urgency: 'LOW'
         }
-      } catch (error) {
-        console.error('Error loading user data:', error)
-        router.push('/signin?role=student')
-      }
-    }
-
-    // Simulate loading
-    const timer = setTimeout(() => {
-      loadUserData()
-      setIsLoading(false)
-      setAnimateStats(true)
-      
-      // Show celebration for streak achievement
-      setTimeout(() => setShowCelebration(true), 1000)
-      setTimeout(() => setShowCelebration(false), 3000)
-    }, 1500)
-    
-    return () => clearTimeout(timer)
-  }, [router])
-
-  const handleSignOut = () => {
-    localStorage.removeItem('codefly_demo_user')
-    localStorage.removeItem('codefly_demo_mode')
-    localStorage.removeItem('demo_authenticated')
-    localStorage.removeItem('demo_user')
-    router.push('/')
-  }
-
-  // Adventure progression handler - now connects to actual lessons
-  const handleMissionClick = (mission: any) => {
-    if (mission.locked) {
-      // Show locked adventure message
-      const prerequisiteName = baseMissions.find(m => m.id === mission.prerequisite)?.name
-      alert(`🔒 Adventure Locked!\n\n✨ Complete "${prerequisiteName}" first to unlock this new destination!\n\nEach location builds upon the knowledge from previous adventures.`)
-      return
-    }
-
-    if (mission.completed) {
-      // Show adventure details or replay option
-      const replayChoice = confirm(`✅ Adventure Complete!\n\n🎉 "${mission.name}" has been mastered!\n\n⚡ XP Earned: ${mission.xp}\n🌍 Region: ${mission.region}\n📚 ${mission.description}\n\nWould you like to replay this adventure to strengthen your skills?`)
-      if (replayChoice) {
-        navigateToLesson(mission)
-      }
-      return
-    }
-
-    // Navigate to actual lesson
-    const confirmMessage = `🚀 Begin Adventure: ${mission.name}?\n\n🌍 Region: ${mission.region}\n⭐ Difficulty: ${mission.difficulty}/6\n⚡ XP Reward: ${mission.xp}\n📚 Goal: ${mission.description}\n\nReady to explore the Digital Realm?`
-    
-    if (confirm(confirmMessage)) {
-      const briefingMessage = mission.type === 'boss' 
-        ? `💎 FINAL CHALLENGE\n\n"${mission.name}"\n\n🎯 This is the ultimate test of all your coding skills!\nCombine everything you've learned to complete your journey through the Digital Realm.\n\nGood luck, master coder! 🌟`
-        : mission.type === 'bonus'
-        ? `🗝️ HIDDEN ADVENTURE\n\n"${mission.name}"\n\n✨ You've discovered a secret location!\n${mission.description}\n\nThese optional challenges will enhance your coding mastery.\n\nReady for the challenge? 💫`
-        : `🎒 Adventure Briefing\n\n"${mission.name}"\n\n📖 ${mission.description}\n\nExplore, learn, and grow stronger as you master new programming concepts!\n\nHappy coding! 🌟`
-        
-      alert(briefingMessage)
-      
-      // Navigate to lesson after briefing
-      setTimeout(() => {
-        navigateToLesson(mission)
-      }, 1000)
+      ]
     }
   }
 
-  // Navigate to the appropriate lesson based on mission
-  const navigateToLesson = (mission: any) => {
-    // Map adventure locations to actual lessons available in lesson-data.ts
-    const lessonMapping: Record<number, string> = {
-      1: '/lesson/week-01',               // Binary Shores Academy → AI Classifier
-      2: '/lesson/week-02',               // Variable Village → Python Magic 8-Ball
-      3: '/lesson/conditionals-logic',    // Logic Lake Outpost (coming soon)
-      4: '/lesson/loops-iteration',       // Loop Canyon Base (coming soon)
-      5: '/lesson/functions-modules',     // Function Forest Station (coming soon)
-      6: '/lesson/data-structures',       // Array Mountains Facility (coming soon)
-      7: '/lesson/object-oriented',       // Object Oasis Complex (coming soon)
-      8: '/lesson/algorithms',            // Algorithm Archipelago (coming soon)
-      9: '/lesson/apis-web',              // API Gateway Fortress (coming soon)
-      10: '/lesson/databases',            // Database Depths (coming soon)
-      11: '/lesson/capstone-project',     // The Core Protocol (coming soon)
-      12: '/lesson/debugging',            // Debug Caves (coming soon)
-      13: '/lesson/optimization',         // Optimization Overlook (coming soon)
-      14: '/lesson/security'              // Security Stronghold (coming soon)
-    }
+  const learningData = getLearningRecommendations()
 
-    const lessonPath = lessonMapping[mission.id]
-    
-    if (lessonPath) {
-      // Store mission context for the lesson
-      localStorage.setItem('current_adventure', JSON.stringify({
-        missionId: mission.id,
-        missionName: mission.name,
-        region: mission.region,
-        xpReward: mission.xp,
-        difficulty: mission.difficulty
+  // Real-time updates simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Update mission progress
+      setMissionStatus(prev => ({
+        ...prev,
+        progress: Math.min(prev.progress + Math.random() * 0.5, 100),
+        timeRemaining: updateTimeRemaining(prev.timeRemaining)
       }))
-      
-      // Navigate to lesson
-      router.push(lessonPath)
-    } else {
-      // For lessons not yet implemented, show coming soon message
-      if (mission.id <= 2) {
-        // Should not happen now, but fallback
-        alert(`🔧 Technical Issue!\n\nThere seems to be a problem loading "${mission.name}". Please try refreshing the page or contact support.`)
-      } else {
-        // For future lessons
-        alert(`🚧 Adventure Coming Soon!\n\n"${mission.name}" is being crafted by our development team!\n\n✨ Currently Available Adventures:\n• Binary Shores Academy (AI Classifier)\n• Variable Village (Python Magic 8-Ball)\n\nMore coding adventures launching soon! 🚀`)
+
+      // Add random achievements/notifications
+      if (Math.random() < 0.1) {
+        const achievements = [
+          'Speed bonus unlocked!',
+          'Perfect execution achieved!',
+          'New skill level reached!',
+          'Weekly streak milestone!',
+          'Code efficiency improved!'
+        ]
+        const newNotification = {
+          id: Date.now().toString(),
+          type: 'achievement',
+          message: achievements[Math.floor(Math.random() * achievements.length)],
+          timestamp: new Date()
+        }
+        setNotifications(prev => [newNotification, ...prev.slice(0, 4)])
       }
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const updateTimeRemaining = (current: string) => {
+    const [minutes, seconds] = current.split(':').map(Number)
+    const totalSeconds = minutes * 60 + seconds - 1
+    if (totalSeconds <= 0) return '00:00'
+    return `${Math.floor(totalSeconds / 60).toString().padStart(2, '0')}:${(totalSeconds % 60).toString().padStart(2, '0')}`
+  }
+
+  const handleMissionLaunch = (missionType: string) => {
+    switch (missionType) {
+      case 'continue':
+        router.push('/mission/shadow-protocol')
+        break
+      case 'analysis':
+        setActiveTab('leaderboard')
+        setLeaderboardView('course')
+        break
+      case 'upgrade':
+        // Navigate to upgrade/customization page
+        router.push('/agent/customization')
+        break
+      case 'emergency':
+        // Navigate to help/tutorial section
+        router.push('/help')
+        break
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delay"></div>
-          <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-        </div>
-        
-        <div className="text-center relative z-10">
-          <div className="mb-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 animate-spin-slow">
-                <Sparkles className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-6 text-yellow-400 animate-pulse" />
-                <Sparkles className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 text-purple-400 animate-pulse" />
-                <Sparkles className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 text-blue-400 animate-pulse" />
-                <Sparkles className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 text-pink-400 animate-pulse" />
-              </div>
-              <div className="text-8xl animate-float mb-4">🚀</div>
-            </div>
-          </div>
-          
-          <h1 className="text-4xl font-bold text-white mb-4">
-            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300% animate-gradient-x">
-              Loading Your CodeFly Adventure...
-            </span>
-          </h1>
-          
-          <div className="flex items-center justify-center space-x-2 mb-8">
-            <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
-            <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
-            <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
-          </div>
-          
-          <p className="text-xl text-gray-200 animate-pulse">
-            Preparing your personalized dashboard... ✨
-          </p>
-        </div>
-      </div>
-    )
+  // Sort agents for different leaderboard views
+  const getSortedAgents = () => {
+    switch (leaderboardView) {
+      case 'weekly':
+        return [...courseAgents].sort((a, b) => b.weeklyXP - a.weeklyXP).slice(0, 5)
+      case 'speed':
+        return [...courseAgents].sort((a, b) => a.fastestTime - b.fastestTime)
+      case 'perfect':
+        return [...courseAgents].sort((a, b) => b.perfectScores - a.perfectScores)
+      default:
+        return [...courseAgents].sort((a, b) => b.xp - a.xp).slice(0, 10)
+    }
   }
-
-  if (!user) {
-    return null
-  }
-
-  const studentStats = user.stats || defaultStats
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-      {/* Tactical HUD Overlay */}
-      <div className="absolute inset-0 pointer-events-none z-30">
-        {/* Top HUD Bar */}
-        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
-          <div className="flex items-center justify-between text-green-400 font-mono text-sm">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span>[CODEFLY HQ] BLACK CIPHER STUDENT PORTAL</span>
-              </div>
-              <div className="text-xs">
-                STATUS: <span className="font-bold text-green-400">ACTIVE</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-xs">XP: {studentStats.xp}</div>
-              <div className="text-xs">LEVEL: {studentStats.level}</div>
-              <div className="text-xs">SECURE LINK: ACTIVE</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Corner HUD Elements */}
-        <div className="absolute top-4 left-4">
-          <div className="w-16 h-16 border-2 border-green-400 bg-black/60 flex items-center justify-center">
-            <div className="text-green-400 font-mono text-xs text-center">
-              <div className="font-bold">BSA</div>
-              <div>HQ</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-4 left-4">
-          <div className="bg-black/80 border border-green-400/40 p-2 font-mono text-xs">
-            <div className="text-green-400 mb-2">[LEGEND]</div>
-            <div className="space-y-1 text-gray-300">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span>Completed</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-                <span>Current</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span>Locked</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Celebration Effect */}
-      {showCelebration && (
-        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-          <div className="text-6xl animate-bounce">
-            🎉
-          </div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="text-4xl font-bold text-yellow-400 animate-pulse">
-              STREAK MASTER! 🔥
-            </div>
-          </div>
-        </div>
-      )}
-      
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       {/* Header */}
-      <div className="relative bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+      <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-lg border-b border-green-500/30 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2 font-mono">
+              <span className="text-green-400">🕯️ Shadow HQ</span> - Black Cipher Command
+            </h1>
             <div className="flex items-center space-x-4">
-              <Link 
-                href="/"
-                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <Home className="h-4 w-4" />
-                <span className="text-sm">Home</span>
-              </Link>
-              <div className="flex items-center">
-                <div className="relative">
-                  <Rocket className="h-8 w-8 text-blue-500 mr-3 animate-pulse" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping"></div>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    CodeFly Academy ✈️
-                  </h1>
-                  <p className="text-sm text-gray-300">Your Coding Adventure Dashboard</p>
-                </div>
-              </div>
+              <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">SHADOW PROTOCOL ACTIVE</span>
+              <span className="text-cyan-300 font-mono text-sm">{currentAgent.codename} | Level {currentAgent.level}</span>
+              <span className="text-purple-300 font-mono text-sm">{currentBadge.icon} {currentBadge.name}</span>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              {/* XP and Level Display */}
-              <div className="flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-purple-500/30">
-                <div className="flex items-center space-x-2">
-                  <Crown className="h-5 w-5 text-yellow-400 animate-pulse" />
-                  <span className="text-white font-bold">Level {studentStats.level}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4 text-blue-400" />
-                  <span className="text-blue-400 font-semibold">{studentStats.xp} XP</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Flame className="h-4 w-4 text-orange-400 animate-pulse" />
-                  <span className="text-orange-400 font-semibold">{studentStats.streak} day streak</span>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center text-sm text-gray-300">
-                  <div className="text-2xl mr-2">{user.avatar}</div>
-                  {user.full_name?.split(' ')[0] || 'Coding Hero'}
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center text-sm text-gray-300 hover:text-white transition-colors bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg"
-                >
-                  <LogOut className="h-4 w-4 mr-1" />
-                  Sign Out
-                </button>
-              </div>
-            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-green-400 font-mono text-2xl">{currentAgent.xp.toLocaleString()} XP</div>
+            <div className="text-gray-300 text-sm">Intel Points</div>
           </div>
         </div>
       </div>
-      
-      {/* Main Content Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-        {/* Navigation Tabs */}
-        <div className="flex space-x-2 mb-6">
+
+      {/* Navigation Tabs */}
+      <div className="bg-gray-800/40 backdrop-blur-sm border-b border-gray-700/50">
+        <div className="flex space-x-0">
           {[
-            { key: 'overview', label: '🏠 Agent Command', icon: '🏠' },
+            { key: 'overview', label: '🕯️ Shadow HQ', icon: '🕯️' },
             { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
-            { key: 'leaderboard', label: '👥 Field Ops Center', icon: '👥' }
+            { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' }
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 border-2 pointer-events-auto ${
+              className={`flex items-center space-x-2 px-6 py-4 font-mono transition-all duration-300 border-b-2 ${
                 activeTab === tab.key
-                  ? 'bg-green-400/20 text-green-400 border-green-400/60 transform scale-105'
-                  : 'bg-black/40 text-green-300/70 border-green-400/30 hover:bg-green-400/10 hover:transform hover:scale-102'
+                  ? 'text-green-400 border-green-400 bg-green-400/10'
+                  : 'text-gray-400 border-transparent hover:text-green-300 hover:bg-gray-700/30'
               }`}
-              style={{clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'}}
             >
-              <span className="text-lg">{tab.icon}</span>
+              <span>{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           ))}
-          
-          {/* Navigation Links */}
-          <Link
-            href="/curriculum"
-            className="px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 bg-black/40 text-green-300 border-2 border-green-400/30 hover:bg-green-400/10 hover:border-green-400/50 hover:transform hover:scale-102 pointer-events-auto"
-          >
-            <span className="text-lg">📚</span>
-            <span>Full Curriculum</span>
-          </Link>
-          
-          <Link
-            href="/ai-literacy"
-            className="px-6 py-3 font-mono font-medium transition-all flex items-center space-x-2 bg-black/40 text-cyan-300 border-2 border-cyan-400/30 hover:bg-cyan-400/10 hover:border-cyan-400/50 hover:transform hover:scale-102 pointer-events-auto"
-          >
-            <span className="text-lg">🧠</span>
-            <span>AI Literacy</span>
-          </Link>
         </div>
+      </div>
 
-        {/* Content */}
+      {/* Content */}
+      <div className="p-8">
         {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Agent Status Header */}
-            <div className="bg-black/60 backdrop-blur-lg border-2 border-green-400/40 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-green-400 mb-2 font-mono">
-                    [AGENT STATUS] CLASSIFIED - EYES ONLY
-                  </h2>
-                  <div className="flex items-center space-x-4 font-mono text-sm">
-                    <span className="text-green-300">CALLSIGN: Agent {user.full_name?.split(' ')[0] || 'Cipher'}</span>
-                    <span className="text-yellow-400">CLEARANCE: LEVEL {studentStats.level}</span>
-                    <span className="text-cyan-400">STATUS: ACTIVE</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl mb-2">{user.avatar}</div>
-                  <div className="text-xs text-green-400 font-mono">BIOMETRIC: VERIFIED</div>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-4 text-center font-mono text-xs">
-                <div className="bg-green-900/30 border border-green-400/30 p-2">
-                  <div className="text-green-400 font-bold">INFILTRATION XP</div>
-                  <div className="text-white text-lg">{studentStats.xp}</div>
-                </div>
-                <div className="bg-orange-900/30 border border-orange-400/30 p-2">
-                  <div className="text-orange-400 font-bold">MISSION STREAK</div>
-                  <div className="text-white text-lg">{studentStats.streak} DAYS</div>
-                </div>
-                <div className="bg-blue-900/30 border border-blue-400/30 p-2">
-                  <div className="text-blue-400 font-bold">OPS COMPLETE</div>
-                  <div className="text-white text-lg">{studentStats.completedLessons}/{studentStats.totalLessons}</div>
-                </div>
-                <div className="bg-purple-900/30 border border-purple-400/30 p-2">
-                  <div className="text-purple-400 font-bold">INTEL BADGES</div>
-                  <div className="text-white text-lg">{studentStats.badges}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Field Operations Dashboard */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Mission Progress Panel */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-amber-400/40 p-6">
-                <div className="flex items-center mb-4">
-                  <Target className="h-5 w-5 text-amber-400 mr-3 animate-pulse" />
-                  <h3 className="text-xl font-bold text-amber-400 font-mono">[MISSION PROGRESS]</h3>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm font-mono mb-2">
-                      <span className="text-gray-300">DIGITAL FORTRESS INFILTRATION</span>
-                      <span className="text-green-400">{Math.round((studentStats.completedLessons / studentStats.totalLessons) * 100)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-700 h-2">
-                      <div 
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 transition-all duration-1000" 
-                        style={{width: `${(studentStats.completedLessons / studentStats.totalLessons) * 100}%`}}
-                      ></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm font-mono mb-2">
-                      <span className="text-gray-300">CLEARANCE PROGRESSION</span>
-                      <span className="text-yellow-400">{studentStats.xp % 1000}/1000 XP</span>
-                    </div>
-                    <div className="w-full bg-gray-700 h-2">
-                      <div 
-                        className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 transition-all duration-1000" 
-                        style={{width: `${(studentStats.xp % 1000) / 10}%`}}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 pt-2">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400 font-mono">{studentStats.completedLessons}</div>
-                      <div className="text-xs text-green-300 font-mono">ZONES BREACHED</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-red-400 font-mono">{studentStats.totalLessons - studentStats.completedLessons}</div>
-                      <div className="text-xs text-red-300 font-mono">ZONES SECURED</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tactical Assessment */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-red-400/40 p-6">
-                <div className="flex items-center mb-4">
-                  <AlertTriangle className="h-5 w-5 text-red-400 mr-3 animate-pulse" />
-                  <h3 className="text-xl font-bold text-red-400 font-mono">[THREAT ASSESSMENT]</h3>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-red-900/20 border border-red-400/30 p-3">
-                    <div className="text-red-400 font-mono text-sm mb-2">BLACK CIPHER STATUS</div>
-                    <div className="text-white font-mono text-lg">ACTIVE THREAT</div>
-                    <div className="text-red-300 text-xs font-mono mt-1">AI system operational in Digital Fortress</div>
-                  </div>
-                  <div className="bg-yellow-900/20 border border-yellow-400/30 p-3">
-                    <div className="text-yellow-400 font-mono text-sm mb-2">SECURITY LEVEL</div>
-                    <div className="flex items-center space-x-2">
-                      <div className="text-white font-mono text-lg">EXTREME</div>
-                      <div className="flex space-x-1">
-                        {[1,2,3,4,5].map(level => (
-                          <div key={level} className={`w-2 h-4 ${level <= 4 ? 'bg-yellow-500' : 'bg-gray-600'}`}></div>
-                        ))}
+          <div className="space-y-6 relative">
+            {/* Notification System */}
+            {notifications.length > 0 && (
+              <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="bg-gradient-to-r from-green-600/90 to-emerald-500/90 backdrop-blur-lg border-2 border-green-400/60 rounded-lg p-4 transform animate-slide-in-right"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="text-2xl animate-pulse">🏆</div>
+                      <div>
+                        <div className="text-green-100 font-mono font-bold text-sm">ACHIEVEMENT UNLOCKED</div>
+                        <div className="text-green-200 text-xs font-mono">{notification.message}</div>
+                        <div className="text-green-300/80 text-xs font-mono">
+                          {notification.timestamp.toLocaleTimeString()}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-green-900/20 border border-green-400/30 p-3">
-                    <div className="text-green-400 font-mono text-sm mb-2">AGENT READINESS</div>
-                    <div className="text-white font-mono text-lg">{studentStats.level >= 10 ? 'FIELD READY' : 'IN TRAINING'}</div>
-                    <div className="text-green-300 text-xs font-mono mt-1">Clearance Level {studentStats.level} verified</div>
-                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Classified Header Overlay */}
+            <div className="fixed top-0 left-0 right-0 z-40 bg-red-900/90 border-b-2 border-red-400 px-4 py-2 backdrop-blur-sm">
+              <div className="flex items-center justify-between text-red-400 font-mono text-xs">
+                <div className="flex items-center space-x-4">
+                  <span className="animate-pulse">● REC</span>
+                  <span>CLASSIFIED - EYES ONLY</span>
+                  <span>SECURITY LEVEL: ULTRA</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span>{new Date().toLocaleDateString()}</span>
+                  <span>{new Date().toLocaleTimeString()}</span>
+                  <span className="text-green-400">CONNECTION: SECURE</span>
                 </div>
               </div>
             </div>
 
-            {/* Intelligence Feed & Current Operation */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Field Intelligence Feed */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-cyan-400/40 p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Activity className="h-5 w-5 text-cyan-400 animate-pulse" />
-                  <h3 className="text-xl font-bold text-cyan-400 font-mono">[FIELD INTEL FEED]</h3>
-                </div>
-                <div className="space-y-3">
-                  {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-black/40 border border-cyan-400/20 font-mono text-xs">
+            {/* HUD Scan Lines Effect */}
+            <div className="fixed inset-0 pointer-events-none z-40 opacity-10">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/20 to-transparent animate-pulse" 
+                   style={{backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.1) 2px, rgba(0,255,0,0.1) 4px)'}}></div>
+            </div>
+
+            {/* Main HUD Container */}
+            <div className="mt-16 space-y-6">
+              {/* Live Tactical Intelligence Feed */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Mission Control HUD */}
+                <div className="lg:col-span-2 relative">
+                  {/* HUD Frame */}
+                  <div className="absolute inset-0 border-2 border-green-400/40 bg-black/80 backdrop-blur-lg" 
+                       style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
+                  </div>
+                  <div className="relative z-10 p-6">
+                    {/* HUD Header */}
+                    <div className="flex items-center justify-between mb-6 border-b border-green-400/30 pb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
+                        <h2 className="text-xl font-bold text-green-400 font-mono tracking-wider">
+                          [MISSION CONTROL ACTIVE]
+                        </h2>
+                        <div className="text-xs text-gray-400 font-mono">ID: MC-7749</div>
+                      </div>
                       <div className="flex items-center space-x-3">
-                        <div className={`w-2 h-2 rounded-full animate-pulse ${
-                          activity.type === 'achievement' ? 'bg-yellow-400' :
-                          activity.type === 'lesson' ? 'bg-blue-400' : 
-                          activity.type === 'streak' ? 'bg-orange-400' : 'bg-green-400'
-                        }`}></div>
-                        <span className="text-white text-sm">[{activity.type.toUpperCase()}] {activity.action}</span>
+                        <div className="text-green-400 font-mono text-xs px-3 py-1 bg-green-400/10 border border-green-400/40" 
+                             style={{clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'}}>
+                          OPERATION: SHADOW PROTOCOL
+                        </div>
+                        <div className="text-green-400 font-mono text-xs">CONN: 100%</div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-cyan-300">{activity.time}</div>
-                        {activity.xp && <div className="text-green-400">+{activity.xp} XP</div>}
+                    </div>
+
+                    {/* HUD Mission Status Display */}
+                    <div className="relative mb-6">
+                      {/* Target Acquisition Frame */}
+                      <div className="border-2 border-cyan-400/60 bg-black/60 p-4 relative">
+                        {/* Corner Brackets */}
+                        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400"></div>
+                        <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400"></div>
+                        <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400"></div>
+                        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400"></div>
+                        
+                        {/* Mission Header */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div>
+                            <div className="flex items-center space-x-3 mb-2">
+                              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                              <h3 className="text-xl font-bold text-cyan-400 font-mono tracking-wide">[TARGET] BINARY SHORES ACADEMY</h3>
+                              <div className="text-xs text-cyan-300 font-mono bg-cyan-400/10 px-2 py-1">ACTIVE</div>
+                            </div>
+                            <p className="text-green-300 text-sm font-mono">INFILTRATION • CODE DECRYPTION • DATA EXTRACTION</p>
+                            <div className="text-xs text-gray-400 font-mono mt-1">SECTOR: BSA-7749 | GRID: 34°N 118°W</div>
+                          </div>
+                          <div className="text-right border-l border-cyan-400/30 pl-4">
+                            <div className="text-3xl font-bold text-orange-400 font-mono">{Math.round(missionStatus.progress)}%</div>
+                            <div className="text-cyan-300 text-xs font-mono">COMPLETION</div>
+                            <div className="text-xs text-gray-400 font-mono">ETA: {missionStatus.timeRemaining}</div>
+                          </div>
+                        </div>
+                        
+                        {/* HUD Progress Bar */}
+                        <div className="relative mb-4">
+                          <div className="w-full bg-gray-800 h-4 border border-cyan-400/30">
+                            <div className="bg-gradient-to-r from-red-500 via-yellow-400 to-green-400 h-full relative" style={{width: `${missionStatus.progress}%`}}>
+                              <div className="absolute right-0 top-0 h-full w-1 bg-white animate-pulse"></div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-400 font-mono mt-1">PROGRESS SCAN: [{'█'.repeat(Math.floor(missionStatus.progress/5))}{'▓'.repeat(Math.floor((100-missionStatus.progress)/5))}] {missionStatus.progress.toFixed(1)}%</div>
+                        </div>
+                        
+                        {/* HUD Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="border border-green-400/40 bg-green-400/5 p-3 text-center">
+                            <div className="text-green-400 font-mono text-lg font-bold">[{missionStatus.objectivesComplete}/{missionStatus.totalObjectives}]</div>
+                            <div className="text-green-300 text-xs font-mono">OBJECTIVES</div>
+                            <div className="text-xs text-gray-400 font-mono">STATUS: NOMINAL</div>
+                          </div>
+                          <div className="border border-yellow-400/40 bg-yellow-400/5 p-3 text-center">
+                            <div className="text-yellow-400 font-mono text-lg font-bold">8.2s</div>
+                            <div className="text-yellow-300 text-xs font-mono">BEST TIME</div>
+                            <div className="text-xs text-gray-400 font-mono">TYPE: SPEED RUN</div>
+                          </div>
+                          <div className="border border-purple-400/40 bg-purple-400/5 p-3 text-center">
+                            <div className="text-purple-400 font-mono text-lg font-bold">94%</div>
+                            <div className="text-purple-300 text-xs font-mono">ACCURACY</div>
+                            <div className="text-xs text-gray-400 font-mono">RANK: EXPERT</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Military Intelligence Terminal */}
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 border-b border-green-400/30 pb-2">
+                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <h4 className="text-lg font-bold text-green-400 font-mono tracking-wider">[INTEL FEED] LIVE TRANSMISSION</h4>
+                        <div className="text-xs text-gray-400 font-mono">CHANNEL: SECURE-7</div>
+                        <div className="flex-1"></div>
+                        <div className="text-xs text-green-400 font-mono">UPLINK: ACTIVE</div>
+                      </div>
+                      
+                      {/* Terminal Window */}
+                      <div className="bg-black border-2 border-green-400/60 p-4 font-mono text-sm max-h-64 overflow-y-auto">
+                        <div className="text-green-400 text-xs mb-2">CLASSIFIED INTELLIGENCE STREAM - AUTHORIZATION ALPHA-7</div>
+                        <div className="text-green-400/60 text-xs mb-4">================================</div>
+                        
+                        <div className="space-y-1">
+                          {[
+                            { time: '14:32:45', type: 'SUCCESS', msg: 'VARIABLE DECLARATION MASTERED - TARGET NEUTRALIZED', priority: 'LOW', color: 'text-green-400' },
+                            { time: '14:28:12', type: 'INTEL', msg: 'NEW ENCRYPTION PATTERN DETECTED IN LOOP STRUCTURES', priority: 'MED', color: 'text-cyan-400' },
+                            { time: '14:25:33', type: 'WARNING', msg: 'SYNTAX ERROR DETECTED - COUNTERMEASURES ACTIVATED', priority: 'HIGH', color: 'text-yellow-400' },
+                            { time: '14:20:17', type: 'ACHIEVEMENT', msg: 'SPEED BONUS UNLOCKED - SUB-10 SECOND COMPLETION', priority: 'LOW', color: 'text-purple-400' },
+                            { time: '14:18:44', type: 'SYSTEM', msg: 'AGENT CLEARANCE LEVEL VERIFIED - ACCESS GRANTED', priority: 'LOW', color: 'text-blue-400' },
+                            { time: '14:15:09', type: 'TACTICAL', msg: 'FUNCTION FORTRESS BREACH ATTEMPT INITIATED', priority: 'MED', color: 'text-orange-400' }
+                          ].map((intel, i) => (
+                            <div key={i} className="flex items-start space-x-2 hover:bg-green-400/5 p-1 transition-all duration-200">
+                              <div className="text-gray-500 text-xs">{intel.time}</div>
+                              <div className={`text-xs px-1 ${intel.priority === 'HIGH' ? 'bg-red-500/20 text-red-400' : intel.priority === 'MED' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
+                                {intel.priority}
+                              </div>
+                              <div className={`text-xs ${intel.color} flex-1`}>
+                                [{intel.type}] {intel.msg}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="text-green-400/60 text-xs mt-4">================================</div>
+                        <div className="text-green-400 text-xs mt-2 flex items-center">
+                          <span className="animate-pulse">█</span>
+                          <span className="ml-1">MONITORING ACTIVE...</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              {/* Military HUD Side Panels */}
+              <div className="space-y-6">
+                {/* Agent Status HUD */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-lg border-2 border-blue-400/40"
+                       style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                  </div>
+                  <div className="relative z-10 p-6">
+                    {/* HUD Header */}
+                    <div className="flex items-center justify-between mb-4 border-b border-blue-400/30 pb-2">
+                      <h3 className="text-lg font-bold text-blue-400 font-mono tracking-wider">[AGENT PROFILE]</h3>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                    </div>
+                    
+                    {/* Agent ID Card */}
+                    <div className="bg-black/60 border border-blue-400/30 p-4 mb-4">
+                      <div className="text-center mb-3">
+                        <div className="text-2xl mb-1">🔥</div>
+                        <div className="text-blue-400 font-mono font-bold text-lg">{currentAgent.codename}</div>
+                        <div className="text-gray-400 text-xs font-mono">ID: {String(currentAgent.id).toUpperCase()}-7749</div>
+                      </div>
+                      <div className="border-t border-blue-400/30 pt-3 space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400 font-mono">CLEARANCE:</span>
+                          <span className="text-blue-400 font-mono">LEVEL-{currentAgent.level}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400 font-mono">RANK:</span>
+                          <span className="text-yellow-400 font-mono">{currentBadge.name.toUpperCase()}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400 font-mono">STATUS:</span>
+                          <span className="text-green-400 font-mono animate-pulse">ACTIVE</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Performance Metrics */}
+                    <div className="space-y-3">
+                      <div className="bg-black/40 border-l-4 border-cyan-400 p-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300 text-xs font-mono">INTEL POINTS</span>
+                          <span className="text-cyan-400 font-mono font-bold">{currentAgent.xp.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <div className="bg-black/40 border-l-4 border-orange-400 p-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300 text-xs font-mono">MISSION STREAK</span>
+                          <span className="text-orange-400 font-mono font-bold">{currentAgent.streak} DAYS</span>
+                        </div>
+                      </div>
+                      <div className="bg-black/40 border-l-4 border-green-400 p-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300 text-xs font-mono">SUCCESS RATE</span>
+                          <span className="text-green-400 font-mono font-bold">{currentAgent.completionRate}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Military Promotion Tracker HUD */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/20 to-orange-900/20 backdrop-blur-lg border-2 border-yellow-400/40"
+                       style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                  </div>
+                  <div className="relative z-10 p-6">
+                    {/* HUD Header */}
+                    <div className="flex items-center justify-between mb-4 border-b border-yellow-400/30 pb-2">
+                      <h3 className="text-lg font-bold text-yellow-400 font-mono tracking-wider">[PROMOTION TRACKER]</h3>
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                    </div>
+                    {(() => {
+                      const nextBadge = badgeSystem.find(badge => badge.xpRequired > currentAgent.xp)
+                      if (!nextBadge) return (
+                        <div className="bg-black/60 border border-yellow-400/30 p-4 text-center">
+                          <div className="text-yellow-400 font-mono text-lg">🏆 MAXIMUM RANK ACHIEVED 🏆</div>
+                          <div className="text-gray-400 font-mono text-xs mt-2">LEGEND STATUS: CONFIRMED</div>
+                        </div>
+                      )
+                      const progress = ((currentAgent.xp - (badgeSystem.find(b => b.xpRequired <= currentAgent.xp)?.xpRequired || 0)) / 
+                                       (nextBadge.xpRequired - (badgeSystem.find(b => b.xpRequired <= currentAgent.xp)?.xpRequired || 0))) * 100
+                      return (
+                        <div className="space-y-4">
+                          {/* Target Promotion Display */}
+                          <div className="bg-black/60 border border-yellow-400/30 p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center space-x-3">
+                                <div className="text-3xl animate-pulse">{nextBadge.icon}</div>
+                                <div>
+                                  <div className="text-yellow-400 font-mono font-bold text-lg">[TARGET: {nextBadge.name.toUpperCase()}]</div>
+                                  <div className="text-gray-400 font-mono text-xs">NEXT PROMOTION TIER</div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-yellow-400 font-mono font-bold">{nextBadge.xpRequired - currentAgent.xp}</div>
+                                <div className="text-gray-400 font-mono text-xs">XP REQUIRED</div>
+                              </div>
+                            </div>
+                            
+                            {/* HUD Progress Bar */}
+                            <div className="relative">
+                              <div className="w-full bg-gray-800 h-4 border border-yellow-400/30">
+                                <div className="bg-gradient-to-r from-yellow-500 via-orange-400 to-red-500 h-full relative" style={{width: `${progress}%`}}>
+                                  <div className="absolute right-0 top-0 h-full w-1 bg-white animate-pulse"></div>
+                                </div>
+                              </div>
+                              <div className="text-xs text-gray-400 font-mono mt-1">
+                                PROMOTION SCAN: [{'█'.repeat(Math.floor(progress/5))}{'▓'.repeat(Math.floor((100-progress)/5))}] {Math.round(progress)}%
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Unlockable Features */}
+                          <div className="bg-black/40 border-l-4 border-yellow-400 p-3">
+                            <div className="text-yellow-400 font-mono text-xs mb-2">[CLASSIFIED UNLOCK PREVIEW]</div>
+                            <div className="text-gray-300 font-mono text-sm">
+                              {nextBadge.unlocks.map((unlock, i) => (
+                                <div key={i} className="flex items-center space-x-2">
+                                  <span className="text-yellow-400">▶</span>
+                                  <span>{unlock}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })()}
+                </div>
+
+                {/* Tactical Operations HUD */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-purple-900/20 backdrop-blur-lg border-2 border-red-400/40"
+                       style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                  </div>
+                  <div className="relative z-10 p-6">
+                    {/* HUD Header */}
+                    <div className="flex items-center justify-between mb-4 border-b border-red-400/30 pb-2">
+                      <h3 className="text-lg font-bold text-red-400 font-mono tracking-wider">[TACTICAL OPERATIONS]</h3>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                    </div>
+                    
+                    {/* Command Buttons Grid */}
+                    <div className="space-y-3">
+                      {/* Primary Mission Button */}
+                      <button 
+                        onClick={() => handleMissionLaunch('continue')}
+                        className="w-full relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-400 opacity-80"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                        </div>
+                        <div className="relative bg-green-500/20 border-2 border-green-400/60 p-3 text-white font-mono transition-all duration-300 group-hover:bg-green-500/40 group-hover:border-green-300"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                          <div className="flex items-center justify-center space-x-3">
+                            <span className="text-green-400 text-xl">🎯</span>
+                            <span className="text-green-300 font-bold tracking-wide">[PRIMARY] CONTINUE MISSION</span>
+                            <div className="text-xs text-green-400">ACTIVE</div>
+                          </div>
+                        </div>
+                      </button>
+                      
+                      {/* Intelligence Analysis Button */}
+                      <button 
+                        onClick={() => handleMissionLaunch('analysis')}
+                        className="w-full relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-cyan-400 opacity-80"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                        </div>
+                        <div className="relative bg-cyan-500/20 border-2 border-cyan-400/60 p-3 text-white font-mono transition-all duration-300 group-hover:bg-cyan-500/40 group-hover:border-cyan-300"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                          <div className="flex items-center justify-center space-x-3">
+                            <span className="text-cyan-400 text-xl">📊</span>
+                            <span className="text-cyan-300 font-bold tracking-wide">[INTEL] PERFORMANCE ANALYSIS</span>
+                            <div className="text-xs text-cyan-400">READY</div>
+                          </div>
+                        </div>
+                      </button>
+                      
+                      {/* Equipment Upgrade Button */}
+                      <button 
+                        onClick={() => handleMissionLaunch('upgrade')}
+                        className="w-full relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-purple-400 opacity-80"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                        </div>
+                        <div className="relative bg-purple-500/20 border-2 border-purple-400/60 p-3 text-white font-mono transition-all duration-300 group-hover:bg-purple-500/40 group-hover:border-purple-300"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                          <div className="flex items-center justify-center space-x-3">
+                            <span className="text-purple-400 text-xl">🔧</span>
+                            <span className="text-purple-300 font-bold tracking-wide">[TECH] UPGRADE EQUIPMENT</span>
+                            <div className="text-xs text-purple-400">AVAILABLE</div>
+                          </div>
+                        </div>
+                      </button>
+                      
+                      {/* Emergency Protocol */}
+                      <button 
+                        onClick={() => handleMissionLaunch('emergency')}
+                        className="w-full relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-red-400 opacity-80"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                        </div>
+                        <div className="relative bg-orange-500/20 border-2 border-orange-400/60 p-3 text-white font-mono transition-all duration-300 group-hover:bg-orange-500/40 group-hover:border-orange-300"
+                             style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}>
+                          <div className="flex items-center justify-center space-x-3">
+                            <span className="text-orange-400 text-xl">🚨</span>
+                            <span className="text-orange-300 font-bold tracking-wide">[EMERGENCY] TACTICAL RETREAT</span>
+                            <div className="text-xs text-orange-400">STANDBY</div>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                    
+                    {/* Status Indicator */}
+                    <div className="mt-4 border-t border-red-400/30 pt-3">
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-gray-400">COMMAND STATUS:</span>
+                        <span className="text-green-400 animate-pulse">● OPERATIONAL</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Learning Recommendations HUD */}
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-lg border-2 border-purple-400/40"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
+              </div>
+              <div className="relative z-10 p-6">
+                {/* HUD Header */}
+                <div className="flex items-center justify-between mb-6 border-b border-purple-400/30 pb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse shadow-lg shadow-purple-500/50"></div>
+                    <h2 className="text-xl font-bold text-purple-400 font-mono tracking-wider">
+                      [AI TRAINING ADVISOR] PERSONALIZED RECOMMENDATIONS
+                    </h2>
+                  </div>
+                  <div className="text-purple-400 font-mono text-xs">AI-POWERED</div>
+                </div>
+
+                {/* Primary Focus Alert */}
+                <div className="bg-red-500/10 border-2 border-red-400/60 p-4 mb-6 relative">
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-400"></div>
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-red-400"></div>
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-red-400"></div>
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-400"></div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="text-4xl animate-bounce">⚠️</div>
+                    <div>
+                      <div className="text-red-400 font-mono font-bold text-lg">
+                        [PRIORITY TRAINING] {learningData.primaryFocus.skill} MASTERY
+                      </div>
+                      <div className="text-red-300 font-mono text-sm">
+                        Current Level: {learningData.primaryFocus.level}% - Priority: {learningData.primaryFocus.priority}
+                      </div>
+                      <div className="text-gray-400 font-mono text-xs mt-1">
+                        AI Analysis: Focus training recommended for optimal advancement
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recommended Training Missions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {learningData.recommendations.map((rec, index) => (
+                    <div key={index} className={`border-2 p-4 relative transition-all duration-300 hover:scale-105 cursor-pointer ${
+                      rec.urgency === 'HIGH' ? 'border-red-400/60 bg-red-500/10 hover:bg-red-500/20' :
+                      rec.urgency === 'MEDIUM' ? 'border-yellow-400/60 bg-yellow-500/10 hover:bg-yellow-500/20' :
+                      'border-green-400/60 bg-green-500/10 hover:bg-green-500/20'
+                    }`}>
+                      {/* Mission Type Badge */}
+                      <div className={`absolute top-2 right-2 text-xs font-mono px-2 py-1 border ${
+                        rec.urgency === 'HIGH' ? 'text-red-400 border-red-400/40 bg-red-400/10' :
+                        rec.urgency === 'MEDIUM' ? 'text-yellow-400 border-yellow-400/40 bg-yellow-400/10' :
+                        'text-green-400 border-green-400/40 bg-green-400/10'
+                      }`}>
+                        {rec.urgency}
+                      </div>
+
+                      {/* Mission Icon */}
+                      <div className="text-center mb-3">
+                        <div className="text-3xl mb-2">
+                          {rec.type === 'SKILL_BOOST' ? '📚' :
+                           rec.type === 'SPEED_TRAINING' ? '⚡' : '🤝'}
+                        </div>
+                        <div className={`text-sm font-mono font-bold ${
+                          rec.urgency === 'HIGH' ? 'text-red-400' :
+                          rec.urgency === 'MEDIUM' ? 'text-yellow-400' :
+                          'text-green-400'
+                        }`}>
+                          [{rec.type}]
+                        </div>
+                      </div>
+
+                      {/* Mission Details */}
+                      <div className="space-y-2">
+                        <h4 className={`font-mono font-bold text-sm ${
+                          rec.urgency === 'HIGH' ? 'text-red-300' :
+                          rec.urgency === 'MEDIUM' ? 'text-yellow-300' :
+                          'text-green-300'
+                        }`}>
+                          {rec.title}
+                        </h4>
+                        <p className="text-gray-400 font-mono text-xs">{rec.description}</p>
+                        
+                        <div className="flex justify-between items-center pt-2 border-t border-gray-600/30">
+                          <div className="text-xs font-mono text-cyan-400">+{rec.xpReward} XP</div>
+                          <div className="text-xs font-mono text-gray-400">~{rec.estimatedTime}</div>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 text-center">
-                  <div className="text-xs text-cyan-400 font-mono">⚡ LIVE FEED - CLASSIFIED</div>
-                </div>
-              </div>
 
-              {/* Priority Operation */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-orange-400/40 p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Target className="h-5 w-5 text-orange-400 animate-pulse" />
-                  <h3 className="text-xl font-bold text-orange-400 font-mono">[PRIORITY OPERATION]</h3>
-                </div>
-                <div className="bg-gradient-to-r from-orange-600/20 to-red-600/20 border border-orange-400/30 p-4">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="text-2xl">🎯</div>
+                {/* AI Insight */}
+                <div className="mt-6 bg-black/40 border-l-4 border-purple-400 p-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-purple-400 text-xl">🤖</div>
                     <div>
-                      <h4 className="text-lg font-bold text-white font-mono">OPERATION: BINARY BREACH</h4>
-                      <p className="text-orange-200 text-sm font-mono">Infiltrate outer perimeter security</p>
+                      <div className="text-purple-400 font-mono font-bold text-sm">[AI INSIGHT]</div>
+                      <div className="text-purple-300 font-mono text-xs">
+                        Based on your performance data, focusing on {learningData.primaryFocus.skill} will increase your 
+                        overall completion rate by ~15% and reduce average solving time by 2.3 seconds.
+                      </div>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4 text-xs font-mono">
-                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
-                      <div className="text-yellow-400">DURATION</div>
-                      <div className="text-white">45 MIN</div>
-                    </div>
-                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
-                      <div className="text-green-400">XP REWARD</div>
-                      <div className="text-white">250 XP</div>
-                    </div>
-                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
-                      <div className="text-blue-400">OBJECTIVES</div>
-                      <div className="text-white">3 GOALS</div>
-                    </div>
-                    <div className="bg-black/40 border border-gray-600/30 p-2 text-center">
-                      <div className="text-red-400">PRIORITY</div>
-                      <div className="text-white">HIGH</div>
-                    </div>
-                  </div>
-                  <div className="flex justify-center">
-                    <button className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-6 py-3 font-mono font-bold transition-all transform hover:scale-105 flex items-center space-x-2 border-2 border-red-400/50">
-                      <Play className="h-4 w-4" />
-                      <span>DEPLOY AGENT</span>
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Advanced HUD Analytics Array */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Skill Matrix HUD */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-cyan-900/20 backdrop-blur-lg border-2 border-blue-400/40"
+                     style={{clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))'}}>
+                </div>
+                <div className="relative z-10 p-6">
+                  {/* HUD Header */}
+                  <div className="flex items-center justify-between mb-4 border-b border-blue-400/30 pb-2">
+                    <h3 className="text-lg font-bold text-blue-400 font-mono tracking-wider">[SKILL MATRIX]</h3>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                  </div>
+                  {/* Skill Proficiency Display */}
+                  <div className="space-y-4">
+                    {[
+                      { skill: 'VARIABLES', level: 95, status: 'MASTERED', color: 'green', code: 'VAR-95' },
+                      { skill: 'FUNCTIONS', level: 78, status: 'PROFICIENT', color: 'blue', code: 'FUN-78' },
+                      { skill: 'LOOPS', level: 65, status: 'DEVELOPING', color: 'yellow', code: 'LOP-65' },
+                      { skill: 'CONDITIONALS', level: 88, status: 'ADVANCED', color: 'purple', code: 'CON-88' }
+                    ].map((skill, i) => (
+                      <div key={i} className="bg-black/60 border border-gray-600/30 p-3">
+                        {/* Skill Header */}
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-2 h-2 rounded-full animate-pulse ${
+                              skill.color === 'green' ? 'bg-green-400' :
+                              skill.color === 'blue' ? 'bg-blue-400' :
+                              skill.color === 'yellow' ? 'bg-yellow-400' : 'bg-purple-400'
+                            }`}></div>
+                            <span className={`text-sm font-mono font-bold ${
+                              skill.color === 'green' ? 'text-green-400' :
+                              skill.color === 'blue' ? 'text-blue-400' :
+                              skill.color === 'yellow' ? 'text-yellow-400' : 'text-purple-400'
+                            }`}>
+                              [{skill.code}] {skill.skill}
+                            </span>
+                          </div>
+                          <div className={`text-xs font-mono px-2 py-1 border ${
+                            skill.color === 'green' ? 'text-green-400 border-green-400/40 bg-green-400/10' :
+                            skill.color === 'blue' ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' :
+                            skill.color === 'yellow' ? 'text-yellow-400 border-yellow-400/40 bg-yellow-400/10' :
+                            'text-purple-400 border-purple-400/40 bg-purple-400/10'
+                          }`}>
+                            {skill.status}
+                          </div>
+                        </div>
+                        
+                        {/* HUD Progress Bar */}
+                        <div className="relative">
+                          <div className="w-full bg-gray-800 h-3 border border-gray-600/40">
+                            <div className={`h-full bg-gradient-to-r transition-all duration-500 ${
+                              skill.color === 'green' ? 'from-green-500 to-emerald-400' :
+                              skill.color === 'blue' ? 'from-blue-500 to-cyan-400' :
+                              skill.color === 'yellow' ? 'from-yellow-500 to-orange-400' :
+                              'from-purple-500 to-pink-400'
+                            } relative`} style={{width: `${skill.level}%`}}>
+                              <div className="absolute right-0 top-0 h-full w-1 bg-white animate-pulse"></div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-400 font-mono mt-1 flex justify-between">
+                            <span>MASTERY SCAN: [{'█'.repeat(Math.floor(skill.level/10))}{'▓'.repeat(Math.floor((100-skill.level)/10))}]</span>
+                            <span className={`font-bold ${
+                              skill.color === 'green' ? 'text-green-400' :
+                              skill.color === 'blue' ? 'text-blue-400' :
+                              skill.color === 'yellow' ? 'text-yellow-400' : 'text-purple-400'
+                            }`}>{skill.level}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Intelligence Report HUD */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-900/20 to-emerald-900/20 backdrop-blur-lg border-2 border-green-400/40"
+                     style={{clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))'}}>
+                </div>
+                <div className="relative z-10 p-6">
+                  {/* HUD Header */}
+                  <div className="flex items-center justify-between mb-4 border-b border-green-400/30 pb-2">
+                    <h3 className="text-lg font-bold text-green-400 font-mono tracking-wider">[INTEL REPORT]</h3>
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  </div>
+                  
+                  {/* Weekly Statistics Display */}
+                  <div className="space-y-4">
+                    {/* Primary Metric - Weekly XP */}
+                    <div className="bg-black/60 border border-green-400/30 p-4 text-center">
+                      <div className="text-green-400 font-mono text-xs mb-1">[WEEKLY INTELLIGENCE POINTS]</div>
+                      <div className="text-4xl font-bold text-green-400 font-mono animate-pulse">{currentAgent.weeklyXP}</div>
+                      <div className="text-green-300 text-xs font-mono mt-1">XP ACCUMULATED THIS CYCLE</div>
+                      <div className="text-gray-400 font-mono text-xs">STATUS: {currentAgent.weeklyXP > 300 ? 'ABOVE AVERAGE' : 'NOMINAL'}</div>
+                    </div>
+                    
+                    {/* Performance Grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Perfect Runs */}
+                      <div className="bg-black/40 border border-cyan-400/40 p-3 text-center">
+                        <div className="text-cyan-400 font-mono text-xs">[PERFECT EXECUTIONS]</div>
+                        <div className="text-2xl font-bold text-cyan-400 font-mono">{currentAgent.perfectScores}</div>
+                        <div className="text-cyan-300 text-xs font-mono">FLAWLESS RUNS</div>
+                        <div className="text-gray-400 font-mono text-xs">ACCURACY: 100%</div>
+                      </div>
+                      
+                      {/* Speed Record */}
+                      <div className="bg-black/40 border border-orange-400/40 p-3 text-center">
+                        <div className="text-orange-400 font-mono text-xs">[SPEED RECORD]</div>
+                        <div className="text-2xl font-bold text-orange-400 font-mono">{currentAgent.fastestTime}s</div>
+                        <div className="text-orange-300 text-xs font-mono">FASTEST TIME</div>
+                        <div className="text-gray-400 font-mono text-xs">CATEGORY: ELITE</div>
+                      </div>
+                    </div>
+                    
+                    {/* Ranking Status */}
+                    <div className="bg-black/40 border-l-4 border-yellow-400 p-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-yellow-400 font-mono text-xs">[GLOBAL RANKING]</div>
+                          <div className="text-yellow-400 font-mono font-bold">
+                            RANK #{courseAgents.findIndex(a => a.id === currentAgent.id) + 1} / {courseAgents.length}
+                          </div>
+                        </div>
+                        <div className="text-2xl">🏆</div>
+                      </div>
+                      <div className="text-gray-400 font-mono text-xs mt-1">
+                        PERCENTILE: {Math.round((1 - (courseAgents.findIndex(a => a.id === currentAgent.id) / courseAgents.length)) * 100)}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mission Objectives HUD */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-red-900/20 backdrop-blur-lg border-2 border-orange-400/40"
+                     style={{clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))'}}>
+                </div>
+                <div className="relative z-10 p-6">
+                  {/* HUD Header */}
+                  <div className="flex items-center justify-between mb-4 border-b border-orange-400/30 pb-2">
+                    <h3 className="text-lg font-bold text-orange-400 font-mono tracking-wider">[MISSION OBJECTIVES]</h3>
+                    <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                  </div>
+                  
+                  {/* Objective List */}
+                  <div className="space-y-3">
+                    {[
+                      { obj: 'MASTER BINARY OPERATORS', status: 'complete', code: 'OBJ-001', priority: 'ALPHA' },
+                      { obj: 'DECODE VARIABLE MYSTERIES', status: 'complete', code: 'OBJ-002', priority: 'ALPHA' },
+                      { obj: 'INFILTRATE FUNCTION FORTRESS', status: 'current', code: 'OBJ-003', priority: 'BRAVO' },
+                      { obj: 'SECURE LOOP PROTOCOLS', status: 'locked', code: 'OBJ-004', priority: 'CHARLIE' },
+                      { obj: 'FINAL DATA EXTRACTION', status: 'locked', code: 'OBJ-005', priority: 'DELTA' }
+                    ].map((obj, i) => (
+                      <div key={i} className={`border p-3 ${
+                        obj.status === 'complete' ? 'bg-green-500/10 border-green-400/40' : 
+                        obj.status === 'current' ? 'bg-orange-500/10 border-orange-400/60 animate-pulse' : 
+                        'bg-gray-800/20 border-gray-600/40'
+                      }`}>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            {/* Status Indicator */}
+                            <div className={`w-3 h-3 border-2 flex items-center justify-center ${
+                              obj.status === 'complete' ? 'border-green-400 bg-green-400' : 
+                              obj.status === 'current' ? 'border-orange-400 bg-orange-400/50 animate-pulse' : 
+                              'border-gray-500 bg-gray-800'
+                            }`}>
+                              {obj.status === 'complete' && <div className="w-1 h-1 bg-black"></div>}
+                              {obj.status === 'current' && <div className="w-1 h-1 bg-white animate-pulse"></div>}
+                              {obj.status === 'locked' && <div className="w-1 h-1 bg-gray-600"></div>}
+                            </div>
+                            
+                            {/* Objective Details */}
+                            <div>
+                              <div className={`text-sm font-mono font-bold ${
+                                obj.status === 'complete' ? 'text-green-400' :
+                                obj.status === 'current' ? 'text-orange-400' :
+                                'text-gray-500'
+                              }`}>
+                                [{obj.code}] {obj.obj}
+                              </div>
+                              <div className={`text-xs font-mono ${
+                                obj.status === 'complete' ? 'text-green-300' :
+                                obj.status === 'current' ? 'text-orange-300' :
+                                'text-gray-600'
+                              }`}>
+                                PRIORITY: {obj.priority} | STATUS: {obj.status.toUpperCase()}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Mission Status Badge */}
+                          <div className={`text-xs font-mono px-2 py-1 border ${
+                            obj.status === 'complete' ? 'text-green-400 border-green-400/40 bg-green-400/10' :
+                            obj.status === 'current' ? 'text-orange-400 border-orange-400/40 bg-orange-400/10' :
+                            'text-gray-500 border-gray-500/40 bg-gray-500/10'
+                          }`}>
+                            {obj.status === 'complete' ? 'COMPLETED' :
+                             obj.status === 'current' ? 'IN PROGRESS' : 'CLASSIFIED'}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Mission Progress Summary */}
+                  <div className="mt-4 border-t border-orange-400/30 pt-3">
+                    <div className="flex items-center justify-between text-xs font-mono">
+                      <span className="text-gray-400">MISSION COMPLETION:</span>
+                      <span className="text-orange-400 font-bold">2/5 OBJECTIVES</span>
+                    </div>
+                    <div className="w-full bg-gray-800 h-2 border border-orange-400/30 mt-2">
+                      <div className="bg-gradient-to-r from-orange-500 to-red-500 h-full relative" style={{width: '40%'}}>
+                        <div className="absolute right-0 top-0 h-full w-1 bg-white animate-pulse"></div>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-400 font-mono mt-1">
+                      PROGRESS: [████████▓▓▓▓▓▓▓▓▓▓] 40%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
           </div>
         )}
 
-        {activeTab === 'overview' && false && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-            <h2 className="text-2xl font-bold text-white mb-6">🚀 Foundation Phase - Python Mastery</h2>
-            
-            <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-4">
-              {/* Week 1 Lesson */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all transform hover:scale-105 cursor-pointer">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-3xl">🚀</div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Welcome to CodeQuest</h3>
-                      <p className="text-purple-200 text-sm">First Interactive Program</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-yellow-400 font-bold text-lg">250 XP</div>
-                    <div className="text-purple-200 text-sm">Week 1</div>
-                  </div>
-                </div>
-                
-                <p className="text-purple-200 mb-4">Begin your coding adventure! Create your first interactive Python program.</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4 text-sm text-purple-200">
-                    <span>3 Challenges</span>
-                    <span>4 Goals</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-purple-300">
-                    <span>Start Quest</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Week 2 Lesson */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all transform hover:scale-105 cursor-pointer">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-3xl">🎯</div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Loops & Events</h3>
-                      <p className="text-purple-200 text-sm">Build a Clicker Game</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-yellow-400 font-bold text-lg">275 XP</div>
-                    <div className="text-purple-200 text-sm">Week 2</div>
-                  </div>
-                </div>
-                
-                <p className="text-purple-200 mb-4">Master loops by building an addictive clicker game!</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4 text-sm text-purple-200">
-                    <span>3 Challenges</span>
-                    <span>4 Goals</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-purple-300">
-                    <span>Start Quest</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Week 3 Lesson */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all transform hover:scale-105 cursor-pointer">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-3xl">🔢</div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Python Basics</h3>
-                      <p className="text-purple-200 text-sm">Number Guessing Game</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-yellow-400 font-bold text-lg">300 XP</div>
-                    <div className="text-purple-200 text-sm">Week 3</div>
-                  </div>
-                </div>
-                
-                <p className="text-purple-200 mb-4">Dive deeper into Python fundamentals!</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4 text-sm text-purple-200">
-                    <span>3 Challenges</span>
-                    <span>4 Goals</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-purple-300">
-                    <span>Start Quest</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-6 border border-purple-500/30">
-              <h3 className="text-xl font-bold text-white mb-4">🎯 Your CodeQuest Journey</h3>
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🚀</div>
-                  <h4 className="text-white font-medium">Foundation</h4>
-                  <p className="text-purple-200 text-sm">Python Mastery</p>
-                  <p className="text-purple-300 text-xs">Weeks 1-6</p>
-                </div>
-                <div className="text-center opacity-50">
-                  <div className="text-3xl mb-2">🤖</div>
-                  <h4 className="text-white font-medium">Innovation</h4>
-                  <p className="text-purple-200 text-sm">AI Integration</p>
-                  <p className="text-purple-300 text-xs">Coming Soon</p>
-                </div>
-                <div className="text-center opacity-50">
-                  <div className="text-3xl mb-2">🌐</div>
-                  <h4 className="text-white font-medium">Web Development</h4>
-                  <p className="text-purple-200 text-sm">HTML & CSS</p>
-                  <p className="text-purple-300 text-xs">Coming Soon</p>
-                </div>
-                <div className="text-center opacity-50">
-                  <div className="text-3xl mb-2">🏆</div>
-                  <h4 className="text-white font-medium">Capstone</h4>
-                  <p className="text-purple-200 text-sm">Final Projects</p>
-                  <p className="text-purple-300 text-xs">Coming Soon</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ENHANCED QUEST MAP */}
         {activeTab === 'questmap' && (
-          <div className="w-full min-h-screen bg-slate-950">
+          <div className="h-screen w-full">
             <AAAGameMap />
           </div>
         )}
 
-        {/* MULTIPLAYER GUILD HALL (LEADERBOARD) */}
         {activeTab === 'leaderboard' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-            {/* Leaderboard Panel */}
-            <div className="lg:col-span-2 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 font-mono">
-                <span>🏆</span>
-                <span>Agent Rankings</span>
-              </h2>
-              <div className="space-y-4">
-                {classmates.slice(0, 6).map((player, index) => (
-                  <div key={player.name} className={`flex items-center space-x-4 p-4 rounded-xl transition-all ${
-                    player.name === (user.full_name?.split(' ')[0] || 'You')
-                      ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 border border-purple-500/50 transform scale-105'
-                      : 'bg-white/5 hover:bg-white/10'
-                  }`}>
-                    <div className="text-2xl font-bold text-yellow-400 min-w-[2rem]">
-                      {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                    </div>
-                    <div className="text-3xl animate-pulse">{player.avatar}</div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-white flex items-center space-x-2">
-                        <span>{player.name}</span>
-                        {player.name === (user.full_name?.split(' ')[0] || 'You') && <span className="text-purple-400">(YOU)</span>}
-                      </h4>
-                      <p className="text-sm text-gray-300">Level {player.level} • {player.xp.toLocaleString()} XP</p>
-                    </div>
-                    <div className={`w-3 h-3 rounded-full ${
-                      player.status === 'online' ? 'bg-green-400 animate-pulse' :
-                      player.status === 'away' ? 'bg-yellow-400' : 'bg-gray-400'
-                    }`}></div>
-                  </div>
-                ))}
-              </div>
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-white mb-2 font-mono">👤 Agent Ranking System</h2>
+              <p className="text-gray-400 font-mono">Competitive intelligence leaderboards</p>
             </div>
 
-            {/* Guild Statistics */}
-            <div className="space-y-4">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center space-x-2 font-mono">
-                  <span>📊</span>
-                  <span>Operation Status</span>
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm text-white mb-2">
-                      <span>Avg Clearance</span>
-                      <span>12.2</span>
+            {/* Leaderboard View Selector */}
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {[
+                { key: 'course', label: '🏆 Course Leaders (Top 10)', icon: '🏆' },
+                { key: 'weekly', label: '⚡ Weekly Top 5', icon: '⚡' },
+                { key: 'speed', label: '🚀 Speed Records', icon: '🚀' },
+                { key: 'perfect', label: '💎 Perfect Scores', icon: '💎' }
+              ].map((view) => (
+                <button
+                  key={view.key}
+                  onClick={() => setLeaderboardView(view.key as any)}
+                  className={`px-4 py-2 rounded-lg font-mono text-sm transition-all duration-300 ${
+                    leaderboardView === view.key
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                  }`}
+                >
+                  {view.icon} {view.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Competitive Leaderboard */}
+            <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl border border-cyan-500/30 overflow-hidden">
+              <div className="space-y-2">
+                {getSortedAgents().map((agent, index) => (
+                  <div
+                    key={agent.id}
+                    className={`flex items-center justify-between p-4 ${agent.id === currentAgent.id ? 'bg-green-500/20 border-l-4 border-green-400' : 'hover:bg-gray-700/30'} transition-all duration-300`}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className={`text-2xl font-bold font-mono ${
+                        index === 0 ? 'text-yellow-400' : 
+                        index === 1 ? 'text-gray-300' : 
+                        index === 2 ? 'text-orange-400' : 'text-gray-500'
+                      }`}>
+                        #{index + 1}
+                      </div>
+                      <div className="text-3xl">{agent.avatar}</div>
+                      <div>
+                        <div className="text-white font-bold">{agent.codename}</div>
+                        <div className="text-gray-400 text-sm">{agent.name}</div>
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{width: '61%'}}></div>
+                    <div className="text-right">
+                      {leaderboardView === 'course' && (
+                        <div>
+                          <div className="text-green-400 font-mono font-bold">{agent.xp.toLocaleString()} XP</div>
+                          <div className="text-gray-400 text-sm">Level {agent.level}</div>
+                        </div>
+                      )}
+                      {leaderboardView === 'weekly' && (
+                        <div>
+                          <div className="text-orange-400 font-mono font-bold">{agent.weeklyXP} XP</div>
+                          <div className="text-gray-400 text-sm">This Week</div>
+                        </div>
+                      )}
+                      {leaderboardView === 'speed' && (
+                        <div>
+                          <div className="text-cyan-400 font-mono font-bold">{agent.fastestTime}s</div>
+                          <div className="text-gray-400 text-sm">Best Time</div>
+                        </div>
+                      )}
+                      {leaderboardView === 'perfect' && (
+                        <div>
+                          <div className="text-purple-400 font-mono font-bold">{agent.perfectScores}</div>
+                          <div className="text-gray-400 text-sm">Perfect Runs</div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm text-white mb-2">
-                      <span>Operations Complete</span>
-                      <span>73%</span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full" style={{width: '73%'}}></div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

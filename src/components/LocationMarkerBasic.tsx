@@ -70,7 +70,7 @@ export function LocationMarker({
       {/* Massive beacon pillar extending to sky */}
       <mesh position={[0, 100, 0]}>
         <cylinderGeometry args={[5, 5, 200]} />
-        <meshBasicMaterial 
+        <meshStandardMaterial 
           color={color}
           emissive={emissiveColor}
           emissiveIntensity={0.8}
@@ -82,7 +82,7 @@ export function LocationMarker({
       {/* Large pulsing base ring */}
       <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[25, 35]} />
-        <meshBasicMaterial 
+        <meshStandardMaterial 
           color={emissiveColor}
           emissive={emissiveColor}
           emissiveIntensity={1.0}
@@ -116,7 +116,7 @@ export function LocationMarker({
       {completed && (
         <mesh position={[0, 32, 0]}>
           <sphereGeometry args={[8]} />
-          <meshBasicMaterial 
+          <meshStandardMaterial 
             color="#10b981" 
             emissive="#10b981"
             emissiveIntensity={0.8}
@@ -127,7 +127,7 @@ export function LocationMarker({
       {!unlocked && (
         <mesh position={[0, 32, 0]}>
           <boxGeometry args={[10, 12, 6]} />
-          <meshBasicMaterial 
+          <meshStandardMaterial 
             color="#ef4444"
             emissive="#ef4444"
             emissiveIntensity={0.6}

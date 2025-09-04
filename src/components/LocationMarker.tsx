@@ -196,7 +196,7 @@ export function LocationMarker({
         {completed && (
           <mesh position={[0, 22, 0]}>
             <sphereGeometry args={[3]} />
-            <meshBasicMaterial 
+            <meshStandardMaterial 
               color="#10b981"
               emissive="#10b981"
               emissiveIntensity={0.6}
@@ -210,8 +210,6 @@ export function LocationMarker({
             <boxGeometry args={[4, 5, 2]} />
             <meshBasicMaterial 
               color="#ef4444"
-              emissive="#ef4444"
-              emissiveIntensity={0.4}
             />
           </mesh>
         )}
@@ -265,6 +263,6 @@ export function LocationMarker({
   )
   } catch (error) {
     console.error('LocationMarker error:', error)
-    return <SimpleFallbackMarker position={safePosition} name={name || 'Mission'} />
+    return <SimpleFallbackMarker position={position} name={name || 'Mission'} />
   }
 }

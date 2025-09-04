@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Home, Lock, CheckCircle, Play, Users, Trophy, Zap, Target, Clock, BookOpen, Star, Flame } from 'lucide-react'
+import { ArrowLeft, Home, Lock, CheckCircle, Play, Users, Trophy, Zap, Target, Clock, BookOpen, Star, Flame, AlertTriangle, Shield } from 'lucide-react'
 
 interface Mission {
   id: number
@@ -49,10 +49,10 @@ const CURRICULUM_MISSIONS: Mission[] = [
 ]
 
 const PHASE_COLORS = {
-  'Shadow Protocol': 'from-gray-600 to-slate-700',
-  'Cipher Command': 'from-blue-600 to-indigo-700', 
-  'Ghost Protocol': 'from-purple-600 to-violet-700',
-  'Quantum Breach': 'from-pink-600 to-rose-700'
+  'Shadow Protocol': 'border-green-400/30 bg-green-400/5',
+  'Cipher Command': 'border-cyan-400/30 bg-cyan-400/5', 
+  'Ghost Protocol': 'border-amber-400/30 bg-amber-400/5',
+  'Quantum Breach': 'border-red-400/30 bg-red-400/5'
 }
 
 const PHASE_ICONS = {
@@ -62,7 +62,7 @@ const PHASE_ICONS = {
   'Quantum Breach': '⚛️'
 }
 
-export default function CurriculumOverview() {
+export default function MissionObjectives() {
   const router = useRouter()
   const [selectedPhase, setSelectedPhase] = useState<string | null>(null)
   const [currentWeek, setCurrentWeek] = useState(2) // Demo: student is on week 2
@@ -117,42 +117,82 @@ export default function CurriculumOverview() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-        <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
-        <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+    <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
+      {/* Tactical HUD Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-50">
+        {/* Corner Brackets */}
+        <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-green-400"></div>
+        <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-green-400"></div>
+        <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-green-400"></div>
+        <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-green-400"></div>
+        
+        {/* Top HUD Bar */}
+        <div className="absolute top-0 left-0 right-0 h-16 bg-black/80 backdrop-blur-sm border-b border-green-400/30">
+          <div className="flex items-center justify-between px-8 py-3">
+            <div className="flex items-center space-x-4">
+              <span className="text-green-400 text-sm font-mono">OPERATION: DIGITAL FORTRESS</span>
+              <div className="text-amber-400 text-sm">● MISSION OBJECTIVES</div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-green-400 text-sm">CLEARANCE LEVEL: TOP SECRET</span>
+              <div className="text-cyan-400 text-sm animate-pulse">SYSTEM ONLINE</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scanning Lines */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-green-400/20 to-transparent animate-ping"></div>
+          <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent top-1/3 animate-ping" style={{animationDelay: '1s'}}></div>
+          <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-amber-400/20 to-transparent top-2/3 animate-ping" style={{animationDelay: '2s'}}></div>
+        </div>
+
+        {/* Side Status Indicators */}
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 p-4">
+          <div className="bg-black/80 backdrop-blur-sm border border-green-400/30 p-2 text-xs space-y-1">
+            <div className="text-green-400">SYS STATUS</div>
+            <div className="text-amber-400">● ACTIVE</div>
+            <div className="text-cyan-400">● ONLINE</div>
+          </div>
+        </div>
+
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 p-4">
+          <div className="bg-black/80 backdrop-blur-sm border border-green-400/30 p-2 text-xs space-y-1">
+            <div className="text-green-400">THREAT LVL</div>
+            <div className="text-red-400">● MINIMAL</div>
+            <div className="text-green-400">● SECURE</div>
+          </div>
+        </div>
       </div>
 
       {/* Header */}
-      <div className="relative bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
+      <div className="relative bg-black/90 backdrop-blur-sm border-b border-green-400/30 pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link 
                 href="/student/dashboard"
-                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+                className="flex items-center space-x-2 bg-black/80 border border-green-400/50 hover:border-green-400 text-green-400 px-3 py-2 transition-all duration-300 hover:bg-green-400/10"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm">Dashboard</span>
+                <span className="text-sm font-mono">AGENT COMMAND</span>
               </Link>
               <div className="flex items-center">
-                <BookOpen className="h-8 w-8 text-blue-500 mr-3 animate-pulse" />
+                <Target className="h-8 w-8 text-green-400 mr-3 animate-pulse" />
                 <div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    CodeFly Curriculum ✈️
+                  <h1 className="text-xl font-bold text-green-400 font-mono">
+                    MISSION OBJECTIVES
                   </h1>
-                  <p className="text-sm text-gray-300">Black Cipher - 18-Week Spy Coding Adventure</p>
+                  <p className="text-sm text-cyan-400 font-mono">BLACK CIPHER - 18-WEEK INFILTRATION PROTOCOL</p>
                 </div>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-purple-500/30">
+              <div className="bg-black/80 border border-green-400/30 px-4 py-2">
                 <div className="flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-green-400" />
-                  <span className="text-white font-semibold">Week {currentWeek} of 18</span>
+                  <Clock className="h-4 w-4 text-amber-400" />
+                  <span className="text-green-400 font-mono">WEEK {currentWeek}/18</span>
                 </div>
               </div>
             </div>
@@ -174,35 +214,35 @@ export default function CurriculumOverview() {
               <div
                 key={phase}
                 onClick={() => setSelectedPhase(selectedPhase === phase ? null : phase)}
-                className={`bg-gradient-to-br ${PHASE_COLORS[phase as keyof typeof PHASE_COLORS]}/20 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-white/40 cursor-pointer transition-all transform hover:scale-105 ${
-                  isCurrentPhase ? 'ring-2 ring-yellow-400 ring-opacity-50' : ''
-                } ${selectedPhase === phase ? 'scale-105 border-white/50' : ''}`}
+                className={`${PHASE_COLORS[phase as keyof typeof PHASE_COLORS]} backdrop-blur-lg border p-6 cursor-pointer transition-all transform hover:scale-105 ${
+                  isCurrentPhase ? 'border-amber-400 bg-amber-400/10' : ''
+                } ${selectedPhase === phase ? 'scale-105 border-green-400' : ''}`}
               >
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="text-3xl">{PHASE_ICONS[phase as keyof typeof PHASE_ICONS]}</div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">{phase}</h3>
-                    <p className="text-xs text-gray-300">Weeks {missions[0]?.week}-{missions[missions.length-1]?.week}</p>
+                    <h3 className="text-lg font-bold text-green-400 font-mono">{phase}</h3>
+                    <p className="text-xs text-cyan-400 font-mono">WEEKS {missions[0]?.week}-{missions[missions.length-1]?.week}</p>
                   </div>
                 </div>
                 
                 <div className="mb-4">
-                  <div className="flex justify-between text-sm text-white mb-2">
-                    <span>Progress</span>
+                  <div className="flex justify-between text-sm text-green-400 font-mono mb-2">
+                    <span>PROGRESS</span>
                     <span>{progress.completed}/{progress.total}</span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-black/50 border border-green-400/30 h-2">
                     <div 
-                      className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500" 
+                      className="bg-gradient-to-r from-green-400 to-cyan-400 h-2 transition-all duration-500" 
                       style={{width: `${progress.percentage}%`}}
                     ></div>
                   </div>
                 </div>
 
-                <div className="text-xs text-gray-300">
-                  {progress.completed === 0 ? 'Not Started' : 
-                   progress.completed === progress.total ? '✅ Complete' :
-                   isCurrentPhase ? '⚡ Current Phase' : 'In Progress'}
+                <div className="text-xs text-amber-400 font-mono">
+                  {progress.completed === 0 ? '[ NOT STARTED ]' : 
+                   progress.completed === progress.total ? '[ ✓ COMPLETE ]' :
+                   isCurrentPhase ? '[ ⚡ ACTIVE ]' : '[ IN PROGRESS ]'}
                 </div>
               </div>
             )
@@ -210,11 +250,11 @@ export default function CurriculumOverview() {
         </div>
 
         {/* Mission Timeline */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
-            <Target className="h-6 w-6 text-purple-400" />
-            <span>Mission Timeline</span>
-            {selectedPhase && <span className="text-lg">- {selectedPhase}</span>}
+        <div className="bg-black/80 backdrop-blur-lg border border-green-400/30 p-6">
+          <h2 className="text-2xl font-bold text-green-400 mb-6 flex items-center space-x-3 font-mono">
+            <Target className="h-6 w-6 text-green-400" />
+            <span>MISSION TIMELINE</span>
+            {selectedPhase && <span className="text-lg text-cyan-400">- {selectedPhase}</span>}
           </h2>
 
           <div className="grid gap-4">
@@ -222,14 +262,14 @@ export default function CurriculumOverview() {
               <div
                 key={mission.id}
                 onClick={() => handleMissionClick(mission)}
-                className={`p-4 rounded-xl border transition-all transform hover:scale-102 cursor-pointer ${
+                className={`p-4 border transition-all transform hover:scale-102 cursor-pointer bg-black/50 ${
                   mission.completed 
-                    ? 'bg-green-500/20 border-green-400/50 hover:border-green-300/70' 
+                    ? 'border-green-400/70 hover:border-green-400 bg-green-400/5' 
                     : mission.unlocked
                     ? mission.week === currentWeek
-                      ? 'bg-yellow-500/20 border-yellow-400/50 hover:border-yellow-300/70 ring-2 ring-yellow-400/30'
-                      : 'bg-blue-500/20 border-blue-400/50 hover:border-blue-300/70'
-                    : 'bg-gray-500/20 border-gray-400/50 opacity-60 cursor-not-allowed'
+                      ? 'border-amber-400/70 hover:border-amber-400 bg-amber-400/10'
+                      : 'border-cyan-400/50 hover:border-cyan-400/70 bg-cyan-400/5'
+                    : 'border-red-400/30 opacity-60 cursor-not-allowed bg-red-400/5'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -240,18 +280,18 @@ export default function CurriculumOverview() {
                         : '🔒'}
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                      <h3 className="text-lg font-bold text-green-400 flex items-center space-x-2 font-mono">
                         <span>{mission.name}</span>
-                        {mission.teamRequired && <Users className="h-4 w-4 text-blue-400" />}
-                        {mission.week === currentWeek && <Flame className="h-4 w-4 text-orange-400 animate-pulse" />}
+                        {mission.teamRequired && <Users className="h-4 w-4 text-cyan-400" />}
+                        {mission.week === currentWeek && <Flame className="h-4 w-4 text-amber-400 animate-pulse" />}
                       </h3>
-                      <p className="text-sm text-gray-300">{mission.description}</p>
-                      <div className="flex items-center space-x-4 text-xs text-gray-400 mt-1">
-                        <span>Week {mission.week}</span>
-                        <span>Difficulty: {'⭐'.repeat(mission.difficulty)}</span>
-                        <span className="text-yellow-400">+{mission.xpReward} XP</span>
+                      <p className="text-sm text-cyan-400 font-mono">{mission.description}</p>
+                      <div className="flex items-center space-x-4 text-xs text-amber-400 mt-1 font-mono">
+                        <span>WEEK {mission.week}</span>
+                        <span>DIFF: {'⭐'.repeat(mission.difficulty)}</span>
+                        <span className="text-green-400">+{mission.xpReward} XP</span>
                         {mission.type === 'assessment' && (
-                          <span className="bg-purple-500/30 px-2 py-1 rounded text-purple-200">
+                          <span className="bg-red-400/20 border border-red-400/30 px-2 py-1 text-red-400">
                             {mission.assessmentType?.toUpperCase()}
                           </span>
                         )}
@@ -261,7 +301,7 @@ export default function CurriculumOverview() {
                   <div className="text-right">
                     <div className={`text-2xl font-bold ${
                       mission.completed ? 'text-green-400' : 
-                      mission.unlocked ? 'text-blue-400' : 'text-gray-400'
+                      mission.unlocked ? 'text-cyan-400' : 'text-red-400'
                     }`}>
                       {mission.phase === 'Shadow Protocol' ? '🕯️' :
                        mission.phase === 'Cipher Command' ? '🔐' :
@@ -275,17 +315,17 @@ export default function CurriculumOverview() {
         </div>
 
         {/* Team Formation Highlight */}
-        <div className="mt-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-lg rounded-2xl p-6 border border-blue-500/30">
+        <div className="mt-6 bg-black/80 backdrop-blur-lg border border-cyan-400/30 p-6">
           <div className="flex items-center space-x-4">
-            <Users className="h-8 w-8 text-blue-400 animate-pulse" />
+            <Users className="h-8 w-8 text-cyan-400 animate-pulse" />
             <div>
-              <h3 className="text-xl font-bold text-white">Team Development Track</h3>
-              <p className="text-blue-200">
+              <h3 className="text-xl font-bold text-green-400 font-mono">SQUAD FORMATION PROTOCOL</h3>
+              <p className="text-cyan-400 font-mono">
                 {currentWeek < 6 
-                  ? `Solo missions until Week 6, then join your development team!`
+                  ? `[ SOLO OPS UNTIL WEEK 6 - THEN JOIN DEVELOPMENT SQUAD ]`
                   : localStorage.getItem('student_team')
-                  ? `You're part of Team ${JSON.parse(localStorage.getItem('student_team') || '{}').name || 'Alpha'}`
-                  : `Ready to join your development team? Complete Team Formation Protocol!`
+                  ? `[ ACTIVE SQUAD: ${JSON.parse(localStorage.getItem('student_team') || '{}').name || 'ALPHA'} ]`
+                  : `[ READY TO JOIN DEVELOPMENT SQUAD? COMPLETE FORMATION PROTOCOL ]`
                 }
               </p>
             </div>
@@ -293,10 +333,10 @@ export default function CurriculumOverview() {
             {currentWeek >= 6 && !localStorage.getItem('student_team') && (
               <button
                 onClick={() => router.push('/team-formation')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center space-x-2"
+                className="bg-black/80 border border-cyan-400/50 hover:border-cyan-400 text-cyan-400 px-6 py-3 font-medium transition-all transform hover:scale-105 flex items-center space-x-2 font-mono hover:bg-cyan-400/10"
               >
                 <Users className="h-4 w-4" />
-                <span>Join Team</span>
+                <span>JOIN SQUAD</span>
               </button>
             )}
           </div>

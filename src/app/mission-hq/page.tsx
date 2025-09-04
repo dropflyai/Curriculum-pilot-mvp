@@ -56,42 +56,56 @@ export default function MissionHQ() {
 
   const missions: Mission[] = [
     {
-      id: 'black-cipher',
-      name: 'BLACK CIPHER',
-      codename: 'OPERATION: DIGITAL FORTRESS',
+      id: 'shadow-protocol',
+      name: 'SHADOW PROTOCOL',
+      codename: 'OPERATION: SOLO MISSIONS',
       status: 'ACTIVE',
-      difficulty: 'EXTREME',
-      duration: '18 WEEKS',
-      xpReward: 25000,
+      difficulty: 'BEGINNER',
+      duration: '4 WEEKS',
+      xpReward: 5000,
       progress: 0,
-      description: 'Elite Python programming course. Infiltrate digital fortresses, decode encrypted algorithms, and master advanced programming concepts through tactical missions.',
+      description: 'Phase 1 of Black Cipher. Master Python fundamentals through solo infiltration missions. Learn variables, loops, and basic algorithms.',
       image: '/CodeFly Homepage.png',
-      route: '/mission/black-cipher'
+      route: '/mission/shadow-protocol'
+    },
+    {
+      id: 'cipher-command',
+      name: 'CIPHER COMMAND',
+      codename: 'OPERATION: TEAM FORMATION',
+      status: 'LOCKED',
+      difficulty: 'INTERMEDIATE',
+      duration: '4 WEEKS',
+      xpReward: 7500,
+      progress: 0,
+      description: 'Phase 2 of Black Cipher. Form elite coding teams and master functions, data structures, and collaborative programming tactics.',
+      image: '/CodeFly Homepage 2.png',
+      prerequisite: 'SHADOW PROTOCOL',
+      route: '/mission/cipher-command'
     },
     {
       id: 'ghost-protocol',
       name: 'GHOST PROTOCOL',
-      codename: 'OPERATION: STEALTH CODE',
+      codename: 'OPERATION: TEAM COLLABORATION',
       status: 'LOCKED',
       difficulty: 'ADVANCED',
-      duration: '12 WEEKS',
-      xpReward: 15000,
+      duration: '5 WEEKS',
+      xpReward: 10000,
       progress: 0,
-      description: 'Advanced web development operations. Master HTML, CSS, and JavaScript to create invisible digital infiltration tools.',
-      image: '/CodeFly Homepage 2.png',
-      prerequisite: 'BLACK CIPHER',
+      description: 'Phase 3 of Black Cipher. Execute complex team missions using object-oriented programming and advanced Python concepts.',
+      image: '/CodeFly Homepage 3.png',
+      prerequisite: 'CIPHER COMMAND',
       route: '/mission/ghost-protocol'
     },
     {
       id: 'quantum-breach',
       name: 'QUANTUM BREACH',
-      codename: 'OPERATION: DATA STORM',
+      codename: 'OPERATION: ADVANCED PROJECTS',
       status: 'LOCKED',
       difficulty: 'EXPERT',
-      duration: '16 WEEKS',
-      xpReward: 20000,
+      duration: '5 WEEKS',
+      xpReward: 15000,
       progress: 0,
-      description: 'Data science and machine learning protocols. Analyze massive datasets and deploy AI algorithms for strategic advantage.',
+      description: 'Phase 4 of Black Cipher. Deploy advanced team projects using APIs, databases, and real-world Python applications.',
       image: '/CodeFly Homepage 3.png',
       prerequisite: 'GHOST PROTOCOL',
       route: '/mission/quantum-breach'
@@ -232,7 +246,7 @@ export default function MissionHQ() {
             AVAILABLE OPERATIONS
           </h3>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {missions.map((mission) => (
               <div
                 key={mission.id}
@@ -242,7 +256,7 @@ export default function MissionHQ() {
                 onClick={() => mission.status !== 'LOCKED' && setSelectedMission(mission)}
               >
                 {/* Mission Card */}
-                <div className="relative h-64 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-green-500/50 transition-all">
+                <div className="relative h-56 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-green-500/50 transition-all">
                   {/* Background Image */}
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
@@ -267,11 +281,11 @@ export default function MissionHQ() {
                   )}
                   
                   {/* Content */}
-                  <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                  <div className="absolute inset-0 p-4 flex flex-col justify-between">
                     {/* Header */}
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className={`text-xs font-mono px-2 py-1 rounded ${
+                      <div className="flex items-center justify-between mb-1">
+                        <span className={`text-xs font-mono px-1 py-0.5 rounded ${
                           mission.difficulty === 'EXTREME' ? 'bg-red-900/80 text-red-300' :
                           mission.difficulty === 'EXPERT' ? 'bg-orange-900/80 text-orange-300' :
                           mission.difficulty === 'ADVANCED' ? 'bg-yellow-900/80 text-yellow-300' :
@@ -281,16 +295,16 @@ export default function MissionHQ() {
                           {mission.difficulty}
                         </span>
                         {mission.status === 'ACTIVE' && (
-                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         )}
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-1">{mission.name}</h3>
+                      <h3 className="text-lg font-bold text-white mb-0.5">{mission.name}</h3>
                       <p className="text-xs text-gray-400 font-mono">{mission.codename}</p>
                     </div>
                     
                     {/* Footer */}
                     <div>
-                      <p className="text-sm text-gray-300 mb-3 line-clamp-2">{mission.description}</p>
+                      <p className="text-xs text-gray-300 mb-2 line-clamp-2">{mission.description}</p>
                       <div className="flex items-center justify-between text-xs font-mono">
                         <span className="text-gray-400">{mission.duration}</span>
                         <span className="text-yellow-400">{mission.xpReward.toLocaleString()} XP</span>

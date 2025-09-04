@@ -401,6 +401,7 @@ export default function StudentDashboard() {
                         </div>
                       </div>
                     </div>
+                  </div>
               </div>
 
               {/* Military HUD Side Panels */}
@@ -422,7 +423,7 @@ export default function StudentDashboard() {
                       <div className="text-center mb-3">
                         <div className="text-2xl mb-1">🔥</div>
                         <div className="text-blue-400 font-mono font-bold text-lg">{currentAgent.codename}</div>
-                        <div className="text-gray-400 text-xs font-mono">ID: {currentAgent.id.toUpperCase()}-7749</div>
+                        <div className="text-gray-400 text-xs font-mono">ID: {String(currentAgent.id).toUpperCase()}-7749</div>
                       </div>
                       <div className="border-t border-blue-400/30 pt-3 space-y-2">
                         <div className="flex justify-between text-xs">
@@ -626,6 +627,7 @@ export default function StudentDashboard() {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
 
             {/* AI Learning Recommendations HUD */}

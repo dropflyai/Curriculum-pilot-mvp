@@ -135,7 +135,7 @@ export function LocationMarker({
         {completed && (
           <mesh position={[0, 40, 20]}>
             <sphereGeometry args={[8]} />
-            <meshBasicMaterial 
+            <meshStandardMaterial 
               color="#10b981" 
               emissive="#10b981"
               emissiveIntensity={0.7}
@@ -146,7 +146,7 @@ export function LocationMarker({
         {!unlocked && (
           <mesh position={[0, 40, 20]}>
             <boxGeometry args={[10, 12, 6]} />
-            <meshBasicMaterial 
+            <meshStandardMaterial 
               color="#ef4444"
               emissive="#ef4444" 
               emissiveIntensity={0.5}

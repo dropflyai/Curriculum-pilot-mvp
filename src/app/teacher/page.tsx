@@ -195,7 +195,7 @@ export default function TeacherDashboard() {
         duration_minutes: 60,
         unlock_rule: 'available' as const,
         objectives: [],
-        standards: lesson.standards || [],
+        standards: [],
         learn_md: '',
         starter_code: '',
         tests_py: '',
@@ -330,11 +330,11 @@ export default function TeacherDashboard() {
 
         // Extract common errors from code submissions
         const allCodeSubmissions = studentsWithProgress.flatMap((s: any) => s.codeSubmissions || [])
-        const errorMessages = allCodeSubmissions
+        const errorMessages: string[] = allCodeSubmissions
           .filter((sub: any) => sub.result === 'error' && sub.errorMessage)
-          .map((sub: any) => sub.errorMessage!)
+          .map((sub: any) => sub.errorMessage as string)
         
-        const commonErrors = errorMessages.length > 0 
+        const commonErrors: string[] = errorMessages.length > 0 
           ? [...new Set(errorMessages)].slice(0, 3)
           : ['No errors recorded yet']
 
@@ -385,7 +385,7 @@ export default function TeacherDashboard() {
           id: `progress-${student.id}`,
           user_id: student.id,
           lesson_id: 'lesson-1',
-          status: student.completedLessons > 0 ? 'completed' : 'in_progress',
+          status: student.completedLessons > 0 ? 'completed' as const : 'in_progress' as const,
           score: student.averageScore,
           started_at: new Date(Date.now() - student.timeSpent * 60000).toISOString(),
           created_at: new Date().toISOString(),
@@ -419,7 +419,7 @@ export default function TeacherDashboard() {
         duration_minutes: 60,
         unlock_rule: 'available' as const,
         objectives: [],
-        standards: lesson.standards || [],
+        standards: [],
         learn_md: '',
         starter_code: '',
         tests_py: '',
@@ -450,21 +450,24 @@ export default function TeacherDashboard() {
       
       // Set mock predictive analytics
       setPredictiveAnalytics({
-        atRiskStudents: mockData.students.filter((s: any) => s.status === 'stuck' || s.status === 'needs_help'),
-        engagementTrends: {
-          increasing: ['Sarah Chen', 'Alex Thompson'],
-          decreasing: ['Michael Brown'],
-          steady: ['Maria Garcia', 'James Wilson']
+        riskStudents: mockData.students
+          .filter((s: any) => s.status === 'stuck' || s.status === 'needs_help')
+          .map((s: any) => ({
+            student: mockStudentsWithProgress.find((student: any) => student.user.id === s.id)!,
+            riskLevel: s.status === 'stuck' ? 'high' as const : 'medium' as const,
+            riskFactors: ['Low engagement', 'Behind on assignments'],
+            interventionSuggestions: ['Schedule 1:1 meeting', 'Review fundamentals']
+          })),
+        classInsights: {
+          engagementTrend: 'stable' as const,
+          performanceTrend: 'improving' as const,
+          recommendedPacing: 'maintain' as const,
+          nextWeekPrediction: 'Continue current momentum with extra support for struggling students'
         },
-        recommendedInterventions: [
-          'Schedule 1-on-1 with James Wilson for variable concepts',
-          'Create study group for struggling students',
-          'Review error handling in next class'
-        ],
-        predictedCompletion: {
-          onTrack: 3,
-          atRisk: 2,
-          needsSupport: 1
+        learningPatterns: {
+          peakHours: ['2PM-4PM', '7PM-9PM'],
+          strugglingConcepts: ['Object-Oriented Programming', 'Error Handling'],
+          successfulStrategies: ['Hands-on practice', 'Peer collaboration']
         }
       })
     } finally {
@@ -2036,12 +2039,12 @@ CodeFly Computer Science Teacher
                         onClick={() => {
                           // Save grade to localStorage for persistence
                           const gradeData = {
-                            studentId: student.user.id,
-                            studentName: student.user.full_name,
+                            studentId: gradingStudent.user.id,
+                            studentName: gradingStudent.user.full_name,
                             lessonId: lesson.id,
                             lessonTitle: lesson.title,
-                            grade: document.querySelector(`input[placeholder="Grade (0-100)"]`)?.value || '',
-                            feedback: document.querySelector(`textarea[placeholder*="feedback"]`)?.value || '',
+                            grade: (document.querySelector(`input[placeholder="Grade (0-100)"]`) as HTMLInputElement)?.value || '',
+                            feedback: (document.querySelector(`textarea[placeholder*="feedback"]`) as HTMLTextAreaElement)?.value || '',
                             timestamp: new Date().toISOString()
                           }
                           
@@ -2050,7 +2053,7 @@ CodeFly Computer Science Teacher
                           existingGrades.push(gradeData)
                           localStorage.setItem('teacher_grades', JSON.stringify(existingGrades))
                           
-                          alert(`Grade saved for ${student.user.full_name}!`)
+                          alert(`Grade saved for ${gradingStudent.user.full_name}!`)
                           setShowGradeModal(false)
                           setGradingStudent(null)
                         }}

@@ -117,7 +117,7 @@ export function LocationMedallion({
         {completed && (
           <mesh position={[0, 1, 0]}>
             <sphereGeometry args={[0.8, 8, 6]} />
-            <meshBasicMaterial 
+            <meshStandardMaterial 
               color="#fbbf24"
               emissive="#f59e0b"
               emissiveIntensity={0.5}

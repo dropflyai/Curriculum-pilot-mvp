@@ -180,3 +180,166 @@ The Black Cipher facility is divided into secured zones that agents must infiltr
 - Monospace fonts for computer terminal feel
 - Corner brackets and status indicators
 - "CLASSIFIED" and "TOP SECRET" styling elements
+
+## BLACK CIPHER CHARACTER UNIVERSE
+
+### 🎭 AGENT AVATARS (Student Characters)
+Students choose from specialized agent archetypes:
+
+**🕵️‍♂️ CIPHER OPERATIVE** - The Classic Spy
+- Starting bonus: +10% XP on stealth missions
+- Special ability: Code Invisibility (bypass one error per lesson)
+- Avatar: 🕵️‍♂️
+
+**🤖 TECH SPECIALIST** - The Hacker
+- Starting bonus: +15% faster debugging
+- Special ability: System Override (skip one challenge per mission)  
+- Avatar: 👨‍💻
+
+**⚡ CYBER NINJA** - The Speed Runner
+- Starting bonus: +20% completion speed bonus
+- Special ability: Lightning Code (double XP for 5 minutes)
+- Avatar: 🥷
+
+**🔬 DATA ANALYST** - The Strategic Mind
+- Starting bonus: +25% XP on logic puzzles
+- Special ability: Pattern Recognition (get hints on complex problems)
+- Avatar: 👩‍🔬
+
+**🛡️ SECURITY EXPERT** - The Defender
+- Starting bonus: Extra attempt on failed missions
+- Special ability: Firewall Shield (prevent XP loss on mistakes)
+- Avatar: 👨‍✈️
+
+**🌟 ROOKIE AGENT** - The Beginner
+- Starting bonus: +50% tutorial XP
+- Special ability: Training Wheels (extended time limits)
+- Avatar: 🧑‍🎓
+
+### 👑 COMMAND STRUCTURE (Allies)
+
+**🎖️ COMMANDER ATLAS** - Mission Director
+- Provides mission briefings and strategic guidance
+- Unlocks advanced operations at higher clearance levels
+- "Agent, the Digital Fortress won't infiltrate itself."
+
+**📡 OPERATOR ECHO** - Intel Coordinator  
+- Real-time hints and tactical support during missions
+- Manages field communications and progress tracking
+- "Copy that, Agent. Intel coming through now."
+
+**🔧 TECH CHIEF BINARY** - Systems Specialist
+- Provides debugging tools and coding equipment
+- Unlocks advanced IDE features and code assistants
+- "I've upgraded your development environment, Agent."
+
+**🧠 DR. SOPHIA QUANTUM** - AI Research Lead
+- Explains complex algorithms and provides learning resources
+- Final ally revealed to help defeat Black Cipher AI
+- "Understanding the enemy's code is key to victory."
+
+### 💀 VILLAINS & BOSSES
+
+**🤖 BLACK CIPHER AI** - Final Boss
+- The rogue artificial intelligence controlling the Digital Fortress
+- Adapts to student coding patterns, becoming more challenging
+- Must be defeated through advanced algorithm implementation
+- "I AM THE FUTURE OF CODE. YOU ARE OBSOLETE."
+
+**⚡ VIRUS GENERAL MALWARE** - Mid-Boss (Week 8)
+- Commands corrupted code armies in the Algorithm Archipelago
+- Creates buggy code challenges that must be debugged
+- Weak to clean, efficient programming practices
+- "Your code will be infected with my chaos!"
+
+**🔐 ENCRYPTION MASTER CAESAR** - Early Boss (Week 4)
+- Guards the security protocols in Loop Canyon Base
+- Creates complex cipher puzzles and logic traps
+- Defeated through mastery of loops and conditionals
+- "None shall pass without solving my eternal riddles!"
+
+**🕷️ DATA SPIDER CRAWLER** - Recurring Mini-Boss
+- Appears randomly during missions to steal progress
+- Can be defeated quickly with correct syntax
+- Vulnerable to well-structured code
+- "Sssssyntax errorsss are my favorite meal!"
+
+**👥 SHADOW COLLECTIVE** - Henchmen
+- Faceless coding challenges that serve the main villains
+- Standard lesson obstacles with thematic flavoring
+- "We are Legion. We are Bugs. We are Infinite."
+
+### ⚡ POWER-UP SYSTEM
+
+#### 🎯 TACTICAL BOOSTERS (Temporary - 15-30 mins)
+**Code Accelerator** - 2x coding speed, faster typing recognition
+**Debug Vision** - Highlights potential errors before running code  
+**XP Amplifier** - 1.5x experience points for next 3 completed challenges
+**Time Dilation** - Extended time limits on timed challenges
+**Hint Radar** - Extra hints available during current session
+**Syntax Shield** - First syntax error auto-corrected per mission
+
+#### 🛡️ PERMANENT UNLOCKS (XP Milestones)
+**Level 5**: Advanced Code Editor (syntax highlighting, autocomplete)
+**Level 10**: AI Assistant Integration (coding suggestions)
+**Level 15**: Mission Replay Access (redo completed missions for XP)
+**Level 20**: Speed Mode (optional time challenges for bonus XP)
+**Level 25**: Master Debugger (advanced error analysis tools)
+**Level 30**: Algorithm Arsenal (pre-built code snippets library)
+
+#### 🏆 SPECIALIST EQUIPMENT (Earned through missions)
+**Quantum Keyboard** - Reduces typos, faster code input
+**Neural Interface** - Better problem-solving hints and AI assistance
+**Stealth Compiler** - Run code without alerting security (fewer penalties)
+**Data Analyzer** - Cut through complex data structure challenges
+**Logic Shield** - Protection against losing XP on failed attempts
+**Cipher Scanner** - See hidden patterns in code puzzles
+**Holographic Display** - Enhanced visual coding environment
+**Memory Amplifier** - Remember more syntax and functions
+**Processing Core** - Faster computational thinking
+
+### 📈 PROGRESSION MECHANICS
+
+#### What Gets Boosted:
+1. **Coding Speed** - Faster lesson completion through enhanced processors
+2. **XP Multipliers** - More points per correct answer via data amplifiers
+3. **Error Forgiveness** - Extra attempts through backup systems
+4. **Hint Access** - More clues via enhanced neural networks
+5. **Time Extensions** - Extended processing time through quantum computing
+6. **Advanced Tools** - Better IDE features and debugging scanners
+7. **Replay Value** - Access archived missions through memory banks
+8. **Collaboration** - Encrypted team channels with other agents (future)
+
+## CYBER WARFARE MECHANICS (School-Safe)
+
+### 🔬 HIGH-TECH BATTLE SYSTEM
+- **Code Duels**: Logic puzzles against AI opponents
+- **Data Streams**: Navigate information flows to solve problems  
+- **Encryption Battles**: Decode enemy communications
+- **System Infiltration**: Bypass security through programming
+- **Virus Debugging**: Clean infected code to defeat enemies
+- **Algorithm Racing**: Speed coding competitions
+- **Neural Hacking**: Connect patterns to unlock systems
+- **Quantum Computing**: Solve complex multi-dimensional problems
+
+## 🚨 TROUBLESHOOTING PROTOCOL - MANDATORY
+
+### When Issues Occur, ALWAYS:
+
+1. **FIRST CHECK**: `KNOWN-SOLUTIONS.md` - We've solved this before? Use that solution!
+2. **FOLLOW PROTOCOL**: Use `TROUBLESHOOTING-PROTOCOL.md` systematically
+3. **LOG EVERYTHING**: Document each attempt in the protocol
+4. **UPDATE KNOWLEDGE**: Add new solutions to `KNOWN-SOLUTIONS.md` after fixing
+5. **TRACK AGENTS**: Log all deployed agents in `AGENT-REGISTRY.md`
+
+### Quick Access Files:
+- `KNOWN-SOLUTIONS.md` - Database of working fixes
+- `TROUBLESHOOTING-PROTOCOL.md` - Systematic debugging approach
+- `AGENT-REGISTRY.md` - Specialized agent tracking and efficiency metrics
+
+### Efficiency Rules:
+1. **NO REPEATED FAILURES** - Check logs before attempting same solution
+2. **SPEED IS KEY** - Known issues should be fixed in < 2 minutes
+3. **DOCUMENT SUCCESS** - Every new solution goes in KNOWN-SOLUTIONS.md
+4. **IMPROVE AGENTS** - Update templates when agents aren't fast enough
+5. **MEASURE EVERYTHING** - Track resolution times in AGENT-REGISTRY.md
