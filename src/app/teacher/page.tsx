@@ -960,17 +960,22 @@ CodeFly Computer Science Teacher
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      {/* Header */}
+      {/* Centered Header */}
       <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                CodeFly Teacher Portal ✈️🎯
-              </h1>
-              <p className="mt-1 text-lg text-purple-300 font-medium">9th Grade Computer Science • Real-time Classroom Management</p>
-            </div>
-            <div className="flex space-x-3">
+          <div className="text-center py-6">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              CodeFly Teacher Portal ✈️🎯
+            </h1>
+            <p className="mt-1 text-lg text-purple-300 font-medium">9th Grade Computer Science • Real-time Classroom Management</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="bg-gray-700/50 backdrop-blur-sm border-b border-purple-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center items-center gap-3 py-4">
               <button
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
                 className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 flex items-center ${
@@ -1024,7 +1029,6 @@ CodeFly Computer Science Teacher
                 <Download className="h-4 w-4 mr-2" />
                 Generate Reports 📊
               </button>
-            </div>
           </div>
         </div>
       </div>
