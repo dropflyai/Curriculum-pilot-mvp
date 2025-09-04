@@ -86,6 +86,80 @@ export default function TeacherPlaybook({ lessonId, title }: TeacherPlaybookProp
       }
     }
     
+    if (lessonId === 'week-02') {
+      return {
+        title: 'Week 2: Variable Village Outpost — String Manipulation & Operations',
+        standards: [
+          'SC.912.ET.2.2: Describe major branches of AI',
+          'SC.912.ET.2.4: Apply string manipulation techniques',
+          'SC.912.ET.2.6: Debug and optimize code solutions'
+        ],
+        story: 'You\'ve established your outpost. Now master communication protocols using string operations.',
+        openingActivities: [
+          {
+            title: 'Hook (2 min)',
+            description: 'Show scrambled message: "EGNLLEECXI SI RUOY LAOG". Ask: "How would you decode this?"'
+          },
+          {
+            title: 'Big idea (2 min)',
+            description: 'Strings are sequences we can slice, reverse, and transform to encode/decode messages.'
+          },
+          {
+            title: 'Plan (1 min)',
+            description: 'Learn methods → practice encoding → build decoder → complete mission.'
+          },
+          {
+            title: 'Real-world connection (2 min)',
+            description: '"Every text message, password, and search query uses these operations. Where else?"'
+          },
+          {
+            title: 'Expectations (3 min)',
+            description: 'Work in pairs—Encoder (creates messages) / Decoder (verifies solutions). Document your cipher methods.'
+          }
+        ],
+        coachingPrompts: [
+          '"What happens if you slice beyond the string length? How can you prevent that?"',
+          '"Show me three different ways to reverse a string—which is most efficient?"',
+          '"If your decoder fails, what debugging steps would you take?"'
+        ],
+        whenStuck: [
+          'Review string indexing (positive vs negative indices).',
+          'Demonstrate string concatenation vs join() method.',
+          'Show how to use print statements for debugging.'
+        ],
+        commonMisconceptions: [
+          {
+            misconception: '"Strings are mutable like lists."',
+            response: '"Strings are immutable—we create new ones, not modify existing."'
+          },
+          {
+            misconception: '"Index errors don\'t matter."',
+            response: '"Index errors crash programs—always validate bounds."'
+          },
+          {
+            misconception: '"One method works for all string operations."',
+            response: '"Different operations need different approaches—choose wisely."'
+          }
+        ],
+        closingActivities: [
+          '2 teams demonstrate their most creative cipher method.',
+          'Exit ticket: One string method mastered + one debugging technique learned.'
+        ],
+        homeworkGuidance: [
+          'Main (≈45 min): Complete Variable Village mission, create custom cipher algorithm, test with 5 messages.',
+          'Challenge (≈15 min): Implement ROT13 or Caesar cipher variation.',
+          'Portfolio (≈5 min): Upload cipher code + decoded message screenshot.'
+        ],
+        successCriteria: [
+          'Working encoder/decoder functions demonstrated',
+          'At least 3 string methods used correctly',
+          'Mission objectives completed with passing tests',
+          'Debugging process documented',
+          'Creative cipher implementation bonus'
+        ]
+      }
+    }
+    
     // Default playbook for other lessons
     return {
       title: `Teacher Playbook: ${title}`,

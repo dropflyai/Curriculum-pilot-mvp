@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
+import StudentPortfolioModal from '@/components/StudentPortfolioModal'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
 import { aiLessons, type AILesson } from '@/lib/lesson-data'
@@ -172,6 +173,10 @@ export default function TeacherDashboard() {
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
   const [analyticsView, setAnalyticsView] = useState<'risk-assessment' | 'insights' | 'patterns'>('risk-assessment')
   
+  // Portfolio System States
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false)
+  const [portfolioStudent, setPortfolioStudent] = useState<StudentProgress | null>(null)
+  
   const supabase = createClient()
 
   // Real-time data fetching
@@ -303,6 +308,7 @@ export default function TeacherDashboard() {
 
       setStudents(studentsWithProgress)
       console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (LIVE PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
+      console.log('🚨 TEACHER DASHBOARD: Students with progress (LIVE PATH):', studentsWithProgress.length, studentsWithProgress.map((s: any) => ({ id: s.user.id, name: s.user.full_name })))
       setLessons(aiLessons)
 
       // Calculate lesson analytics from real data
@@ -367,8 +373,8 @@ export default function TeacherDashboard() {
       const predictiveData = generatePredictiveAnalytics(studentsWithProgress)
       setPredictiveAnalytics(predictiveData)
     } catch (error) {
-      // Silently fall back to mock data when Supabase is not configured
-      // console.log('Using mock data for teacher dashboard')
+      // Fall back to mock data when Supabase is not configured
+      console.log('🚨 TEACHER DASHBOARD: Falling back to mock data. Error:', error)
       // Use mock data when Supabase is not configured
       const mockData = getMockTeacherData()
       
@@ -434,6 +440,7 @@ export default function TeacherDashboard() {
         updated_at: new Date().toISOString()
       }))
       console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (MOCK PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
+      console.log('🚨 TEACHER DASHBOARD: Mock students with progress:', mockStudentsWithProgress.length, mockStudentsWithProgress.map((s: any) => ({ id: s.user.id, name: s.user.full_name })))
       setLessons(aiLessons)
       
       // Set analytics with real lesson data
@@ -1134,41 +1141,6 @@ CodeFly Computer Science Teacher
               </div>
             </div>
 
-            {/* Magic 8-Ball Project */}
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-white">Project: Magic 8-Ball</h3>
-                </div>
-                <span className="text-xs bg-yellow-600 text-white px-2 py-1 rounded-full">Upcoming</span>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">Interactive Python Project</p>
-              
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Ready:</span>
-                  <span className="text-yellow-400 font-bold">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>Starts next week</span>
-                  <span>Est: 45 min</span>
-                </div>
-              </div>
-              
-              <div className="flex gap-2">
-                <button className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors">
-                  <Settings className="h-4 w-4 inline mr-1" />
-                  Configure
-                </button>
-                <button className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                  <Calendar className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Quick Actions Bar */}
@@ -1521,6 +1493,16 @@ CodeFly Computer Science Teacher
                           >
                             <Eye className="h-4 w-4" />
                           </Link>
+                          <button 
+                            className="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded-lg transition-colors"
+                            title="View student portfolio"
+                            onClick={() => {
+                              setPortfolioStudent(student)
+                              setShowPortfolioModal(true)
+                            }}
+                          >
+                            <BookOpen className="h-4 w-4" />
+                          </button>
                           <button 
                             className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors"
                             title="Send message"
@@ -2572,6 +2554,31 @@ CodeFly Computer Science Teacher
             </div>
           </div>
         </div>
+      )}
+
+      {/* Student Portfolio Modal */}
+      {showPortfolioModal && portfolioStudent && (
+        <StudentPortfolioModal
+          student={{
+            id: portfolioStudent.user.id,
+            full_name: portfolioStudent.user.full_name || 'Unknown Student',
+            email: portfolioStudent.user.email || '',
+            currentLesson: portfolioStudent.progress.length > 0 ? 
+              (lessons.find(l => l.id === portfolioStudent.progress[portfolioStudent.progress.length - 1].lesson_id)?.title || 'Unknown Lesson') : 
+              'No lessons started',
+            completedLessons: portfolioStudent.progress.filter(p => p.status === 'completed').length,
+            averageScore: portfolioStudent.progress.filter(p => p.score).length > 0 ?
+              Math.round(portfolioStudent.progress.filter(p => p.score).reduce((sum, p) => sum + (p.score || 0), 0) / portfolioStudent.progress.filter(p => p.score).length * 100) :
+              0,
+            timeSpent: portfolioStudent.currentActivity?.timeSpent || 0,
+            lastSeen: portfolioStudent.currentActivity?.lastSeen || 'Unknown'
+          }}
+          isOpen={showPortfolioModal}
+          onClose={() => {
+            setShowPortfolioModal(false)
+            setPortfolioStudent(null)
+          }}
+        />
       )}
     </div>
   )
