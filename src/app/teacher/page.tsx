@@ -1055,11 +1055,11 @@ CodeFly Computer Science Teacher
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <h3 className="text-lg font-bold text-white">Week 1: AI Vocabulary</h3>
+                  <h3 className="text-lg font-bold text-white">Week 1: Operation Beacon</h3>
                 </div>
                 <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full">Active</span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">Flashcards & Matching Quiz</p>
+              <p className="text-gray-400 text-sm mb-3">AI/ML Training & Variables</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -1094,11 +1094,11 @@ CodeFly Computer Science Teacher
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-white">Lesson 1: Python Basics</h3>
+                  <h3 className="text-lg font-bold text-white">Week 2: Variable Village Outpost</h3>
                 </div>
                 <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full">In Progress</span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">Variables, Input/Output, Print</p>
+              <p className="text-gray-400 text-sm mb-3">String Manipulation & User Input</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
