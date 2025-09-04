@@ -18,7 +18,7 @@ import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
-import { getAllLessons } from '@/lib/lesson-data'
+import { aiLessons, type AILesson } from '@/lib/lesson-data'
 
 interface StudentProgress {
   user: User
@@ -84,7 +84,7 @@ export default function TeacherDashboard() {
   const { user, isAuthenticated, loading: authLoading, isTeacher } = useAuth()
   const router = useRouter()
   const [students, setStudents] = useState<StudentProgress[]>([])
-  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [lessons, setLessons] = useState<AILesson[]>([])
   const [analytics, setAnalytics] = useState<LessonAnalytics[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('all')
@@ -185,10 +185,9 @@ export default function TeacherDashboard() {
 
       if (usersError) throw usersError
 
-      // Force use of Black Cipher lessons from getAllLessons() instead of database
+      // Force use of Black Cipher lessons from aiLessons instead of database
       // This ensures teacher dashboard shows current Black Cipher curriculum
-      const realLessons = getAllLessons()
-      const lessonsData = realLessons.map((lesson, index) => ({
+      const lessonsData = aiLessons.map((lesson, index) => ({
         id: lesson.id,
         week: index + 1,
         title: lesson.title,
@@ -302,7 +301,7 @@ export default function TeacherDashboard() {
       })
 
       setStudents(studentsWithProgress)
-      setLessons(lessonsData || [])
+      setLessons(aiLessons)
 
       // Calculate lesson analytics from real data
       const lessonAnalytics = (lessonsData || []).map((lesson: any) => {
@@ -410,9 +409,8 @@ export default function TeacherDashboard() {
       
       setStudents(mockStudentsWithProgress)
       
-      // Get real lessons from Black Cipher curriculum
-      const realLessons = getAllLessons()
-      const formattedLessons = realLessons.map((lesson, index) => ({
+      // Get real lessons from Black Cipher curriculum  
+      const formattedLessons = aiLessons.map((lesson, index) => ({
         id: lesson.id,
         week: index + 1,
         title: lesson.title,
@@ -432,10 +430,10 @@ export default function TeacherDashboard() {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }))
-      setLessons(formattedLessons)
+      setLessons(aiLessons)
       
       // Set analytics with real lesson data
-      setAnalytics(realLessons.slice(0, 2).map((lesson: any, index: number) => ({
+      setAnalytics(aiLessons.slice(0, 2).map((lesson: any, index: number) => ({
         lessonId: lesson.id,
         title: lesson.title,
         avgTimeSpent: 45 + index * 10, // Simulated data

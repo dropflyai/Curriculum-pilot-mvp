@@ -243,7 +243,7 @@ class ProgressTracker {
 
   private getLessonName(lessonId: string): string {
     const lessonNames: Record<string, string> = {
-      'week-01': 'Binary Shores Academy',
+      'week-01': 'Operation Beacon',
       'week-02': 'Variable Village Outpost'
     }
     return lessonNames[lessonId] || lessonId

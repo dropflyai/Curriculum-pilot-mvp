@@ -616,7 +616,7 @@ function formatBadgeName(badge: string): string {
   return names[badge] || badge.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
-function DemoInner({ backgroundImageUrl, routeTo, containerRef }: { backgroundImageUrl?: string; routeTo: (p: string) => void; containerRef: React.RefObject<HTMLDivElement>; }) {
+function DemoInner({ backgroundImageUrl, routeTo, containerRef }: { backgroundImageUrl?: string; routeTo: (p: string) => void; containerRef: React.RefObject<HTMLDivElement | null>; }) {
   const { store, adapter } = useQuest();
   const [snap, setSnap] = useState(store.getState());
   useEffect(() => store.subscribe((s) => setSnap(s)), [store]);

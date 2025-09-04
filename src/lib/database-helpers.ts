@@ -227,10 +227,10 @@ export async function updateLeaderboard(userId: string) {
       .eq('user_id', userId)
       .gte('completed_at', dateFilter)
       
-    const totalXP = stats?.reduce((sum, s) => sum + (s.xp_earned || 0), 0) || 0
+    const totalXP = stats?.reduce((sum: number, s: any) => sum + (s.xp_earned || 0), 0) || 0
     const lessonsCompleted = stats?.length || 0
-    const perfectScores = stats?.filter(s => s.xp_earned === 100).length || 0
-    const fastestTime = Math.min(...(stats?.map(s => s.time_spent_seconds) || [Infinity]))
+    const perfectScores = stats?.filter((s: any) => s.xp_earned === 100).length || 0
+    const fastestTime = Math.min(...(stats?.map((s: any) => s.time_spent_seconds) || [Infinity]))
     
     await supabase
       .from('leaderboard')
