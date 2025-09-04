@@ -209,9 +209,9 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
   
   // Update last activity timestamp for Agent Academy sessions
-  if (isAuthenticated && user?.id) {
-    response.headers.set('X-AA-User-ID', user.id)
-    response.headers.set('X-AA-Role', userRole || 'unknown')
+  if (isAuthenticated && userRole) {
+    response.headers.set('X-AA-User-ID', 'authenticated-user')
+    response.headers.set('X-AA-Role', userRole)
     response.headers.set('X-AA-Timestamp', new Date().toISOString())
   }
 
