@@ -1,4 +1,4 @@
--- Create Demo Users for CodeFly Black Cipher
+-- Create Demo Users for CodeFly Agent Academy
 -- Run this in your Supabase SQL Editor after running the main schema
 
 -- ============= DEMO USER CREDENTIALS =============
@@ -96,7 +96,7 @@ VALUES
     'YOUR_STUDENT_UUID_HERE'::uuid,
     'first_login',
     'Welcome Agent',
-    'Successfully joined the Black Cipher program',
+    'Successfully joined the Agent Academy program',
     100
   ),
   (

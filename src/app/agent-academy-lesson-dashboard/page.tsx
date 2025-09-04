@@ -14,7 +14,7 @@ const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
         </div>
         <div className="text-2xl text-white font-bold mb-2">Loading Unreal-Quality 3D World...</div>
-        <p className="text-gray-400 animate-pulse">Rendering Black Cipher missions... 🎮</p>
+        <p className="text-gray-400 animate-pulse">Rendering Agent Academy missions... 🎮</p>
       </div>
     </div>
   )
@@ -34,7 +34,7 @@ const badgeSystem = [
 const courseAgents = [
   { id: 1, codename: 'Agent Phoenix', name: 'Alex Chen', xp: 2150, level: 5, fastestTime: 8.2, perfectScores: 12, weeklyXP: 380, streak: 7, completionRate: 94, avatar: '🔥' },
   { id: 2, codename: 'Shadow Viper', name: 'Maya Singh', xp: 2890, level: 6, fastestTime: 6.8, perfectScores: 18, weeklyXP: 420, streak: 12, completionRate: 98, avatar: '🐍' },
-  { id: 3, codename: 'Cipher Wolf', name: 'Jordan Kim', xp: 3200, level: 7, fastestTime: 7.1, perfectScores: 22, weeklyXP: 510, streak: 15, completionRate: 96, avatar: '🐺' },
+  { id: 3, codename: 'Agent Wolf', name: 'Jordan Kim', xp: 3200, level: 7, fastestTime: 7.1, perfectScores: 22, weeklyXP: 510, streak: 15, completionRate: 96, avatar: '🐺' },
   { id: 4, codename: 'Binary Ghost', name: 'Sam Rivera', xp: 1980, level: 4, fastestTime: 9.5, perfectScores: 8, weeklyXP: 280, streak: 4, completionRate: 87, avatar: '👻' },
   { id: 5, codename: 'Quantum Raven', name: 'Riley Park', xp: 2750, level: 6, fastestTime: 7.8, perfectScores: 15, weeklyXP: 390, streak: 9, completionRate: 92, avatar: '🐦‍⬛' },
   { id: 6, codename: 'Stealth Tiger', name: 'Casey Liu', xp: 1750, level: 4, fastestTime: 10.2, perfectScores: 6, weeklyXP: 240, streak: 3, completionRate: 82, avatar: '🐅' },
@@ -202,7 +202,7 @@ export default function StudentDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
-              <span className="text-green-400">🎯 Black Cipher HQ</span> - Command Center
+              <span className="text-green-400">🎯 Agent Academy HQ</span> - Command Center
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">OPERATION BEACON ACTIVE</span>
@@ -223,7 +223,7 @@ export default function StudentDashboard() {
       <div className="bg-gray-800/40 backdrop-blur-sm border-b border-gray-700/50">
         <div className="flex space-x-0">
           {[
-            { key: 'overview', label: '🎯 Black Cipher Intel', icon: '🎯' },
+            { key: 'overview', label: '🎯 Agent Academy Intel', icon: '🎯' },
             { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
             { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' }
           ].map((tab) => (
@@ -296,7 +296,7 @@ export default function StudentDashboard() {
             <div className="mt-16 space-y-4 max-w-7xl mx-auto px-4">
               {/* Live Tactical Intelligence Feed */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-7xl mx-auto">
-                {/* Main Black Cipher Control HUD */}
+                {/* Main Agent Academy Control HUD */}
                 <div className="relative">
                   {/* HUD Frame */}
                   <div className="absolute inset-0 border-2 border-green-400/40 bg-black/80 backdrop-blur-lg" 

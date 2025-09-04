@@ -27,35 +27,35 @@ export default function Week1() {
       subtitle: 'Numbers, Text, and Boolean Intel',
       description: 'Learn to store different types of intelligence data',
       concept: 'String, Integer, Float, and Boolean variables',
-      example: 'security_level = 5, is_secure = True',
+      example: 'agent_id = 7, latitude = 40.7589',
       difficulty: 'Beginner',
       duration: '20 min', 
-      xp: 75,
-      status: 'locked'
+      xp: 100,
+      status: 'available'
     },
     {
       id: 3,
-      title: 'Agent Profile Setup',
-      subtitle: 'Multiple Variable Assignment',
-      description: 'Create your complete agent profile with multiple data points',
-      concept: 'Multiple variables and organization',
-      example: 'agent_name, clearance_level, mission_code',
-      difficulty: 'Beginner',
-      duration: '20 min',
-      xp: 75,
-      status: 'locked'
+      title: 'Automated Security Protocols',
+      subtitle: 'Loops & Conditional Logic',
+      description: 'Master tactical decision-making and automated patrol systems',
+      concept: 'if statements, for loops, and conditional automation',
+      example: 'for zone in range(3): check_security(zone)',
+      difficulty: 'Intermediate',
+      duration: '25 min',
+      xp: 175,
+      status: 'available'
     },
     {
       id: 4,
-      title: 'Intelligence Database',
-      subtitle: 'Variable Memory Challenge',
-      description: 'Complete intelligence gathering by storing complex facility data',
-      concept: 'Combining all variable concepts',
-      example: 'Multi-step intelligence storage system',
+      title: 'Modular Command Functions',
+      subtitle: 'Reusable Tactical Protocols',
+      description: 'Create specialized mission functions for encryption and analysis',
+      concept: 'Function definition, parameters, and return values',
+      example: 'def encrypt_message(): return "secured"',
       difficulty: 'Intermediate',
-      duration: '25 min',
-      xp: 100,
-      status: 'locked'
+      duration: '30 min',
+      xp: 200,
+      status: 'available'
     }
   ]
 
@@ -75,7 +75,7 @@ export default function Week1() {
           </div>
           <div className="text-right">
             <div className="text-green-400 font-mono text-xl">4 LESSONS</div>
-            <div className="text-gray-300 text-sm">+300 Total XP</div>
+            <div className="text-gray-300 text-sm">+525 Total XP</div>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function Week1() {
                 className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                   lesson.status === 'locked' ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                onClick={() => lesson.status === 'available' && setSelectedLesson(lesson.id)}
+                onClick={() => setSelectedLesson(lesson.id)}
               >
                 <div className={`bg-black/60 backdrop-blur-lg border-2 p-6 ${
                   lesson.status === 'available' 
@@ -171,19 +171,13 @@ export default function Week1() {
                       <span className="text-yellow-400 font-mono">+{lesson.xp} XP</span>
                     </div>
                     
-                    {lesson.status === 'available' && (
-                      <button 
-                        onClick={() => router.push(`/mission/operation-beacon/week-1/lesson-${lesson.id}`)}
-                        className="bg-green-600 hover:bg-green-500 text-white font-mono text-sm px-4 py-2 transition-colors"
-                        style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
-                      >
-                        START LESSON
-                      </button>
-                    )}
-                    
-                    {lesson.status === 'locked' && (
-                      <div className="text-gray-500 font-mono text-sm">🔒 Complete Previous</div>
-                    )}
+                    <button 
+                      onClick={() => router.push(`/mission/operation-beacon/week-1/lesson-${lesson.id}`)}
+                      className="bg-green-600 hover:bg-green-500 text-white font-mono text-sm px-4 py-2 transition-colors"
+                      style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
+                    >
+                      START LESSON
+                    </button>
                   </div>
                 </div>
               </div>

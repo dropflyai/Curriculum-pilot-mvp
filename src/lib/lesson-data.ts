@@ -1074,13 +1074,13 @@ print("\\n🎯 Your goal: Create an AI that makes school life better for everyon
         title: 'Classic Magic 8-Ball',
         dataset: 'fortune-responses',
         labels: ['positive', 'negative', 'neutral', 'mysterious'],
-        learn_md: `## 🔐 Decode the Black Cipher's Fortune Protocol
+        learn_md: `## 🔐 Decode the Agent Academy's Fortune Protocol
 
-**Agent**, you've infiltrated the mysterious Black Cipher network and discovered their ancient fortune-telling protocol. The organization once used mystical 8-Ball divination to make critical decisions, but their system holds secrets far deeper than simple yes/no answers.
+**Agent**, you've infiltrated the mysterious Agent Academy network and discovered their ancient fortune-telling protocol. The organization once used mystical 8-Ball divination to make critical decisions, but their system holds secrets far deeper than simple yes/no answers.
 
-### ⚫ The Black Cipher's Secret Arsenal
+### ⚫ The Agent Academy's Secret Arsenal
 
-The Black Cipher didn't just predict the future - they **programmed** it. Their digital fortune protocol was a sophisticated information system disguised as a simple toy:
+The Agent Academy didn't just predict the future - they **programmed** it. Their digital fortune protocol was a sophisticated information system disguised as a simple toy:
 
 **🔴 Cipher Response Classifications**
 - **POSITIVE INTEL** (10 encoded messages): "Mission confirmed", "Path is clear", "Proceed as planned"
@@ -1123,7 +1123,7 @@ You'll master these key concepts:
 - Track the most popular questions
 - Display response distribution
 
-**🕵️ Black Cipher Interface Protocol**
+**🕵️ Agent Academy Interface Protocol**
 - Encrypted terminal animations with cipher symbols
 - Decryption delay effects for authentic espionage feel
 - Color-coded security levels (green=safe, red=danger, yellow=classified)
@@ -1131,7 +1131,7 @@ You'll master these key concepts:
 ### 🔐 Cryptographic Science Behind Fortune Protocols
 
 **Pseudorandom Cipher Generation**
-The Black Cipher's fortune system uses cryptographic pseudorandom algorithms - mathematical formulas that generate unpredictable sequences essential for secure communications. Mastering randomness is critical for:
+The Agent Academy's fortune system uses cryptographic pseudorandom algorithms - mathematical formulas that generate unpredictable sequences essential for secure communications. Mastering randomness is critical for:
 - **Covert operations** (mission outcome probability)
 - **Encryption systems** (secure key generation)  
 - **Intelligence analysis** (pattern recognition, data modeling)
@@ -1187,7 +1187,7 @@ The programming patterns you're learning power:
 - Security testing tools
 - Random audit sampling
 
-### 🎯 Your Black Cipher Assignment
+### 🎯 Your Agent Academy Assignment
 
 1. **Reverse-engineer the fortune protocol** with authentic cipher responses
 2. **Implement security classifications** with appropriate access levels
@@ -1198,7 +1198,7 @@ The programming patterns you're learning power:
 
 ### 🕵️ The Cryptography of Predictability
 
-Here's the Black Cipher's secret: Is their fortune system truly *random*? Like all digital systems, it follows deterministic algorithms. If an enemy agent knew the exact system state, they could predict every "random" response and compromise missions.
+Here's the Agent Academy's secret: Is their fortune system truly *random*? Like all digital systems, it follows deterministic algorithms. If an enemy agent knew the exact system state, they could predict every "random" response and compromise missions.
 
 But cryptographically secure pseudorandomness is indistinguishable from true randomness. This principle is essential for:
 - **Secure communications** (encrypted message keys)
@@ -1207,7 +1207,7 @@ But cryptographically secure pseudorandomness is indistinguishable from true ran
 
 ### 🔓 Ready to Crack the Cipher?
 
-You're about to reverse-engineer a program that combines espionage, psychology, programming mastery, and covert operations. Whether agents ask tactical questions or strategic ones, your Black Cipher Fortune Protocol will provide that perfect mix of intelligence and mystery that has guided secret operations for generations.
+You're about to reverse-engineer a program that combines espionage, psychology, programming mastery, and covert operations. Whether agents ask tactical questions or strategic ones, your Agent Academy Fortune Protocol will provide that perfect mix of intelligence and mystery that has guided secret operations for generations.
 
 **Time to infiltrate the digital shadows and unlock the cipher's secrets!** ⚫🔐`,
         code: {

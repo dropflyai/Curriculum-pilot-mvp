@@ -69,6 +69,14 @@ export async function completeMission(userId: string, missionId: string) {
   // Log achievement
   await logMissionCompletion(userId, missionId)
   
+  // Send mission completion email
+  try {
+    await sendMissionCompletionEmail(userId, missionId, missionRewards.xp)
+  } catch (emailError) {
+    console.error('Failed to send mission completion email:', emailError)
+    // Don't fail mission completion if email fails
+  }
+  
   return { data, error: null }
 }
 
@@ -378,5 +386,69 @@ export async function getMissionsDashboardData(userId: string) {
     missions: progress || [],
     profile: profile || { xp: 0, level: 1, badge_level: 'Recruit' },
     achievements: achievements || []
+  }
+}
+
+/**
+ * Send mission completion email to user
+ */
+async function sendMissionCompletionEmail(userId: string, missionId: string, xpEarned: number) {
+  const supabase = createClient()
+  
+  // Get user profile for email
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, email')
+    .eq('id', userId)
+    .single()
+  
+  if (!profile?.email) {
+    console.error('No email found for user:', userId)
+    return
+  }
+
+  const missionNames = {
+    'shadow-protocol': 'Operation Beacon',
+    'cipher-command': 'Cipher Command',
+    'ghost-protocol': 'Loop Canyon Base',
+    'quantum-breach': 'Quantum Breach'
+  }
+  
+  const nextMissions = {
+    'shadow-protocol': 'Cipher Command',
+    'cipher-command': 'Loop Canyon Base',
+    'ghost-protocol': 'Quantum Breach',
+    'quantum-breach': undefined
+  }
+  
+  const missionName = missionNames[missionId as keyof typeof missionNames] || missionId
+  const nextMission = nextMissions[missionId as keyof typeof nextMissions]
+  
+  // Send email via API route
+  try {
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'mission_complete',
+        userName: profile.full_name || 'Agent',
+        userEmail: profile.email,
+        missionName,
+        xpEarned,
+        nextMission
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Failed to send email')
+    }
+
+    console.log('Mission completion email sent successfully')
+  } catch (error) {
+    console.error('Error sending mission completion email:', error)
+    throw error
   }
 }

@@ -1,4 +1,4 @@
--- Black Cipher Database Schema for Supabase
+-- Agent Academy Database Schema for Supabase
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -236,10 +236,170 @@ ALTER PUBLICATION supabase_realtime ADD TABLE activity_feed;
 ALTER PUBLICATION supabase_realtime ADD TABLE team_chat;
 ALTER PUBLICATION supabase_realtime ADD TABLE leaderboard;
 
+-- Mission progress tracking table (for mission-hq localStorage migration)
+CREATE TABLE public.mission_progress (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  mission_id TEXT NOT NULL,
+  status TEXT CHECK (status IN ('not_started', 'in_progress', 'completed')) DEFAULT 'not_started',
+  completed_weeks INTEGER[] DEFAULT '{}',
+  xp_earned INTEGER DEFAULT 0,
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  last_activity TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, mission_id)
+);
+
+-- Student projects storage (for InteractiveCodingPlayground localStorage migration)
+CREATE TABLE public.student_projects (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  code TEXT NOT NULL,
+  language TEXT DEFAULT 'python',
+  is_public BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Photo classifier data (for RealPhotoClassifier localStorage migration)
+CREATE TABLE public.user_photos (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  file_name TEXT NOT NULL,
+  classification TEXT,
+  confidence DECIMAL(5,2),
+  is_flagged BOOLEAN DEFAULT FALSE,
+  uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Lesson activity tracking (for lesson progress localStorage migration)
+CREATE TABLE public.lesson_activities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  lesson_id TEXT NOT NULL,
+  activity_type TEXT NOT NULL, -- 'learn', 'flashcards', 'quiz', 'knowledge-quest', 'python-lab', 'ai-advisor-lab'
+  progress JSONB DEFAULT '{}',
+  completed BOOLEAN DEFAULT FALSE,
+  score INTEGER DEFAULT 0,
+  time_spent_seconds INTEGER DEFAULT 0,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, lesson_id, activity_type)
+);
+
+-- Capstone projects (for team formation and capstone localStorage migration)  
+CREATE TABLE public.capstone_projects (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE, -- For individual projects
+  title TEXT NOT NULL,
+  description TEXT,
+  repository_url TEXT,
+  demo_url TEXT,
+  technologies TEXT[] DEFAULT '{}',
+  status TEXT CHECK (status IN ('planning', 'development', 'testing', 'completed')) DEFAULT 'planning',
+  presentation_date DATE,
+  grade TEXT,
+  teacher_feedback TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Homework assignments (for vocabulary and other homework localStorage migration)
+CREATE TABLE public.homework_assignments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  assignment_type TEXT NOT NULL, -- 'vocabulary', 'coding', 'project', etc.
+  assignment_id TEXT NOT NULL, -- specific assignment identifier
+  score INTEGER DEFAULT 0,
+  max_score INTEGER DEFAULT 100,
+  answers JSONB DEFAULT '{}',
+  completed BOOLEAN DEFAULT FALSE,
+  submitted_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, assignment_type, assignment_id)
+);
+
+-- Teacher grades (for teacher localStorage migration)
+CREATE TABLE public.teacher_grades (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  teacher_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  student_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  assignment_type TEXT NOT NULL,
+  assignment_id TEXT NOT NULL,
+  grade TEXT NOT NULL,
+  points INTEGER,
+  max_points INTEGER DEFAULT 100,
+  feedback TEXT,
+  graded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for performance
+CREATE INDEX idx_mission_progress_user ON mission_progress(user_id);
+CREATE INDEX idx_mission_progress_mission ON mission_progress(mission_id);
+CREATE INDEX idx_student_projects_user ON student_projects(user_id);
+CREATE INDEX idx_user_photos_user ON user_photos(user_id);
+CREATE INDEX idx_lesson_activities_user ON lesson_activities(user_id);
+CREATE INDEX idx_lesson_activities_lesson ON lesson_activities(lesson_id);
+CREATE INDEX idx_capstone_projects_team ON capstone_projects(team_id);
+CREATE INDEX idx_capstone_projects_user ON capstone_projects(user_id);
+CREATE INDEX idx_homework_assignments_user ON homework_assignments(user_id);
+CREATE INDEX idx_teacher_grades_teacher ON teacher_grades(teacher_id);
+CREATE INDEX idx_teacher_grades_student ON teacher_grades(student_id);
+
+-- Row Level Security for new tables
+ALTER TABLE mission_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE student_projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_photos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lesson_activities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE capstone_projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE homework_assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE teacher_grades ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for new tables
+CREATE POLICY "Users can manage own mission progress" ON mission_progress
+  FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can manage own projects" ON student_projects
+  FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can view public projects" ON student_projects
+  FOR SELECT USING (is_public = true);
+
+CREATE POLICY "Users can manage own photos" ON user_photos
+  FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can manage own lesson activities" ON lesson_activities
+  FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Team members can manage capstone projects" ON capstone_projects
+  FOR ALL USING (
+    auth.uid() = user_id OR
+    EXISTS (
+      SELECT 1 FROM teams 
+      WHERE teams.id = capstone_projects.team_id 
+      AND auth.uid() = ANY(teams.members)
+    )
+  );
+
+CREATE POLICY "Users can manage own homework" ON homework_assignments
+  FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Teachers can manage grades they assign" ON teacher_grades
+  FOR ALL USING (auth.uid() = teacher_id);
+
+CREATE POLICY "Students can view their own grades" ON teacher_grades
+  FOR SELECT USING (auth.uid() = student_id);
+
 -- Insert sample missions data
 INSERT INTO missions (id, name, description, difficulty, duration_weeks, xp_reward, prerequisite_mission_id, image_url)
 VALUES 
-  ('operation-beacon', 'OPERATION BEACON', 'Master Python fundamentals through solo infiltration missions', 'BEGINNER', 4, 5000, NULL, '/Black Cipher_1.png'),
-  ('cipher-command', 'CIPHER COMMAND', 'Form elite coding teams and master functions and data structures', 'INTERMEDIATE', 4, 7500, 'operation-beacon', '/Black Cipher_2.png'),
-  ('loop-canyon-base', 'LOOP CANYON BASE', 'Execute complex team missions using object-oriented programming', 'ADVANCED', 5, 10000, 'cipher-command', '/Black Cipher_3.png'),
-  ('quantum-breach', 'QUANTUM BREACH', 'Deploy advanced team projects using APIs and databases', 'EXPERT', 5, 15000, 'loop-canyon-base', '/Black Cipher_4.png');
+  ('operation-beacon', 'OPERATION BEACON', 'Master Python fundamentals through solo infiltration missions', 'BEGINNER', 4, 5000, NULL, '/Agent Academy_1.png'),
+  ('cipher-command', 'CIPHER COMMAND', 'Form elite coding teams and master functions and data structures', 'INTERMEDIATE', 4, 7500, 'operation-beacon', '/Agent Academy_2.png'),
+  ('loop-canyon-base', 'LOOP CANYON BASE', 'Execute complex team missions using object-oriented programming', 'ADVANCED', 5, 10000, 'cipher-command', '/Agent Academy_3.png'),
+  ('quantum-breach', 'QUANTUM BREACH', 'Deploy advanced team projects using APIs and databases', 'EXPERT', 5, 15000, 'loop-canyon-base', '/Agent Academy_4.png');

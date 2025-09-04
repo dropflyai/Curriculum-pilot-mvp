@@ -9,6 +9,17 @@ export interface LessonProgress {
 
 // Get progress for a specific lesson
 export function getLessonProgress(lessonId: string): LessonProgress {
+  // Return default if not in browser
+  if (typeof window === 'undefined') {
+    return {
+      id: lessonId,
+      progress: 0,
+      score: 0,
+      completedSections: [],
+      lastUpdated: Date.now()
+    }
+  }
+  
   try {
     const stored = localStorage.getItem(`lesson-progress-${lessonId}`)
     if (stored) {
@@ -36,28 +47,30 @@ export function getLessonProgress(lessonId: string): LessonProgress {
 
 // Update progress for a specific lesson
 export function updateLessonProgress(lessonId: string, progress: number, score?: number, completedSections?: string[]) {
-  try {
-    const current = getLessonProgress(lessonId)
-    const updated: LessonProgress = {
-      ...current,
-      progress: Math.max(current.progress, progress), // Never go backwards in progress
-      score: score !== undefined ? Math.max(current.score, score) : current.score,
-      completedSections: completedSections || current.completedSections,
-      lastUpdated: Date.now()
-    }
-    
-    localStorage.setItem(`lesson-progress-${lessonId}`, JSON.stringify(updated))
-    
-    // Trigger a custom event to notify dashboard of progress change
-    window.dispatchEvent(new CustomEvent('lessonProgressUpdate', { 
-      detail: { lessonId, progress: updated.progress, score: updated.score }
-    }))
-    
-    return updated
-  } catch (error) {
-    console.error('Error saving lesson progress:', error)
-    return getLessonProgress(lessonId)
+  const current = getLessonProgress(lessonId)
+  const updated: LessonProgress = {
+    ...current,
+    progress: Math.max(current.progress, progress), // Never go backwards in progress
+    score: score !== undefined ? Math.max(current.score, score) : current.score,
+    completedSections: completedSections || current.completedSections,
+    lastUpdated: Date.now()
   }
+  
+  // Only save to localStorage in browser
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(`lesson-progress-${lessonId}`, JSON.stringify(updated))
+      
+      // Trigger a custom event to notify dashboard of progress change
+      window.dispatchEvent(new CustomEvent('lessonProgressUpdate', { 
+        detail: { lessonId, progress: updated.progress, score: updated.score }
+      }))
+    } catch (error) {
+      console.error('Error saving lesson progress:', error)
+    }
+  }
+  
+  return updated
 }
 
 // Get all lesson progress data
@@ -83,6 +96,19 @@ export function markLessonComplete(lessonId: string, finalScore?: number) {
 
 // Get completion status for week-02 specifically
 export function getWeek02CompletionStatus() {
+  // Return default state if not in browser
+  if (typeof window === 'undefined') {
+    return {
+      progress: 0,
+      score: 0,
+      knowledgeQuestCompleted: false,
+      pythonConceptsCompleted: false,
+      aiAdvisorLabCompleted: false,
+      quizCompleted: false,
+      isFullyComplete: false
+    }
+  }
+  
   const knowledgeQuestCompleted = localStorage.getItem('knowledge-quest-completed-week-02') === 'true'
   const pythonConceptsCompleted = localStorage.getItem('python-lab-completed-week-02') === 'true' 
   const aiAdvisorLabCompleted = localStorage.getItem('ai-advisor-lab-completed-week-02') === 'true'

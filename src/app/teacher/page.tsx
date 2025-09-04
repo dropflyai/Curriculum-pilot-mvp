@@ -185,8 +185,8 @@ export default function TeacherDashboard() {
 
       if (usersError) throw usersError
 
-      // Force use of Black Cipher lessons from getAllLessons() instead of database
-      // This ensures teacher dashboard shows current Black Cipher curriculum
+      // Force use of Agent Academy lessons from getAllLessons() instead of database
+      // This ensures teacher dashboard shows current Agent Academy curriculum
       const realLessons = getAllLessons()
       const lessonsData = realLessons.map((lesson, index) => ({
         id: lesson.id,
@@ -410,7 +410,7 @@ export default function TeacherDashboard() {
       
       setStudents(mockStudentsWithProgress)
       
-      // Get real lessons from Black Cipher curriculum
+      // Get real lessons from Agent Academy curriculum
       const realLessons = getAllLessons()
       const formattedLessons = realLessons.map((lesson, index) => ({
         id: lesson.id,

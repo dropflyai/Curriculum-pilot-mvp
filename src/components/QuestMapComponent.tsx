@@ -78,10 +78,10 @@ export const COLORS = {
 
 // Default 8-mission S-curve (1200×800)
 export const DEFAULT_MISSIONS: Mission[] = [
-  { id: 1, key: "academy",   name: "CodeFly Academy",  x: 120,  y: 380, status: "completed", icon: "castle",   route: "/course/1" },
-  { id: 2, key: "variables",  name: "Variable Storage", x: 380,  y: 200, status: "completed", icon: "warehouse", route: "/course/2" },
-  { id: 3, key: "logic",      name: "Logic Tower",      x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/course/3" },
-  { id: 4, key: "loops",      name: "Loop Systems",     x: 950,  y: 180, status: "locked",    icon: "factory",  route: "/course/4" },
+  { id: 1, key: "academy",   name: "Operation Beacon",  x: 120,  y: 380, status: "completed", icon: "castle",   route: "/mission/operation-beacon" },
+  { id: 2, key: "variables",  name: "Cipher Command", x: 380,  y: 200, status: "completed", icon: "warehouse", route: "/mission/cipher-command" },
+  { id: 3, key: "logic",      name: "Ghost Protocol",      x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/mission/ghost-protocol" },
+  { id: 4, key: "loops",      name: "Quantum Breach",     x: 950,  y: 180, status: "locked",    icon: "factory",  route: "/mission/quantum-breach" },
   { id: 5, key: "functions",  name: "Function Lab",     x: 1080, y: 320, status: "locked",    icon: "lab",      route: "/course/5" },
   { id: 6, key: "arrays",     name: "Array Center",     x: 950,  y: 620, status: "locked",    icon: "array",    route: "/course/6" },
   { id: 7, key: "objects",    name: "Object Studio",    x: 620,  y: 660, status: "locked",    icon: "studio",   route: "/course/7" },

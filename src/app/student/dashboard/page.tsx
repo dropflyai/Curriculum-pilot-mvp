@@ -4,18 +4,35 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
+// Enhanced components for demo
+import ParticleEffects from '@/components/ParticleEffects'
+import SoundEffects, { useSound } from '@/components/SoundEffects'
+import AchievementSystem, { demoAchievements } from '@/components/AchievementSystem'
+
 // Enhanced AAA quality 3D map with advanced rendering - YOUR CUSTOM MAP
 const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-full flex items-center justify-center bg-black">
-      <div className="text-center">
+    <div className="h-full flex items-center justify-center bg-black particle-container">
+      <div className="text-center animate-scale-in">
         <div className="mb-4">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+          <div className="enhanced-spinner"></div>
         </div>
-        <div className="text-2xl text-white font-bold mb-2">Loading Unreal-Quality 3D World...</div>
-        <p className="text-gray-400 animate-pulse">Rendering Black Cipher missions... 🎮</p>
+        <div className="text-2xl text-white font-bold mb-2 animate-slide-in-up">Loading Unreal-Quality 3D World...</div>
+        <p className="text-gray-400 animate-pulse animate-slide-in-up" style={{animationDelay: '0.2s'}}>Rendering Agent Academy missions... 🎮</p>
+        
+        {/* Loading dots animation */}
+        <div className="flex justify-center space-x-1 mt-4">
+          {[0, 1, 2].map(i => (
+            <div 
+              key={i} 
+              className="w-2 h-2 bg-purple-500 rounded-full animate-loading-dots"
+              style={{animationDelay: `${i * 0.2}s`}}
+            ></div>
+          ))}
+        </div>
       </div>
+      <ParticleEffects type="ambient" count={10} />
     </div>
   )
 })
@@ -34,7 +51,7 @@ const badgeSystem = [
 const courseAgents = [
   { id: 1, codename: 'Agent Phoenix', name: 'Alex Chen', xp: 2150, level: 5, fastestTime: 8.2, perfectScores: 12, weeklyXP: 380, streak: 7, completionRate: 94, avatar: '🔥' },
   { id: 2, codename: 'Shadow Viper', name: 'Maya Singh', xp: 2890, level: 6, fastestTime: 6.8, perfectScores: 18, weeklyXP: 420, streak: 12, completionRate: 98, avatar: '🐍' },
-  { id: 3, codename: 'Cipher Wolf', name: 'Jordan Kim', xp: 3200, level: 7, fastestTime: 7.1, perfectScores: 22, weeklyXP: 510, streak: 15, completionRate: 96, avatar: '🐺' },
+  { id: 3, codename: 'Agent Wolf', name: 'Jordan Kim', xp: 3200, level: 7, fastestTime: 7.1, perfectScores: 22, weeklyXP: 510, streak: 15, completionRate: 96, avatar: '🐺' },
   { id: 4, codename: 'Binary Ghost', name: 'Sam Rivera', xp: 1980, level: 4, fastestTime: 9.5, perfectScores: 8, weeklyXP: 280, streak: 4, completionRate: 87, avatar: '👻' },
   { id: 5, codename: 'Quantum Raven', name: 'Riley Park', xp: 2750, level: 6, fastestTime: 7.8, perfectScores: 15, weeklyXP: 390, streak: 9, completionRate: 92, avatar: '🐦‍⬛' },
   { id: 6, codename: 'Stealth Tiger', name: 'Casey Liu', xp: 1750, level: 4, fastestTime: 10.2, perfectScores: 6, weeklyXP: 240, streak: 3, completionRate: 82, avatar: '🐅' },
@@ -46,7 +63,8 @@ const courseAgents = [
 
 export default function StudentDashboard() {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<'overview' | 'questmap' | 'leaderboard'>('overview')
+  const { playSound } = useSound()
+  const [activeTab, setActiveTab] = useState<'overview' | 'questmap' | 'leaderboard' | 'achievements'>('overview')
   const [leaderboardView, setLeaderboardView] = useState<'course' | 'weekly' | 'speed' | 'perfect'>('course')
   const [notifications, setNotifications] = useState<Array<{id: string, type: string, message: string, timestamp: string}>>([])
   const [missionStatus, setMissionStatus] = useState({
@@ -59,6 +77,8 @@ export default function StudentDashboard() {
   const [isClient, setIsClient] = useState(false)
   const [currentTime, setCurrentTime] = useState<string>('')
   const [currentDate, setCurrentDate] = useState<string>('')
+  const [particlesTrigger, setParticlesTrigger] = useState(false)
+  const [xpAnimation, setXpAnimation] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -121,24 +141,36 @@ export default function StudentDashboard() {
 
   const learningData = getLearningRecommendations()
 
-  // Real-time updates simulation
+  // Real-time updates simulation with enhanced effects
   useEffect(() => {
     const interval = setInterval(() => {
       // Update mission progress
-      setMissionStatus(prev => ({
-        ...prev,
-        progress: Math.min(prev.progress + Math.random() * 0.5, 100),
-        timeRemaining: updateTimeRemaining(prev.timeRemaining)
-      }))
+      setMissionStatus(prev => {
+        const newProgress = Math.min(prev.progress + Math.random() * 0.5, 100)
+        if (newProgress > prev.progress + 0.3) {
+          // Trigger XP animation and sound for significant progress
+          setXpAnimation(true)
+          playSound('success')
+          setTimeout(() => setXpAnimation(false), 800)
+        }
+        return {
+          ...prev,
+          progress: newProgress,
+          timeRemaining: updateTimeRemaining(prev.timeRemaining)
+        }
+      })
 
-      // Add random achievements/notifications
-      if (Math.random() < 0.1) {
+      // Add random achievements/notifications with effects
+      if (Math.random() < 0.15) {
         const achievements = [
           'Speed bonus unlocked!',
           'Perfect execution achieved!',
           'New skill level reached!',
           'Weekly streak milestone!',
-          'Code efficiency improved!'
+          'Code efficiency improved!',
+          'Mission objective completed!',
+          'Stealth bonus activated!',
+          'Combo multiplier achieved!'
         ]
         const newNotification = {
           id: Date.now().toString(),
@@ -147,11 +179,16 @@ export default function StudentDashboard() {
           timestamp: new Date().toLocaleTimeString()
         }
         setNotifications(prev => [newNotification, ...prev.slice(0, 4)])
+        
+        // Trigger celebration effects
+        playSound('achievement')
+        setParticlesTrigger(true)
+        setTimeout(() => setParticlesTrigger(false), 100)
       }
-    }, 5000)
+    }, 4000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [playSound])
 
   const updateTimeRemaining = (current: string) => {
     const [minutes, seconds] = current.split(':').map(Number)
@@ -161,8 +198,13 @@ export default function StudentDashboard() {
   }
 
   const handleMissionLaunch = (missionType: string) => {
+    playSound('click')
+    
     switch (missionType) {
       case 'continue':
+        playSound('success')
+        setParticlesTrigger(true)
+        setTimeout(() => setParticlesTrigger(false), 100)
         router.push('/mission/operation-beacon')
         break
       case 'analysis':
@@ -195,13 +237,17 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 particle-container">
+      {/* Enhanced Sound & Visual Effects */}
+      <SoundEffects enabled={true} volume={0.4} />
+      <ParticleEffects type="success" trigger={particlesTrigger} />
+      <ParticleEffects type="ambient" count={8} />
       {/* Header */}
       <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-lg border-b border-green-500/30 p-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
-              <span className="text-green-400">🎯 Mission HQ</span> - Black Cipher Command
+              <span className="text-green-400">🎯 Mission HQ</span> - Agent Academy Command
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">OPERATION BEACON ACTIVE</span>
@@ -212,8 +258,13 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-green-400 font-mono text-2xl">{currentAgent.xp.toLocaleString()} XP</div>
+            <div className={`text-green-400 font-mono text-2xl transition-all duration-300 ${xpAnimation ? 'animate-xp-counter' : ''}`}>
+              {currentAgent.xp.toLocaleString()} XP
+            </div>
             <div className="text-gray-300 text-sm">Intel Points</div>
+            {xpAnimation && (
+              <div className="text-yellow-400 font-mono text-sm animate-slide-in-up">+50 XP Bonus!</div>
+            )}
           </div>
         </div>
       </div>
@@ -224,14 +275,18 @@ export default function StudentDashboard() {
           {[
             { key: 'overview', label: '🎯 Mission HQ', icon: '🎯' },
             { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
-            { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' }
+            { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' },
+            { key: 'achievements', label: '🏆 Achievements', icon: '🏆' }
           ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
-              className={`flex items-center space-x-2 px-6 py-4 font-mono transition-all duration-300 border-b-2 ${
+              onClick={() => {
+                playSound('click')
+                setActiveTab(tab.key as any)
+              }}
+              className={`flex items-center space-x-2 px-6 py-4 font-mono transition-all duration-300 border-b-2 demo-hover-scale ${
                 activeTab === tab.key
-                  ? 'text-green-400 border-green-400 bg-green-400/10'
+                  ? 'text-green-400 border-green-400 bg-green-400/10 animate-glow-pulse'
                   : 'text-gray-400 border-transparent hover:text-green-300 hover:bg-gray-700/30'
               }`}
             >
@@ -1075,6 +1130,19 @@ export default function StudentDashboard() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'achievements' && (
+          <div className="animate-slide-in-up">
+            <AchievementSystem 
+              achievements={demoAchievements}
+              onAchievementUnlock={(achievement) => {
+                playSound('levelUp')
+                setParticlesTrigger(true)
+                setTimeout(() => setParticlesTrigger(false), 100)
+              }}
+            />
           </div>
         )}
       </div>

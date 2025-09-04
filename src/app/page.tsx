@@ -23,8 +23,9 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    checkUser()
-  }, [])
+    // Redirect to games page
+    router.push('/games')
+  }, [router])
 
 
   function checkUser() {

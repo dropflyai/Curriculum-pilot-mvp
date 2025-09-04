@@ -22,6 +22,10 @@ interface StudentProgress {
 const STORAGE_KEY = 'codefly_student_progress'
 
 export const saveProgress = (data: Partial<StudentProgress>) => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  
   try {
     const existing = getProgress()
     const updated = { ...existing, ...data }
@@ -34,6 +38,19 @@ export const saveProgress = (data: Partial<StudentProgress>) => {
 }
 
 export const getProgress = (): StudentProgress => {
+  // Return default if not in browser
+  if (typeof window === 'undefined') {
+    return {
+      lessons: {},
+      userStats: {
+        totalXP: 0,
+        currentStreak: 0,
+        lastActivityDate: new Date().toISOString(),
+        achievements: []
+      }
+    }
+  }
+  
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -106,6 +123,10 @@ export const updateUserStats = (updates: Partial<StudentProgress['userStats']>) 
 }
 
 export const clearProgress = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  
   try {
     localStorage.removeItem(STORAGE_KEY)
     return true
@@ -120,6 +141,10 @@ export const exportProgress = (): string => {
 }
 
 export const importProgress = (data: string): boolean => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  
   try {
     const parsed = JSON.parse(data)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed))

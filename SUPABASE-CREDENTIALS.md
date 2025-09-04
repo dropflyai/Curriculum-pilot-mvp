@@ -1,7 +1,7 @@
 # Supabase Project Credentials
 
 ## Project Details
-- **Project Name**: Black Cipher Learning Platform
+- **Project Name**: Agent Academy Learning Platform
 - **Project ID**: fhopjsgiwvquayyvadaw
 - **Dashboard URL**: https://supabase.com/dashboard/project/fhopjsgiwvquayyvadaw
 

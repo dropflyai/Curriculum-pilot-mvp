@@ -796,10 +796,10 @@ ALTER PUBLICATION supabase_realtime ADD TABLE leaderboard;
 
 INSERT INTO missions (id, name, description, difficulty, duration_weeks, xp_reward, prerequisite_mission_id, image_url)
 VALUES 
-  ('operation-beacon', 'OPERATION BEACON', 'Master Python fundamentals through solo infiltration missions', 'BEGINNER', 4, 5000, NULL, '/Black Cipher_1.png'),
-  ('cipher-command', 'CIPHER COMMAND', 'Form elite coding teams and master functions and data structures', 'INTERMEDIATE', 4, 7500, 'operation-beacon', '/Black Cipher_2.png'),
-  ('loop-canyon-base', 'LOOP CANYON BASE', 'Execute complex team missions using object-oriented programming', 'ADVANCED', 5, 10000, 'cipher-command', '/Black Cipher_3.png'),
-  ('quantum-breach', 'QUANTUM BREACH', 'Deploy advanced team projects using APIs and databases', 'EXPERT', 5, 15000, 'loop-canyon-base', '/Black Cipher_4.png');
+  ('operation-beacon', 'OPERATION BEACON', 'Master Python fundamentals through solo infiltration missions', 'BEGINNER', 4, 5000, NULL, '/Agent Academy_1.png'),
+  ('cipher-command', 'CIPHER COMMAND', 'Form elite coding teams and master functions and data structures', 'INTERMEDIATE', 4, 7500, 'operation-beacon', '/Agent Academy_2.png'),
+  ('loop-canyon-base', 'LOOP CANYON BASE', 'Execute complex team missions using object-oriented programming', 'ADVANCED', 5, 10000, 'cipher-command', '/Agent Academy_3.png'),
+  ('quantum-breach', 'QUANTUM BREACH', 'Deploy advanced team projects using APIs and databases', 'EXPERT', 5, 15000, 'loop-canyon-base', '/Agent Academy_4.png');
 
 -- =====================================================
 -- SECURITY FUNCTIONS FOR APPLICATION USE

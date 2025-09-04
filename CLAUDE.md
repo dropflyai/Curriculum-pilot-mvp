@@ -7,12 +7,12 @@
 - This is the product name that appears in all UI, headers, and branding
 - CodeFly will eventually host multiple educational games
 
-### Current Game: Black Cipher 🎮
-- **Black Cipher** is the GAME NAME (not Shadow Protocol!)
-- Black Cipher is the first game within the CodeFly platform
+### Current Game: Agent Academy 🎮
+- **Agent Academy** is the GAME NAME (not Shadow Protocol!)
+- Agent Academy is the first game within the CodeFly platform
 - The game teaches coding through a spy/agent themed adventure
 
-### Mission Names Within Black Cipher Game:
+### Mission Names Within Agent Academy Game:
 1. **Shadow Protocol** (Weeks 1-4) - First mission phase
 2. **Cipher Command** (Weeks 5-8) - Second mission phase  
 3. **Ghost Protocol** (Weeks 9-13) - Third mission phase
@@ -21,7 +21,7 @@
 ### Hierarchy Summary:
 ```
 CodeFly (Platform)
-  └── Black Cipher (Game)
+  └── Agent Academy (Game)
       ├── Shadow Protocol (Mission 1)
       ├── Cipher Command (Mission 2)
       ├── Ghost Protocol (Mission 3)
@@ -42,34 +42,34 @@ CodeFly (Platform)
 
 ### Correct Usage Examples:
 - ✅ "Welcome to CodeFly - Learn To Code On The Fly"
-- ✅ "Black Cipher: Episode 1 - Shadow Protocol"
-- ✅ "Begin your Black Cipher training at Binary Shores Academy"
-- ✅ "CodeFly presents: Black Cipher"
+- ✅ "Agent Academy: Episode 1 - Shadow Protocol"
+- ✅ "Begin your Agent Academy training at Binary Shores Academy"
+- ✅ "CodeFly presents: Agent Academy"
 
 ### Incorrect Usage (AVOID):
 - ❌ "Welcome to Shadow Protocol" (Shadow Protocol is just one mission)
-- ❌ "Shadow Protocol Curriculum" (It's Black Cipher curriculum)
-- ❌ "Shadow Protocol Game" (The game is Black Cipher)
+- ❌ "Shadow Protocol Curriculum" (It's Agent Academy curriculum)
+- ❌ "Shadow Protocol Game" (The game is Agent Academy)
 
 ## Teacher Dashboard Requirements
 
 The teacher dashboard should reflect:
 1. **Platform branding**: CodeFly logo and colors
-2. **Game context**: Black Cipher theming (spy/agent theme)
-3. **Mission tracking**: Show student progress through all 4 Black Cipher missions
-4. **Proper naming**: Use "Black Cipher" when referring to the game
+2. **Game context**: Agent Academy theming (spy/agent theme)
+3. **Mission tracking**: Show student progress through all 4 Agent Academy missions
+4. **Proper naming**: Use "Agent Academy" when referring to the game
 
 ## Student Experience
 
 Students are:
-- Playing the **Black Cipher** game
+- Playing the **Agent Academy** game
 - On the **CodeFly** platform
 - Currently in the **Shadow Protocol** mission (weeks 1-4)
 
 ## Future Expansion
 
 CodeFly will eventually include:
-- Black Cipher (Current - Beginner Python)
+- Agent Academy (Current - Beginner Python)
 - [Future Game 2] (Intermediate Web Development)
 - [Future Game 3] (Advanced Full-Stack)
 - [Future Game 4] (AI/ML Concepts)
@@ -78,15 +78,15 @@ CodeFly will eventually include:
 
 | Context | Correct Term | NOT |
 |---------|-------------|-----|
-| Platform/Software | CodeFly | Black Cipher, Shadow Protocol |
-| Current Game | Black Cipher | Shadow Protocol, CodeFly Game |
-| Week 1-4 Mission | Shadow Protocol | Black Cipher Mission 1 |
-| Curriculum Name | Black Cipher Curriculum | Shadow Protocol Curriculum |
-| Dashboard Title | CodeFly Teacher Dashboard | Black Cipher Dashboard |
+| Platform/Software | CodeFly | Agent Academy, Shadow Protocol |
+| Current Game | Agent Academy | Shadow Protocol, CodeFly Game |
+| Week 1-4 Mission | Shadow Protocol | Agent Academy Mission 1 |
+| Curriculum Name | Agent Academy Curriculum | Shadow Protocol Curriculum |
+| Dashboard Title | CodeFly Teacher Dashboard | Agent Academy Dashboard |
 
 ## Remember
 - **CodeFly** = The platform (like Steam or Epic Games)
-- **Black Cipher** = The game (like Fortnite or Minecraft)
+- **Agent Academy** = The game (like Fortnite or Minecraft)
 - **Shadow Protocol** = Mission 1 within the game (like Season 1 or Chapter 1)
 
 ## CRITICAL DEVELOPMENT RULES - NEVER VIOLATE
@@ -130,7 +130,7 @@ CodeFly will eventually include:
 
 ### 🏔️ THE DIGITAL FORTRESS (Game World)
 
-The Black Cipher facility is divided into secured zones that agents must infiltrate:
+The Agent Academy facility is divided into secured zones that agents must infiltrate:
 
 #### Chapter 1: Tutorial Islands (Outer Perimeter)
 - **Binary Shores Academy** - Initial infiltration point, learn basic encryption
@@ -151,7 +151,7 @@ The Black Cipher facility is divided into secured zones that agents must infiltr
 - **Database Depths** - Intelligence storage vault
 
 #### Final Target: The Core
-- **The Core Protocol** - The Black Cipher AI itself
+- **The Core Protocol** - The Agent Academy AI itself
 
 ### 🕵️ AGENT TERMINOLOGY (Use These Terms)
 
@@ -166,7 +166,7 @@ The Black Cipher facility is divided into secured zones that agents must infiltr
 - **Mission Map** - Tactical overview of Digital Fortress zones
 - **Agent Command** - Where agents coordinate and view team status  
 - **Field Ops Center** - Mission briefings and team leaderboards
-- **Agents** - The students infiltrating Black Cipher
+- **Agents** - The students infiltrating Agent Academy
 - **Operations** - Individual coding challenges/lessons
 - **Digital Fortress** - The game world/facility being infiltrated
 - **Tactical HUD** - The interface styling
@@ -235,7 +235,7 @@ Students choose from specialized agent archetypes:
 
 **🧠 DR. SOPHIA QUANTUM** - AI Research Lead
 - Explains complex algorithms and provides learning resources
-- Final ally revealed to help defeat Black Cipher AI
+- Final ally revealed to help defeat Agent Academy AI
 - "Understanding the enemy's code is key to victory."
 
 ### 💀 VILLAINS & BOSSES

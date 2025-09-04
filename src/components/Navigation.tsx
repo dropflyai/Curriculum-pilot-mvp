@@ -26,29 +26,31 @@ export default function Navigation() {
 
   async function getProfile() {
     try {
-      // Check for demo user first
-      const demoMode = localStorage.getItem('demo_authenticated') === 'true'
-      if (demoMode) {
-        const demoUserStr = localStorage.getItem('demo_user')
-        if (demoUserStr) {
-          const demoUser = JSON.parse(demoUserStr)
-          setUser({
-            id: demoUser.id,
-            email: demoUser.email,
-            full_name: demoUser.full_name,
-            display_name: demoUser.full_name?.split(' ')[0],
-            avatar_url: null,
-            role: demoUser.role,
-            total_xp: demoUser.role === 'student' ? 1250 : 0,
-            current_streak: demoUser.role === 'student' ? 7 : 0,
-            longest_streak: demoUser.role === 'student' ? 14 : 0,
-            last_active_date: new Date().toISOString(),
-            accommodations_jsonb: {},
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          setLoading(false)
-          return
+      // Check for demo user first (only in browser)
+      if (typeof window !== 'undefined') {
+        const demoMode = localStorage.getItem('demo_authenticated') === 'true'
+        if (demoMode) {
+          const demoUserStr = localStorage.getItem('demo_user')
+          if (demoUserStr) {
+            const demoUser = JSON.parse(demoUserStr)
+            setUser({
+              id: demoUser.id,
+              email: demoUser.email,
+              full_name: demoUser.full_name,
+              display_name: demoUser.full_name?.split(' ')[0],
+              avatar_url: null,
+              role: demoUser.role,
+              total_xp: demoUser.role === 'student' ? 1250 : 0,
+              current_streak: demoUser.role === 'student' ? 7 : 0,
+              longest_streak: demoUser.role === 'student' ? 14 : 0,
+              last_active_date: new Date().toISOString(),
+              accommodations_jsonb: {},
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })
+            setLoading(false)
+            return
+          }
         }
       }
 
@@ -71,11 +73,13 @@ export default function Navigation() {
   }
 
   async function signOut() {
-    // Clear demo data
-    localStorage.removeItem('demo_user')
-    localStorage.removeItem('demo_authenticated')
-    localStorage.removeItem('codefly_demo_user')
-    localStorage.removeItem('codefly_demo_mode')
+    // Clear demo data (only in browser)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('demo_user')
+      localStorage.removeItem('demo_authenticated')
+      localStorage.removeItem('codefly_demo_user')
+      localStorage.removeItem('codefly_demo_mode')
+    }
     
     // Clear Supabase auth
     await supabase.auth.signOut()

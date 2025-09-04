@@ -1,24 +1,24 @@
-// Authentication helpers for Black Cipher with activation keys
+// Authentication helpers for Agent Academy with activation keys
 import { signUp, signIn as baseSignIn } from '@/lib/auth'
 import { AuthUser } from '@/lib/auth'
 
 // Activation key configuration
 const VALID_ACTIVATION_KEYS = {
   // Student keys
-  'BC-STUDENT-2024': { role: 'student', expires: '2025-12-31' },
-  'BC-TRAINEE-ALPHA': { role: 'student', expires: '2025-06-30' },
-  'BC-RECRUIT-BETA': { role: 'student', expires: '2025-09-30' },
-  'BC-CADET-GAMMA': { role: 'student', expires: '2025-03-31' },
+  'AA-STUDENT-2024': { role: 'student', expires: '2025-12-31' },
+  'AA-TRAINEE-ALPHA': { role: 'student', expires: '2025-06-30' },
+  'AA-RECRUIT-BETA': { role: 'student', expires: '2025-09-30' },
+  'AA-CADET-GAMMA': { role: 'student', expires: '2025-03-31' },
   
   // Teacher keys
-  'BC-TEACHER-2024': { role: 'teacher', expires: '2025-12-31' },
-  'BC-COMMANDER-ALPHA': { role: 'teacher', expires: '2025-12-31' },
-  'BC-INSTRUCTOR-BETA': { role: 'teacher', expires: '2025-09-30' },
+  'AA-TEACHER-2024': { role: 'teacher', expires: '2025-12-31' },
+  'AA-COMMANDER-ALPHA': { role: 'teacher', expires: '2025-12-31' },
+  'AA-INSTRUCTOR-BETA': { role: 'teacher', expires: '2025-09-30' },
   
   // Demo keys for testing
-  'BC-DEMO-STUDENT': { role: 'student', expires: '2030-12-31' },
-  'BC-DEMO-TEACHER': { role: 'teacher', expires: '2030-12-31' },
-  'BC-TEST-ACCESS': { role: 'student', expires: '2030-12-31' }
+  'AA-DEMO-STUDENT': { role: 'student', expires: '2030-12-31' },
+  'AA-DEMO-TEACHER': { role: 'teacher', expires: '2030-12-31' },
+  'AA-TEST-ACCESS': { role: 'student', expires: '2030-12-31' }
 } as const
 
 // School and class codes
@@ -37,7 +37,7 @@ const VALID_CLASS_CODES = {
 }
 
 /**
- * Validates an activation key for Black Cipher access
+ * Validates an activation key for Agent Academy access
  */
 export async function validateActivationKey(activationKey: string): Promise<boolean> {
   try {
@@ -74,7 +74,7 @@ export function getActivationKeyRole(activationKey: string): 'student' | 'teache
 }
 
 /**
- * Creates a new Black Cipher account with activation key validation
+ * Creates a new Agent Academy account with activation key validation
  */
 export async function createAccount(
   email: string,
@@ -91,9 +91,9 @@ export async function createAccount(
       return { user: null, error: error || new Error('Failed to create account') }
     }
 
-    // Store codename and Black Cipher specific data
+    // Store codename and Agent Academy specific data
     if (typeof window !== 'undefined') {
-      const blackCipherProfile = {
+      const agentAcademyProfile = {
         userId: user.id,
         codename,
         role,
@@ -102,7 +102,7 @@ export async function createAccount(
         clearanceLevel: role === 'teacher' ? 'COMMAND' : 'FIELD'
       }
       
-      localStorage.setItem(`bc_profile_${user.id}`, JSON.stringify(blackCipherProfile))
+      localStorage.setItem(`aa_profile_${user.id}`, JSON.stringify(agentAcademyProfile))
     }
 
     return { user, error: null }
@@ -115,7 +115,7 @@ export async function createAccount(
 }
 
 /**
- * Enhanced sign in with Black Cipher session management
+ * Enhanced sign in with Agent Academy session management
  */
 export async function signIn(email: string, password: string): Promise<{ user: AuthUser | null; error: Error | null }> {
   try {
@@ -125,16 +125,16 @@ export async function signIn(email: string, password: string): Promise<{ user: A
       return { user: null, error: error || new Error('Authentication failed') }
     }
 
-    // Initialize Black Cipher session
+    // Initialize Agent Academy session
     if (typeof window !== 'undefined') {
       const sessionData = {
         userId: user.id,
         loginTime: new Date().toISOString(),
-        sessionId: `bc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        sessionId: `aa_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         lastActivity: new Date().toISOString()
       }
       
-      localStorage.setItem('bc_session', JSON.stringify(sessionData))
+      localStorage.setItem('aa_session', JSON.stringify(sessionData))
     }
 
     return { user, error: null }
@@ -167,7 +167,7 @@ export async function joinSchool(userId: string, schoolCode: string): Promise<{ 
         joinedAt: new Date().toISOString()
       }
       
-      localStorage.setItem(`bc_school_${userId}`, JSON.stringify(schoolMembership))
+      localStorage.setItem(`aa_school_${userId}`, JSON.stringify(schoolMembership))
     }
 
     // In a real app, this would make an API call to join the school
@@ -203,7 +203,7 @@ export async function joinClass(userId: string, classCode: string): Promise<{ su
         joinedAt: new Date().toISOString()
       }
       
-      localStorage.setItem(`bc_class_${userId}`, JSON.stringify(classMembership))
+      localStorage.setItem(`aa_class_${userId}`, JSON.stringify(classMembership))
     }
 
     // In a real app, this would make an API call to join the class
@@ -219,12 +219,12 @@ export async function joinClass(userId: string, classCode: string): Promise<{ su
 }
 
 /**
- * Gets Black Cipher profile for a user
+ * Gets Agent Academy profile for a user
  */
-export function getBlackCipherProfile(userId: string) {
+export function getAgentAcademyProfile(userId: string) {
   if (typeof window === 'undefined') return null
   
-  const profile = localStorage.getItem(`bc_profile_${userId}`)
+  const profile = localStorage.getItem(`aa_profile_${userId}`)
   return profile ? JSON.parse(profile) : null
 }
 
@@ -234,7 +234,7 @@ export function getBlackCipherProfile(userId: string) {
 export function getUserSchool(userId: string) {
   if (typeof window === 'undefined') return null
   
-  const school = localStorage.getItem(`bc_school_${userId}`)
+  const school = localStorage.getItem(`aa_school_${userId}`)
   return school ? JSON.parse(school) : null
 }
 
@@ -244,7 +244,7 @@ export function getUserSchool(userId: string) {
 export function getUserClass(userId: string) {
   if (typeof window === 'undefined') return null
   
-  const classInfo = localStorage.getItem(`bc_class_${userId}`)
+  const classInfo = localStorage.getItem(`aa_class_${userId}`)
   return classInfo ? JSON.parse(classInfo) : null
 }
 
@@ -252,7 +252,7 @@ export function getUserClass(userId: string) {
  * Role-based redirect after authentication
  */
 export function getRedirectPath(user: AuthUser): string {
-  const profile = getBlackCipherProfile(user.id)
+  const profile = getAgentAcademyProfile(user.id)
   const role = user.role || profile?.role
 
   switch (role) {
@@ -275,7 +275,7 @@ export function hasRequiredClearance(
 ): boolean {
   if (!user) return false
   
-  const profile = getBlackCipherProfile(user.id)
+  const profile = getAgentAcademyProfile(user.id)
   const clearanceLevel = profile?.clearanceLevel || 
     (user.role === 'admin' ? 'ADMIN' : 
      user.role === 'teacher' ? 'COMMAND' : 'FIELD')
@@ -295,21 +295,21 @@ export function hasRequiredClearance(
 export function updateActivity() {
   if (typeof window === 'undefined') return
   
-  const session = localStorage.getItem('bc_session')
+  const session = localStorage.getItem('aa_session')
   if (session) {
     const sessionData = JSON.parse(session)
     sessionData.lastActivity = new Date().toISOString()
-    localStorage.setItem('bc_session', JSON.stringify(sessionData))
+    localStorage.setItem('aa_session', JSON.stringify(sessionData))
   }
 }
 
 /**
- * Checks if Black Cipher session is active
+ * Checks if Agent Academy session is active
  */
 export function isSessionActive(): boolean {
   if (typeof window === 'undefined') return false
   
-  const session = localStorage.getItem('bc_session')
+  const session = localStorage.getItem('aa_session')
   if (!session) return false
   
   const sessionData = JSON.parse(session)
@@ -323,16 +323,16 @@ export function isSessionActive(): boolean {
 }
 
 /**
- * Clears Black Cipher session data
+ * Clears Agent Academy session data
  */
 export function clearSession() {
   if (typeof window === 'undefined') return
   
-  localStorage.removeItem('bc_session')
+  localStorage.removeItem('aa_session')
 }
 
 // Export all valid codes for admin purposes
-export const BLACK_CIPHER_CODES = {
+export const AGENT_ACADEMY_CODES = {
   ACTIVATION_KEYS: VALID_ACTIVATION_KEYS,
   SCHOOL_CODES: VALID_SCHOOL_CODES,
   CLASS_CODES: VALID_CLASS_CODES

@@ -22,7 +22,7 @@ interface FormData {
   classCode: string
 }
 
-export default function BlackCipherSignup() {
+export default function AgentAcademySignup() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -58,7 +58,7 @@ export default function BlackCipherSignup() {
 
   const validateStep1 = async () => {
     if (!formData.activationKey) {
-      setError('Activation key is required for Black Cipher access')
+      setError('Activation key is required for Agent Academy access')
       return false
     }
 
@@ -175,7 +175,7 @@ export default function BlackCipherSignup() {
         }
       }
 
-      setSuccess('Agent profile created successfully. Welcome to Black Cipher.')
+      setSuccess('Agent profile created successfully. Welcome to Agent Academy.')
       
       setTimeout(() => {
         if (formData.role === 'student') {
@@ -296,7 +296,7 @@ export default function BlackCipherSignup() {
                     disabled={loading}
                   />
                   <p className="text-xs text-gray-400 mt-2 font-mono">
-                    Required for Black Cipher security clearance
+                    Required for Agent Academy security clearance
                   </p>
                 </div>
 
@@ -563,7 +563,7 @@ export default function BlackCipherSignup() {
               <Shield className="w-4 h-4 text-red-400 mr-2 mt-0.5 flex-shrink-0" />
               <div className="text-red-200 text-xs font-mono">
                 <div className="font-bold mb-1">CLASSIFIED SYSTEM</div>
-                <div>This is a secure Black Cipher recruitment portal. All activities are monitored and logged. Only authorized personnel may proceed.</div>
+                <div>This is a secure Agent Academy recruitment portal. All activities are monitored and logged. Only authorized personnel may proceed.</div>
               </div>
             </div>
           </div>

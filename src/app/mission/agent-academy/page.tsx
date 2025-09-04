@@ -8,7 +8,7 @@ import {
   AlertCircle, Zap, TrendingUp, Award, Navigation
 } from 'lucide-react'
 
-export default function BlackCipherMission() {
+export default function AgentAcademyMission() {
   const [missionStatus, setMissionStatus] = useState('CLASSIFIED')
   const [accessGranted, setAccessGranted] = useState(false)
 
@@ -72,7 +72,7 @@ export default function BlackCipherMission() {
           <div className="bg-black/90 border border-red-600/50 rounded-lg p-3 mb-8 font-mono text-sm backdrop-blur-sm">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4">
-                <span className="text-red-400">MISSION ID: BC-7749</span>
+                <span className="text-red-400">MISSION ID: AA-7749</span>
                 <span className="text-yellow-400">CLASSIFICATION: TOP SECRET</span>
               </div>
               <div className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function BlackCipherMission() {
           {/* Main Title */}
           <h1 className="text-7xl md:text-9xl font-black mb-6 font-mono tracking-wider">
             <span className="bg-gradient-to-r from-red-500 via-amber-500 to-red-600 bg-clip-text text-transparent">
-              BLACK CIPHER
+              AGENT ACADEMY
             </span>
           </h1>
           <h2 className="text-2xl md:text-3xl font-bold text-red-300 mb-8 font-mono">
@@ -99,9 +99,9 @@ export default function BlackCipherMission() {
               PRIORITY ALPHA BRIEFING
             </div>
             <p className="text-xl text-gray-200 font-medium leading-relaxed mb-4">
-              Intelligence has discovered a rogue AI system codenamed <span className="text-red-400 font-bold">"BLACK CIPHER"</span> 
-              operating from a fortified mountain facility. Your mission: infiltrate the digital fortress, 
-              decode encrypted Python protocols, and neutralize the threat.
+              Intelligence has discovered a rogue AI system operating from a fortified mountain facility. 
+              Your mission: infiltrate the digital fortress, decode encrypted Python protocols, 
+              and neutralize the threat through your <span className="text-red-400 font-bold">"AGENT ACADEMY"</span> training.
             </p>
             <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
               <div className="text-center">
@@ -153,7 +153,7 @@ export default function BlackCipherMission() {
               📋 MISSION OBJECTIVES
             </h2>
             <p className="text-xl text-gray-300 font-mono">
-              Complete all objectives to successfully infiltrate BLACK CIPHER
+              Complete all objectives to successfully complete AGENT ACADEMY training
             </p>
           </div>
 
@@ -342,7 +342,7 @@ export default function BlackCipherMission() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Badge:</span>
-                  <span className="text-purple-400">Cipher Master</span>
+                  <span className="text-purple-400">Agent Master</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Attempts:</span>
@@ -393,7 +393,7 @@ export default function BlackCipherMission() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button className="bg-gradient-to-r from-red-600 to-red-800 text-white px-12 py-5 rounded-xl text-xl font-bold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-2xl border-2 border-red-400/50 font-mono">
                 <Unlock className="h-6 w-6 mr-3" />
-                🚀 INITIATE BLACK CIPHER
+                🚀 INITIATE AGENT ACADEMY
               </button>
               
               <Link href="/student/dashboard" className="bg-black/80 border-2 border-gray-600/50 text-gray-400 px-12 py-5 rounded-xl text-xl font-semibold hover:bg-black/90 hover:text-white transition-all duration-300 flex items-center justify-center font-mono">

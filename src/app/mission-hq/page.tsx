@@ -38,19 +38,38 @@ export default function MissionHQ() {
   useEffect(() => {
     // Check authentication and load mission progress from Supabase
     const checkAuthAndLoadProgress = async () => {
-      // Check real user auth
-      const { user: authUser } = await getCurrentUser()
-      if (!authUser) {
+      try {
+        // Check real user auth first
+        const { user: authUser } = await getCurrentUser()
+        if (authUser) {
+          setUser(authUser)
+          // Fetch completed missions from Supabase
+          const completed = await getCompletedMissions(authUser.id)
+          setCompletedMissions(completed)
+          setLoading(false)
+          return
+        }
+
+        // Check demo authentication as fallback
+        const demoAuthenticated = localStorage.getItem('demo_authenticated') === 'true'
+        const demoUserStr = localStorage.getItem('demo_user')
+        
+        if (demoAuthenticated && demoUserStr) {
+          const demoUser = JSON.parse(demoUserStr)
+          setUser(demoUser)
+          // Demo users get empty mission progress for now
+          setCompletedMissions([])
+          setLoading(false)
+          return
+        }
+
+        // No authentication found, redirect to auth
         router.push('/auth')
-        return
+      } catch (error) {
+        console.error('Authentication check failed:', error)
+        setLoading(false)
+        router.push('/auth')
       }
-      setUser(authUser)
-      
-      // Fetch completed missions from Supabase
-      const completed = await getCompletedMissions(authUser.id)
-      setCompletedMissions(completed)
-      
-      setLoading(false)
     }
     
     checkAuthAndLoadProgress()
@@ -94,7 +113,7 @@ export default function MissionHQ() {
       duration: '4 WEEKS',
       xpReward: 5000,
       progress: 0,
-      description: 'Phase 1 of Black Cipher. Master Python fundamentals through solo infiltration missions. Learn variables, loops, and basic algorithms.',
+      description: 'Phase 1 of Agent Academy. Master Python fundamentals through solo infiltration missions. Learn variables, loops, and basic algorithms.',
       image: '/CodeFly Homepage.png',
       route: '/mission/operation-beacon'
     },
@@ -106,7 +125,7 @@ export default function MissionHQ() {
       duration: '4 WEEKS',
       xpReward: 7500,
       progress: 0,
-      description: 'Phase 2 of Black Cipher. Form elite coding teams and master functions, data structures, and collaborative programming tactics.',
+      description: 'Phase 2 of Agent Academy. Form elite coding teams and master functions, data structures, and collaborative programming tactics.',
       image: '/CodeFly Homepage 2.png',
       prerequisite: 'OPERATION BEACON',
       route: '/mission/cipher-command'
@@ -119,7 +138,7 @@ export default function MissionHQ() {
       duration: '5 WEEKS',
       xpReward: 10000,
       progress: 0,
-      description: 'Phase 3 of Black Cipher. Execute complex team missions using object-oriented programming and advanced Python concepts.',
+      description: 'Phase 3 of Agent Academy. Execute complex team missions using object-oriented programming and advanced Python concepts.',
       image: '/CodeFly Homepage 3.png',
       prerequisite: 'CIPHER COMMAND',
       route: '/mission/ghost-protocol'
@@ -132,7 +151,7 @@ export default function MissionHQ() {
       duration: '5 WEEKS',
       xpReward: 15000,
       progress: 0,
-      description: 'Phase 4 of Black Cipher. Deploy advanced team projects using APIs, databases, and real-world Python applications.',
+      description: 'Phase 4 of Agent Academy. Deploy advanced team projects using APIs, databases, and real-world Python applications.',
       image: '/CodeFly Homepage 3.png',
       prerequisite: 'LOOP CANYON BASE',
       route: '/mission/quantum-breach'
@@ -156,7 +175,7 @@ export default function MissionHQ() {
   const handleStartMission = async (missionId: string) => {
     if (!user) return
     await startMission(user.id, missionId)
-    router.push('/black-cipher-lesson-dashboard')
+    router.push('/agent-academy-lesson-dashboard')
   }
   
   if (loading) {
@@ -562,7 +581,7 @@ export default function MissionHQ() {
                     VIEW COMPLETED MISSION
                   </Link>
                   <Link
-                    href="/black-cipher-lesson-dashboard"
+                    href="/agent-academy-lesson-dashboard"
                     className="flex-1 bg-gradient-to-r from-gray-600 to-gray-800 text-white px-8 py-4 rounded-lg font-bold hover:from-gray-500 hover:to-gray-700 transition-all flex items-center justify-center gap-3"
                   >
                     <ChevronRight className="w-5 h-5" />

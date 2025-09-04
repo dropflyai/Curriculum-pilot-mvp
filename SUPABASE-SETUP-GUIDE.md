@@ -1,4 +1,4 @@
-# 🚀 Supabase Setup Guide for Black Cipher
+# 🚀 Supabase Setup Guide for Agent Academy
 
 ## Step 1: Get Your Supabase Credentials
 

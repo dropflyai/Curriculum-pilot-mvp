@@ -6,10 +6,12 @@ const ROUTE_PROTECTION = {
   // Public routes that don't require authentication
   public: [
     '/',
+    '/games',
     '/auth',
     '/auth/signup', 
     '/signin',
     '/demo',
+    '/demo-access',
     '/interactive-demo',
     '/course-overview',
     '/api/lessons',
@@ -23,7 +25,7 @@ const ROUTE_PROTECTION = {
     '/lesson',
     '/python-lesson',
     '/python-lesson-direct',
-    '/mission/black-cipher',
+    '/mission/agent-academy',
     '/ai-literacy',
     '/capstone-project',
     '/team-formation'
@@ -50,15 +52,16 @@ const DASHBOARD_REDIRECTS = [
 
 // Check if user has demo authentication
 function checkDemoAuth(request: NextRequest) {
+  // Enable demo authentication for demo buttons
   const demoUser = request.cookies.get('demo_user')?.value
-  const demoAuth = request.cookies.get('demo_authenticated')?.value
+  const demoAuthenticated = request.cookies.get('demo_authenticated')?.value === 'true'
   
-  if (demoUser && demoAuth === 'true') {
+  if (demoAuthenticated && demoUser) {
     try {
       const user = JSON.parse(demoUser)
       return { isAuthenticated: true, user }
-    } catch {
-      return { isAuthenticated: false, user: null }
+    } catch (e) {
+      // Invalid JSON, ignore
     }
   }
   
@@ -218,14 +221,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Black Cipher session activity tracking
+  // Agent Academy session activity tracking
   const response = NextResponse.next()
   
-  // Update last activity timestamp for Black Cipher sessions
+  // Update last activity timestamp for Agent Academy sessions
   if (isAuthenticated && user?.id) {
-    response.headers.set('X-BC-User-ID', user.id)
-    response.headers.set('X-BC-Role', userRole || 'unknown')
-    response.headers.set('X-BC-Timestamp', new Date().toISOString())
+    response.headers.set('X-AA-User-ID', user.id)
+    response.headers.set('X-AA-Role', userRole || 'unknown')
+    response.headers.set('X-AA-Timestamp', new Date().toISOString())
   }
 
   return response

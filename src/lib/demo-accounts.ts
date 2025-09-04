@@ -41,14 +41,22 @@ export async function demoLogin(accountType: 'student' | 'teacher') {
     role: account.role
   }
   
-  // Store demo user in localStorage
-  localStorage.setItem('demo_user', JSON.stringify(mockUser))
-  localStorage.setItem('demo_authenticated', 'true')
-  
-  // Set cookies for middleware authentication
-  document.cookie = `demo_user=${JSON.stringify(mockUser)}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
-  document.cookie = `demo_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
-  document.cookie = `user_role=${account.role}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+  // Only run in browser environment
+  if (typeof window !== 'undefined') {
+    try {
+      // Store demo user in localStorage
+      localStorage.setItem('demo_user', JSON.stringify(mockUser))
+      localStorage.setItem('demo_authenticated', 'true')
+      
+      // Set cookies for middleware authentication
+      document.cookie = `demo_user=${JSON.stringify(mockUser)}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+      document.cookie = `demo_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+      document.cookie = `user_role=${account.role}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+    } catch (e) {
+      // Ignore localStorage errors in case it's not available
+      console.warn('localStorage not available:', e)
+    }
+  }
   
   return { user: mockUser }
 }

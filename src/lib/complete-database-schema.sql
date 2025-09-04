@@ -1,4 +1,4 @@
--- Complete Database Schema for CodeFly Black Cipher
+-- Complete Database Schema for CodeFly Agent Academy
 -- Run this entire file in your Supabase SQL Editor
 
 -- ============= USER PROFILES TABLE =============
