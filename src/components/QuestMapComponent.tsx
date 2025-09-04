@@ -80,7 +80,7 @@ export const COLORS = {
 export const DEFAULT_MISSIONS: Mission[] = [
   { id: 1, key: "academy",   name: "Operation Beacon",  x: 120,  y: 380, status: "completed", icon: "castle",   route: "/mission/operation-beacon" },
   { id: 2, key: "variables",  name: "Cipher Command", x: 380,  y: 200, status: "completed", icon: "warehouse", route: "/mission/cipher-command" },
-  { id: 3, key: "logic",      name: "Ghost Protocol",      x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/mission/ghost-protocol" },
+  { id: 3, key: "logic",      name: "AI Command Center",      x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/mission/ai-command-center" },
   { id: 4, key: "loops",      name: "Quantum Breach",     x: 950,  y: 180, status: "locked",    icon: "factory",  route: "/mission/quantum-breach" },
   { id: 5, key: "functions",  name: "Function Lab",     x: 1080, y: 320, status: "locked",    icon: "lab",      route: "/course/5" },
   { id: 6, key: "arrays",     name: "Array Center",     x: 950,  y: 620, status: "locked",    icon: "array",    route: "/course/6" },

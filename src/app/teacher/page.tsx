@@ -1181,12 +1181,12 @@ CodeFly Computer Science Teacher
               </div>
             </div>
 
-            {/* Week 4: Ghost Protocol */}
+            {/* Week 4: AI Command Center */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-white">Week 4: Ghost Protocol</h3>
+                  <h3 className="text-lg font-bold text-white">Week 4: AI Command Center</h3>
                 </div>
                 <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded-full">Locked</span>
               </div>
