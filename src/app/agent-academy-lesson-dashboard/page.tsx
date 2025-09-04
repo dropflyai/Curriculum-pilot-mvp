@@ -909,11 +909,11 @@ export default function StudentDashboard() {
                   {/* Objective List */}
                   <div className="space-y-2">
                     {[
-                      { obj: 'WEEK 1: INTELLIGENCE GATHERING', status: 'current', code: 'OBJ-001', priority: 'ALPHA' },
-                      { obj: 'WEEK 2: COMMUNICATION PROTOCOLS', status: 'locked', code: 'OBJ-002', priority: 'BRAVO' },
-                      { obj: 'WEEK 3: TERMINAL HACKING', status: 'locked', code: 'OBJ-003', priority: 'CHARLIE' },
-                      { obj: 'WEEK 4: MISSION CALCULATIONS', status: 'locked', code: 'OBJ-004', priority: 'DELTA' },
-                      { obj: 'PERIMETER BREACH COMPLETE', status: 'locked', code: 'OBJ-005', priority: 'OMEGA' }
+                      { obj: 'WEEK 1: AI MEMORY CORE DEVELOPMENT', status: 'current', code: 'OBJ-001', priority: 'ALPHA' },
+                      { obj: 'WEEK 2: AI COMMUNICATION SYSTEMS', status: 'locked', code: 'OBJ-002', priority: 'BRAVO' },
+                      { obj: 'WEEK 3: AI DECISION ENGINE', status: 'locked', code: 'OBJ-003', priority: 'CHARLIE' },
+                      { obj: 'WEEK 4: AI TACTICAL CALCULATIONS', status: 'locked', code: 'OBJ-004', priority: 'DELTA' },
+                      { obj: 'SUPER AI AGENT DEPLOYMENT', status: 'locked', code: 'OBJ-005', priority: 'OMEGA' }
                     ].map((obj, i) => (
                       <div key={i} className={`border p-3 ${
                         obj.status === 'complete' ? 'bg-green-500/10 border-green-400/40' : 
