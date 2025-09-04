@@ -286,7 +286,7 @@ export function hasRequiredClearance(
     'ADMIN': 2
   }
   
-  return levelHierarchy[clearanceLevel] >= levelHierarchy[requiredLevel]
+  return levelHierarchy[clearanceLevel as keyof typeof levelHierarchy] >= levelHierarchy[requiredLevel]
 }
 
 /**

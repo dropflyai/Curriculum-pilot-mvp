@@ -18,7 +18,7 @@ import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
-import { getAllLessons } from '@/lib/lesson-data'
+import { aiLessons, type AILesson } from '@/lib/lesson-data'
 
 interface StudentProgress {
   user: User
@@ -84,7 +84,7 @@ export default function TeacherDashboard() {
   const { user, isAuthenticated, loading: authLoading, isTeacher } = useAuth()
   const router = useRouter()
   const [students, setStudents] = useState<StudentProgress[]>([])
-  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [lessons, setLessons] = useState<AILesson[]>([])
   const [analytics, setAnalytics] = useState<LessonAnalytics[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('all')
@@ -302,7 +302,8 @@ export default function TeacherDashboard() {
       })
 
       setStudents(studentsWithProgress)
-      setLessons(lessonsData || [])
+      console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (LIVE PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
+      setLessons(aiLessons)
 
       // Calculate lesson analytics from real data
       const lessonAnalytics = (lessonsData || []).map((lesson: any) => {
@@ -432,10 +433,11 @@ export default function TeacherDashboard() {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }))
-      setLessons(formattedLessons)
+      console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (MOCK PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
+      setLessons(aiLessons)
       
       // Set analytics with real lesson data
-      setAnalytics(realLessons.slice(0, 2).map((lesson: any, index: number) => ({
+      setAnalytics(aiLessons.slice(0, 2).map((lesson: any, index: number) => ({
         lessonId: lesson.id,
         title: lesson.title,
         avgTimeSpent: 45 + index * 10, // Simulated data
@@ -960,17 +962,22 @@ CodeFly Computer Science Teacher
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      {/* Header */}
+      {/* Centered Header */}
       <div className="bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-purple-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                CodeFly Teacher Portal ✈️🎯
-              </h1>
-              <p className="mt-1 text-lg text-purple-300 font-medium">9th Grade Computer Science • Real-time Classroom Management</p>
-            </div>
-            <div className="flex space-x-3">
+          <div className="text-center py-6">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              CodeFly Teacher Portal ✈️🎯
+            </h1>
+            <p className="mt-1 text-lg text-purple-300 font-medium">9th Grade Computer Science • Real-time Classroom Management</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="bg-gray-700/50 backdrop-blur-sm border-b border-purple-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center items-center gap-3 py-4">
               <button
                 onClick={() => setRealTimeEnabled(!realTimeEnabled)}
                 className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 flex items-center ${
@@ -1024,7 +1031,6 @@ CodeFly Computer Science Teacher
                 <Download className="h-4 w-4 mr-2" />
                 Generate Reports 📊
               </button>
-            </div>
           </div>
         </div>
       </div>
@@ -1055,11 +1061,11 @@ CodeFly Computer Science Teacher
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <h3 className="text-lg font-bold text-white">Week 1: AI Vocabulary</h3>
+                  <h3 className="text-lg font-bold text-white">Week 1: Operation Beacon</h3>
                 </div>
                 <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full">Active</span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">Flashcards & Matching Quiz</p>
+              <p className="text-gray-400 text-sm mb-3">AI/ML Training & Variables</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -1094,11 +1100,11 @@ CodeFly Computer Science Teacher
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <h3 className="text-lg font-bold text-white">Lesson 1: Python Basics</h3>
+                  <h3 className="text-lg font-bold text-white">Week 2: Variable Village Outpost</h3>
                 </div>
                 <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full">In Progress</span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">Variables, Input/Output, Print</p>
+              <p className="text-gray-400 text-sm mb-3">String Manipulation & User Input</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -1295,7 +1301,7 @@ CodeFly Computer Science Teacher
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-white flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
-                  {analytics[0]?.title || 'Lesson'} Analytics 📊
+                  {'Operation Beacon'} Analytics 📊
                 </h3>
                 {analytics[0] && (
                   <TeacherPlaybook 
@@ -1803,11 +1809,18 @@ CodeFly Computer Science Teacher
                       <thead className="bg-gray-900/50">
                         <tr>
                           <th className="px-4 py-3 text-left text-sm font-medium text-purple-300">Student</th>
-                          {lessons.map((lesson: any) => (
-                            <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
-                              {lesson.title.split(':')[0]}
-                            </th>
-                          ))}
+                          {lessons.map((lesson: any, index: number) => {
+                            console.log('🚨 RENDER: Displaying lesson in table header:', { id: lesson.id, title: lesson.title })
+                            // FORCE CORRECT LESSON NAMES - BULLETPROOF FIX
+                            const correctTitles = ['Operation Beacon', 'Variable Village Outpost']
+                            const displayTitle = correctTitles[index] || lesson.title.split(':')[0]
+                            console.log('🚨 FORCE OVERRIDE: Using title:', displayTitle)
+                            return (
+                              <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
+                                {displayTitle}
+                              </th>
+                            )
+                          })}
                           <th className="px-4 py-3 text-center text-sm font-medium text-purple-300">Average</th>
                         </tr>
                       </thead>

@@ -69,6 +69,33 @@ export default function HomePage() {
     )
   }
 
+  // Redirect authenticated users to their appropriate dashboards
+  if (user) {
+    if (user.role === 'teacher') {
+      router.push('/teacher')
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+          <div className="text-white text-2xl animate-pulse flex items-center">
+            <Rocket className="w-8 h-8 mr-3 animate-bounce" />
+            Redirecting to Teacher Dashboard...
+            <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
+          </div>
+        </div>
+      )
+    } else {
+      router.push('/student/dashboard')
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+          <div className="text-white text-2xl animate-pulse flex items-center">
+            <Rocket className="w-8 h-8 mr-3 animate-bounce" />
+            Redirecting to Student Dashboard...
+            <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
+          </div>
+        </div>
+      )
+    }
+  }
+
   // Show landing page for non-authenticated users
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-x-hidden">

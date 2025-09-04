@@ -28,7 +28,7 @@ export async function getCompletedMissions(userId: string): Promise<string[]> {
     return []
   }
   
-  return data?.map(m => m.mission_id) || []
+  return data?.map((m: any) => m.mission_id) || []
 }
 
 /**
