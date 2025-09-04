@@ -9,7 +9,7 @@ interface Mission {
   id: number
   name: string
   week: number
-  phase: 'Shadow Protocol' | 'Cipher Command' | 'Ghost Protocol' | 'Quantum Breach'
+  phase: 'Operation Beacon' | 'Mission Atlas' | 'Code Falcon' | 'Project Vector'
   type: 'solo' | 'team' | 'assessment'
   difficulty: number
   xpReward: number
@@ -21,45 +21,45 @@ interface Mission {
 }
 
 const CURRICULUM_MISSIONS: Mission[] = [
-  // Phase 1: Shadow Protocol (Weeks 1-4) - Solo Missions
-  { id: 1, name: 'Binary Shores Academy', week: 1, phase: 'Shadow Protocol', type: 'solo', difficulty: 1, xpReward: 250, description: 'Master variables and basic data types', unlocked: true, completed: true },
-  { id: 2, name: 'Variable Village Outpost', week: 2, phase: 'Shadow Protocol', type: 'solo', difficulty: 1, xpReward: 300, description: 'String manipulation and user input mastery', unlocked: true, completed: true },
-  { id: 3, name: 'Logic Lake Fortress', week: 3, phase: 'Shadow Protocol', type: 'solo', difficulty: 2, xpReward: 350, description: 'Conditional statements and boolean logic', unlocked: true, completed: false },
-  { id: 4, name: 'Shadow Protocol Assessment', week: 4, phase: 'Shadow Protocol', type: 'assessment', difficulty: 2, xpReward: 400, description: 'Solo project combining all foundational skills', unlocked: false, completed: false, assessmentType: 'project' },
+  // Phase 1: Operation Beacon (Weeks 1-4) - Solo Missions
+  { id: 1, name: 'Intelligence Gathering', week: 1, phase: 'Operation Beacon', type: 'solo', difficulty: 1, xpReward: 250, description: 'Master variables and data storage', unlocked: true, completed: false },
+  { id: 2, name: 'Communication Protocols', week: 2, phase: 'Operation Beacon', type: 'solo', difficulty: 1, xpReward: 300, description: 'Print statements and output mastery', unlocked: false, completed: false },
+  { id: 3, name: 'Terminal Hacking', week: 3, phase: 'Operation Beacon', type: 'solo', difficulty: 2, xpReward: 350, description: 'Input and user interaction', unlocked: false, completed: false },
+  { id: 4, name: 'Mission Calculations', week: 4, phase: 'Operation Beacon', type: 'assessment', difficulty: 2, xpReward: 400, description: 'Basic math and operations assessment', unlocked: false, completed: false, assessmentType: 'project' },
 
-  // Phase 2: Cipher Command (Weeks 5-8) - Transition to Teams  
-  { id: 5, name: 'Loop Canyon Base', week: 5, phase: 'Cipher Command', type: 'solo', difficulty: 2, xpReward: 450, description: 'Master for and while loops', unlocked: false, completed: false },
-  { id: 6, name: 'Team Formation Protocol', week: 6, phase: 'Cipher Command', type: 'team', difficulty: 2, xpReward: 500, description: 'Join your development squad', unlocked: false, completed: false, teamRequired: true },
-  { id: 7, name: 'Function Forest Station', week: 7, phase: 'Cipher Command', type: 'team', difficulty: 3, xpReward: 550, description: 'Create reusable functions and modules', unlocked: false, completed: false, teamRequired: true },
-  { id: 8, name: 'Cipher Command Challenge', week: 8, phase: 'Cipher Command', type: 'assessment', difficulty: 3, xpReward: 600, description: 'First team project showcase', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' },
+  // Phase 2: Mission Atlas (Weeks 5-8) - Transition to Teams  
+  { id: 5, name: 'Loop Canyon Base', week: 5, phase: 'Mission Atlas', type: 'solo', difficulty: 2, xpReward: 450, description: 'Master for and while loops', unlocked: false, completed: false },
+  { id: 6, name: 'Team Formation Protocol', week: 6, phase: 'Mission Atlas', type: 'team', difficulty: 2, xpReward: 500, description: 'Join your development squad', unlocked: false, completed: false, teamRequired: true },
+  { id: 7, name: 'Function Forest Station', week: 7, phase: 'Mission Atlas', type: 'team', difficulty: 3, xpReward: 550, description: 'Create reusable functions and modules', unlocked: false, completed: false, teamRequired: true },
+  { id: 8, name: 'Mission Atlas Challenge', week: 8, phase: 'Mission Atlas', type: 'assessment', difficulty: 3, xpReward: 600, description: 'First team project showcase', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' },
 
-  // Phase 3: Ghost Protocol (Weeks 9-13) - Team Missions
-  { id: 9, name: 'Array Mountains Facility', week: 9, phase: 'Ghost Protocol', type: 'team', difficulty: 3, xpReward: 650, description: 'Data structures and list manipulation', unlocked: false, completed: false, teamRequired: true },
-  { id: 10, name: 'Object Oasis Complex', week: 10, phase: 'Ghost Protocol', type: 'team', difficulty: 4, xpReward: 700, description: 'Object-oriented programming fundamentals', unlocked: false, completed: false, teamRequired: true },
-  { id: 11, name: 'Algorithm Archipelago', week: 11, phase: 'Ghost Protocol', type: 'team', difficulty: 4, xpReward: 750, description: 'Sorting and searching algorithms', unlocked: false, completed: false, teamRequired: true },
-  { id: 12, name: 'Ghost Protocol Midterm', week: 12, phase: 'Ghost Protocol', type: 'assessment', difficulty: 4, xpReward: 800, description: 'Comprehensive team assessment', unlocked: false, completed: false, teamRequired: true, assessmentType: 'test' },
-  { id: 13, name: 'Debug Caves Expedition', week: 13, phase: 'Ghost Protocol', type: 'team', difficulty: 4, xpReward: 850, description: 'Advanced debugging and error handling', unlocked: false, completed: false, teamRequired: true },
+  // Phase 3: Code Falcon (Weeks 9-13) - Team Missions
+  { id: 9, name: 'Array Mountains Facility', week: 9, phase: 'Code Falcon', type: 'team', difficulty: 3, xpReward: 650, description: 'Data structures and list manipulation', unlocked: false, completed: false, teamRequired: true },
+  { id: 10, name: 'Object Oasis Complex', week: 10, phase: 'Code Falcon', type: 'team', difficulty: 4, xpReward: 700, description: 'Object-oriented programming fundamentals', unlocked: false, completed: false, teamRequired: true },
+  { id: 11, name: 'Algorithm Archipelago', week: 11, phase: 'Code Falcon', type: 'team', difficulty: 4, xpReward: 750, description: 'Sorting and searching algorithms', unlocked: false, completed: false, teamRequired: true },
+  { id: 12, name: 'Code Falcon Midterm', week: 12, phase: 'Code Falcon', type: 'assessment', difficulty: 4, xpReward: 800, description: 'Comprehensive team assessment', unlocked: false, completed: false, teamRequired: true, assessmentType: 'test' },
+  { id: 13, name: 'Debug Caves Expedition', week: 13, phase: 'Code Falcon', type: 'team', difficulty: 4, xpReward: 850, description: 'Advanced debugging and error handling', unlocked: false, completed: false, teamRequired: true },
 
-  // Phase 4: Quantum Breach (Weeks 14-18) - Advanced Team Challenges
-  { id: 14, name: 'API Gateway Fortress', week: 14, phase: 'Quantum Breach', type: 'team', difficulty: 5, xpReward: 900, description: 'REST APIs and web integration', unlocked: false, completed: false, teamRequired: true },
-  { id: 15, name: 'Database Depths', week: 15, phase: 'Quantum Breach', type: 'team', difficulty: 5, xpReward: 950, description: 'SQL and database design', unlocked: false, completed: false, teamRequired: true },
-  { id: 16, name: 'Security Stronghold', week: 16, phase: 'Quantum Breach', type: 'team', difficulty: 5, xpReward: 1000, description: 'Cybersecurity and safe coding practices', unlocked: false, completed: false, teamRequired: true },
-  { id: 17, name: 'Quantum Breach Protocol', week: 17, phase: 'Quantum Breach', type: 'assessment', difficulty: 6, xpReward: 1100, description: 'Advanced team capstone project', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' },
-  { id: 18, name: 'The Final Breach', week: 18, phase: 'Quantum Breach', type: 'assessment', difficulty: 6, xpReward: 1200, description: 'Ultimate coding mastery showcase', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' }
+  // Phase 4: Project Vector (Weeks 14-18) - Advanced Team Challenges
+  { id: 14, name: 'API Gateway Fortress', week: 14, phase: 'Project Vector', type: 'team', difficulty: 5, xpReward: 900, description: 'REST APIs and web integration', unlocked: false, completed: false, teamRequired: true },
+  { id: 15, name: 'Database Depths', week: 15, phase: 'Project Vector', type: 'team', difficulty: 5, xpReward: 950, description: 'SQL and database design', unlocked: false, completed: false, teamRequired: true },
+  { id: 16, name: 'Security Stronghold', week: 16, phase: 'Project Vector', type: 'team', difficulty: 5, xpReward: 1000, description: 'Cybersecurity and safe coding practices', unlocked: false, completed: false, teamRequired: true },
+  { id: 17, name: 'Project Vector Protocol', week: 17, phase: 'Project Vector', type: 'assessment', difficulty: 6, xpReward: 1100, description: 'Advanced team capstone project', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' },
+  { id: 18, name: 'The Final Breach', week: 18, phase: 'Project Vector', type: 'assessment', difficulty: 6, xpReward: 1200, description: 'Ultimate coding mastery showcase', unlocked: false, completed: false, teamRequired: true, assessmentType: 'project' }
 ]
 
 const PHASE_COLORS = {
-  'Shadow Protocol': 'border-green-400/30 bg-green-400/5',
-  'Cipher Command': 'border-cyan-400/30 bg-cyan-400/5', 
-  'Ghost Protocol': 'border-amber-400/30 bg-amber-400/5',
-  'Quantum Breach': 'border-red-400/30 bg-red-400/5'
+  'Operation Beacon': 'border-green-400/30 bg-green-400/5',
+  'Mission Atlas': 'border-cyan-400/30 bg-cyan-400/5', 
+  'Code Falcon': 'border-amber-400/30 bg-amber-400/5',
+  'Project Vector': 'border-red-400/30 bg-red-400/5'
 }
 
 const PHASE_ICONS = {
-  'Shadow Protocol': '🕯️',
-  'Cipher Command': '🔐',
-  'Ghost Protocol': '👻',
-  'Quantum Breach': '⚛️'
+  'Operation Beacon': '🎯',
+  'Mission Atlas': '🗺️',
+  'Code Falcon': '🦅',
+  'Project Vector': '⚡'
 }
 
 export default function MissionObjectives() {
@@ -77,7 +77,7 @@ export default function MissionObjectives() {
     }
   }, [router])
 
-  const phases = ['Shadow Protocol', 'Cipher Command', 'Ghost Protocol', 'Quantum Breach']
+  const phases = ['Operation Beacon', 'Mission Atlas', 'Code Falcon', 'Project Vector']
 
   const getMissionsForPhase = (phase: string) => {
     return CURRICULUM_MISSIONS.filter(mission => mission.phase === phase)
@@ -303,9 +303,9 @@ export default function MissionObjectives() {
                       mission.completed ? 'text-green-400' : 
                       mission.unlocked ? 'text-cyan-400' : 'text-red-400'
                     }`}>
-                      {mission.phase === 'Shadow Protocol' ? '🕯️' :
-                       mission.phase === 'Cipher Command' ? '🔐' :
-                       mission.phase === 'Ghost Protocol' ? '👻' : '⚛️'}
+                      {mission.phase === 'Operation Beacon' ? '🎯' :
+                       mission.phase === 'Mission Atlas' ? '🗺️' :
+                       mission.phase === 'Code Falcon' ? '🦅' : '⚡'}
                     </div>
                   </div>
                 </div>
