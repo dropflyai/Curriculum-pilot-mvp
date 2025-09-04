@@ -55,10 +55,18 @@ function checkDemoAuth(request: NextRequest) {
   
   if (demoUser && demoAuth === 'true') {
     try {
-      const user = JSON.parse(demoUser)
+      // Decode the cookie value if it's encoded
+      const decodedUser = decodeURIComponent(demoUser)
+      const user = JSON.parse(decodedUser)
       return { isAuthenticated: true, user }
     } catch {
-      return { isAuthenticated: false, user: null }
+      // Try parsing without decoding in case it's not encoded
+      try {
+        const user = JSON.parse(demoUser)
+        return { isAuthenticated: true, user }
+      } catch {
+        return { isAuthenticated: false, user: null }
+      }
     }
   }
   

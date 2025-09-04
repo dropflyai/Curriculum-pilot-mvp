@@ -45,10 +45,14 @@ export async function demoLogin(accountType: 'student' | 'teacher') {
   localStorage.setItem('demo_user', JSON.stringify(mockUser))
   localStorage.setItem('demo_authenticated', 'true')
   
-  // Set cookies for middleware authentication
-  document.cookie = `demo_user=${JSON.stringify(mockUser)}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
-  document.cookie = `demo_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
-  document.cookie = `user_role=${account.role}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+  // Set cookies for middleware authentication - ensure proper encoding
+  const userCookie = encodeURIComponent(JSON.stringify(mockUser))
+  document.cookie = `demo_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax` // 7 days
+  document.cookie = `demo_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax` // 7 days
+  document.cookie = `user_role=${account.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax` // 7 days
+  
+  // Force a small delay to ensure cookies are set
+  await new Promise(resolve => setTimeout(resolve, 100))
   
   return { user: mockUser }
 }
