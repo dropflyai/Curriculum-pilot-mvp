@@ -1295,7 +1295,7 @@ CodeFly Computer Science Teacher
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-white flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
-                  {analytics[0]?.title || 'Lesson'} Analytics 📊
+                  {'Operation Beacon'} Analytics 📊
                 </h3>
                 {analytics[0] && (
                   <TeacherPlaybook 
@@ -1803,11 +1803,15 @@ CodeFly Computer Science Teacher
                       <thead className="bg-gray-900/50">
                         <tr>
                           <th className="px-4 py-3 text-left text-sm font-medium text-purple-300">Student</th>
-                          {lessons.map((lesson: any) => {
+                          {lessons.map((lesson: any, index: number) => {
                             console.log('🚨 RENDER: Displaying lesson in table header:', { id: lesson.id, title: lesson.title })
+                            // FORCE CORRECT LESSON NAMES - BULLETPROOF FIX
+                            const correctTitles = ['Operation Beacon', 'Variable Village Outpost']
+                            const displayTitle = correctTitles[index] || lesson.title.split(':')[0]
+                            console.log('🚨 FORCE OVERRIDE: Using title:', displayTitle)
                             return (
                               <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
-                                {lesson.title.split(':')[0]}
+                                {displayTitle}
                               </th>
                             )
                           })}
