@@ -73,11 +73,11 @@ function AuthPageContent() {
       const { user } = await demoLogin(accountType)
       console.log('Demo login result:', user) // Debug log
       if (user) {
-        // Redirect based on account type
+        // Use window.location for full page navigation to ensure middleware picks up new auth state
         if (accountType === 'teacher') {
-          router.push('/teacher')
+          window.location.href = '/teacher'
         } else {
-          router.push('/mission-hq')
+          window.location.href = '/mission-hq'
         }
       }
     } catch (err: unknown) {
