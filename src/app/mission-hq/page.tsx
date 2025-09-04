@@ -70,7 +70,7 @@ export default function MissionHQ() {
     }
   }
 
-  const isMissionUnlocked = (mission: Mission, missions: Mission[]): boolean => {
+  const isMissionUnlocked = (mission: Omit<Mission, 'status'>, missions: Omit<Mission, 'status'>[]): boolean => {
     if (!mission.prerequisite) return true // First mission is always unlocked
     
     const completedMissions = getCompletedMissions()
@@ -137,7 +137,7 @@ export default function MissionHQ() {
   const missions: Mission[] = baseMissions.map(mission => {
     const completedMissions = getCompletedMissions()
     const isCompleted = completedMissions.includes(mission.id)
-    const isUnlocked = !mission.prerequisite || isMissionUnlocked(mission, baseMissions as Mission[])
+    const isUnlocked = !mission.prerequisite || isMissionUnlocked(mission, baseMissions)
     
     return {
       ...mission,
