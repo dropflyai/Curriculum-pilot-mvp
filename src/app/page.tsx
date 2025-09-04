@@ -158,26 +158,17 @@ export default function HomePage() {
                       </p>
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
-                          href="/demo"
+                          href="/auth"
                           className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition transform hover:scale-105 shadow-xl"
                         >
-                          📊 View Sales Demo & ROI Calculator
+                          🚀 Get Started - Sign In
                         </Link>
-                        <button
-                          onClick={() => {
-                            localStorage.setItem('demo_user', JSON.stringify({
-                              id: 'demo-teacher-1',
-                              email: 'teacher@codefly.demo',
-                              full_name: 'Ms. Rodriguez',
-                              role: 'teacher'
-                            }))
-                            localStorage.setItem('demo_authenticated', 'true')
-                            window.location.reload()
-                          }}
+                        <Link
+                          href="/auth/signup"
                           className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl text-lg font-bold transition backdrop-blur-sm border border-white/20 transform hover:scale-105"
                         >
-                          🎯 Try Teacher Dashboard
-                        </button>
+                          ✨ Create Account
+                        </Link>
                       </div>
                       <div className="mt-4 text-sm text-gray-400">
                         ✅ Used by 127+ schools nationwide • ✅ FERPA compliant • ✅ State standards aligned
@@ -392,28 +383,19 @@ export default function HomePage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                           <Link
-                            href="/demo"
+                            href="/auth/signup"
                             className="bg-white text-purple-900 px-8 py-4 rounded-xl text-lg font-bold hover:bg-gray-100 transition transform hover:scale-105 shadow-xl"
                           >
                             <DollarSign className="inline w-5 h-5 mr-2" />
-                            See Pricing & ROI
+                            Create Account
                           </Link>
-                          <button
-                            onClick={() => {
-                              localStorage.setItem('demo_user', JSON.stringify({
-                                id: 'demo-teacher-1',
-                                email: 'teacher@codefly.demo',
-                                full_name: 'Ms. Rodriguez',
-                                role: 'teacher'
-                              }))
-                              localStorage.setItem('demo_authenticated', 'true')
-                              window.location.reload()
-                            }}
+                          <Link
+                            href="/auth"
                             className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl text-lg font-bold hover:from-blue-600 hover:to-purple-600 transition transform hover:scale-105 shadow-xl"
                           >
                             <Play className="inline w-5 h-5 mr-2" />
-                            Start Free Trial
-                          </button>
+                            Sign In Now
+                          </Link>
                         </div>
                         <p className="text-sm text-gray-200 mt-6">
                           ✓ No credit card required &nbsp; ✓ 30-day free trial &nbsp; ✓ Full support included

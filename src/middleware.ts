@@ -6,14 +6,9 @@ const ROUTE_PROTECTION = {
   // Public routes that don't require authentication
   public: [
     '/',
-    '/games',
     '/auth',
     '/auth/signup', 
     '/signin',
-    '/demo',
-    '/demo-access',
-    '/interactive-demo',
-    '/course-overview',
     '/api/lessons',
     '/api/list'
   ],
@@ -25,10 +20,15 @@ const ROUTE_PROTECTION = {
     '/lesson',
     '/python-lesson',
     '/python-lesson-direct',
-    '/mission/agent-academy',
+    '/mission',
+    '/games',
+    '/dashboard',
+    '/agent-academy-lesson-dashboard',
     '/ai-literacy',
     '/capstone-project',
-    '/team-formation'
+    '/team-formation',
+    '/course-overview',
+    '/interactive-demo'
   ],
   
   // Teacher/Admin routes
@@ -50,29 +50,9 @@ const DASHBOARD_REDIRECTS = [
   '/dashboard'
 ]
 
-// Check if user has demo authentication
+// Check if user has demo authentication - DISABLED FOR PRODUCTION
 function checkDemoAuth(request: NextRequest) {
-  // Enable demo authentication for demo buttons
-  const demoUser = request.cookies.get('demo_user')?.value
-  const demoAuthenticated = request.cookies.get('demo_authenticated')?.value === 'true'
-  
-  if (demoAuthenticated && demoUser) {
-    try {
-      // Decode the cookie value if it's encoded
-      const decodedUser = decodeURIComponent(demoUser)
-      const user = JSON.parse(decodedUser)
-      return { isAuthenticated: true, user }
-    } catch {
-      // Try parsing without decoding in case it's not encoded
-      try {
-        const user = JSON.parse(demoUser)
-        return { isAuthenticated: true, user }
-      } catch {
-        return { isAuthenticated: false, user: null }
-      }
-    }
-  }
-  
+  // Demo authentication is disabled - users must sign in properly
   return { isAuthenticated: false, user: null }
 }
 

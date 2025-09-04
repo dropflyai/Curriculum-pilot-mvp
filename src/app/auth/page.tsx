@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, signUp } from '@/lib/auth'
 import { Eye, EyeOff, User, Mail, Lock, UserCheck, Play, GraduationCap, ArrowLeft, Home, Sparkles, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import { demoLogin } from '@/lib/demo-accounts'
 
 function AuthPageContent() {
   const [isLogin, setIsLogin] = useState(true)
@@ -22,13 +21,6 @@ function AuthPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  // Auto-login demo accounts
-  useEffect(() => {
-    const demoType = searchParams.get('demo')
-    if (demoType === 'student' || demoType === 'teacher') {
-      handleDemoLogin(demoType)
-    }
-  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,29 +60,6 @@ function AuthPageContent() {
     }
   }
 
-  const handleDemoLogin = async (accountType: 'student' | 'teacher') => {
-    console.log('Demo login clicked:', accountType) // Debug log
-    setLoading(true)
-    setError(null)
-
-    try {
-      const { user } = await demoLogin(accountType)
-      console.log('Demo login result:', user) // Debug log
-      if (user) {
-        // Use window.location for full page navigation to ensure middleware picks up new auth state
-        if (accountType === 'teacher') {
-          window.location.href = '/teacher'
-        } else {
-          window.location.href = '/games'
-        }
-      }
-    } catch (err: unknown) {
-      console.error('Demo login error:', err) // Debug log
-      setError(err instanceof Error ? err.message : 'Demo login failed')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const toggleMode = () => {
     setIsLogin(!isLogin)
@@ -272,41 +241,6 @@ function AuthPageContent() {
               </button>
             </form>
 
-            {/* Demo Login Section */}
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/20"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-transparent text-gray-300">Or try a demo account</span>
-                </div>
-              </div>
-              
-              <div className="mt-6 grid grid-cols-1 gap-3">
-                <button
-                  onClick={() => handleDemoLogin('student')}
-                  disabled={loading}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-blue-500/50 rounded-lg bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
-                >
-                  <GraduationCap className="h-5 w-5 mr-2" />
-                  Demo Student Login
-                </button>
-                
-                <button
-                  onClick={() => handleDemoLogin('teacher')}
-                  disabled={loading}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-purple-500/50 rounded-lg bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
-                >
-                  <UserCheck className="h-5 w-5 mr-2" />
-                  Demo Teacher Login
-                </button>
-              </div>
-              
-              <p className="mt-3 text-xs text-gray-400 text-center">
-                Demo accounts are pre-configured with sample data for exploration
-              </p>
-            </div>
 
             {/* Toggle Mode */}
             <div className="mt-6 text-center">
