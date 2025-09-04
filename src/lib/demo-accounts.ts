@@ -45,5 +45,10 @@ export async function demoLogin(accountType: 'student' | 'teacher') {
   localStorage.setItem('demo_user', JSON.stringify(mockUser))
   localStorage.setItem('demo_authenticated', 'true')
   
+  // Set cookies for middleware authentication
+  document.cookie = `demo_user=${JSON.stringify(mockUser)}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+  document.cookie = `demo_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+  document.cookie = `user_role=${account.role}; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+  
   return { user: mockUser }
 }

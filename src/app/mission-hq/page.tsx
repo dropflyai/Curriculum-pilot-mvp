@@ -54,39 +54,61 @@ export default function MissionHQ() {
     router.push('/')
   }
 
-  const missions: Mission[] = [
+  // Mission progression system - determines which missions are unlocked
+  const getCompletedMissions = () => {
+    // In a real app, this would come from the database/localStorage
+    // For now, we'll simulate that only Operation Beacon is available initially
+    const completed = localStorage.getItem('completed_missions')
+    return completed ? JSON.parse(completed) : []
+  }
+
+  const completeMission = (missionId: string) => {
+    const completed = getCompletedMissions()
+    if (!completed.includes(missionId)) {
+      completed.push(missionId)
+      localStorage.setItem('completed_missions', JSON.stringify(completed))
+    }
+  }
+
+  const isMissionUnlocked = (mission: Mission, missions: Mission[]): boolean => {
+    if (!mission.prerequisite) return true // First mission is always unlocked
+    
+    const completedMissions = getCompletedMissions()
+    const prerequisiteMission = missions.find(m => m.name === mission.prerequisite)
+    return prerequisiteMission ? completedMissions.includes(prerequisiteMission.id) : false
+  }
+
+  // Base mission data - status will be determined dynamically
+  const baseMissions: Omit<Mission, 'status'>[] = [
     {
       id: 'shadow-protocol',
-      name: 'SHADOW PROTOCOL',
+      name: 'OPERATION BEACON',
       codename: 'OPERATION: SOLO MISSIONS',
-      status: 'ACTIVE',
       difficulty: 'BEGINNER',
       duration: '4 WEEKS',
       xpReward: 5000,
       progress: 0,
       description: 'Phase 1 of Black Cipher. Master Python fundamentals through solo infiltration missions. Learn variables, loops, and basic algorithms.',
       image: '/CodeFly Homepage.png',
-      route: '/mission/shadow-protocol'
+      route: '/mission/operation-beacon'
     },
     {
       id: 'cipher-command',
       name: 'CIPHER COMMAND',
       codename: 'OPERATION: TEAM FORMATION',
-      status: 'LOCKED',
       difficulty: 'INTERMEDIATE',
       duration: '4 WEEKS',
       xpReward: 7500,
       progress: 0,
       description: 'Phase 2 of Black Cipher. Form elite coding teams and master functions, data structures, and collaborative programming tactics.',
       image: '/CodeFly Homepage 2.png',
-      prerequisite: 'SHADOW PROTOCOL',
+      prerequisite: 'OPERATION BEACON',
       route: '/mission/cipher-command'
     },
     {
       id: 'ghost-protocol',
-      name: 'GHOST PROTOCOL',
+      name: 'LOOP CANYON BASE',
       codename: 'OPERATION: TEAM COLLABORATION',
-      status: 'LOCKED',
       difficulty: 'ADVANCED',
       duration: '5 WEEKS',
       xpReward: 10000,
@@ -100,17 +122,30 @@ export default function MissionHQ() {
       id: 'quantum-breach',
       name: 'QUANTUM BREACH',
       codename: 'OPERATION: ADVANCED PROJECTS',
-      status: 'LOCKED',
       difficulty: 'EXPERT',
       duration: '5 WEEKS',
       xpReward: 15000,
       progress: 0,
       description: 'Phase 4 of Black Cipher. Deploy advanced team projects using APIs, databases, and real-world Python applications.',
       image: '/CodeFly Homepage 3.png',
-      prerequisite: 'GHOST PROTOCOL',
+      prerequisite: 'LOOP CANYON BASE',
       route: '/mission/quantum-breach'
     }
   ]
+
+  // Add dynamic status to missions
+  const missions: Mission[] = baseMissions.map(mission => {
+    const completedMissions = getCompletedMissions()
+    const isCompleted = completedMissions.includes(mission.id)
+    const isUnlocked = !mission.prerequisite || isMissionUnlocked(mission, baseMissions as Mission[])
+    
+    return {
+      ...mission,
+      status: isCompleted ? 'COMPLETED' as const : 
+              isUnlocked ? 'ACTIVE' as const : 
+              'LOCKED' as const
+    }
+  })
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -389,7 +424,7 @@ export default function MissionHQ() {
             </div>
             
             <div className="flex gap-4">
-              {selectedMission.id === 'black-cipher' ? (
+              {selectedMission.status === 'ACTIVE' ? (
                 <>
                   <Link
                     href={selectedMission.route}
@@ -399,13 +434,30 @@ export default function MissionHQ() {
                     VIEW MISSION BRIEFING
                   </Link>
                   <Link
-                    href="/student/dashboard"
+                    href="/black-cipher-lesson-dashboard"
                     className="flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-8 py-4 rounded-lg font-bold hover:from-red-500 hover:to-red-700 transition-all flex items-center justify-center gap-3"
                   >
                     <Crosshair className="w-5 h-5" />
                     START MISSION
                   </Link>
+                  {/* Test button for completing missions - remove in production */}
+                  <button
+                    onClick={() => {
+                      completeMission(selectedMission.id)
+                      setSelectedMission(null)
+                      window.location.reload() // Refresh to show updated status
+                    }}
+                    className="px-4 py-4 bg-yellow-900 hover:bg-yellow-800 text-yellow-300 rounded-lg font-bold transition-all text-xs"
+                    title="TEST: Complete Mission"
+                  >
+                    ✓ COMPLETE (TEST)
+                  </button>
                 </>
+              ) : selectedMission.status === 'COMPLETED' ? (
+                <div className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3">
+                  <Award className="w-5 h-5" />
+                  MISSION COMPLETED
+                </div>
               ) : (
                 <button
                   className="flex-1 bg-gray-800 text-gray-400 px-8 py-4 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-3"

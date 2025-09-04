@@ -190,7 +190,7 @@ export default function HomePage() {
                   {/* Demo Buttons */}
                   <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
                     <Link
-                      href="/auth"
+                      href="/auth?demo=student"
                       className="bg-gradient-to-r from-green-600/80 to-emerald-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                     >
                       <BookOpen className="h-5 w-5 mr-2" />
@@ -198,7 +198,7 @@ export default function HomePage() {
                     </Link>
                     
                     <Link
-                      href="/auth"
+                      href="/auth?demo=teacher"
                       className="bg-gradient-to-r from-purple-600/80 to-pink-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                     >
                       <Users className="h-5 w-5 mr-2" />

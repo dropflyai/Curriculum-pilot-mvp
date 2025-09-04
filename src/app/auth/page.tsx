@@ -65,11 +65,13 @@ function AuthPageContent() {
   }
 
   const handleDemoLogin = async (accountType: 'student' | 'teacher') => {
+    console.log('Demo login clicked:', accountType) // Debug log
     setLoading(true)
     setError(null)
 
     try {
       const { user } = await demoLogin(accountType)
+      console.log('Demo login result:', user) // Debug log
       if (user) {
         // Redirect based on account type
         if (accountType === 'teacher') {
@@ -79,6 +81,7 @@ function AuthPageContent() {
         }
       }
     } catch (err: unknown) {
+      console.error('Demo login error:', err) // Debug log
       setError(err instanceof Error ? err.message : 'Demo login failed')
     } finally {
       setLoading(false)

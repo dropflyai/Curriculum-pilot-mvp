@@ -77,6 +77,11 @@ export async function signOut() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('demo_user')
       localStorage.removeItem('demo_authenticated')
+      
+      // Clear demo cookies
+      document.cookie = 'demo_user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      document.cookie = 'demo_authenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      document.cookie = 'user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
     }
 
     // Clear Supabase auth if configured
