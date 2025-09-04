@@ -301,6 +301,7 @@ export default function TeacherDashboard() {
       })
 
       setStudents(studentsWithProgress)
+      console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (LIVE PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
       setLessons(aiLessons)
 
       // Calculate lesson analytics from real data
@@ -430,6 +431,7 @@ export default function TeacherDashboard() {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }))
+      console.log('🚨 TEACHER DASHBOARD: Setting lessons from aiLessons (MOCK PATH):', aiLessons.map(l => ({ id: l.id, title: l.title })))
       setLessons(aiLessons)
       
       // Set analytics with real lesson data
@@ -1801,11 +1803,14 @@ CodeFly Computer Science Teacher
                       <thead className="bg-gray-900/50">
                         <tr>
                           <th className="px-4 py-3 text-left text-sm font-medium text-purple-300">Student</th>
-                          {lessons.map((lesson: any) => (
-                            <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
-                              {lesson.title.split(':')[0]}
-                            </th>
-                          ))}
+                          {lessons.map((lesson: any) => {
+                            console.log('🚨 RENDER: Displaying lesson in table header:', { id: lesson.id, title: lesson.title })
+                            return (
+                              <th key={lesson.id} className="px-4 py-3 text-center text-sm font-medium text-purple-300">
+                                {lesson.title.split(':')[0]}
+                              </th>
+                            )
+                          })}
                           <th className="px-4 py-3 text-center text-sm font-medium text-purple-300">Average</th>
                         </tr>
                       </thead>
