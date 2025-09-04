@@ -8,6 +8,9 @@ import {
   ChevronRight, Clock, Award, TrendingUp, Users, Zap, MapPin,
   Navigation, Crosshair, Database, Globe, Cpu, Wifi, LogOut
 } from 'lucide-react'
+import { getCompletedMissions, completeMission as completeMissionDB, startMission } from '@/lib/mission-progress'
+import { getCurrentUser } from '@/lib/auth'
+import { getMissionRewardDisplay, formatMissionRewards } from '@/lib/mission-rewards'
 
 interface Mission {
   id: string
@@ -29,51 +32,54 @@ export default function MissionHQ() {
   const [user, setUser] = useState<any>(null)
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null)
   const [systemStatus, setSystemStatus] = useState('ONLINE')
+  const [completedMissions, setCompletedMissions] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check authentication
-    const checkAuth = () => {
-      const demoAuth = localStorage.getItem('demo_authenticated') === 'true'
-      const demoUserStr = localStorage.getItem('demo_user')
-      
-      if (!demoAuth || !demoUserStr) {
+    // Check authentication and load mission progress from Supabase
+    const checkAuthAndLoadProgress = async () => {
+      // Check real user auth
+      const { user: authUser } = await getCurrentUser()
+      if (!authUser) {
         router.push('/auth')
         return
       }
+      setUser(authUser)
       
-      const demoUser = JSON.parse(demoUserStr)
-      setUser(demoUser)
+      // Fetch completed missions from Supabase
+      const completed = await getCompletedMissions(authUser.id)
+      setCompletedMissions(completed)
+      
+      setLoading(false)
     }
     
-    checkAuth()
+    checkAuthAndLoadProgress()
   }, [router])
 
-  const handleLogout = () => {
-    localStorage.removeItem('demo_authenticated')
-    localStorage.removeItem('demo_user')
+  const handleLogout = async () => {
+    // Sign out from Supabase
+    const { signOut } = await import('@/lib/auth')
+    await signOut()
+    
     router.push('/')
   }
 
-  // Mission progression system - determines which missions are unlocked
-  const getCompletedMissions = () => {
-    // In a real app, this would come from the database/localStorage
-    // For now, we'll simulate that only Operation Beacon is available initially
-    const completed = localStorage.getItem('completed_missions')
-    return completed ? JSON.parse(completed) : []
-  }
-
-  const completeMission = (missionId: string) => {
-    const completed = getCompletedMissions()
-    if (!completed.includes(missionId)) {
-      completed.push(missionId)
-      localStorage.setItem('completed_missions', JSON.stringify(completed))
+  // Mission progression system - now using Supabase
+  const completeMission = async (missionId: string) => {
+    if (!user) return
+    
+    // Save to Supabase
+    const { data, error } = await completeMissionDB(user.id, missionId)
+    
+    if (!error) {
+      // Update local state
+      setCompletedMissions(prev => [...prev, missionId])
     }
   }
 
   const isMissionUnlocked = (mission: Omit<Mission, 'status'>, missions: Omit<Mission, 'status'>[]): boolean => {
     if (!mission.prerequisite) return true // First mission is always unlocked
     
-    const completedMissions = getCompletedMissions()
     const prerequisiteMission = missions.find(m => m.name === mission.prerequisite)
     return prerequisiteMission ? completedMissions.includes(prerequisiteMission.id) : false
   }
@@ -135,7 +141,6 @@ export default function MissionHQ() {
 
   // Add dynamic status to missions
   const missions: Mission[] = baseMissions.map(mission => {
-    const completedMissions = getCompletedMissions()
     const isCompleted = completedMissions.includes(mission.id)
     const isUnlocked = !mission.prerequisite || isMissionUnlocked(mission, baseMissions)
     
@@ -146,6 +151,23 @@ export default function MissionHQ() {
               'LOCKED' as const
     }
   })
+  
+  // Start mission when user clicks start
+  const handleStartMission = async (missionId: string) => {
+    if (!user) return
+    await startMission(user.id, missionId)
+    router.push('/black-cipher-lesson-dashboard')
+  }
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-green-400 font-mono">
+          <div className="animate-pulse">LOADING MISSION DATA...</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -310,7 +332,7 @@ export default function MissionHQ() {
                       <div className="text-center">
                         <Lock className="w-12 h-12 text-red-500 mx-auto mb-2" />
                         <div className="text-red-400 font-mono text-sm">CLASSIFIED</div>
-                        <div className="text-gray-500 text-xs mt-1">Requires: {mission.prerequisite}</div>
+                        <div className="text-gray-500 text-xs mt-1">CLEARANCE {mission.difficulty === 'EXPERT' ? 'OMEGA' : mission.difficulty === 'ADVANCED' ? 'DELTA' : 'CHARLIE'}</div>
                       </div>
                     </div>
                   )}
@@ -422,6 +444,95 @@ export default function MissionHQ() {
                 <div className="text-lg font-bold text-red-400">{selectedMission.status}</div>
               </div>
             </div>
+
+            {/* Mission Rewards Section */}
+            {(() => {
+              const rewardData = formatMissionRewards(selectedMission.id)
+              if (!rewardData) return null
+
+              return (
+                <div className="mb-8 bg-gray-900/30 border border-amber-500/30 rounded-xl p-6">
+                  <h3 className="text-xl font-bold text-amber-400 mb-4 font-mono flex items-center gap-3">
+                    <Award className="w-5 h-5" />
+                    MISSION REWARDS
+                  </h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Left Column - Clearance & XP */}
+                    <div className="space-y-4">
+                      <div className="bg-black/40 rounded-lg p-4 border border-purple-500/30">
+                        <h4 className="text-lg font-bold text-purple-400 mb-3 flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
+                          Security Clearance
+                        </h4>
+                        <div className="bg-purple-900/30 rounded-lg p-3">
+                          <div className="text-sm text-gray-300 mb-1">{rewardData.detailed.clearanceCard.name}</div>
+                          <div className="text-xs text-purple-300">{rewardData.detailed.clearanceCard.description}</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-black/40 rounded-lg p-4 border border-green-500/30">
+                        <h4 className="text-lg font-bold text-green-400 mb-3 flex items-center gap-2">
+                          <Zap className="w-4 h-4" />
+                          Experience Earned
+                        </h4>
+                        <div className="text-2xl font-bold text-green-400">
+                          {rewardData.detailed.xp.toLocaleString()} XP
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column - Tech Items & Skills */}
+                    <div className="space-y-4">
+                      <div className="bg-black/40 rounded-lg p-4 border border-blue-500/30">
+                        <h4 className="text-lg font-bold text-blue-400 mb-3 flex items-center gap-2">
+                          <Database className="w-4 h-4" />
+                          Tech Items Acquired ({rewardData.detailed.techItems.length})
+                        </h4>
+                        <div className="space-y-2 max-h-24 overflow-y-auto">
+                          {rewardData.detailed.techItems.map((item, index) => (
+                            <div key={index} className="flex items-center gap-2 text-sm">
+                              <span className="text-lg">{item.icon}</span>
+                              <div>
+                                <div className="text-blue-300 font-semibold">{item.name}</div>
+                                <div className="text-xs text-gray-400">{item.description}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-black/40 rounded-lg p-4 border border-yellow-500/30">
+                        <h4 className="text-lg font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                          <Cpu className="w-4 h-4" />
+                          Skills Unlocked ({rewardData.detailed.skillsUnlocked.length})
+                        </h4>
+                        <div className="flex flex-wrap gap-1">
+                          {rewardData.detailed.skillsUnlocked.map((skill, index) => (
+                            <span key={index} className="text-xs bg-yellow-900/30 text-yellow-300 px-2 py-1 rounded-md border border-yellow-500/30">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Special Bonus */}
+                  {rewardData.detailed.specialBonus && (
+                    <div className="mt-4 bg-gradient-to-r from-amber-900/20 to-orange-900/20 rounded-lg p-4 border border-amber-500/50">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{rewardData.detailed.specialBonus.icon}</span>
+                        <div>
+                          <div className="text-lg font-bold text-amber-400">{rewardData.detailed.specialBonus.name}</div>
+                          <div className="text-sm text-amber-300">{rewardData.detailed.specialBonus.description}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
             
             <div className="flex gap-4">
               {selectedMission.status === 'ACTIVE' ? (
@@ -433,45 +544,45 @@ export default function MissionHQ() {
                     <Target className="w-5 h-5" />
                     VIEW MISSION BRIEFING
                   </Link>
-                  <Link
-                    href="/black-cipher-lesson-dashboard"
+                  <button
+                    onClick={() => handleStartMission(selectedMission.id)}
                     className="flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-8 py-4 rounded-lg font-bold hover:from-red-500 hover:to-red-700 transition-all flex items-center justify-center gap-3"
                   >
                     <Crosshair className="w-5 h-5" />
                     START MISSION
-                  </Link>
-                  {/* Test button for completing missions - remove in production */}
-                  <button
-                    onClick={() => {
-                      completeMission(selectedMission.id)
-                      setSelectedMission(null)
-                      window.location.reload() // Refresh to show updated status
-                    }}
-                    className="px-4 py-4 bg-yellow-900 hover:bg-yellow-800 text-yellow-300 rounded-lg font-bold transition-all text-xs"
-                    title="TEST: Complete Mission"
-                  >
-                    ✓ COMPLETE (TEST)
                   </button>
                 </>
               ) : selectedMission.status === 'COMPLETED' ? (
-                <div className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3">
-                  <Award className="w-5 h-5" />
-                  MISSION COMPLETED
-                </div>
+                <>
+                  <Link
+                    href={selectedMission.route}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-bold hover:from-blue-500 hover:to-blue-700 transition-all flex items-center justify-center gap-3"
+                  >
+                    <Award className="w-5 h-5" />
+                    VIEW COMPLETED MISSION
+                  </Link>
+                  <Link
+                    href="/black-cipher-lesson-dashboard"
+                    className="flex-1 bg-gradient-to-r from-gray-600 to-gray-800 text-white px-8 py-4 rounded-lg font-bold hover:from-gray-500 hover:to-gray-700 transition-all flex items-center justify-center gap-3"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                    REVIEW LESSONS
+                  </Link>
+                </>
               ) : (
                 <button
-                  className="flex-1 bg-gray-800 text-gray-400 px-8 py-4 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-3"
+                  className="flex-1 bg-red-900/30 text-red-400 px-8 py-4 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-3 border border-red-600/30"
                   disabled
                 >
                   <Lock className="w-5 h-5" />
-                  MISSION LOCKED
+                  ACCESS DENIED - SECURITY CLEARANCE LEVEL {selectedMission.difficulty === 'EXPERT' ? 'OMEGA' : selectedMission.difficulty === 'ADVANCED' ? 'DELTA' : 'CHARLIE'} REQUIRED
                 </button>
               )}
               <button
                 onClick={() => setSelectedMission(null)}
                 className="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-gray-400 rounded-lg font-bold transition-all"
               >
-                CANCEL
+                CLOSE
               </button>
             </div>
           </div>

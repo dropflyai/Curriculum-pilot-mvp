@@ -48,36 +48,17 @@ export default function StudentDashboard() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'overview' | 'questmap' | 'leaderboard'>('overview')
   const [leaderboardView, setLeaderboardView] = useState<'course' | 'weekly' | 'speed' | 'perfect'>('course')
-  const [notifications, setNotifications] = useState<Array<{id: string, type: string, message: string, timestamp: string}>>([])
+  const [notifications, setNotifications] = useState<Array<{id: string, type: string, message: string, timestamp: Date}>>([])
   const [missionStatus, setMissionStatus] = useState({
-    currentMission: 'Operation Beacon',
-    progress: 0,
-    timeRemaining: '72:00',
-    objectivesComplete: 0,
-    totalObjectives: 4
+    currentMission: 'Shadow Protocol',
+    progress: 73,
+    timeRemaining: '12:34',
+    objectivesComplete: 12,
+    totalObjectives: 15
   })
-  const [isClient, setIsClient] = useState(false)
-  const [currentTime, setCurrentTime] = useState<string>('')
-  const [currentDate, setCurrentDate] = useState<string>('')
-
-  useEffect(() => {
-    setIsClient(true)
-    
-    // Set initial time and date, update every second
-    const updateTime = () => {
-      const now = new Date()
-      setCurrentTime(now.toLocaleTimeString())
-      setCurrentDate(now.toLocaleDateString())
-    }
-    
-    updateTime()
-    const interval = setInterval(updateTime, 1000)
-    
-    return () => clearInterval(interval)
-  }, [])
 
   const currentAgent = courseAgents[0] // Agent Phoenix (current user)
-  const currentBadge = [...badgeSystem].reverse().find(badge => currentAgent.xp >= badge.xpRequired) || badgeSystem[0]
+  const currentBadge = badgeSystem.reverse().find(badge => currentAgent.xp >= badge.xpRequired) || badgeSystem[0]
 
   // Personalized learning recommendations based on performance
   const getLearningRecommendations = () => {
@@ -144,7 +125,7 @@ export default function StudentDashboard() {
           id: Date.now().toString(),
           type: 'achievement',
           message: achievements[Math.floor(Math.random() * achievements.length)],
-          timestamp: new Date().toLocaleTimeString()
+          timestamp: new Date()
         }
         setNotifications(prev => [newNotification, ...prev.slice(0, 4)])
       }
@@ -163,7 +144,7 @@ export default function StudentDashboard() {
   const handleMissionLaunch = (missionType: string) => {
     switch (missionType) {
       case 'continue':
-        router.push('/mission/operation-beacon')
+        router.push('/mission/shadow-protocol')
         break
       case 'analysis':
         setActiveTab('leaderboard')
@@ -201,14 +182,12 @@ export default function StudentDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
-              <span className="text-green-400">🎯 Mission HQ</span> - Black Cipher Command
+              <span className="text-green-400">🕯️ Shadow HQ</span> - Black Cipher Command
             </h1>
             <div className="flex items-center space-x-4">
-              <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">OPERATION BEACON ACTIVE</span>
+              <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">SHADOW PROTOCOL ACTIVE</span>
               <span className="text-cyan-300 font-mono text-sm">{currentAgent.codename} | Level {currentAgent.level}</span>
-              <span className="text-purple-300 font-mono text-sm">
-                {isClient ? currentBadge.icon : '🔰'} {currentBadge.name}
-              </span>
+              <span className="text-purple-300 font-mono text-sm">{currentBadge.icon} {currentBadge.name}</span>
             </div>
           </div>
           <div className="text-right">
@@ -222,7 +201,7 @@ export default function StudentDashboard() {
       <div className="bg-gray-800/40 backdrop-blur-sm border-b border-gray-700/50">
         <div className="flex space-x-0">
           {[
-            { key: 'overview', label: '🎯 Mission HQ', icon: '🎯' },
+            { key: 'overview', label: '🕯️ Shadow HQ', icon: '🕯️' },
             { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
             { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' }
           ].map((tab) => (
@@ -260,7 +239,7 @@ export default function StudentDashboard() {
                         <div className="text-green-100 font-mono font-bold text-sm">ACHIEVEMENT UNLOCKED</div>
                         <div className="text-green-200 text-xs font-mono">{notification.message}</div>
                         <div className="text-green-300/80 text-xs font-mono">
-                          {notification.timestamp}
+                          {notification.timestamp.toLocaleTimeString()}
                         </div>
                       </div>
                     </div>
@@ -278,8 +257,8 @@ export default function StudentDashboard() {
                   <span>SECURITY LEVEL: ULTRA</span>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <span>{isClient ? currentDate : '--/--/----'}</span>
-                  <span>{isClient ? currentTime : '--:--:-- --'}</span>
+                  <span>{new Date().toLocaleDateString()}</span>
+                  <span>{new Date().toLocaleTimeString()}</span>
                   <span className="text-green-400">CONNECTION: SECURE</span>
                 </div>
               </div>
@@ -314,7 +293,7 @@ export default function StudentDashboard() {
                       <div className="flex items-center space-x-3">
                         <div className="text-green-400 font-mono text-xs px-3 py-1 bg-green-400/10 border border-green-400/40" 
                              style={{clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'}}>
-                          OPERATION: BEACON
+                          OPERATION: SHADOW PROTOCOL
                         </div>
                         <div className="text-green-400 font-mono text-xs">CONN: 100%</div>
                       </div>
@@ -649,6 +628,7 @@ export default function StudentDashboard() {
                 </div>
               </div>
             </div>
+            </div>
 
             {/* AI Learning Recommendations HUD */}
             <div className="relative mb-6">
@@ -908,11 +888,11 @@ export default function StudentDashboard() {
                   {/* Objective List */}
                   <div className="space-y-3">
                     {[
-                      { obj: 'WEEK 1: INTELLIGENCE GATHERING', status: 'current', code: 'OBJ-001', priority: 'ALPHA' },
-                      { obj: 'WEEK 2: COMMUNICATION PROTOCOLS', status: 'locked', code: 'OBJ-002', priority: 'BRAVO' },
-                      { obj: 'WEEK 3: TERMINAL HACKING', status: 'locked', code: 'OBJ-003', priority: 'CHARLIE' },
-                      { obj: 'WEEK 4: MISSION CALCULATIONS', status: 'locked', code: 'OBJ-004', priority: 'DELTA' },
-                      { obj: 'PERIMETER BREACH COMPLETE', status: 'locked', code: 'OBJ-005', priority: 'OMEGA' }
+                      { obj: 'MASTER BINARY OPERATORS', status: 'complete', code: 'OBJ-001', priority: 'ALPHA' },
+                      { obj: 'DECODE VARIABLE MYSTERIES', status: 'complete', code: 'OBJ-002', priority: 'ALPHA' },
+                      { obj: 'INFILTRATE FUNCTION FORTRESS', status: 'current', code: 'OBJ-003', priority: 'BRAVO' },
+                      { obj: 'SECURE LOOP PROTOCOLS', status: 'locked', code: 'OBJ-004', priority: 'CHARLIE' },
+                      { obj: 'FINAL DATA EXTRACTION', status: 'locked', code: 'OBJ-005', priority: 'DELTA' }
                     ].map((obj, i) => (
                       <div key={i} className={`border p-3 ${
                         obj.status === 'complete' ? 'bg-green-500/10 border-green-400/40' : 
@@ -969,22 +949,20 @@ export default function StudentDashboard() {
                   <div className="mt-4 border-t border-orange-400/30 pt-3">
                     <div className="flex items-center justify-between text-xs font-mono">
                       <span className="text-gray-400">MISSION COMPLETION:</span>
-                      <span className="text-orange-400 font-bold">0/5 WEEKS</span>
+                      <span className="text-orange-400 font-bold">2/5 OBJECTIVES</span>
                     </div>
                     <div className="w-full bg-gray-800 h-2 border border-orange-400/30 mt-2">
-                      <div className="bg-gradient-to-r from-orange-500 to-red-500 h-full relative" style={{width: '0%'}}>
+                      <div className="bg-gradient-to-r from-orange-500 to-red-500 h-full relative" style={{width: '40%'}}>
                         <div className="absolute right-0 top-0 h-full w-1 bg-white animate-pulse"></div>
                       </div>
                     </div>
                     <div className="text-xs text-gray-400 font-mono mt-1">
-                      PROGRESS: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 0%
+                      PROGRESS: [████████▓▓▓▓▓▓▓▓▓▓] 40%
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
-          </div>
           </div>
         )}
 

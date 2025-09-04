@@ -56,6 +56,7 @@ export default function StudentDashboard() {
     objectivesComplete: 0,
     totalObjectives: 4
   })
+  const [completedMissions, setCompletedMissions] = useState<string[]>([])
   const [isClient, setIsClient] = useState(false)
   const [currentTime, setCurrentTime] = useState<string>('')
   const [currentDate, setCurrentDate] = useState<string>('')
@@ -201,7 +202,7 @@ export default function StudentDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
-              <span className="text-green-400">🎯 Mission HQ</span> - Black Cipher Command
+              <span className="text-green-400">🎯 Black Cipher HQ</span> - Command Center
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-green-400 font-mono text-xs px-2 py-1 bg-green-400/20 rounded">OPERATION BEACON ACTIVE</span>
@@ -222,7 +223,7 @@ export default function StudentDashboard() {
       <div className="bg-gray-800/40 backdrop-blur-sm border-b border-gray-700/50">
         <div className="flex space-x-0">
           {[
-            { key: 'overview', label: '🎯 Mission HQ', icon: '🎯' },
+            { key: 'overview', label: '🎯 Black Cipher Intel', icon: '🎯' },
             { key: 'questmap', label: '🗺️ Mission Map', icon: '🗺️' },
             { key: 'leaderboard', label: '👤 Agent Ranks', icon: '👤' }
           ].map((tab) => (
@@ -243,9 +244,9 @@ export default function StudentDashboard() {
       </div>
 
       {/* Content */}
-      <div className="p-8">
+      <div className="p-6">
         {activeTab === 'overview' && (
-          <div className="space-y-6 relative">
+          <div className="space-y-4 relative">
             {/* Notification System */}
             {notifications.length > 0 && (
               <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
@@ -292,22 +293,22 @@ export default function StudentDashboard() {
             </div>
 
             {/* Main HUD Container */}
-            <div className="mt-16 space-y-6">
+            <div className="mt-16 space-y-4 max-w-7xl mx-auto px-4">
               {/* Live Tactical Intelligence Feed */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Mission Control HUD */}
-                <div className="lg:col-span-2 relative">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-7xl mx-auto">
+                {/* Main Black Cipher Control HUD */}
+                <div className="relative">
                   {/* HUD Frame */}
                   <div className="absolute inset-0 border-2 border-green-400/40 bg-black/80 backdrop-blur-lg" 
                        style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
                   </div>
-                  <div className="relative z-10 p-6">
+                  <div className="relative z-10 p-5">
                     {/* HUD Header */}
                     <div className="flex items-center justify-between mb-6 border-b border-green-400/30 pb-4">
                       <div className="flex items-center space-x-4">
                         <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
                         <h2 className="text-xl font-bold text-green-400 font-mono tracking-wider">
-                          [MISSION CONTROL ACTIVE]
+                          [BLACK CIPHER CONTROL ACTIVE]
                         </h2>
                         <div className="text-xs text-gray-400 font-mono">ID: MC-7749</div>
                       </div>
@@ -426,13 +427,13 @@ export default function StudentDashboard() {
               </div>
 
               {/* Military HUD Side Panels */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Agent Status HUD */}
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-lg border-2 border-blue-400/40"
                        style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                   </div>
-                  <div className="relative z-10 p-6">
+                  <div className="relative z-10 p-5">
                     {/* HUD Header */}
                     <div className="flex items-center justify-between mb-4 border-b border-blue-400/30 pb-2">
                       <h3 className="text-lg font-bold text-blue-400 font-mono tracking-wider">[AGENT PROFILE]</h3>
@@ -491,7 +492,7 @@ export default function StudentDashboard() {
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/20 to-orange-900/20 backdrop-blur-lg border-2 border-yellow-400/40"
                        style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                   </div>
-                  <div className="relative z-10 p-6">
+                  <div className="relative z-10 p-5">
                     {/* HUD Header */}
                     <div className="flex items-center justify-between mb-4 border-b border-yellow-400/30 pb-2">
                       <h3 className="text-lg font-bold text-yellow-400 font-mono tracking-wider">[PROMOTION TRACKER]</h3>
@@ -560,7 +561,7 @@ export default function StudentDashboard() {
                   <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-purple-900/20 backdrop-blur-lg border-2 border-red-400/40"
                        style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                   </div>
-                  <div className="relative z-10 p-6">
+                  <div className="relative z-10 p-5">
                     {/* HUD Header */}
                     <div className="flex items-center justify-between mb-4 border-b border-red-400/30 pb-2">
                       <h3 className="text-lg font-bold text-red-400 font-mono tracking-wider">[TACTICAL OPERATIONS]</h3>
@@ -651,7 +652,7 @@ export default function StudentDashboard() {
             </div>
 
             {/* AI Learning Recommendations HUD */}
-            <div className="relative mb-6">
+            <div className="relative mb-4 max-w-7xl mx-auto">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-lg border-2 border-purple-400/40"
                    style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
               </div>
@@ -691,7 +692,7 @@ export default function StudentDashboard() {
                 </div>
 
                 {/* Recommended Training Missions */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {learningData.recommendations.map((rec, index) => (
                     <div key={index} className={`border-2 p-4 relative transition-all duration-300 hover:scale-105 cursor-pointer ${
                       rec.urgency === 'HIGH' ? 'border-red-400/60 bg-red-500/10 hover:bg-red-500/20' :
@@ -759,7 +760,7 @@ export default function StudentDashboard() {
             </div>
 
             {/* Advanced HUD Analytics Array */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-7xl mx-auto">
               {/* Skill Matrix HUD */}
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-cyan-900/20 backdrop-blur-lg border-2 border-blue-400/40"
@@ -772,7 +773,7 @@ export default function StudentDashboard() {
                     <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                   </div>
                   {/* Skill Proficiency Display */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {[
                       { skill: 'VARIABLES', level: 95, status: 'MASTERED', color: 'green', code: 'VAR-95' },
                       { skill: 'FUNCTIONS', level: 78, status: 'PROFICIENT', color: 'blue', code: 'FUN-78' },
@@ -846,7 +847,7 @@ export default function StudentDashboard() {
                   </div>
                   
                   {/* Weekly Statistics Display */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Primary Metric - Weekly XP */}
                     <div className="bg-black/60 border border-green-400/30 p-4 text-center">
                       <div className="text-green-400 font-mono text-xs mb-1">[WEEKLY INTELLIGENCE POINTS]</div>
@@ -906,7 +907,7 @@ export default function StudentDashboard() {
                   </div>
                   
                   {/* Objective List */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {[
                       { obj: 'WEEK 1: INTELLIGENCE GATHERING', status: 'current', code: 'OBJ-001', priority: 'ALPHA' },
                       { obj: 'WEEK 2: COMMUNICATION PROTOCOLS', status: 'locked', code: 'OBJ-002', priority: 'BRAVO' },

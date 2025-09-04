@@ -94,11 +94,8 @@ export default function HomePage() {
                 #1 in K-12
               </span>
             </div>
-            <div className="flex space-x-4">
-              <Link href="/demo" className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg">
-                🏫 School Demo
-              </Link>
-              <Link href="/auth" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg">
+            <div className="flex items-center">
+              <Link href="/auth" className="text-white/80 hover:text-white transition-colors duration-200 font-medium">
                 Sign In
               </Link>
             </div>
@@ -163,90 +160,54 @@ export default function HomePage() {
                       real Python projects, and epic gamification! 
                     </span>
                   </p>
-                  <p className="text-lg text-gray-300 mb-10 max-w-3xl mx-auto">
+                  <p className="text-lg text-gray-300 mb-32 max-w-3xl mx-auto">
                     Join thousands of students earning XP, unlocking badges, and building amazing projects
                     while teachers save 10+ hours per week with our automated grading system
                   </p>
-                  
-                  {/* Main CTA Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                    <Link
-                      href="/auth"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-12 py-5 rounded-xl text-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-2xl"
-                    >
-                      <Rocket className="h-6 w-6 mr-3" />
-                      Get Started Free ✨
-                    </Link>
-                    
-                    <Link
-                      href="/auth"
-                      className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-12 py-5 rounded-xl text-xl font-bold hover:bg-white/20 transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
-                    >
-                      <Trophy className="h-6 w-6 mr-3" />
-                      Sign In
-                    </Link>
-                  </div>
-                  
-                  {/* Demo Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
-                    <Link
-                      href="/auth?demo=student"
-                      className="bg-gradient-to-r from-green-600/80 to-emerald-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
-                    >
-                      <BookOpen className="h-5 w-5 mr-2" />
-                      Try Student Demo 🎆
-                    </Link>
-                    
-                    <Link
-                      href="/auth?demo=teacher"
-                      className="bg-gradient-to-r from-purple-600/80 to-pink-600/80 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
-                    >
-                      <Users className="h-5 w-5 mr-2" />
-                      Try Teacher Demo 🎯
-                    </Link>
-                  </div>
 
                   {/* Feature Cards */}
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-                    <div className="group relative">
+                  <div className="max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-32 items-stretch">
+                    <div className="group relative h-full">
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105">
-                        <Zap className="w-12 h-12 text-blue-500 mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">Interactive Coding</h3>
-                        <p className="text-gray-300 text-sm">Write real Python code in our browser-based IDE with instant feedback and hints</p>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105 text-center h-full flex flex-col justify-center">
+                        <Zap className="w-12 h-12 text-blue-500 mb-4 mx-auto" />
+                        <h3 className="text-xl font-bold text-white mb-3">Interactive Coding</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">Write real Python code in our browser-based IDE with instant feedback and hints</p>
                       </div>
                     </div>
 
-                    <div className="group relative">
+                    <div className="group relative h-full">
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105">
-                        <GamepadIcon className="w-12 h-12 text-purple-500 mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">Project-Based Learning</h3>
-                        <p className="text-gray-300 text-sm">Build real projects like games, apps, and tools that you can share with friends</p>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105 text-center h-full flex flex-col justify-center">
+                        <GamepadIcon className="w-12 h-12 text-purple-500 mb-4 mx-auto" />
+                        <h3 className="text-xl font-bold text-white mb-3">Project-Based Learning</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">Build real projects like games, apps, and tools that you can share with friends</p>
                       </div>
                     </div>
 
-                    <div className="group relative">
+                    <div className="group relative h-full">
                       <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-red-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 transform hover:scale-105">
-                        <Bot className="w-12 h-12 text-pink-500 mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">AI Study Buddy</h3>
-                        <p className="text-gray-300 text-sm">Get personalized help and explanations from Coach Nova, your AI coding mentor</p>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 transform hover:scale-105 text-center h-full flex flex-col justify-center">
+                        <Bot className="w-12 h-12 text-pink-500 mb-4 mx-auto" />
+                        <h3 className="text-xl font-bold text-white mb-3">AI Study Buddy</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">Get personalized help and explanations from Coach Nova, your AI coding mentor</p>
                       </div>
                     </div>
 
-                    <div className="group relative">
+                    <div className="group relative h-full">
                       <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 transform hover:scale-105">
-                        <GraduationCap className="w-12 h-12 text-green-500 mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">Teacher Tools</h3>
-                        <p className="text-gray-300 text-sm">Comprehensive dashboard for tracking student progress and managing classroom activities</p>
+                      <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 transform hover:scale-105 text-center h-full flex flex-col justify-center">
+                        <GraduationCap className="w-12 h-12 text-green-500 mb-4 mx-auto" />
+                        <h3 className="text-xl font-bold text-white mb-3">Teacher Tools</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">Comprehensive dashboard for tracking student progress and managing classroom activities</p>
                       </div>
+                    </div>
                     </div>
                   </div>
 
                   {/* School Administrator Section */}
-                  <div className="mt-12 p-8 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-2xl border border-green-500/30 backdrop-blur-sm max-w-4xl mx-auto">
+                  <div className="mt-32 p-8 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-2xl border border-green-500/30 backdrop-blur-sm max-w-4xl mx-auto">
                     <div className="text-center">
                       <div className="text-4xl mb-3">🏫</div>
                       <h3 className="text-2xl font-bold text-green-400 mb-3">School Administrators & Teachers</h3>
