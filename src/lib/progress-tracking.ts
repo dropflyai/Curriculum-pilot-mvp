@@ -73,7 +73,7 @@ class ProgressTracker {
             schema: 'public',
             table: 'student_progress'
           },
-          (payload) => this.handleRealtimeUpdate('progress', payload)
+          (payload: any) => this.handleRealtimeUpdate('progress', payload)
         )
         .on(
           'postgres_changes',
@@ -82,7 +82,7 @@ class ProgressTracker {
             schema: 'public', 
             table: 'student_activities'
           },
-          (payload) => this.handleRealtimeUpdate('activity', payload)
+          (payload: any) => this.handleRealtimeUpdate('activity', payload)
         )
         .subscribe()
     } catch (error) {
@@ -424,7 +424,7 @@ class ProgressTracker {
 
       if (error) throw error
 
-      return data?.map(row => ({
+      return data?.map((row: any) => ({
         id: row.id,
         lessonId: row.lesson_id,
         studentId: row.student_id,
@@ -467,7 +467,7 @@ class ProgressTracker {
 
       if (error) throw error
 
-      return data?.map(row => ({
+      return data?.map((row: any) => ({
         id: row.id,
         studentId: row.student_id,
         studentName: row.users?.raw_user_meta_data?.full_name || 'Unknown Student',
@@ -499,7 +499,7 @@ class ProgressTracker {
 
       if (error) throw error
 
-      return data?.map(row => ({
+      return data?.map((row: any) => ({
         id: row.id,
         lessonId: row.lesson_id,
         studentId: row.student_id,
@@ -544,7 +544,7 @@ class ProgressTracker {
 
       if (error) throw error
 
-      return data?.map(row => ({
+      return data?.map((row: any) => ({
         id: row.id,
         lessonId: row.lesson_id,
         studentId: row.student_id,

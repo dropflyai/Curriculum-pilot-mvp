@@ -72,8 +72,6 @@ export function LocationMarker({
         <cylinderGeometry args={[5, 5, 200]} />
         <meshBasicMaterial 
           color={color}
-          emissive={emissiveColor}
-          emissiveIntensity={0.8}
           transparent
           opacity={0.9}
         />
@@ -84,8 +82,6 @@ export function LocationMarker({
         <ringGeometry args={[25, 35]} />
         <meshBasicMaterial 
           color={emissiveColor}
-          emissive={emissiveColor}
-          emissiveIntensity={1.0}
           transparent
           opacity={0.9}
         />
@@ -95,8 +91,6 @@ export function LocationMarker({
         <sphereGeometry args={[15, 32, 32]} />
         <meshStandardMaterial 
           color={color}
-          emissive={emissiveColor}
-          emissiveIntensity={hovered ? 1.5 : 1.0}
           metalness={0.3}
           roughness={0.2}
         />
@@ -107,8 +101,6 @@ export function LocationMarker({
         <boxGeometry args={[12, 12, 12]} />
         <meshStandardMaterial 
           color="#ffffff" 
-          emissive="#ffffff"
-          emissiveIntensity={0.6}
         />
       </mesh>
       
@@ -118,8 +110,6 @@ export function LocationMarker({
           <sphereGeometry args={[8]} />
           <meshBasicMaterial 
             color="#10b981" 
-            emissive="#10b981"
-            emissiveIntensity={0.8}
           />
         </mesh>
       )}
@@ -129,8 +119,6 @@ export function LocationMarker({
           <boxGeometry args={[10, 12, 6]} />
           <meshBasicMaterial 
             color="#ef4444"
-            emissive="#ef4444"
-            emissiveIntensity={0.6}
           />
         </mesh>
       )}

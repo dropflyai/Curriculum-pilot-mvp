@@ -76,8 +76,8 @@ export function LocationMedallion({
             color={baseColor}
             metalness={0.8}
             roughness={0.2}
-            emissive={baseColor}
-            emissiveIntensity={hovered ? 0.3 : 0.1}
+
+
           />
         </mesh>
         
@@ -88,8 +88,8 @@ export function LocationMedallion({
             color={getTypeColor()}
             metalness={0.9}
             roughness={0.1}
-            emissive={getTypeColor()}
-            emissiveIntensity={0.2}
+
+
           />
         </mesh>
         
@@ -119,8 +119,8 @@ export function LocationMedallion({
             <sphereGeometry args={[0.8, 8, 6]} />
             <meshBasicMaterial 
               color="#fbbf24"
-              emissive="#f59e0b"
-              emissiveIntensity={0.5}
+
+
             />
           </mesh>
         )}

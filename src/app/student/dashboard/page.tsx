@@ -150,6 +150,9 @@ export default function StudentDashboard() {
       
       return unsubscribe
     }
+    
+    // Return empty cleanup function if no listener was added
+    return () => {}
   }, [user?.id, addRealtimeListener])
   
   // Load user data

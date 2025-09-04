@@ -338,7 +338,7 @@ export function QuestMapProvider({
   initialRecord?: ProgressRecord;
   children: React.ReactNode;
 }) {
-  const storeRef = useRef<QuestStore>();
+  const storeRef = useRef<QuestStore | null>(null);
   if (!storeRef.current) {
     storeRef.current = createQuestStore(initialRecord ?? DEFAULT_RECORD(userId, courseId));
   }
@@ -389,7 +389,7 @@ const segmentStyle = (from: Mission, to: Mission) => {
 
 // ---------- Icons ----------
 function Icon({ type, size = 22, color = "currentColor" }: { type: IconKey; size?: number; color?: string }) {
-  const c = { fill: "none", stroke: color, strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+  const c = { fill: "none", stroke: color, strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (type) {
     case "castle":
       return (<g><rect x={-size*0.4} y={-size*0.1} width={size*0.8} height={size*0.5} rx={2} {...c}/><path d={`M ${-size*0.4} ${-size*0.1} v-${size*0.25} h${size*0.25} v${size*0.12} h${size*0.1} v-${size*0.12} h${size*0.25} v${size*0.25}`} {...c}/><path d={`M ${-size*0.2} ${size*0.4} v-${size*0.2} h${size*0.4} v${size*0.2}`} {...c}/><path d={`M ${-size*0.05} ${-size*0.35} l${size*0.25} ${size*0.1} l-${size*0.25} ${size*0.1} z`} fill={color}/></g>);
@@ -402,7 +402,7 @@ function Icon({ type, size = 22, color = "currentColor" }: { type: IconKey; size
     case "lab":
       return (<g><path d={`M ${-size*0.2} ${-size*0.38} v${size*0.25} l-${size*0.18} ${size*0.28} h${size*0.76} l-${size*0.18} -${size*0.28} v-${size*0.25}`} {...c}/><path d={`M ${-size*0.2} ${-size*0.13} h${size*0.4}`} {...c}/><path d={`M ${-size*0.05} ${-size*0.38} h${size*0.1}`} {...c}/></g>);
     case "array":
-      return (<g>{[0,1,2].map(r=>[0,1,2].map(c=>(<rect key={`${r}-${c}`} x={-size*0.36 + c*(size*0.24)} y={-size*0.36 + r*(size*0.24)} width={size*0.18} height={size*0.18} {...c}/>)))}<text x={size*0.5} y={size*0.15} fontSize={size*0.6} fill={color} fontWeight={700}>[]</text></g>);
+      return (<g>{[0,1,2].map(r=>[0,1,2].map(col=>(<rect key={`${r}-${col}`} x={-size*0.36 + col*(size*0.24)} y={-size*0.36 + r*(size*0.24)} width={size*0.18} height={size*0.18} {...c}/>)))}<text x={size*0.5} y={size*0.15} fontSize={size*0.6} fill={color} fontWeight={700}>[]</text></g>);
     case "studio":
       return (<g><rect x={-size*0.45} y={-size*0.25} width={size*0.9} height={size*0.5} rx={4} {...c}/><path d={`M ${-size*0.25} ${-size*0.25} v-${size*0.15}`} {...c}/><path d={`M ${size*0.25} ${-size*0.25} v-${size*0.15}`} {...c}/><text x={0} y={size*0.1} fontSize={size*0.7} textAnchor="middle" fill={color} fontWeight={700}>{"{}"}</text></g>);
     case "database":
@@ -616,7 +616,7 @@ function formatBadgeName(badge: string): string {
   return names[badge] || badge.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
-function DemoInner({ backgroundImageUrl, routeTo, containerRef }: { backgroundImageUrl?: string; routeTo: (p: string) => void; containerRef: React.RefObject<HTMLDivElement>; }) {
+function DemoInner({ backgroundImageUrl, routeTo, containerRef }: { backgroundImageUrl?: string; routeTo: (p: string) => void; containerRef: React.RefObject<HTMLDivElement | null>; }) {
   const { store, adapter } = useQuest();
   const [snap, setSnap] = useState(store.getState());
   useEffect(() => store.subscribe((s) => setSnap(s)), [store]);

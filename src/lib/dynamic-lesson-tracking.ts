@@ -52,7 +52,7 @@ class DynamicLessonTracker {
 
       if (!error && dbLessons && dbLessons.length > 0) {
         // Use database lessons
-        const lessons = dbLessons.map(lesson => ({
+        const lessons = dbLessons.map((lesson: any) => ({
           id: lesson.id,
           title: lesson.title,
           week: lesson.week,
@@ -62,7 +62,7 @@ class DynamicLessonTracker {
         }))
         
         // Update cache
-        lessons.forEach(lesson => {
+        lessons.forEach((lesson: any) => {
           this.lessonsCache.set(lesson.id, lesson)
         })
         
@@ -101,7 +101,7 @@ class DynamicLessonTracker {
     const discoveredLessons = new Map<string, DynamicLesson>()
 
     if (progressData) {
-      progressData.forEach(progress => {
+      progressData.forEach((progress: any) => {
         if (!discoveredLessons.has(progress.lesson_id)) {
           // Extract week number from lesson ID if possible
           let weekNum = 0
@@ -162,7 +162,7 @@ class DynamicLessonTracker {
       const progressByLesson = new Map<string, any[]>()
       
       if (progressData) {
-        progressData.forEach(progress => {
+        progressData.forEach((progress: any) => {
           const lessonProgress = progressByLesson.get(progress.lesson_id) || []
           lessonProgress.push(progress)
           progressByLesson.set(progress.lesson_id, lessonProgress)
@@ -248,17 +248,17 @@ class DynamicLessonTracker {
       if (error) throw error
 
       const studentsStarted = progressData?.length || 0
-      const studentsCompleted = progressData?.filter(s => s.status === 'completed').length || 0
-      const studentsInProgress = progressData?.filter(s => s.status === 'in_progress').length || 0
-      const studentsNeedingHelp = progressData?.filter(s => s.needs_help).length || 0
+      const studentsCompleted = progressData?.filter((s: any) => s.status === 'completed').length || 0
+      const studentsInProgress = progressData?.filter((s: any) => s.status === 'in_progress').length || 0
+      const studentsNeedingHelp = progressData?.filter((s: any) => s.needs_help).length || 0
 
-      const totalProgress = progressData?.reduce((sum, s) => {
+      const totalProgress = progressData?.reduce((sum: any, s: any) => {
         const sections = s.sections_completed?.length || 0
         const total = s.total_sections || 4
         return sum + (sections / total) * 100
       }, 0) || 0
 
-      const totalTime = progressData?.reduce((sum, s) => sum + (s.time_spent_minutes || 0), 0) || 0
+      const totalTime = progressData?.reduce((sum: any, s: any) => sum + (s.time_spent_minutes || 0), 0) || 0
 
       return {
         lesson,
@@ -319,7 +319,7 @@ class DynamicLessonTracker {
     const formats = new Map<string, number>()
     
     if (data) {
-      data.forEach(item => {
+      data.forEach((item: any) => {
         const id = item.lesson_id
         let pattern = 'unknown'
         
@@ -335,7 +335,7 @@ class DynamicLessonTracker {
 
     return Array.from(formats.entries()).map(([pattern, count]) => ({
       pattern,
-      example: data?.find(d => {
+      example: data?.find((d: any) => {
         const id = d.lesson_id
         if (pattern === 'week-XX') return id.match(/^week-\d{2}$/)
         if (pattern === 'lesson-X') return id.match(/^lesson-\d+$/)

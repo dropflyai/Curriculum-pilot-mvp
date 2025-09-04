@@ -213,7 +213,7 @@ function Water() {
 // LocationMarker moved to separate file
 // Old function LocationMarker removed - see LocationMarker.tsx
 
-// Commented out old function LocationMarker({ 
+/* Commented out old function LocationMarker({ 
   position, 
   name, 
   type, 
@@ -221,7 +221,7 @@ function Water() {
   completed,
   onClick,
   lore,
-  missionNumber 
+  missionNumber */ 
 }: { 
   position: [number, number, number]
   name: string

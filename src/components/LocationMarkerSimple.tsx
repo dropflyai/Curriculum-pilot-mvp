@@ -91,8 +91,8 @@ export function LocationMarker({
           <cylinderGeometry args={[25, 30, 8]} />
           <meshStandardMaterial 
             color={iconColor}
-            emissive={glowColor}
-            emissiveIntensity={hovered ? 1.0 : 0.6}
+
+
           />
         </mesh>
         
@@ -101,8 +101,8 @@ export function LocationMarker({
           <cylinderGeometry args={[20, 20, 2]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            emissive="#ffffff"
-            emissiveIntensity={0.5}
+
+
           />
         </mesh>
         
@@ -116,8 +116,8 @@ export function LocationMarker({
           {type === 'dungeon' && <octahedronGeometry args={[18]} />}
           <meshStandardMaterial 
             color={iconColor} 
-            emissive={glowColor} 
-            emissiveIntensity={0.5}
+
+
           />
         </mesh>
         
@@ -137,8 +137,8 @@ export function LocationMarker({
             <sphereGeometry args={[8]} />
             <meshBasicMaterial 
               color="#10b981" 
-              emissive="#10b981"
-              emissiveIntensity={0.7}
+
+
             />
           </mesh>
         )}
@@ -148,8 +148,8 @@ export function LocationMarker({
             <boxGeometry args={[10, 12, 6]} />
             <meshBasicMaterial 
               color="#ef4444"
-              emissive="#ef4444" 
-              emissiveIntensity={0.5}
+
+
             />
           </mesh>
         )}

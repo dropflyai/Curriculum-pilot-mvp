@@ -125,7 +125,7 @@ export function useStudentProgress(studentId: string) {
   }, [studentId])
 
   useEffect(() => {
-    if (!studentId) return
+    if (!studentId) return () => {}
 
     // Initial load
     refreshStudentProgress()

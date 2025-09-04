@@ -154,7 +154,7 @@ export function useDynamicMonitoring() {
           schema: 'public',
           table: 'student_activities'
         },
-        (payload) => {
+        (payload: any) => {
           // Add new activity to the top of the list
           setData(prev => ({
             ...prev,

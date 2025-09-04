@@ -119,8 +119,6 @@ export function LocationMarker({
           <cylinderGeometry args={[12, 15, 4, 8]} />
           <meshStandardMaterial 
             color={iconColor}
-            emissive={glowColor}
-            emissiveIntensity={hovered ? 0.8 : 0.4}
             metalness={0.8}
             roughness={0.2}
           />
@@ -141,8 +139,6 @@ export function LocationMarker({
           <cylinderGeometry args={[8, 8, 0.2, 8]} />
           <meshStandardMaterial 
             color="#ffffff"
-            emissive="#ffffff"
-            emissiveIntensity={0.3}
           />
         </mesh>
         
@@ -156,8 +152,6 @@ export function LocationMarker({
           {type === 'dungeon' && <octahedronGeometry args={[7]} />}
           <meshStandardMaterial 
             color={iconColor} 
-            emissive={glowColor} 
-            emissiveIntensity={0.3}
           />
         </mesh>
         
@@ -167,8 +161,6 @@ export function LocationMarker({
           <boxGeometry args={[2, 2, 2]} />
           <meshStandardMaterial 
             color="#3776ab"
-            emissive="#3776ab"
-            emissiveIntensity={0.5}
           />
         </mesh>
         
@@ -198,8 +190,6 @@ export function LocationMarker({
             <sphereGeometry args={[3]} />
             <meshBasicMaterial 
               color="#10b981"
-              emissive="#10b981"
-              emissiveIntensity={0.6}
             />
           </mesh>
         )}
@@ -210,8 +200,6 @@ export function LocationMarker({
             <boxGeometry args={[4, 5, 2]} />
             <meshBasicMaterial 
               color="#ef4444"
-              emissive="#ef4444"
-              emissiveIntensity={0.4}
             />
           </mesh>
         )}
@@ -265,6 +253,6 @@ export function LocationMarker({
   )
   } catch (error) {
     console.error('LocationMarker error:', error)
-    return <SimpleFallbackMarker position={safePosition} name={name || 'Mission'} />
+    return <SimpleFallbackMarker position={position} name={name || 'Mission'} />
   }
 }
