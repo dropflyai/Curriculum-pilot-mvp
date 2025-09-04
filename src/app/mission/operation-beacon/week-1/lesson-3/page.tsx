@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import CoachNova from '@/components/CoachNova'
 
 interface Dialogue {
   character: string
   text: string
   image: string
-  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious' | 'alert'
+  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious'
 }
 
 interface Challenge {
@@ -17,7 +18,6 @@ interface Challenge {
   hint: string
   correctCode: string
   explanation: string
-  spyContext: string
 }
 
 export default function Lesson3() {
@@ -43,71 +43,59 @@ export default function Lesson3() {
   const introDialogue: Dialogue[] = [
     {
       character: "Commander Atlas",
-      text: "Agent, we've detected a security breach. Multiple surveillance zones need automated patrol protocols. Time to master tactical decision-making and repetitive operations.",
+      text: "Agent, urgent situation! The Digital Fortress has infiltrated St. Michael's Academy. Their security system is blocking access to the chapel before morning prayer. We need immediate action!",
       image: "/Commander Atlas.png",
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus", 
-      text: "Loops and conditionals are the automation backbone of any security system. Loops handle repetitive tasks, while conditionals make smart decisions based on changing conditions.",
+      text: "I've analyzed their system - it's using conditional logic to control access. We can reprogram it using Python if-statements to restore proper chapel access for the students and faculty.",
       image: "/Dr. Maya Nexus.png",
-      emotion: "alert"
+      emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
-      text: "In the field, you'll need to: check security levels repeatedly, scan multiple targets, and make instant tactical decisions. These control structures are essential for mission automation.",
+      text: "Time is critical! Morning prayer starts in minutes. These conditional statements work like the monastery's ancient rules - if certain conditions are met, then specific actions follow.",
       image: "/Commander Atlas.png", 
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus",
-      text: "Let's start with conditionals using 'if' statements for decision-making, then move to 'for' loops for automated repetition. Master these and your code becomes truly intelligent.",
+      text: "Think of it like the sacred schedule - if it's morning prayer time AND you're an authorized student, then access is granted. Master these logical pathways and you'll unlock their entire system!",
       image: "/Dr. Maya Nexus.png",
-      emotion: "encouraging"
+      emotion: "neutral"
     }
   ]
 
-  // Coding Challenges - Spy-themed loops and conditionals
+  // Coding Challenges
   const challenges: Challenge[] = [
     {
       id: 1,
-      instruction: "Check if security_level is greater than or equal to 3. If true, print 'Access Granted'",
-      hint: "Use: if security_level >= 3:\n    print('Access Granted')\n\n(Create the security_level variable first with any value)",
-      correctCode: "security_level = 5\nif security_level >= 3:\n    print('Access Granted')",
-      explanation: "Perfect! Conditional statements let your code make intelligent decisions. 'if' checks a condition and executes code only when it's true.",
-      spyContext: "Security checkpoint automated. The system now grants or denies access based on clearance levels without human intervention."
+      instruction: "The chapel doors are locked! Check if current_time is greater than 6, then print 'Morning prayer access granted'",
+      hint: "Use: if condition: (followed by indented print statement)",
+      correctCode: "if current_time > 6:\n    print('Morning prayer access granted')",
+      explanation: "Brilliant! Your conditional logic bypassed the first security layer. The chapel system now recognizes morning prayer hours."
     },
     {
       id: 2, 
-      instruction: "Create a complete security check: if agent_status equals 'ACTIVE', print 'Mission Ready', otherwise print 'Agent Offline'",
-      hint: "Use if-else:\nif agent_status == 'ACTIVE':\n    print('Mission Ready')\nelse:\n    print('Agent Offline')\n\n(Set agent_status first)",
-      correctCode: "agent_status = 'ACTIVE'\nif agent_status == 'ACTIVE':\n    print('Mission Ready')\nelse:\n    print('Agent Offline')",
-      explanation: "Excellent tactical logic! The if-else structure handles binary decisions - your code now responds to any agent status automatically.",
-      spyContext: "Agent status monitoring system active. Command HQ can now instantly verify operational readiness across all field agents."
+      instruction: "Sacred files detected! If student_role equals 'altar_server', print 'Sacred archives unlocked', else print 'Permission required'",
+      hint: "Use: if condition: ... else: ... (remember proper indentation)",
+      correctCode: "if student_role == 'altar_server':\n    print('Sacred archives unlocked')\nelse:\n    print('Permission required')",
+      explanation: "Excellent infiltration! The system now recognizes authorized altar servers and grants access to the sacred digital archives."
     },
     {
       id: 3,
-      instruction: "Patrol 3 security zones using a for loop. Print 'Zone [number] secured' for each zone (1, 2, 3)",
-      hint: "Use: for zone in range(1, 4):\n    print(f'Zone {zone} secured')",
-      correctCode: "for zone in range(1, 4):\n    print(f'Zone {zone} secured')",
-      explanation: "Outstanding automation! For loops handle repetitive tasks efficiently. Your patrol protocol now runs continuously without manual oversight.",
-      spyContext: "Automated patrol system engaged. Security coverage is now continuous and systematic, eliminating human error in zone monitoring."
+      instruction: "Multiple access levels found! If prayer_level is 'novice' print 'Basic chapel access', if 'adept' print 'Sacristy access', else print 'Full sanctuary access'",
+      hint: "Use: if condition1: ... elif condition2: ... else: ...",
+      correctCode: "if prayer_level == 'novice':\n    print('Basic chapel access')\nelif prayer_level == 'adept':\n    print('Sacristy access')\nelse:\n    print('Full sanctuary access')",
+      explanation: "Outstanding! Your multi-level conditional unlocked the hierarchical access system used by the monastery's digital network."
     },
     {
       id: 4,
-      instruction: "Scan a list of 4 agent codenames: ['Alpha', 'Bravo', 'Charlie', 'Delta']. Print 'Agent [codename] confirmed' for each",
-      hint: "agents = ['Alpha', 'Bravo', 'Charlie', 'Delta']\nfor agent in agents:\n    print(f'Agent {agent} confirmed')",
-      correctCode: "agents = ['Alpha', 'Bravo', 'Charlie', 'Delta']\nfor agent in agents:\n    print(f'Agent {agent} confirmed')",
-      explanation: "Mission accomplished! You've mastered list iteration - essential for processing multiple data points in field operations.",
-      spyContext: "Agent roster verification complete. All field operatives confirmed and accounted for through automated roll-call protocol."
-    },
-    {
-      id: 5,
-      instruction: "Combine both concepts: Check each threat level in [1, 3, 5, 2]. If level >= 3, print 'HIGH ALERT: Level [X]', else print 'Normal: Level [X]'",
-      hint: "threat_levels = [1, 3, 5, 2]\nfor level in threat_levels:\n    if level >= 3:\n        print(f'HIGH ALERT: Level {level}')\n    else:\n        print(f'Normal: Level {level}')",
-      correctCode: "threat_levels = [1, 3, 5, 2]\nfor level in threat_levels:\n    if level >= 3:\n        print(f'HIGH ALERT: Level {level}')\n    else:\n        print(f'Normal: Level {level}')",
-      explanation: "Tactical perfection! You've combined loops and conditionals into an intelligent threat assessment system. This is advanced field programming!",
-      spyContext: "Automated threat detection system online. Real-time analysis now categorizes all security alerts with appropriate response protocols."
+      instruction: "Final security barrier! If both confession_booth_empty is True AND evening_vespers is True, print 'Secret passage revealed'",
+      hint: "Use 'and' to combine conditions: if condition1 and condition2:",
+      correctCode: "if confession_booth_empty == True and evening_vespers == True:\n    print('Secret passage revealed')",
+      explanation: "Mission successful! You've discovered the hidden passage that leads to the next lesson's intelligence files. The monastery's secrets are now within reach!"
     }
   ]
 
@@ -124,7 +112,7 @@ export default function Lesson3() {
             setShowCutscene(false)
             setShowCharacter(false)
           }
-        }, 3500) // Show dialogue for 3.5 seconds
+        }, 3000) // Show dialogue for 3 seconds
         
         return () => clearTimeout(nextTimer)
       }, 500) // Character fade-in delay
@@ -139,78 +127,35 @@ export default function Lesson3() {
     setShowCharacter(false)
   }
 
-  // Check user code with flexible validation
+  // Check user code
   const checkCode = () => {
-    const trimmedCode = userCode.trim().replace(/\s+/g, ' ')
+    const trimmedCode = userCode.trim()
     const currentChallengeData = challenges[currentChallenge]
     
-    let isCorrect = false
+    // More flexible checking for conditional logic
+    const codeLines = trimmedCode.split('\n').map(line => line.trim())
+    const expectedLines = currentChallengeData.correctCode.split('\n').map(line => line.trim())
     
-    switch (currentChallenge) {
-      case 0: // Security level check
-        isCorrect = (
-          trimmedCode.includes('security_level') &&
-          trimmedCode.includes('if') &&
-          trimmedCode.includes('>=') &&
-          trimmedCode.includes('3') &&
-          trimmedCode.includes('print(') &&
-          trimmedCode.includes('Access Granted')
-        )
+    // Check if the key elements are present
+    let isValid = true
+    for (const expectedLine of expectedLines) {
+      if (expectedLine && !codeLines.some(codeLine => 
+        codeLine.includes(expectedLine.replace(/\s+/g, ' ')) || 
+        codeLine.replace(/\s+/g, ' ') === expectedLine.replace(/\s+/g, ' ')
+      )) {
+        isValid = false
         break
-      case 1: // Agent status if-else
-        isCorrect = (
-          trimmedCode.includes('agent_status') &&
-          trimmedCode.includes('if') &&
-          trimmedCode.includes('ACTIVE') &&
-          trimmedCode.includes('else:') &&
-          trimmedCode.includes('Mission Ready') &&
-          trimmedCode.includes('Agent Offline')
-        )
-        break
-      case 2: // Zone patrol loop
-        isCorrect = (
-          trimmedCode.includes('for') &&
-          trimmedCode.includes('zone') &&
-          trimmedCode.includes('range') &&
-          trimmedCode.includes('Zone') &&
-          trimmedCode.includes('secured')
-        )
-        break
-      case 3: // Agent list iteration
-        isCorrect = (
-          trimmedCode.includes('agents') &&
-          trimmedCode.includes('[') &&
-          trimmedCode.includes('Alpha') &&
-          trimmedCode.includes('for') &&
-          trimmedCode.includes('agent') &&
-          trimmedCode.includes('Agent') &&
-          trimmedCode.includes('confirmed')
-        )
-        break
-      case 4: // Combined loop and conditional
-        isCorrect = (
-          trimmedCode.includes('threat_levels') &&
-          trimmedCode.includes('[1, 3, 5, 2]') &&
-          trimmedCode.includes('for') &&
-          trimmedCode.includes('if') &&
-          trimmedCode.includes('HIGH ALERT') &&
-          trimmedCode.includes('Normal')
-        )
-        break
-      default:
-        isCorrect = false
+      }
     }
     
-    if (isCorrect) {
+    if (isValid || trimmedCode.replace(/\s+/g, ' ') === currentChallengeData.correctCode.replace(/\s+/g, ' ')) {
       setIsCorrect(true)
       setFeedback(currentChallengeData.explanation)
-      if (!completedChallenges.includes(currentChallenge)) {
-        setCompletedChallenges(prev => [...prev, currentChallenge])
-        setXpEarned(prev => prev + 35)
-      }
+      setCompletedChallenges(prev => [...prev, currentChallenge])
+      setXpEarned(prev => prev + 25)
     } else {
       setIsCorrect(false)
-      setFeedback("Code structure needs adjustment. Check your syntax - remember proper indentation for if statements and loops!")
+      setFeedback("Not quite right. Check your syntax and conditional logic!")
     }
   }
 
@@ -239,7 +184,7 @@ export default function Lesson3() {
         }}
       >
         {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
         
         {/* Character Portrait */}
         <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
@@ -250,14 +195,19 @@ export default function Lesson3() {
               <img 
                 src={introDialogue[currentDialogue].image}
                 alt={introDialogue[currentDialogue].character}
-                className="max-w-lg h-auto drop-shadow-2xl"
+                className="max-w-md h-auto drop-shadow-2xl object-cover"
+                style={{
+                  clipPath: 'polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)',
+                  transform: 'scale(1.2)',
+                  objectPosition: 'center'
+                }}
               />
             </div>
           )}
         </div>
 
         {/* Dialogue Box */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/95 to-transparent p-8">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/90 to-transparent p-8">
           <div className="max-w-4xl mx-auto">
             <div className="bg-black/80 backdrop-blur-lg border-2 border-orange-400/60 p-6"
                  style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
@@ -265,13 +215,13 @@ export default function Lesson3() {
               {/* Character Name */}
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-orange-400 font-mono">
-                  {introDialogue[currentDialogue]?.character === "Commander Atlas" ? "<ñ" : "=,"} {introDialogue[currentDialogue]?.character}
+                  üéñÔ∏è {introDialogue[currentDialogue]?.character}
                 </h3>
                 <button 
                   onClick={skipCutscene}
                   className="text-gray-400 hover:text-white font-mono text-sm"
                 >
-                  Skip Cutscene í
+                  Skip Cutscene ‚Üí
                 </button>
               </div>
               
@@ -300,30 +250,36 @@ export default function Lesson3() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-orange-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-800/50 to-red-700/50 backdrop-blur-lg border-b border-orange-500/30 p-4">
+      <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-lg border-b border-orange-500/30 p-4">
         <div className="flex items-center justify-between">
           <div>
             <Link href="/mission/operation-beacon/week-1" className="text-orange-400 hover:text-orange-300 font-mono text-sm mb-2 block">
-              ê Return to Week 1
+              ‚Üê Return to Week 1
             </Link>
             <h1 className="text-2xl font-bold text-white font-mono">
-              <span className="text-orange-400">= LESSON 3</span> - Automated Security Protocols
+              <span className="text-orange-400">ü§ñ LESSON 3</span> - AI Decision Engine
             </h1>
           </div>
-          <div className="text-right">
-            <div className="text-yellow-400 font-mono font-bold">+{xpEarned} XP</div>
-            <div className="text-gray-300 text-sm">{completedChallenges.length}/5 Complete</div>
+          <div className="text-right max-w-md">
+            <div className="bg-red-900/30 border border-red-500/50 p-3 rounded-lg mb-2">
+              <div className="text-red-400 font-mono font-bold text-xs mb-1">üö® URGENT MISSION</div>
+              <div className="text-red-300 text-xs font-mono leading-tight">
+                Digital Fortress security detected! Must reprogram chapel access system using conditional logic before morning prayer service begins.
+              </div>
+            </div>
+            <div className="text-yellow-400 font-mono font-bold text-sm">+{xpEarned} XP</div>
+            <div className="text-gray-300 text-xs">{completedChallenges.length}/4 Systems Bypassed</div>
           </div>
         </div>
       </div>
 
       <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             
-            {/* Challenge Instructions */}
+            {/* Left Column: Challenge Instructions */}
             <div className="space-y-6">
               {/* Current Challenge */}
               <div className="bg-black/60 backdrop-blur-lg border-2 border-blue-400/40 p-6"
@@ -331,55 +287,45 @@ export default function Lesson3() {
                 
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-blue-400 font-mono">
-                    Security Protocol {currentChallenge + 1}/5
+                    Challenge {currentChallenge + 1}/4
                   </h2>
-                  <div className="text-blue-400 font-mono text-sm">Automation Systems</div>
+                  <div className="text-blue-400 font-mono text-sm">Conditional Logic</div>
                 </div>
                 
                 <p className="text-white font-mono mb-4">
                   {challenges[currentChallenge].instruction}
                 </p>
                 
-                {/* Spy Context */}
-                <div className="bg-red-900/20 border-l-4 border-red-400 p-3 mb-4">
-                  <p className="text-red-300 font-mono text-sm">
-                    <span className="text-red-400 font-bold">=® Mission Context:</span> {challenges[currentChallenge].spyContext}
-                  </p>
-                </div>
-                
                 {/* Hint Button */}
                 <button 
                   onClick={() => setShowHint(!showHint)}
                   className="bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-400/40 text-yellow-400 font-mono text-sm px-3 py-2 mb-4 transition-colors"
                 >
-                  =° {showHint ? 'Hide Tactical Guide' : 'Show Tactical Guide'}
+                  üí° {showHint ? 'Hide Hint' : 'Show Hint'}
                 </button>
                 
                 {showHint && (
                   <div className="bg-yellow-400/10 border-l-4 border-yellow-400 p-3 mb-4">
                     <p className="text-yellow-300 font-mono text-sm">
-                      <span className="text-yellow-400 font-bold">° Tactical Guide:</span><br/>
                       {challenges[currentChallenge].hint}
                     </p>
                   </div>
                 )}
               </div>
 
-              {/* Character Feedback */}
+              {/* Dr. Maya Nexus Feedback */}
               {feedback && (
                 <div className="bg-black/60 backdrop-blur-lg border-2 border-purple-400/40 p-6"
                      style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                   
                   <div className="flex items-start space-x-4">
                     <img 
-                      src={isCorrect ? "/Dr. Maya Nexus.png" : "/Commander Atlas.png"}
-                      alt={isCorrect ? "Dr. Maya Nexus" : "Commander Atlas"}
+                      src="/Dr. Maya Nexus.png"
+                      alt="Dr. Maya Nexus"
                       className="w-16 h-16 rounded-full border-2 border-purple-400"
                     />
                     <div>
-                      <h3 className="text-purple-400 font-mono font-bold mb-2">
-                        {isCorrect ? "=, Dr. Maya Nexus" : "<ñ Commander Atlas"}
-                      </h3>
+                      <h3 className="text-purple-400 font-mono font-bold mb-2">Dr. Maya Nexus</h3>
                       <p className={`font-mono text-sm ${isCorrect ? 'text-green-300' : 'text-red-300'}`}>
                         {feedback}
                       </p>
@@ -393,66 +339,18 @@ export default function Lesson3() {
                         className="bg-green-600 hover:bg-green-500 text-white font-mono px-4 py-2 transition-colors"
                         style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
                       >
-                        {currentChallenge < challenges.length - 1 ? 'Next Protocol í' : 'Complete Mission í'}
+                        {currentChallenge < challenges.length - 1 ? 'Next Challenge ‚Üí' : 'Complete Lesson ‚Üí'}
                       </button>
                     </div>
                   )}
                 </div>
               )}
-            </div>
-
-            {/* Code Editor */}
-            <div className="space-y-6">
-              <div className="bg-black/80 backdrop-blur-lg border-2 border-orange-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                
-                <h3 className="text-orange-400 font-mono font-bold mb-4">= Automation Control Terminal</h3>
-                
-                {/* Control Flow Reference */}
-                <div className="bg-gray-900 border border-orange-400/30 p-3 mb-4 text-sm">
-                  <div className="text-orange-400 font-mono font-bold mb-2">° Control Flow Commands:</div>
-                  <div className="text-gray-300 font-mono space-y-1">
-                    <div><span className="text-yellow-400">if condition:</span> Execute if true</div>
-                    <div><span className="text-green-400">else:</span> Execute if condition false</div>
-                    <div><span className="text-blue-400">for item in list:</span> Repeat for each</div>
-                    <div><span className="text-red-400">range(start, end):</span> Number sequence</div>
-                  </div>
-                  <div className="text-orange-300 text-xs mt-2">=° Remember: Indentation matters in Python!</div>
-                </div>
-                
-                {/* Code Input */}
-                <div className="bg-gray-900 border border-gray-600 p-4 mb-4">
-                  <textarea
-                    value={userCode}
-                    onChange={(e) => setUserCode(e.target.value)}
-                    placeholder="# Type your automation protocol here&#10;if security_level >= 3:&#10;    print('Access Granted')"
-                    className="w-full h-40 bg-transparent text-orange-400 font-mono text-sm resize-none focus:outline-none"
-                  />
-                </div>
-                
-                {/* Execute Button */}
-                <div className="flex justify-between">
-                  <button 
-                    onClick={() => setUserCode('')}
-                    className="bg-gray-600 hover:bg-gray-500 text-white font-mono px-4 py-2 transition-colors"
-                  >
-                    Clear Protocol
-                  </button>
-                  <button 
-                    onClick={checkCode}
-                    className="bg-orange-600 hover:bg-orange-500 text-white font-mono px-6 py-2 transition-colors"
-                    style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
-                  >
-                    Execute Automation
-                  </button>
-                </div>
-              </div>
 
               {/* Progress Tracking */}
               <div className="bg-black/40 border border-gray-600/30 p-4">
-                <h4 className="text-white font-mono font-bold mb-3">Security System Status</h4>
+                <h4 className="text-white font-mono font-bold mb-3">Mission Progress</h4>
                 <div className="space-y-2">
-                  {challenges.map((challenge, index) => (
+                  {challenges.map((_, index) => (
                     <div key={index} className="flex items-center space-x-3">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                         completedChallenges.includes(index) ? 'bg-green-500 text-white' :
@@ -466,31 +364,118 @@ export default function Lesson3() {
                         index === currentChallenge ? 'text-yellow-400' :
                         'text-gray-500'
                       }`}>
-                        Security Protocol {index + 1}
-                        {completedChallenges.includes(index) && ' '}
+                        Challenge {index + 1}
+                        {completedChallenges.includes(index) && ' ‚úì'}
                       </span>
-                      <div className="text-xs text-gray-400 font-mono">
-                        {index === 0 && 'Access Check'} 
-                        {index === 1 && 'Status Monitor'}
-                        {index === 2 && 'Zone Patrol'}
-                        {index === 3 && 'Agent Roster'}
-                        {index === 4 && 'Threat Analysis'}
-                      </div>
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* Center Column: Code Editor (Expanded) */}
+            <div className="space-y-6">
+              <div className="bg-black/80 backdrop-blur-lg border-2 border-orange-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                 
-                {/* XP Progress Bar */}
-                <div className="mt-4">
-                  <div className="flex justify-between text-sm font-mono text-gray-400 mb-1">
-                    <span>Automation XP</span>
-                    <span>{xpEarned}/175</span>
+                <h3 className="text-orange-400 font-mono font-bold mb-4">üñ•Ô∏è Tactical Code Terminal</h3>
+                
+                {/* Code Input - Larger */}
+                <div className="bg-gray-900 border border-gray-600 p-4 mb-4">
+                  <textarea
+                    value={userCode}
+                    onChange={(e) => setUserCode(e.target.value)}
+                    placeholder="Type your Python conditional code here..."
+                    className="w-full h-64 bg-transparent text-orange-400 font-mono text-sm resize-none focus:outline-none"
+                  />
+                </div>
+                
+                {/* Execute Button */}
+                <div className="flex justify-between">
+                  <button 
+                    onClick={() => setUserCode('')}
+                    className="bg-gray-600 hover:bg-gray-500 text-white font-mono px-4 py-2 transition-colors"
+                  >
+                    Clear Code
+                  </button>
+                  <button 
+                    onClick={checkCode}
+                    className="bg-orange-600 hover:bg-orange-500 text-white font-mono px-6 py-2 transition-colors"
+                    style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
+                  >
+                    Execute Code
+                  </button>
+                </div>
+              </div>
+
+              {/* Code Output/Console */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-green-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                
+                <h4 className="text-green-400 font-mono font-bold mb-3">üìü Console Output</h4>
+                <div className="bg-gray-900 border border-gray-600 p-4 min-h-[120px]">
+                  <pre className="text-green-300 font-mono text-sm whitespace-pre-wrap">
+                    {feedback ? (
+                      isCorrect ? (
+                        `‚úÖ Code executed successfully!\n\n${feedback}`
+                      ) : (
+                        `‚ùå Execution failed!\n\n${feedback}`
+                      )
+                    ) : (
+                      "Ready to execute code...\nType your Python conditional statements above and click 'Execute Code'."
+                    )}
+                  </pre>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: AI Tutor */}
+            <div className="space-y-6">
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-cyan-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                <h3 className="text-cyan-400 font-mono font-bold mb-4">ü§ñ Coach Nova AI Tutor</h3>
+                <div className="space-y-4">
+                  <CoachNova 
+                    studentName="Agent"
+                    lessonTitle="Tactical Decision Logic - Conditional Statements Training"
+                    currentChallenge={currentChallenge}
+                    totalChallenges={challenges.length}
+                    xpEarned={xpEarned}
+                    lessonContext={{
+                      type: 'lesson',
+                      difficulty: 'recruit',
+                      mission: 'Operation Beacon - Week 1'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Reference Card */}
+              <div className="bg-black/40 border border-gray-600/30 p-4">
+                <h4 className="text-white font-mono font-bold mb-3">üìã Quick Reference</h4>
+                <div className="space-y-2 text-xs font-mono">
+                  <div className="text-blue-300">
+                    <span className="text-yellow-400">if</span> condition:
                   </div>
-                  <div className="w-full bg-gray-700 h-2 rounded">
-                    <div 
-                      className="bg-gradient-to-r from-orange-500 to-red-500 h-2 rounded transition-all duration-500"
-                      style={{ width: `${(xpEarned / 175) * 100}%` }}
-                    ></div>
+                  <div className="text-blue-300 ml-4">
+                    # execute if true
+                  </div>
+                  <div className="text-blue-300">
+                    <span className="text-yellow-400">elif</span> condition2:
+                  </div>
+                  <div className="text-blue-300 ml-4">
+                    # execute if condition2 true
+                  </div>
+                  <div className="text-blue-300">
+                    <span className="text-yellow-400">else</span>:
+                  </div>
+                  <div className="text-blue-300 ml-4">
+                    # execute if all false
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-gray-600">
+                    <div className="text-gray-400">Operators:</div>
+                    <div className="text-green-300">== != &gt; &lt; &gt;= &lt;=</div>
+                    <div className="text-purple-300">and or not</div>
                   </div>
                 </div>
               </div>
@@ -498,6 +483,7 @@ export default function Lesson3() {
           </div>
         </div>
       </div>
+
     </div>
   )
 }
