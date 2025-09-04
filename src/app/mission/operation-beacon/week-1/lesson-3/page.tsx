@@ -44,25 +44,25 @@ export default function Lesson3() {
     {
       character: "Commander Atlas",
       text: "Agent, urgent situation! The Digital Fortress has infiltrated St. Michael's Academy. Their security system is blocking access to the chapel before morning prayer. We need immediate action!",
-      image: "/Commander Atlas.png",
+      image: "/Commander Atlas_processed.png",
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus", 
       text: "I've analyzed their system - it's using conditional logic to control access. We can reprogram it using Python if-statements to restore proper chapel access for the students and faculty.",
-      image: "/Dr. Maya Nexus.png",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
       text: "Time is critical! Morning prayer starts in minutes. These conditional statements work like the monastery's ancient rules - if certain conditions are met, then specific actions follow.",
-      image: "/Commander Atlas.png", 
+      image: "/Commander Atlas_processed.png", 
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus",
       text: "Think of it like the sacred schedule - if it's morning prayer time AND you're an authorized student, then access is granted. Master these logical pathways and you'll unlock their entire system!",
-      image: "/Dr. Maya Nexus.png",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "neutral"
     }
   ]
@@ -320,7 +320,7 @@ export default function Lesson3() {
                   
                   <div className="flex items-start space-x-4">
                     <img 
-                      src="/Dr. Maya Nexus.png"
+                      src="/Dr. Maya Nexus_processed.png"
                       alt="Dr. Maya Nexus"
                       className="w-16 h-16 rounded-full border-2 border-purple-400"
                     />

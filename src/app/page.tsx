@@ -1,7 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Code, BookOpen, Users, Rocket, ChevronRight, Zap, Trophy, Bot, GraduationCap,
@@ -10,93 +8,8 @@ import {
   MessageCircle, ThumbsUp, Activity, BarChart3, DollarSign, School
 } from 'lucide-react'
 
-interface SimpleUser {
-  id: string
-  email: string
-  full_name: string
-  role: 'student' | 'teacher'
-}
-
 export default function HomePage() {
-  const [user, setUser] = useState<SimpleUser | null>(null)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    // Redirect to games page
-    router.push('/games')
-  }, [router])
-
-
-  function checkUser() {
-    try {
-      // Check for demo authentication
-      const demoMode = localStorage.getItem('demo_authenticated') === 'true'
-      if (demoMode) {
-        const demoUserStr = localStorage.getItem('demo_user')
-        if (demoUserStr) {
-          const demoUser = JSON.parse(demoUserStr)
-          setUser({
-            id: demoUser.id,
-            email: demoUser.email,
-            full_name: demoUser.full_name,
-            role: demoUser.role
-          })
-        }
-      }
-    } catch (error) {
-      console.error('Error loading user:', error)
-    }
-    // Always set loading to false
-    setLoading(false)
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('demo_authenticated')
-    localStorage.removeItem('demo_user')
-    window.location.reload()
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-        <div className="text-white text-2xl animate-pulse flex items-center">
-          <Rocket className="w-8 h-8 mr-3 animate-bounce" />
-          Loading CodeFly...
-          <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
-        </div>
-      </div>
-    )
-  }
-
-  // Redirect authenticated users to their appropriate dashboards
-  if (user) {
-    if (user.role === 'teacher') {
-      router.push('/teacher')
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-          <div className="text-white text-2xl animate-pulse flex items-center">
-            <Rocket className="w-8 h-8 mr-3 animate-bounce" />
-            Redirecting to Teacher Dashboard...
-            <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
-          </div>
-        </div>
-      )
-    } else {
-      router.push('/student/dashboard')
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
-          <div className="text-white text-2xl animate-pulse flex items-center">
-            <Rocket className="w-8 h-8 mr-3 animate-bounce" />
-            Redirecting to Student Dashboard...
-            <Sparkles className="w-6 h-6 ml-3 animate-pulse" />
-          </div>
-        </div>
-      )
-    }
-  }
-
-  // Show landing page for non-authenticated users
+  // Show landing page for ALL users - no redirects, no authentication checks
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-x-hidden">
       {/* Animated Background Elements */}
@@ -122,7 +35,7 @@ export default function HomePage() {
                 #1 in K-12
               </span>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <Link href="/auth" className="text-white/80 hover:text-white transition-colors duration-200 font-medium">
                 Sign In
               </Link>

@@ -11,11 +11,11 @@ export default function Week1() {
   const lessons = [
     {
       id: 1,
-      title: 'Mission Intel Storage',
-      subtitle: 'Creating Your First Variables',
-      description: 'Store target coordinates and facility data in your tactical computer',
-      concept: 'Basic variable assignment: name = value',
-      example: 'target_location = "Digital Fortress"',
+      title: 'AI Memory Banks',
+      subtitle: 'Programming Agent Memory',
+      description: 'Create your AI\'s memory system to store critical information and threat data',
+      concept: 'Variables store information: agent_name = "Guardian"',
+      example: 'threat_level = 5, ai_status = "Active"',
       difficulty: 'Beginner',
       duration: '15 min',
       xp: 50,
@@ -23,11 +23,11 @@ export default function Week1() {
     },
     {
       id: 2,
-      title: 'Classified Data Types', 
-      subtitle: 'Numbers, Text, and Boolean Intel',
-      description: 'Learn to store different types of intelligence data',
-      concept: 'String, Integer, Float, and Boolean variables',
-      example: 'agent_id = 7, latitude = 40.7589',
+      title: 'Data Intelligence Types', 
+      subtitle: 'Teaching AI to Recognize Data',
+      description: 'Program your AI to understand different types of intelligence data',
+      concept: 'AI processes strings, integers, floats, and boolean data',
+      example: 'enemy_count = 12, coordinates = 40.7589',
       difficulty: 'Beginner',
       duration: '20 min', 
       xp: 100,
@@ -35,11 +35,11 @@ export default function Week1() {
     },
     {
       id: 3,
-      title: 'Automated Security Protocols',
-      subtitle: 'Loops & Conditional Logic',
-      description: 'Master tactical decision-making and automated patrol systems',
-      concept: 'if statements, for loops, and conditional automation',
-      example: 'for zone in range(3): check_security(zone)',
+      title: 'AI Decision Making',
+      subtitle: 'Conditional Logic & Automation',
+      description: 'Program your AI to make autonomous decisions and patrol protocols',
+      concept: 'AI logic: if condition, then action (autonomous behavior)',
+      example: 'if threat_detected: activate_defense()',
       difficulty: 'Intermediate',
       duration: '25 min',
       xp: 175,
@@ -47,11 +47,11 @@ export default function Week1() {
     },
     {
       id: 4,
-      title: 'Modular Command Functions',
-      subtitle: 'Reusable Tactical Protocols',
-      description: 'Create specialized mission functions for encryption and analysis',
-      concept: 'Function definition, parameters, and return values',
-      example: 'def encrypt_message(): return "secured"',
+      title: 'AI Skill Modules',
+      subtitle: 'Reusable AI Capabilities',
+      description: 'Create specialized AI functions for threat analysis and response',
+      concept: 'Modular AI skills: functions that can be called repeatedly',
+      example: 'def analyze_threat(): return "threat_assessment"',
       difficulty: 'Intermediate',
       duration: '30 min',
       xp: 200,
@@ -69,9 +69,9 @@ export default function Week1() {
               ← Return to Operation Beacon
             </Link>
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
-              <span className="text-green-400">📊 WEEK 1</span> - Intelligence Gathering
+              <span className="text-green-400">🤖 WEEK 1</span> - AI Memory Core
             </h1>
-            <p className="text-gray-300 font-mono">Variables & Data Storage</p>
+            <p className="text-gray-300 font-mono">Building Your First AI Agent</p>
           </div>
           <div className="text-right">
             <div className="text-green-400 font-mono text-xl">4 LESSONS</div>
@@ -88,19 +88,25 @@ export default function Week1() {
             <div className="flex items-start space-x-4">
               <div className="text-6xl">🎖️</div>
               <div>
-                <h2 className="text-2xl font-bold text-blue-400 font-mono mb-2">COMMANDER ATLAS - WEEK 1 BRIEFING</h2>
+                <h2 className="text-2xl font-bold text-blue-400 font-mono mb-2">🚨 COMMANDER ATLAS - URGENT AI BRIEFING</h2>
                 <p className="text-gray-300 font-mono mb-4">
-                  "Agent, welcome to your first week of tactical training. Before you can infiltrate the Digital Fortress, 
-                  you must master the fundamental skill of intelligence storage."
+                  "Agent, the situation is critical. Enemy AI systems are evolving rapidly, and we need our own 
+                  intelligent defense system operational IMMEDIATELY. You will build our counter-AI from the ground up."
                 </p>
                 <p className="text-blue-300 font-mono text-sm mb-4">
-                  "Your tactical computer uses Python variables to store critical mission data. Each piece of intelligence 
-                  must be properly labeled and stored for instant retrieval during field operations."
+                  "This week, you'll create the AI's foundational memory system using Python variables. Think of it as 
+                  programming a digital brain that can remember, process, and act on critical information autonomously."
                 </p>
+                <div className="bg-red-500/10 border-l-4 border-red-400 p-4 mb-4">
+                  <p className="text-red-300 font-mono text-sm">
+                    <strong>NATIONAL THREAT LEVEL:</strong> CRITICAL - Enemy AI becoming more sophisticated daily. 
+                    Our survival depends on building a superior counter-intelligence agent.
+                  </p>
+                </div>
                 <div className="bg-blue-400/10 border-l-4 border-blue-400 p-4">
                   <p className="text-blue-300 font-mono text-sm">
-                    <strong>WEEK 1 OBJECTIVE:</strong> Master variable creation and data storage. 
-                    Store target locations, security codes, and agent profiles in your system memory.
+                    <strong>WEEK 1 MISSION:</strong> Build your AI's memory core and data processing systems. 
+                    Each lesson makes your AI more intelligent and capable of autonomous operations.
                   </p>
                 </div>
               </div>
@@ -186,7 +192,7 @@ export default function Week1() {
 
           {/* Week Progress */}
           <div className="bg-black/40 border border-gray-600/30 p-6">
-            <h3 className="text-white font-mono font-bold mb-4">WEEK 1 PROGRESS</h3>
+            <h3 className="text-white font-mono font-bold mb-4">🤖 AI AGENT DEVELOPMENT PROGRESS</h3>
             <div className="flex items-center space-x-4 mb-4">
               <div className="flex-1 bg-gray-800 h-4 border border-gray-600">
                 <div className="bg-gradient-to-r from-green-500 to-cyan-400 h-full w-0"></div>
@@ -197,21 +203,21 @@ export default function Week1() {
             {/* Learning Objectives */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-green-400 font-mono font-bold mb-2">INTELLIGENCE SKILLS</h4>
+                <h4 className="text-green-400 font-mono font-bold mb-2">🤖 AI DEVELOPMENT SKILLS</h4>
                 <ul className="space-y-1">
-                  <li className="text-gray-400 font-mono text-sm">• Variable creation and naming</li>
-                  <li className="text-gray-400 font-mono text-sm">• Data type recognition</li>
-                  <li className="text-gray-400 font-mono text-sm">• Multiple variable management</li>
-                  <li className="text-gray-400 font-mono text-sm">• Intelligence database construction</li>
+                  <li className="text-gray-400 font-mono text-sm">• AI memory system creation</li>
+                  <li className="text-gray-400 font-mono text-sm">• Intelligent data processing</li>
+                  <li className="text-gray-400 font-mono text-sm">• Multi-variable AI state management</li>
+                  <li className="text-gray-400 font-mono text-sm">• Agent knowledge base construction</li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-blue-400 font-mono font-bold mb-2">MISSION APPLICATIONS</h4>
+                <h4 className="text-blue-400 font-mono font-bold mb-2">🛡️ DEFENSE APPLICATIONS</h4>
                 <ul className="space-y-1">
-                  <li className="text-gray-400 font-mono text-sm">• Target location storage</li>
-                  <li className="text-gray-400 font-mono text-sm">• Security code management</li>
-                  <li className="text-gray-400 font-mono text-sm">• Agent profile creation</li>
-                  <li className="text-gray-400 font-mono text-sm">• Facility data organization</li>
+                  <li className="text-gray-400 font-mono text-sm">• Threat level monitoring</li>
+                  <li className="text-gray-400 font-mono text-sm">• Enemy AI tracking systems</li>
+                  <li className="text-gray-400 font-mono text-sm">• Automated defense protocols</li>
+                  <li className="text-gray-400 font-mono text-sm">• Real-time intelligence processing</li>
                 </ul>
               </div>
             </div>

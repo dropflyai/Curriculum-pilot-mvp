@@ -127,7 +127,7 @@ function getDashboardPath(role: string): string {
       return '/teacher'
     case 'student':
     default:
-      return '/mission-hq'
+      return '/games'
   }
 }
 
@@ -170,11 +170,7 @@ export function middleware(request: NextRequest) {
 
   // Handle public routes
   if (matchesRoutes(pathname, ROUTE_PROTECTION.public)) {
-    // If user is authenticated and trying to access auth pages, redirect to dashboard
-    if (isAuthenticated && (pathname === '/auth' || pathname === '/auth/signup' || pathname === '/signin')) {
-      const dashboardPath = userRole ? getDashboardPath(userRole) : '/student/dashboard'
-      return NextResponse.redirect(new URL(dashboardPath, request.url))
-    }
+    // Allow access to auth pages even if authenticated (so users can switch accounts)
     return NextResponse.next()
   }
 

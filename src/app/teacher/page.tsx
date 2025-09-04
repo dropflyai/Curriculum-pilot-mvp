@@ -18,6 +18,7 @@ import Link from 'next/link'
 import TeacherPlaybook from '@/components/TeacherPlaybook'
 import StudentPortfolioModal from '@/components/StudentPortfolioModal'
 import { getMockTeacherData } from '@/lib/mock-teacher-data'
+import { getAllLessons } from '@/lib/lesson-data'
 import { progressTracker, type LessonProgress, type StudentActivity } from '@/lib/progress-tracking'
 import { aiLessons, type AILesson } from '@/lib/lesson-data'
 
@@ -1062,8 +1063,8 @@ CodeFly Computer Science Teacher
           </div>
 
           {/* Assignment Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {/* Week 1 Vocabulary Homework */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {/* Week 1: Operation Beacon */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -1072,7 +1073,7 @@ CodeFly Computer Science Teacher
                 </div>
                 <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full">Active</span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">AI/ML Training & Variables</p>
+              <p className="text-gray-400 text-sm mb-3">Python Basics & Variables</p>
               
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -1102,7 +1103,7 @@ CodeFly Computer Science Teacher
               </div>
             </div>
 
-            {/* Python Basics Lesson */}
+            {/* Week 2: Variable Village Outpost */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -1136,6 +1137,84 @@ CodeFly Computer Science Teacher
                   Monitor Progress
                 </Link>
                 <button className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                  <MessageSquare className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Week 3: Cipher Command */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">Week 3: Cipher Command</h3>
+                </div>
+                <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded-full">Locked</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-3">Loops & Control Structures</p>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Progress:</span>
+                  <span className="text-gray-400 font-bold">0%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-purple-500 to-violet-500 h-2 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>Unlocks after Week 2</span>
+                  <span>Coming Soon</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  disabled
+                  className="flex-1 bg-gray-700 text-gray-400 px-3 py-2 rounded-lg text-sm font-medium text-center cursor-not-allowed"
+                >
+                  <Eye className="h-4 w-4 inline mr-1" />
+                  Preview
+                </button>
+                <button disabled className="bg-gray-700 text-gray-400 px-3 py-2 rounded-lg text-sm cursor-not-allowed">
+                  <MessageSquare className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Week 4: Ghost Protocol */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                  <h3 className="text-lg font-bold text-white">Week 4: Ghost Protocol</h3>
+                </div>
+                <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded-full">Locked</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-3">Functions & Code Organization</p>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Progress:</span>
+                  <span className="text-gray-400 font-bold">0%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-cyan-500 to-teal-500 h-2 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>Unlocks after Week 3</span>
+                  <span>Coming Soon</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  disabled
+                  className="flex-1 bg-gray-700 text-gray-400 px-3 py-2 rounded-lg text-sm font-medium text-center cursor-not-allowed"
+                >
+                  <Eye className="h-4 w-4 inline mr-1" />
+                  Preview
+                </button>
+                <button disabled className="bg-gray-700 text-gray-400 px-3 py-2 rounded-lg text-sm cursor-not-allowed">
                   <MessageSquare className="h-4 w-4" />
                 </button>
               </div>

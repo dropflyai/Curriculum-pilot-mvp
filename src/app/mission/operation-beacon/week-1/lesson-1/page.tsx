@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import CoachNova from '@/components/CoachNova'
 
 interface Dialogue {
   character: string
@@ -42,26 +43,26 @@ export default function Lesson1() {
   const introDialogue: Dialogue[] = [
     {
       character: "Commander Atlas",
-      text: "Agent, welcome to your first tactical training session. Today you'll learn the foundation of all digital intelligence gathering.",
-      image: "/Commander Atlas.png",
+      text: "Agent, URGENT: Enemy AI systems are infiltrating our networks globally. You must immediately begin building our counter-AI defense system. Time is critical.",
+      image: "/Commander Atlas_processed.png",
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus", 
-      text: "Hello! I'm Dr. Maya Nexus, your AI learning advisor. I'll guide you through mastering Python variables - the building blocks of code intelligence.",
-      image: "/Dr. Maya Nexus.png",
+      text: "Agent, I'm Dr. Maya Nexus. We're racing against time to build an AI that can outsmart the enemy. Variables are your AI's memory - without them, it can't think or act.",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
-      text: "Variables are like secure containers for storing mission-critical data. Master this skill, and you'll be ready for field operations.",
-      image: "/Commander Atlas.png", 
+      text: "Your AI needs variables to remember threat levels, enemy positions, and defense protocols. Each variable you create makes our AI more intelligent than theirs.",
+      image: "/Commander Atlas_processed.png", 
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus",
-      text: "Let's start with the basics. A variable stores information using this format: variable_name = value. Ready for your first mission?",
-      image: "/Dr. Maya Nexus.png",
+      text: "Your AI's survival depends on remembering data. Program its memory using: ai_status = 'Active'. Every second counts - the enemy AI is learning too. Begin now!",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "neutral"
     }
   ]
@@ -70,31 +71,31 @@ export default function Lesson1() {
   const challenges: Challenge[] = [
     {
       id: 1,
-      instruction: "Store the target location 'Digital Fortress' in a variable called target_location",
-      hint: "Remember: variable_name = 'text value' (use quotes for text)",
-      correctCode: "target_location = \"Digital Fortress\"",
-      explanation: "Perfect! You've stored text data in a variable. The quotes tell Python this is text, not a command."
+      instruction: "Program your AI's identity by storing 'Guardian AI' in a variable called ai_name",
+      hint: "Give your AI a name: ai_name = 'Guardian AI' (use quotes for text)",
+      correctCode: "ai_name = \"Guardian AI\"",
+      explanation: "Excellent! Your AI now has an identity. This is the first step in creating an intelligent agent that can defend our systems."
     },
     {
       id: 2, 
-      instruction: "Store the security level number 5 in a variable called security_level",
-      hint: "Numbers don't need quotes: variable_name = number",
-      correctCode: "security_level = 5",
-      explanation: "Excellent! Numbers are stored without quotes. Python recognizes this as numerical data."
+      instruction: "Set your AI's initial threat level to 3 by storing it in a variable called threat_level",
+      hint: "Numbers don't need quotes: threat_level = 3",
+      correctCode: "threat_level = 3",
+      explanation: "Perfect! Your AI can now track threat levels. This numerical data helps it assess danger and respond appropriately."
     },
     {
       id: 3,
-      instruction: "Store your agent codename in a variable called agent_name (choose any codename you like)",
-      hint: "Use quotes around your codename text: agent_name = 'Your Codename'",
-      correctCode: "agent_name = ",
-      explanation: "Outstanding! You've created your agent profile. Variables can store any text you assign to them."
+      instruction: "Create your AI's creator signature in a variable called developer_name (use your own name or codename)",
+      hint: "Use quotes around your name: developer_name = 'Your Name'",
+      correctCode: "developer_name = ",
+      explanation: "Great work! Your AI knows who created it. This creates accountability and helps with command authorization protocols."
     },
     {
       id: 4,
-      instruction: "Create a variable called mission_active and set it to True (this is a boolean - True/False value)",
+      instruction: "Activate your AI by creating a variable called ai_status and setting it to True",
       hint: "Boolean values: True or False (capital letters, no quotes)",
-      correctCode: "mission_active = True",
-      explanation: "Mission accomplished! Boolean variables store True/False values for yes/no decisions."
+      correctCode: "ai_status = True",
+      explanation: "Mission critical! Your AI is now ACTIVE. Boolean variables let your AI make yes/no decisions for autonomous operations."
     }
   ]
 
@@ -196,7 +197,12 @@ export default function Lesson1() {
               <img 
                 src={introDialogue[currentDialogue].image}
                 alt={introDialogue[currentDialogue].character}
-                className="max-w-md h-auto drop-shadow-2xl"
+                className="max-w-md h-auto drop-shadow-2xl object-cover"
+                style={{
+                  clipPath: 'polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)',
+                  transform: 'scale(1.2)',
+                  objectPosition: 'center'
+                }}
               />
             </div>
           )}
@@ -255,21 +261,27 @@ export default function Lesson1() {
               ← Return to Week 1
             </Link>
             <h1 className="text-2xl font-bold text-white font-mono">
-              <span className="text-green-400">📊 LESSON 1</span> - Mission Intel Storage
+              <span className="text-green-400">🤖 LESSON 1</span> - AI Memory Core Programming
             </h1>
           </div>
-          <div className="text-right">
-            <div className="text-yellow-400 font-mono font-bold">+{xpEarned} XP</div>
-            <div className="text-gray-300 text-sm">{completedChallenges.length}/4 Complete</div>
+          <div className="text-right max-w-md">
+            <div className="bg-blue-900/30 border border-blue-500/50 p-3 rounded-lg mb-2">
+              <div className="text-blue-400 font-mono font-bold text-xs mb-1">📡 INTEL BRIEFING</div>
+              <div className="text-blue-300 text-xs font-mono leading-tight">
+  URGENT: Enemy AI systems are becoming self-aware. Build your counter-AI's memory system before they achieve full autonomy. National security depends on it.
+              </div>
+            </div>
+            <div className="text-yellow-400 font-mono font-bold text-sm">+{xpEarned} XP</div>
+            <div className="text-gray-300 text-xs">{completedChallenges.length}/4 Intel Secured</div>
           </div>
         </div>
       </div>
 
       <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             
-            {/* Challenge Instructions */}
+            {/* Left Column: Challenge Instructions */}
             <div className="space-y-6">
               {/* Current Challenge */}
               <div className="bg-black/60 backdrop-blur-lg border-2 border-blue-400/40 p-6"
@@ -310,7 +322,7 @@ export default function Lesson1() {
                   
                   <div className="flex items-start space-x-4">
                     <img 
-                      src="/Dr. Maya Nexus.png"
+                      src="/Dr. Maya Nexus_processed.png"
                       alt="Dr. Maya Nexus"
                       className="w-16 h-16 rounded-full border-2 border-purple-400"
                     />
@@ -335,46 +347,10 @@ export default function Lesson1() {
                   )}
                 </div>
               )}
-            </div>
-
-            {/* Code Editor */}
-            <div className="space-y-6">
-              <div className="bg-black/80 backdrop-blur-lg border-2 border-green-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                
-                <h3 className="text-green-400 font-mono font-bold mb-4">🖥️ Tactical Code Terminal</h3>
-                
-                {/* Code Input */}
-                <div className="bg-gray-900 border border-gray-600 p-4 mb-4">
-                  <textarea
-                    value={userCode}
-                    onChange={(e) => setUserCode(e.target.value)}
-                    placeholder="Type your Python code here..."
-                    className="w-full h-32 bg-transparent text-green-400 font-mono text-sm resize-none focus:outline-none"
-                  />
-                </div>
-                
-                {/* Execute Button */}
-                <div className="flex justify-between">
-                  <button 
-                    onClick={() => setUserCode('')}
-                    className="bg-gray-600 hover:bg-gray-500 text-white font-mono px-4 py-2 transition-colors"
-                  >
-                    Clear Code
-                  </button>
-                  <button 
-                    onClick={checkCode}
-                    className="bg-green-600 hover:bg-green-500 text-white font-mono px-6 py-2 transition-colors"
-                    style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
-                  >
-                    Execute Code
-                  </button>
-                </div>
-              </div>
 
               {/* Progress Tracking */}
               <div className="bg-black/40 border border-gray-600/30 p-4">
-                <h4 className="text-white font-mono font-bold mb-3">Lesson Progress</h4>
+                <h4 className="text-white font-mono font-bold mb-3">Mission Progress</h4>
                 <div className="space-y-2">
                   {challenges.map((_, index) => (
                     <div key={index} className="flex items-center space-x-3">
@@ -398,9 +374,113 @@ export default function Lesson1() {
                 </div>
               </div>
             </div>
+
+            {/* Center Column: Code Editor (Expanded) */}
+            <div className="space-y-6">
+              <div className="bg-black/80 backdrop-blur-lg border-2 border-green-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                
+                <h3 className="text-green-400 font-mono font-bold mb-4">🖥️ Tactical Code Terminal</h3>
+                
+                {/* Code Input - Larger */}
+                <div className="bg-gray-900 border border-gray-600 p-4 mb-4">
+                  <textarea
+                    value={userCode}
+                    onChange={(e) => setUserCode(e.target.value)}
+                    placeholder="Type your Python code here..."
+                    className="w-full h-64 bg-transparent text-green-400 font-mono text-sm resize-none focus:outline-none"
+                  />
+                </div>
+                
+                {/* Execute Button */}
+                <div className="flex justify-between">
+                  <button 
+                    onClick={() => setUserCode('')}
+                    className="bg-gray-600 hover:bg-gray-500 text-white font-mono px-4 py-2 transition-colors"
+                  >
+                    Clear Code
+                  </button>
+                  <button 
+                    onClick={checkCode}
+                    className="bg-green-600 hover:bg-green-500 text-white font-mono px-6 py-2 transition-colors"
+                    style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
+                  >
+                    Execute Code
+                  </button>
+                </div>
+              </div>
+
+              {/* Code Output/Console */}
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-blue-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                
+                <h4 className="text-blue-400 font-mono font-bold mb-3">📟 Console Output</h4>
+                <div className="bg-gray-900 border border-gray-600 p-4 min-h-[120px]">
+                  <pre className="text-green-300 font-mono text-sm whitespace-pre-wrap">
+                    {feedback ? (
+                      isCorrect ? (
+                        `✅ Code executed successfully!\n\n${feedback}`
+                      ) : (
+                        `❌ Execution failed!\n\n${feedback}`
+                      )
+                    ) : (
+                      "Ready to execute code...\nType your Python variable assignments above and click 'Execute Code'."
+                    )}
+                  </pre>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: AI Tutor */}
+            <div className="space-y-6">
+              <div className="bg-black/60 backdrop-blur-lg border-2 border-cyan-400/40 p-6"
+                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
+                <h3 className="text-cyan-400 font-mono font-bold mb-4">🤖 Coach Nova AI Tutor</h3>
+                <div className="space-y-4">
+                  <CoachNova 
+                    studentName="Agent"
+                    lessonTitle="Mission Intel Storage - Variables Training"
+                    currentChallenge={currentChallenge}
+                    totalChallenges={challenges.length}
+                    xpEarned={xpEarned}
+                    lessonContext={{
+                      type: 'lesson',
+                      difficulty: 'recruit',
+                      mission: 'Operation Beacon - Week 1'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Reference Card */}
+              <div className="bg-black/40 border border-gray-600/30 p-4">
+                <h4 className="text-white font-mono font-bold mb-3">📋 Quick Reference</h4>
+                <div className="space-y-2 text-xs font-mono">
+                  <div className="text-blue-300">
+                    <span className="text-yellow-400">variable_name</span> = <span className="text-green-300">value</span>
+                  </div>
+                  <div className="text-gray-400 ml-4">
+                    # Store data in memory
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-gray-600">
+                    <div className="text-gray-400">Data Types:</div>
+                    <div className="text-green-300">"text" → String</div>
+                    <div className="text-blue-300">42 → Integer</div>
+                    <div className="text-purple-300">True/False → Boolean</div>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-gray-600">
+                    <div className="text-gray-400">Examples:</div>
+                    <div className="text-green-300">name = "Agent"</div>
+                    <div className="text-blue-300">level = 5</div>
+                    <div className="text-purple-300">ready = True</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   )
 }

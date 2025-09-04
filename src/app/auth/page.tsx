@@ -41,8 +41,12 @@ function AuthPageContent() {
         if (error) throw error
         
         if (user) {
-          // Redirect based on role (we'll get this from the profile)
-          router.push('/mission-hq')
+          // Redirect to games selection for students, teacher dashboard for teachers
+          if (formData.role === 'teacher') {
+            router.push('/teacher')
+          } else {
+            router.push('/games')
+          }
         }
       } else {
         const { user, error } = await signUp(
@@ -77,7 +81,7 @@ function AuthPageContent() {
         if (accountType === 'teacher') {
           window.location.href = '/teacher'
         } else {
-          window.location.href = '/mission-hq'
+          window.location.href = '/games'
         }
       }
     } catch (err: unknown) {

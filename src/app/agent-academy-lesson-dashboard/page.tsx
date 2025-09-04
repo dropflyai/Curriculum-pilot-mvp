@@ -308,7 +308,7 @@ export default function StudentDashboard() {
                       <div className="flex items-center space-x-4">
                         <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
                         <h2 className="text-xl font-bold text-green-400 font-mono tracking-wider">
-                          [BLACK CIPHER CONTROL ACTIVE]
+                          [AGENT ACADEMY CONTROL ACTIVE]
                         </h2>
                         <div className="text-xs text-gray-400 font-mono">ID: MC-7749</div>
                       </div>

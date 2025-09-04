@@ -44,25 +44,25 @@ export default function Lesson4() {
     {
       character: "Commander Atlas",
       text: "Outstanding progress, Agent. Now for advanced tactical operations - modular command functions. These are reusable code tools that eliminate repetition and maximize efficiency.",
-      image: "/Commander Atlas.png",
+      image: "/Commander Atlas_processed.png",
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus", 
       text: "Functions are like specialized mission protocols. Define them once, use them everywhere. They accept inputs, process data, and return results - the backbone of professional spy software.",
-      image: "/Dr. Maya Nexus.png",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
       text: "In field operations, you'll decrypt messages, calculate distances, analyze threats, and validate credentials repeatedly. Functions make these operations instant and error-free.",
-      image: "/Commander Atlas.png", 
+      image: "/Commander Atlas_processed.png", 
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus",
       text: "Let's master function definition with 'def', parameters for inputs, and return statements for outputs. These skills separate field operatives from true cyber agents.",
-      image: "/Dr. Maya Nexus.png",
+      image: "/Dr. Maya Nexus_processed.png",
       emotion: "alert"
     }
   ]
@@ -241,7 +241,12 @@ export default function Lesson4() {
               <img 
                 src={introDialogue[currentDialogue].image}
                 alt={introDialogue[currentDialogue].character}
-                className="max-w-lg h-auto drop-shadow-2xl"
+                className="max-w-lg h-auto drop-shadow-2xl object-cover"
+                style={{
+                  clipPath: 'polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)',
+                  transform: 'scale(1.2)',
+                  objectPosition: 'center'
+                }}
               />
             </div>
           )}
@@ -256,13 +261,13 @@ export default function Lesson4() {
               {/* Character Name */}
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-purple-400 font-mono">
-                  {introDialogue[currentDialogue]?.character === "Commander Atlas" ? "<ñ" : "=,"} {introDialogue[currentDialogue]?.character}
+                  {introDialogue[currentDialogue]?.character === "Commander Atlas" ? "<ÔøΩ" : "=,"} {introDialogue[currentDialogue]?.character}
                 </h3>
                 <button 
                   onClick={skipCutscene}
                   className="text-gray-400 hover:text-white font-mono text-sm"
                 >
-                  Skip Cutscene í
+                  Skip Cutscene ÔøΩ
                 </button>
               </div>
               
@@ -297,10 +302,10 @@ export default function Lesson4() {
         <div className="flex items-center justify-between">
           <div>
             <Link href="/mission/operation-beacon/week-1" className="text-purple-400 hover:text-purple-300 font-mono text-sm mb-2 block">
-              ê Return to Week 1
+              ÔøΩ Return to Week 1
             </Link>
             <h1 className="text-2xl font-bold text-white font-mono">
-              <span className="text-purple-400">ô LESSON 4</span> - Modular Command Functions
+              <span className="text-purple-400">ÔøΩ LESSON 4</span> - Modular Command Functions
             </h1>
           </div>
           <div className="text-right">
@@ -334,7 +339,7 @@ export default function Lesson4() {
                 {/* Spy Context */}
                 <div className="bg-indigo-900/20 border-l-4 border-indigo-400 p-3 mb-4">
                   <p className="text-indigo-300 font-mono text-sm">
-                    <span className="text-indigo-400 font-bold"><Ø Operational Impact:</span> {challenges[currentChallenge].spyContext}
+                    <span className="text-indigo-400 font-bold">üéØ Operational Impact:</span> {challenges[currentChallenge].spyContext}
                   </p>
                 </div>
                 
@@ -343,13 +348,13 @@ export default function Lesson4() {
                   onClick={() => setShowHint(!showHint)}
                   className="bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-400/40 text-yellow-400 font-mono text-sm px-3 py-2 mb-4 transition-colors"
                 >
-                  =° {showHint ? 'Hide Function Template' : 'Show Function Template'}
+                  =ÔøΩ {showHint ? 'Hide Function Template' : 'Show Function Template'}
                 </button>
                 
                 {showHint && (
                   <div className="bg-yellow-400/10 border-l-4 border-yellow-400 p-3 mb-4">
                     <p className="text-yellow-300 font-mono text-sm">
-                      <span className="text-yellow-400 font-bold">=À Template:</span><br/>
+                      <span className="text-yellow-400 font-bold">=ÔøΩ Template:</span><br/>
                       <pre className="text-yellow-200 text-xs mt-1">{challenges[currentChallenge].hint}</pre>
                     </p>
                   </div>
@@ -363,13 +368,13 @@ export default function Lesson4() {
                   
                   <div className="flex items-start space-x-4">
                     <img 
-                      src={isCorrect ? "/Dr. Maya Nexus.png" : "/Commander Atlas.png"}
+                      src={isCorrect ? "/Dr. Maya Nexus_processed.png" : "/Commander Atlas_processed.png"}
                       alt={isCorrect ? "Dr. Maya Nexus" : "Commander Atlas"}
                       className="w-16 h-16 rounded-full border-2 border-purple-400"
                     />
                     <div>
                       <h3 className="text-purple-400 font-mono font-bold mb-2">
-                        {isCorrect ? "=, Dr. Maya Nexus" : "<ñ Commander Atlas"}
+                        {isCorrect ? "=, Dr. Maya Nexus" : "<ÔøΩ Commander Atlas"}
                       </h3>
                       <p className={`font-mono text-sm ${isCorrect ? 'text-green-300' : 'text-red-300'}`}>
                         {feedback}
@@ -384,7 +389,7 @@ export default function Lesson4() {
                         className="bg-green-600 hover:bg-green-500 text-white font-mono px-4 py-2 transition-colors"
                         style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
                       >
-                        {currentChallenge < challenges.length - 1 ? 'Deploy Next Module í' : 'Complete Training í'}
+                        {currentChallenge < challenges.length - 1 ? 'Deploy Next Module ÔøΩ' : 'Complete Training ÔøΩ'}
                       </button>
                     </div>
                   )}
@@ -397,7 +402,7 @@ export default function Lesson4() {
               <div className="bg-black/80 backdrop-blur-lg border-2 border-purple-400/40 p-6"
                    style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
                 
-                <h3 className="text-purple-400 font-mono font-bold mb-4">ô Function Development Terminal</h3>
+                <h3 className="text-purple-400 font-mono font-bold mb-4">ÔøΩ Function Development Terminal</h3>
                 
                 {/* Function Reference */}
                 <div className="bg-gray-900 border border-purple-400/30 p-3 mb-4 text-sm">
@@ -408,7 +413,7 @@ export default function Lesson4() {
                     <div><span className="text-blue-400">return value</span> Return result</div>
                     <div><span className="text-red-400">function_name()</span> Call function</div>
                   </div>
-                  <div className="text-purple-300 text-xs mt-2">† Don't forget proper indentation!</div>
+                  <div className="text-purple-300 text-xs mt-2">ÔøΩ Don't forget proper indentation!</div>
                 </div>
                 
                 {/* Code Input */}

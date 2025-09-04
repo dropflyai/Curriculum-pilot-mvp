@@ -11,9 +11,9 @@ export default function OperationBeacon() {
   const weeks = [
     {
       id: 1,
-      title: 'Week 1: Intelligence Gathering',
+      title: 'Week 1: AI Memory Core',
       subtitle: 'Variables & Data Storage',
-      description: 'Learn to store critical mission intelligence in your tactical computer',
+      description: 'Build the foundational memory systems for your AI agent prototype',
       character: '🎖️ Commander Atlas',
       status: 'available',
       lessons: 4,
@@ -21,9 +21,9 @@ export default function OperationBeacon() {
     },
     {
       id: 2, 
-      title: 'Week 2: Communication Protocols',
+      title: 'Week 2: Agent Communication',
       subtitle: 'Print & Output',
-      description: 'Establish secure communication channels with mission headquarters',
+      description: 'Program your AI to communicate and report critical intelligence',
       character: '🔧 Tech Chief Binary',
       status: 'locked',
       lessons: 4,
@@ -31,9 +31,9 @@ export default function OperationBeacon() {
     },
     {
       id: 3,
-      title: 'Week 3: Terminal Hacking', 
+      title: 'Week 3: Interactive Agent', 
       subtitle: 'Input & User Interaction',
-      description: 'Infiltrate enemy security terminals and extract classified data',
+      description: 'Create an AI that can receive commands and adapt to user input',
       character: '📡 Operator Echo',
       status: 'locked',
       lessons: 5,
@@ -41,9 +41,9 @@ export default function OperationBeacon() {
     },
     {
       id: 4,
-      title: 'Week 4: Mission Calculations',
+      title: 'Week 4: Tactical Calculations',
       subtitle: 'Basic Math & Operations', 
-      description: 'Calculate optimal breach timing and tactical advantages',
+      description: 'Program your AI to perform real-time threat assessments and calculations',
       character: '🧠 Dr. Maya Nexus',
       status: 'locked',
       lessons: 5,
@@ -63,7 +63,7 @@ export default function OperationBeacon() {
             <h1 className="text-3xl font-bold text-white mb-2 font-mono">
               <span className="text-green-400">🎯 OPERATION BEACON</span>
             </h1>
-            <p className="text-gray-300 font-mono">Digital Fortress - Perimeter Infiltration</p>
+            <p className="text-gray-300 font-mono">AI Agent Development - National Security Priority</p>
           </div>
           <div className="text-right">
             <div className="text-green-400 font-mono text-xl">MISSION 1</div>
@@ -81,15 +81,21 @@ export default function OperationBeacon() {
             <div className="flex items-start space-x-4">
               <div className="text-6xl">🏔️</div>
               <div>
-                <h2 className="text-2xl font-bold text-amber-400 font-mono mb-2">MISSION BRIEFING</h2>
+                <h2 className="text-2xl font-bold text-amber-400 font-mono mb-2">MISSION BRIEFING - CODE RED</h2>
                 <p className="text-gray-300 font-mono mb-4">
-                  Intelligence has discovered the BLACK CIPHER AI in a fortified mountain facility. 
-                  You are a newly recruited agent beginning infiltration of the outer perimeter security systems.
+                  🚨 NATIONAL SECURITY THREAT DETECTED: A rogue AI network is compromising global infrastructure. 
+                  We need YOU to build a counter-AI agent capable of stopping this digital warfare before it's too late.
                 </p>
+                <div className="bg-red-500/10 border-l-4 border-red-400 p-4 mb-4">
+                  <p className="text-red-300 font-mono text-sm">
+                    <strong>URGENT:</strong> Enemy AI systems are learning faster than we can defend. 
+                    Time is critical - we need our own super-intelligent agent operational ASAP.
+                  </p>
+                </div>
                 <div className="bg-amber-400/10 border-l-4 border-amber-400 p-4">
                   <p className="text-amber-300 font-mono text-sm">
-                    <strong>OBJECTIVE:</strong> Master Python fundamentals while infiltrating the Digital Fortress perimeter. 
-                    Each week brings you closer to the facility's core systems.
+                    <strong>YOUR MISSION:</strong> Learn Python fundamentals to build increasingly sophisticated AI agents. 
+                    Each week, your agent becomes more powerful - culminating in a super AI capable of national defense.
                   </p>
                 </div>
               </div>
