@@ -174,6 +174,41 @@ Before Starting Development:
 
 ---
 
-## Last Updated: Sept 3, 2025
+## Vercel Build Failures
+
+### Problem: Extra JSX Closing Tag Prevents Deployment
+**Fixed on**: Sept 5, 2025
+**Symptoms**: "Failed to execute 'fetch' on 'Window': Invalid value", Vercel build fails
+**Error**: Unterminated regexp literal, JSX syntax error
+
+**SOLUTION**:
+```typescript
+// Check for extra closing div tags in JSX components
+// Common location: auth page around line 339
+// WRONG - Extra closing tag:
+        </div>
+        </div>  // <- Remove this extra closing div
+      </div>
+    </div>
+
+// CORRECT:
+        </div>
+      </div>
+    </div>
+```
+
+**Files Often Affected**:
+- `src/app/auth/page.tsx` (line 339)
+- Any component with nested JSX structures
+
+**Verification**:
+```bash
+npm run build  # Should complete successfully
+npx vercel --prod --yes  # Should deploy without errors
+```
+
+---
+
+## Last Updated: Sept 5, 2025
 
 **Note**: Always check this file FIRST when encountering issues. If your solution isn't here, add it after resolving!

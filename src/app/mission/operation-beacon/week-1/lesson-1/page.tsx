@@ -132,18 +132,18 @@ export default function Lesson1() {
     const trimmedCode = userCode.trim()
     const currentChallengeData = challenges[currentChallenge]
     
-    // Special handling for challenge 3 (agent name - can be anything)
+    // Special handling for challenge 3 (developer name - can be anything)
     if (currentChallenge === 2) {
-      const isValidAgentName = trimmedCode.startsWith('agent_name = ') && 
+      const isValidDeveloperName = trimmedCode.startsWith('developer_name = ') && 
                               (trimmedCode.includes('"') || trimmedCode.includes("'"))
-      if (isValidAgentName) {
+      if (isValidDeveloperName) {
         setIsCorrect(true)
         setFeedback(currentChallengeData.explanation)
         setCompletedChallenges(prev => [...prev, currentChallenge])
         setXpEarned(prev => prev + 25)
       } else {
         setIsCorrect(false)
-        setFeedback("Remember: agent_name = 'Your Codename' (use quotes around text)")
+        setFeedback("Remember: developer_name = 'Your Name' (use quotes around text)")
       }
       return
     }
