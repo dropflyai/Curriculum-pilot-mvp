@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Star, Zap, Shield, Code, Trophy, Gift, ChevronRight, Sparkles, Target, Award } from 'lucide-react'
+import { ArrowLeft, Star, Zap, Shield, Code, Trophy, Gift, ChevronRight, Sparkles, Target, Award, Brain } from 'lucide-react'
 
 export default function Week1Achievements() {
   const [showAnimation, setShowAnimation] = useState(false)
@@ -213,6 +213,14 @@ export default function Week1Achievements() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/quiz/week-1"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105"
+              >
+                <Brain className="h-5 w-5 mr-2" />
+                Take Knowledge Quiz
+              </Link>
+              
               <Link
                 href="/mission/operation-beacon/week-2"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105"
