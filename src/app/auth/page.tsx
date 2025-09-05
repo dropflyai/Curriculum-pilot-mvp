@@ -336,7 +336,6 @@ function AuthPageContent() {
             </div>
           )}
         </div>
-        </div>
       </div>
     </div>
   )
