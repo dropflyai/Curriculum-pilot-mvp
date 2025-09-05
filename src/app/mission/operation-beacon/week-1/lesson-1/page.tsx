@@ -89,6 +89,34 @@ export default function Lesson1() {
     router.push('/mission/operation-beacon/week-1?completed=lesson-1')
   }
 
+  // Opening Cutscene Dialogue - RESTORED FROM WORKING COMMIT
+  const introDialogue = [
+    {
+      character: "Commander Atlas",
+      text: "Agent, URGENT: Enemy AI systems are infiltrating our networks globally. You must immediately begin building our counter-AI defense system. Time is critical.",
+      image: "/Commander Atlas.png",
+      emotion: "serious" as const
+    },
+    {
+      character: "Dr. Maya Nexus", 
+      text: "Agent, I'm Dr. Maya Nexus. We're racing against time to build an AI that can outsmart the enemy. Variables are your AI's memory - without them, it can't think or act.",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "encouraging" as const
+    },
+    {
+      character: "Commander Atlas",
+      text: "Your AI needs variables to remember threat levels, enemy positions, and defense protocols. Each variable you create makes our AI more intelligent than theirs.",
+      image: "/Commander Atlas.png", 
+      emotion: "confident" as const
+    },
+    {
+      character: "Dr. Maya Nexus",
+      text: "Your AI's survival depends on remembering data. Program its memory using: ai_status = 'Active'. Every second counts - the enemy AI is learning too. Begin now!",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "neutral" as const
+    }
+  ]
+
   return (
     <EnhancedLessonInterface
       lessonId={1}
@@ -96,6 +124,7 @@ export default function Lesson1() {
       description="Build your counter-AI's memory system using Python variables"
       challenges={challenges}
       weekNumber={1}
+      introDialogue={introDialogue}
       onComplete={handleLessonComplete}
     />
   )
