@@ -20,8 +20,17 @@ import {
   Award,
   Brain,
   Compass,
-  HelpCircle
+  HelpCircle,
+  Volume2,
+  VolumeX
 } from 'lucide-react'
+
+interface Dialogue {
+  character: string
+  text: string
+  image: string
+  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious' | 'alert'
+}
 
 interface Challenge {
   id: number
@@ -43,6 +52,7 @@ interface LessonProps {
   description: string
   challenges: Challenge[]
   weekNumber: number
+  introDialogue?: Dialogue[]
   onComplete: (xpEarned: number) => void
 }
 
@@ -52,6 +62,7 @@ export default function EnhancedLessonInterface({
   description, 
   challenges, 
   weekNumber,
+  introDialogue,
   onComplete 
 }: LessonProps) {
   const [currentChallenge, setCurrentChallenge] = useState(0)
@@ -67,6 +78,9 @@ export default function EnhancedLessonInterface({
   const [activeTab, setActiveTab] = useState<'challenge' | 'resources' | 'concepts'>('challenge')
   const [showSolution, setShowSolution] = useState(false)
   const [hintLevel, setHintLevel] = useState(0)
+  const [showCutscene, setShowCutscene] = useState(!!introDialogue)
+  const [currentDialogue, setCurrentDialogue] = useState(0)
+  const [showCharacter, setShowCharacter] = useState(false)
 
   const currentChallengeData = challenges[currentChallenge]
 
@@ -184,6 +198,133 @@ export default function EnhancedLessonInterface({
     }
     setNovaMessage(getNovaResponse(type))
     setShowNova(true)
+  }
+
+  // Auto-advance cutscene dialogue (restored from original)
+  useEffect(() => {
+    if (showCutscene && introDialogue && currentDialogue < introDialogue.length) {
+      const timer = setTimeout(() => {
+        setShowCharacter(true)
+        const nextTimer = setTimeout(() => {
+          if (currentDialogue < introDialogue.length - 1) {
+            setCurrentDialogue(prev => prev + 1)
+            setShowCharacter(false)
+          } else {
+            setShowCutscene(false)
+            setShowCharacter(false)
+          }
+        }, 4000) // Show dialogue for 4 seconds
+        
+        return () => clearTimeout(nextTimer)
+      }, 500) // Character fade-in delay
+      
+      return () => clearTimeout(timer)
+    }
+  }, [currentDialogue, showCutscene, introDialogue])
+
+  // Skip cutscene
+  const skipCutscene = () => {
+    setShowCutscene(false)
+    setShowCharacter(false)
+  }
+
+  // Show cutscene first (restored original style)
+  if (showCutscene && introDialogue) {
+    const dialogue = introDialogue[currentDialogue]
+    
+    return (
+      <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Background particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
+        </div>
+
+        {/* Skip button */}
+        <button
+          onClick={skipCutscene}
+          className="absolute top-8 right-8 flex items-center space-x-2 px-4 py-2 bg-black/50 border border-cyan-400/30 rounded-lg text-cyan-400 hover:bg-black/70 transition-all z-20"
+        >
+          <VolumeX className="h-4 w-4" />
+          <span>Skip Intro</span>
+        </button>
+
+        {/* Character and dialogue */}
+        <div className="relative h-full flex items-center justify-center px-8">
+          <div className="max-w-4xl w-full text-center">
+            
+            {/* Character */}
+            {dialogue.image && (
+              <div className={`transition-all duration-500 mb-8 ${
+                showCharacter ? 'opacity-100 scale-100' : 'opacity-70 scale-95'
+              }`}>
+                <div className="relative inline-block">
+                  <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cyan-400/50 shadow-2xl">
+                    <img 
+                      src={dialogue.image} 
+                      alt={dialogue.character}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to emoji if image fails
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        target.nextElementSibling?.classList.remove('hidden')
+                      }}
+                    />
+                    <div className="hidden w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-purple-600 to-blue-600">
+                      🕵️
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-cyan-400 tracking-wider">
+                    {dialogue.character}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dialogue box */}
+            <div className="bg-black/80 backdrop-blur-lg border-2 border-cyan-400/50 rounded-lg p-8 max-w-3xl mx-auto">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs text-cyan-400/70">
+                  <span>SECURE TRANSMISSION</span>
+                  <span>{currentDialogue + 1}/{introDialogue.length}</span>
+                </div>
+                
+                <p className="text-lg md:text-xl text-white leading-relaxed font-mono">
+                  {dialogue.text}
+                </p>
+
+                <div className="flex justify-end pt-4">
+                  <button
+                    onClick={skipCutscene}
+                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105"
+                  >
+                    <span>{currentDialogue === introDialogue.length - 1 ? 'Start Mission' : 'Continue'}</span>
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex justify-center space-x-2 mt-6">
+              {introDialogue.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                    index === currentDialogue 
+                      ? 'w-8 bg-cyan-400' 
+                      : index < currentDialogue 
+                      ? 'bg-cyan-400/50' 
+                      : 'bg-white/20'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

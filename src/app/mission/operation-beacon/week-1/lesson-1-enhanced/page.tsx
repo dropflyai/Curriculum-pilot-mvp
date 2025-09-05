@@ -89,6 +89,34 @@ export default function EnhancedLesson1() {
     router.push('/achievements/week-1?lesson=1&xp=' + xpEarned)
   }
 
+  // Opening Cutscene Dialogue - restored from original
+  const introDialogue = [
+    {
+      character: "Commander Atlas",
+      text: "Agent, welcome to Binary Shores Academy. I'm Commander Atlas, director of Agent Academy operations. Your first mission begins now.",
+      image: "/Commander_Atlas.png",
+      emotion: "serious" as const
+    },
+    {
+      character: "Tech Chief Binary", 
+      text: "I've set up your development environment. Variables are like secure containers - they store critical mission data for your AI systems.",
+      image: "/Tech Chief Binary.png",
+      emotion: "confident" as const
+    },
+    {
+      character: "Operator Echo",
+      text: "Remember Agent, every line of code you write brings us closer to stopping the BLACK CIPHER threat. Let's start with variable fundamentals.",
+      image: "/Operator_Echo_.png",
+      emotion: "encouraging" as const
+    },
+    {
+      character: "Commander Atlas",
+      text: "Your mission: Build an AI memory core using Python variables. Master this, and you'll have the foundation to counter any digital threat.",
+      image: "/Commander_Atlas.png",
+      emotion: "alert" as const
+    }
+  ]
+
   return (
     <EnhancedLessonInterface
       lessonId={1}
@@ -96,6 +124,7 @@ export default function EnhancedLesson1() {
       description="Build your counter-AI's memory system using Python variables"
       challenges={challenges}
       weekNumber={1}
+      introDialogue={introDialogue}
       onComplete={handleLessonComplete}
     />
   )
