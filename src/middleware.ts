@@ -50,9 +50,24 @@ const DASHBOARD_REDIRECTS = [
   '/dashboard'
 ]
 
-// Check if user has demo authentication - DISABLED FOR PRODUCTION
+// Check if user has demo authentication - CONTROLLED ACCESS
 function checkDemoAuth(request: NextRequest) {
-  // Demo authentication is disabled - users must sign in properly
+  // Check for demo session token
+  const demoToken = request.cookies.get('demo_auth_token')?.value
+  const demoRole = request.cookies.get('demo_user_role')?.value
+  
+  if (demoToken === 'demo_access_2024' && demoRole) {
+    return { 
+      isAuthenticated: true, 
+      user: { 
+        id: 'demo_user', 
+        email: 'demo@codyflyai.com', 
+        role: demoRole,
+        isDemoUser: true 
+      } 
+    }
+  }
+  
   return { isAuthenticated: false, user: null }
 }
 
@@ -210,7 +225,8 @@ export function middleware(request: NextRequest) {
   
   // Update last activity timestamp for Agent Academy sessions
   if (isAuthenticated && userRole) {
-    response.headers.set('X-AA-User-ID', 'authenticated-user')
+    const userId = user?.id || 'authenticated-user'
+    response.headers.set('X-AA-User-ID', userId)
     response.headers.set('X-AA-Role', userRole)
     response.headers.set('X-AA-Timestamp', new Date().toISOString())
   }

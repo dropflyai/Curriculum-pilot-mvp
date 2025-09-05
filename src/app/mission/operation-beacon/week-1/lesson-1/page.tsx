@@ -44,25 +44,25 @@ export default function Lesson1() {
     {
       character: "Commander Atlas",
       text: "Agent, URGENT: Enemy AI systems are infiltrating our networks globally. You must immediately begin building our counter-AI defense system. Time is critical.",
-      image: "/Commander Atlas_processed.png",
+      image: "/Commander Atlas.png",
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus", 
       text: "Agent, I'm Dr. Maya Nexus. We're racing against time to build an AI that can outsmart the enemy. Variables are your AI's memory - without them, it can't think or act.",
-      image: "/Dr. Maya Nexus_processed.png",
+      image: "/Dr. Maya Nexus.png",
       emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
       text: "Your AI needs variables to remember threat levels, enemy positions, and defense protocols. Each variable you create makes our AI more intelligent than theirs.",
-      image: "/Commander Atlas_processed.png", 
+      image: "/Commander Atlas.png", 
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus",
       text: "Your AI's survival depends on remembering data. Program its memory using: ai_status = 'Active'. Every second counts - the enemy AI is learning too. Begin now!",
-      image: "/Dr. Maya Nexus_processed.png",
+      image: "/Dr. Maya Nexus.png",
       emotion: "neutral"
     }
   ]
@@ -112,7 +112,7 @@ export default function Lesson1() {
             setShowCutscene(false)
             setShowCharacter(false)
           }
-        }, 3000) // Show dialogue for 3 seconds
+        }, 6000) // Show dialogue for 6 seconds
         
         return () => clearTimeout(nextTimer)
       }, 500) // Character fade-in delay
@@ -322,7 +322,7 @@ export default function Lesson1() {
                   
                   <div className="flex items-start space-x-4">
                     <img 
-                      src="/Dr. Maya Nexus_processed.png"
+                      src="/Dr. Maya Nexus.png"
                       alt="Dr. Maya Nexus"
                       className="w-16 h-16 rounded-full border-2 border-purple-400"
                     />

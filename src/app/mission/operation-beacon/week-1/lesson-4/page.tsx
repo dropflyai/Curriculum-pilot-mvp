@@ -44,25 +44,25 @@ export default function Lesson4() {
     {
       character: "Commander Atlas",
       text: "Outstanding progress, Agent. Now for advanced tactical operations - modular command functions. These are reusable code tools that eliminate repetition and maximize efficiency.",
-      image: "/Commander Atlas_processed.png",
+      image: "/Commander Atlas.png",
       emotion: "confident"
     },
     {
       character: "Dr. Maya Nexus", 
       text: "Functions are like specialized mission protocols. Define them once, use them everywhere. They accept inputs, process data, and return results - the backbone of professional spy software.",
-      image: "/Dr. Maya Nexus_processed.png",
+      image: "/Dr. Maya Nexus.png",
       emotion: "encouraging"
     },
     {
       character: "Commander Atlas",
       text: "In field operations, you'll decrypt messages, calculate distances, analyze threats, and validate credentials repeatedly. Functions make these operations instant and error-free.",
-      image: "/Commander Atlas_processed.png", 
+      image: "/Commander Atlas.png", 
       emotion: "serious"
     },
     {
       character: "Dr. Maya Nexus",
       text: "Let's master function definition with 'def', parameters for inputs, and return statements for outputs. These skills separate field operatives from true cyber agents.",
-      image: "/Dr. Maya Nexus_processed.png",
+      image: "/Dr. Maya Nexus.png",
       emotion: "alert"
     }
   ]

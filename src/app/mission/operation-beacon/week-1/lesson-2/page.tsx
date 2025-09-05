@@ -65,25 +65,25 @@ export default function Lesson2() {
     {
       character: "Tech Chief Binary",
       text: "Agent, we've intercepted classified enemy data, but it's scrambled across different data types. Your mission: decode these intel fragments using Python data classification.",
-      image: "/Tech Chief Binary_Sketch_processed.png",
+      image: "/Tech Chief Binary.png",
       emotion: "serious"
     },
     {
       character: "Operator Echo", 
       text: "Binary's right - data types are like different cipher keys. Each type unlocks specific information patterns. Master these, and no encrypted data can hide from us.",
-      image: "/Operator Echo Sketch_processed.png",
+      image: "/Operator_Echo_.png",
       emotion: "alert"
     },
     {
       character: "Tech Chief Binary",
       text: "We're dealing with four critical data types: integers for agent IDs, floats for coordinates, strings for encrypted messages, and booleans for security protocols.",
-      image: "/Tech Chief Binary_Sketch_processed.png", 
+      image: "/Tech Chief Binary.png", 
       emotion: "confident"
     },
     {
       character: "Operator Echo",
       text: "Each data type has unique properties and operations. Understanding them means the difference between mission success and blown cover. Ready to decode some classified intel?",
-      image: "/Operator Echo Sketch_processed.png",
+      image: "/Operator_Echo_.png",
       emotion: "encouraging"
     }
   ]

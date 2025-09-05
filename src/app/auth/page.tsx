@@ -20,6 +20,20 @@ function AuthPageContent() {
   
   const router = useRouter()
   const searchParams = useSearchParams()
+
+  // Demo login function
+  const handleDemoLogin = (role: 'student' | 'teacher') => {
+    // Set demo cookies (1 hour = 3600 seconds)
+    document.cookie = `demo_auth_token=demo_access_2024; path=/; max-age=3600`
+    document.cookie = `demo_user_role=${role}; path=/; max-age=3600`
+    
+    // Redirect based on role
+    if (role === 'teacher') {
+      router.push('/teacher')
+    } else {
+      router.push('/games')
+    }
+  }
   
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -255,6 +269,73 @@ function AuthPageContent() {
               </p>
             </div>
           </div>
+
+          {/* Demo Credentials Section - Only show on login */}
+          {isLogin && (
+            <div className="mt-6 bg-amber-900/30 backdrop-blur-lg rounded-2xl shadow-2xl p-6 border border-amber-400/30">
+              <div className="text-center mb-4">
+                <h3 className="text-amber-400 font-bold text-lg">🔐 Demo Access Credentials</h3>
+                <p className="text-amber-200 text-sm">For demonstration and testing purposes only</p>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Student Demo */}
+                <div className="bg-blue-900/30 border border-blue-400/30 rounded-lg p-4">
+                  <h4 className="text-blue-300 font-semibold mb-2 flex items-center">
+                    <User className="w-4 h-4 mr-2" />
+                    Student Demo Account
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Email:</span>
+                      <span className="text-blue-200 font-mono">student@demo.codyflyai.com</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Password:</span>
+                      <span className="text-blue-200 font-mono">demo2024</span>
+                    </div>
+                    <button
+                      onClick={() => handleDemoLogin('student')}
+                      className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-md transition-colors text-sm"
+                    >
+                      Quick Student Login
+                    </button>
+                  </div>
+                </div>
+
+                {/* Teacher Demo */}
+                <div className="bg-purple-900/30 border border-purple-400/30 rounded-lg p-4">
+                  <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Teacher Demo Account
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Email:</span>
+                      <span className="text-purple-200 font-mono">teacher@demo.codyflyai.com</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Password:</span>
+                      <span className="text-purple-200 font-mono">demo2024</span>
+                    </div>
+                    <button
+                      onClick={() => handleDemoLogin('teacher')}
+                      className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white py-2 px-4 rounded-md transition-colors text-sm"
+                    >
+                      Quick Teacher Login
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 text-center">
+                <p className="text-amber-300 text-xs">
+                  ⚠️ Demo accounts reset every hour • For evaluation purposes only
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
         </div>
       </div>
     </div>
