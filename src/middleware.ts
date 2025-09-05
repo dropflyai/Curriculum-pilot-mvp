@@ -21,6 +21,7 @@ const ROUTE_PROTECTION = {
     '/python-lesson',
     '/python-lesson-direct',
     '/mission',
+    '/mission-hq',
     '/games',
     '/dashboard',
     '/agent-academy-lesson-dashboard',
@@ -28,7 +29,9 @@ const ROUTE_PROTECTION = {
     '/capstone-project',
     '/team-formation',
     '/course-overview',
-    '/interactive-demo'
+    '/interactive-demo',
+    '/achievements',
+    '/quiz'
   ],
   
   // Teacher/Admin routes

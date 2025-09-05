@@ -65,21 +65,62 @@ export default function EnhancedLessonInterface({
   const [showNova, setShowNova] = useState(true)
   const [novaMessage, setNovaMessage] = useState('')
   const [activeTab, setActiveTab] = useState<'challenge' | 'resources' | 'concepts'>('challenge')
+  const [showSolution, setShowSolution] = useState(false)
+  const [hintLevel, setHintLevel] = useState(0)
 
   const currentChallengeData = challenges[currentChallenge]
 
-  // Nova AI responses
-  const novaResponses = {
-    welcome: "Hey there, Agent! I'm Nova, your AI coding companion. I'm here to help you master Python and complete your missions successfully!",
-    hint: "Need a hint? I can help break down this challenge into smaller steps.",
-    success: "Excellent work! You're becoming quite the skilled agent. Ready for the next challenge?",
-    error: "Don't worry, every agent makes mistakes. Let me help you figure out what went wrong.",
-    stuck: "Feeling stuck? Remember, coding is like solving puzzles - break it down into small pieces!",
-    encouragement: "You've got this! Every expert was once a beginner. Keep experimenting!"
+  // Nova AI responses - more dynamic based on context
+  const getNovaResponse = (type: string) => {
+    const challenge = currentChallengeData
+    
+    switch(type) {
+      case 'welcome':
+        return "Hey there, Agent! I'm Nova, your AI coding companion. I'm here to help you master Python and complete your missions successfully!"
+      
+      case 'hint':
+        if (hintLevel === 0) {
+          return `Let me help you with this challenge. ${challenge.hint}`
+        } else if (hintLevel === 1) {
+          return `Here's another clue: Look at the example carefully. The pattern is: ${challenge.correctCode.split('=')[0]} = something`
+        } else {
+          return `Almost there! Remember to use quotes for text values and check your spelling carefully.`
+        }
+      
+      case 'success':
+        return "Excellent work! You're becoming quite the skilled agent. Ready for the next challenge?"
+      
+      case 'error':
+        const codeHasEquals = code.includes('=')
+        const codeHasQuotes = code.includes('"') || code.includes("'")
+        if (!codeHasEquals) {
+          return "I notice you're missing the equals sign (=). In Python, we use = to assign values to variables."
+        } else if (!codeHasQuotes && currentChallenge !== 1) {
+          return "Don't forget to use quotes around text values! Python needs quotes to know it's text."
+        }
+        return "Check your syntax carefully. Make sure your variable name matches exactly what's asked."
+      
+      case 'stuck':
+        setShowSolution(true)
+        return `No worries! Let me show you the solution step by step. The correct answer is: ${challenge.correctCode}. Try typing it yourself to understand how it works!`
+      
+      case 'encouragement':
+        const progress = (completedChallenges.length / challenges.length) * 100
+        if (progress === 0) {
+          return "Starting is the hardest part - you're already doing great by being here!"
+        } else if (progress < 50) {
+          return `You're ${Math.round(progress)}% through! Keep going, you're building strong foundations!`
+        } else {
+          return `Amazing progress! You're ${Math.round(progress)}% complete. The finish line is in sight!`
+        }
+      
+      default:
+        return "I'm here to help! Click any of the buttons to get assistance."
+    }
   }
 
   useEffect(() => {
-    setNovaMessage(novaResponses.welcome)
+    setNovaMessage(getNovaResponse('welcome'))
   }, [])
 
   const checkCode = () => {
@@ -98,7 +139,7 @@ export default function EnhancedLessonInterface({
       } else {
         setIsCorrect(false)
         setFeedback("Remember: developer_name = 'Your Name' (use quotes around text)")
-        setNovaMessage(novaResponses.error)
+        setNovaMessage(getNovaResponse('error'))
       }
       return
     }
@@ -111,10 +152,10 @@ export default function EnhancedLessonInterface({
       setFeedback(currentChallengeData.explanation)
       setCompletedChallenges(prev => [...prev, currentChallenge])
       setXpEarned(prev => prev + 25)
-      setNovaMessage(novaResponses.success)
+      setNovaMessage(getNovaResponse('success'))
     } else {
       setFeedback("Not quite right. Check your syntax and try again!")
-      setNovaMessage(novaResponses.error)
+      setNovaMessage(getNovaResponse('error'))
     }
   }
 
@@ -126,6 +167,8 @@ export default function EnhancedLessonInterface({
       setIsCorrect(false)
       setShowHint(false)
       setShowResources(false)
+      setShowSolution(false)
+      setHintLevel(0)
       setActiveTab('challenge')
       setNovaMessage("Let's tackle the next challenge! Take your time to read through it carefully.")
     } else {
@@ -134,8 +177,12 @@ export default function EnhancedLessonInterface({
     }
   }
 
-  const askNova = (type: keyof typeof novaResponses) => {
-    setNovaMessage(novaResponses[type])
+  const askNova = (type: string) => {
+    if (type === 'hint') {
+      setHintLevel(prev => Math.min(prev + 1, 2))
+      setShowHint(true)
+    }
+    setNovaMessage(getNovaResponse(type))
     setShowNova(true)
   }
 
@@ -336,8 +383,26 @@ export default function EnhancedLessonInterface({
                         <div className="flex items-start space-x-3">
                           <Lightbulb className="h-5 w-5 text-yellow-400 mt-0.5" />
                           <div>
-                            <h4 className="text-yellow-400 font-semibold mb-2">Hint:</h4>
+                            <h4 className="text-yellow-400 font-semibold mb-2">Hint {hintLevel > 0 ? `(Level ${hintLevel + 1})` : ''}:</h4>
                             <p className="text-yellow-200 text-sm">{currentChallengeData.hint}</p>
+                            {hintLevel > 0 && (
+                              <p className="text-yellow-300 text-xs mt-2">💡 Pro tip: Look for the pattern in the example code!</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {showSolution && (
+                      <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-lg border border-green-400/30 p-4 mt-4">
+                        <div className="flex items-start space-x-3">
+                          <Check className="h-5 w-5 text-green-400 mt-0.5" />
+                          <div>
+                            <h4 className="text-green-400 font-semibold mb-2">Solution:</h4>
+                            <code className="text-green-300 font-mono bg-black/40 px-3 py-2 rounded block">
+                              {currentChallengeData.correctCode}
+                            </code>
+                            <p className="text-green-200 text-xs mt-2">Try typing this yourself to understand how it works!</p>
                           </div>
                         </div>
                       </div>

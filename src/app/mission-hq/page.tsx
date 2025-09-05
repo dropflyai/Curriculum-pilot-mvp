@@ -50,7 +50,30 @@ export default function MissionHQ() {
           return
         }
 
-        // Check demo authentication as fallback
+        // CRITICAL FIX: Check demo authentication from cookies first (matches middleware)
+        const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`
+          const parts = value.split(`; ${name}=`)
+          if (parts.length === 2) return parts.pop()?.split(';').shift()
+          return null
+        }
+        
+        const demoToken = getCookie('demo_auth_token')
+        const demoRole = getCookie('demo_user_role')
+        
+        if (demoToken === 'demo_access_2024' && demoRole) {
+          setUser({
+            role: demoRole as 'student' | 'teacher',
+            id: 'demo_user',
+            email: 'demo@codefly.com',
+            isDemoUser: true
+          })
+          setCompletedMissions([])
+          setLoading(false)
+          return
+        }
+        
+        // Fallback: Check localStorage authentication 
         const demoAuthenticated = localStorage.getItem('demo_authenticated') === 'true'
         const demoUserStr = localStorage.getItem('demo_user')
         

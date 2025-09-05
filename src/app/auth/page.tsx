@@ -27,6 +27,15 @@ function AuthPageContent() {
     document.cookie = `demo_auth_token=demo_access_2024; path=/; max-age=3600`
     document.cookie = `demo_user_role=${role}; path=/; max-age=3600`
     
+    // CRITICAL FIX: Also set localStorage for backward compatibility
+    localStorage.setItem('demo_authenticated', 'true')
+    localStorage.setItem('demo_user', JSON.stringify({
+      role: role,
+      id: 'demo_user',
+      email: `demo@codefly.com`,
+      isDemoUser: true
+    }))
+    
     // Redirect based on role
     if (role === 'teacher') {
       router.push('/teacher')
