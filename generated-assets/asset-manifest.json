@@ -1,0 +1,481 @@
+{
+  "generationDate": "2025-09-05T22:29:34.283Z",
+  "totalTime": "7.2 minutes",
+  "totalAssets": 75,
+  "successfulAssets": 17,
+  "categories": [
+    {
+      "name": "achievements",
+      "total": 23,
+      "successful": 17
+    },
+    {
+      "name": "uiElements",
+      "total": 14,
+      "successful": 0
+    },
+    {
+      "name": "concepts",
+      "total": 13,
+      "successful": 0
+    },
+    {
+      "name": "characterEmotions",
+      "total": 15,
+      "successful": 0
+    },
+    {
+      "name": "cutscenes",
+      "total": 10,
+      "successful": 0
+    }
+  ],
+  "results": {
+    "achievements": [
+      {
+        "name": "first-code",
+        "description": "First successful code execution badge with python snake",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-V31YGuDZZBT5LHXPW8JcAgLh.png?st=2025-09-05T21%3A22%3A36Z&se=2025-09-05T23%3A22%3A36Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=38e27a3b-6174-4d3e-90ac-d7d9ad49543f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T20%3A59%3A41Z&ske=2025-09-06T20%3A59%3A41Z&sks=b&skv=2024-08-04&sig=0lm80C5n3jPYWkI%2BwscZ2LIssLpgVc4ls7cdX5mrgcA%3D",
+        "category": "achievements",
+        "generatedAt": 1757110956035,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757110956035,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "variable-master",
+        "description": "Variables mastery badge with data containers",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-SdwHSms2RK9dJiZNi4xUZVPz.png?st=2025-09-05T21%3A22%3A52Z&se=2025-09-05T23%3A22%3A52Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=c6569cb0-0faa-463d-9694-97df3dc1dfb1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T17%3A13%3A08Z&ske=2025-09-06T17%3A13%3A08Z&sks=b&skv=2024-08-04&sig=zCZnPjlx/mqRzNWZOHTPnU8QDypWPGkc/I%2BiNf6k1UM%3D",
+        "category": "achievements",
+        "generatedAt": 1757110972778,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757110972778,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "input-output-pro",
+        "description": "I/O operations badge with data flow arrows",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-dCGhkq3qDuokgQHO7SVB4MpG.png?st=2025-09-05T21%3A23%3A09Z&se=2025-09-05T23%3A23%3A09Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=32836cae-d25f-4fe9-827b-1c8c59c442cc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A05%3A48Z&ske=2025-09-06T16%3A05%3A48Z&sks=b&skv=2024-08-04&sig=pWgKVyF3zvA1Vrf3hyhvBqHo3%2B37PQ2oUlXzaF49TGY%3D",
+        "category": "achievements",
+        "generatedAt": 1757110989391,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757110989391,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "logic-champion",
+        "description": "Conditional logic badge with circuit paths",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-rWKHs6JPTGkCtr7JKqlsduyM.png?st=2025-09-05T21%3A23%3A27Z&se=2025-09-05T23%3A23%3A27Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=0e2a3d55-e963-40c9-9c89-2a1aa28cb3ac&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T20%3A35%3A23Z&ske=2025-09-06T20%3A35%3A23Z&sks=b&skv=2024-08-04&sig=1L8cVm0JRA7c/zfsxA14KL%2B8fGiPbg8X/Sn%2Bhe8GqI4%3D",
+        "category": "achievements",
+        "generatedAt": 1757111007019,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111007019,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "week-1-complete",
+        "description": "Week 1 completion badge with star",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-jP0wvzVRo8xLpH8vcoTFSmvD.png?st=2025-09-05T21%3A23%3A45Z&se=2025-09-05T23%3A23%3A45Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=38e27a3b-6174-4d3e-90ac-d7d9ad49543f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T18%3A34%3A24Z&ske=2025-09-06T18%3A34%3A24Z&sks=b&skv=2024-08-04&sig=8upBRx%2BArYoz/5dtgDePED6lo8cJiGyCLCNQIAegBQk%3D",
+        "category": "achievements",
+        "generatedAt": 1757111025264,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111025264,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "loop-wizard",
+        "description": "Loop mastery badge with infinity symbol",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-x1J1mTmflQcfKKKG9tdZeGw5.png?st=2025-09-05T21%3A24%3A01Z&se=2025-09-05T23%3A24%3A01Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=b2c0e1c0-cf97-4e19-8986-8073905d5723&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T10%3A11%3A58Z&ske=2025-09-06T10%3A11%3A58Z&sks=b&skv=2024-08-04&sig=AvJbUW1Bf5gz4uqBLg8/Wfr6aN3mF6MJNagGzLsrQl0%3D",
+        "category": "achievements",
+        "generatedAt": 1757111042025,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111042025,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "function-architect",
+        "description": "Functions badge with modular blocks",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-RwPQcs20JbWQ82OVE65qakjB.png?st=2025-09-05T21%3A24%3A18Z&se=2025-09-05T23%3A24%3A18Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=0e2a3d55-e963-40c9-9c89-2a1aa28cb3ac&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T20%3A52%3A02Z&ske=2025-09-06T20%3A52%3A02Z&sks=b&skv=2024-08-04&sig=DvmVLi%2BuKEkhxxDPsuVcfDePKLRcyZ1NZNaxOr0Z0M0%3D",
+        "category": "achievements",
+        "generatedAt": 1757111058933,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111058933,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "array-commander",
+        "description": "Arrays badge with data grid",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-63NXXcL8KnF0573gyrvpIT1S.png?st=2025-09-05T21%3A24%3A37Z&se=2025-09-05T23%3A24%3A37Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=31d50bd4-689f-439b-a875-f22bd677744d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T12%3A48%3A11Z&ske=2025-09-06T12%3A48%3A11Z&sks=b&skv=2024-08-04&sig=Q9R3Jmlj3Z1DnkJdTO%2BQinCIIsXdLjgTtEwvp5gsEWo%3D",
+        "category": "achievements",
+        "generatedAt": 1757111077241,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111077241,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "debugging-expert",
+        "description": "Debug badge with magnifying glass",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-vdVimAuxnxzKrwt9ha9ekD0o.png?st=2025-09-05T21%3A24%3A55Z&se=2025-09-05T23%3A24%3A55Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=38e27a3b-6174-4d3e-90ac-d7d9ad49543f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T22%3A09%3A09Z&ske=2025-09-06T22%3A09%3A09Z&sks=b&skv=2024-08-04&sig=RYV2waiKhWgGwU2nvShZfJrfxZPgHcHYoNEODwFJt%2Bw%3D",
+        "category": "achievements",
+        "generatedAt": 1757111095332,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111095332,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "oop-master",
+        "description": "Object-oriented badge with class hierarchy",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-KUqwk9yTEkdWUJurEW1JP8AP.png?st=2025-09-05T21%3A25%3A11Z&se=2025-09-05T23%3A25%3A11Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8eb2c87c-0531-4dab-acb3-b5e2adddce6c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A09%3A24Z&ske=2025-09-06T16%3A09%3A24Z&sks=b&skv=2024-08-04&sig=nnyAQNVakYxTja0XDzPcfrVEqbIKl16j09JEwAmRwA0%3D",
+        "category": "achievements",
+        "generatedAt": 1757111111713,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111111713,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "algorithm-ace",
+        "description": "Algorithm badge with flowchart",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-wuT7cK2RKD3yoEW6rk2wBa8U.png?st=2025-09-05T21%3A25%3A30Z&se=2025-09-05T23%3A25%3A30Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=32836cae-d25f-4fe9-827b-1c8c59c442cc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T22%3A25%3A30Z&ske=2025-09-06T22%3A25%3A30Z&sks=b&skv=2024-08-04&sig=L6enNUJ6elMuS0O9xzVCchbcvhUjA7saWFbtVFRgo0U%3D",
+        "category": "achievements",
+        "generatedAt": 1757111130209,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111130209,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "ai-pioneer",
+        "description": "AI fundamentals badge with neural network",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-Oo3Yh4zCC1yAMkPnchF5ocW8.png?st=2025-09-05T21%3A25%3A47Z&se=2025-09-05T23%3A25%3A47Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=0e2a3d55-e963-40c9-9c89-2a1aa28cb3ac&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A37%3A32Z&ske=2025-09-06T16%3A37%3A32Z&sks=b&skv=2024-08-04&sig=u7ognRkBn%2B2bcfDaKoHy0lcmxwYquoWSN09nERHsB4U%3D",
+        "category": "achievements",
+        "generatedAt": 1757111147133,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111147133,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "ml-explorer",
+        "description": "Machine learning badge with brain",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-iVIEXaTT2n7HT4JhRnTZaeHC.png?st=2025-09-05T21%3A26%3A03Z&se=2025-09-05T23%3A26%3A03Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=31d50bd4-689f-439b-a875-f22bd677744d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T15%3A11%3A55Z&ske=2025-09-06T15%3A11%3A55Z&sks=b&skv=2024-08-04&sig=SNH6uGBACMXtO7IJ5qVHSD0kO8dHLAwEI0pBjK6Dc6A%3D",
+        "category": "achievements",
+        "generatedAt": 1757111163668,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111163668,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "api-integrator",
+        "description": "API badge with connection nodes",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-iAy5sHF1JRcWxrr7sN8WwJYC.png?st=2025-09-05T21%3A26%3A19Z&se=2025-09-05T23%3A26%3A19Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8eb2c87c-0531-4dab-acb3-b5e2adddce6c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A07%3A29Z&ske=2025-09-06T16%3A07%3A29Z&sks=b&skv=2024-08-04&sig=zEsJkHzDK1eU4TAJZCuT9WZYcXu3veCR6H%2Beuhfp/Ak%3D",
+        "category": "achievements",
+        "generatedAt": 1757111179594,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111179594,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "database-architect",
+        "description": "Database badge with data vault",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-e3sMYW7SSEp3KI5ETMqM9Zu2.png?st=2025-09-05T21%3A26%3A36Z&se=2025-09-05T23%3A26%3A36Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8eb2c87c-0531-4dab-acb3-b5e2adddce6c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A55%3A55Z&ske=2025-09-06T16%3A55%3A55Z&sks=b&skv=2024-08-04&sig=M8QvQ/Ok32Qn5IlcCAm3Wp%2BSnwJgLg5TZw2nVFeFBAo%3D",
+        "category": "achievements",
+        "generatedAt": 1757111197060,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111197060,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "agent-creator",
+        "description": "AI agent creation badge with robot",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-aPu0oMGefQQRlTD42khGcU65.png?st=2025-09-05T21%3A26%3A53Z&se=2025-09-05T23%3A26%3A53Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=32836cae-d25f-4fe9-827b-1c8c59c442cc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T19%3A00%3A46Z&ske=2025-09-06T19%3A00%3A46Z&sks=b&skv=2024-08-04&sig=4Md5jnuF7lzaBQ5pcXrrfsZfwP%2BqvK1tbfn5SJVcZrw%3D",
+        "category": "achievements",
+        "generatedAt": 1757111213980,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111213980,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "graduation-honor",
+        "description": "Course completion badge with graduation cap",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-wpgCfLcmXpfBw32NmDX1UR0J/user-xdLLHHjikowk3TDVbDSDuVXk/img-CEs2R5n8Q6wBuqQ7NY4cea50.png?st=2025-09-05T21%3A27%3A10Z&se=2025-09-05T23%3A27%3A10Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8eb2c87c-0531-4dab-acb3-b5e2adddce6c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-05T16%3A07%3A29Z&ske=2025-09-06T16%3A07%3A29Z&sks=b&skv=2024-08-04&sig=Chg90zV7q3SPDBtNUuR%2Bbeg7CAdGcCUTLGwl1hH86Jo%3D",
+        "category": "achievements",
+        "generatedAt": 1757111230061,
+        "metadata": {
+          "model": "dall-e-3",
+          "timestamp": 1757111230061,
+          "cost": 0.04
+        }
+      },
+      {
+        "name": "speed-coder",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "perfect-score",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "helper-hero",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "streak-warrior",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "bug-hunter",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "creative-coder",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      }
+    ],
+    "uiElements": [
+      {
+        "name": "button-primary-normal",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "button-primary-hover",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "button-primary-pressed",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "button-secondary-normal",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "button-danger-normal",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "button-success-normal",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "panel-lesson-card",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "panel-code-editor",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "panel-dialogue-box",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "panel-achievement",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "progress-bar-empty",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "progress-bar-fill",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "progress-circle",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "loading-spinner",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      }
+    ],
+    "concepts": [
+      {
+        "name": "concept-variables",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-data-types",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-loops",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-functions",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-conditionals",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-arrays",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-objects",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-classes",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-inheritance",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-neural-network",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-machine-learning",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-training-data",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "concept-ai-agent",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      }
+    ],
+    "characterEmotions": [
+      {
+        "name": "atlas-confident",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "atlas-thinking",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "atlas-proud",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "atlas-serious",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "atlas-encouraging",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "maya-excited",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "maya-explaining",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "maya-focused",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "maya-celebrating",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "binary-alert",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "binary-analyzing",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "binary-satisfied",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "nova-motivating",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "nova-teaching",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "nova-celebrating",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      }
+    ],
+    "cutscenes": [
+      {
+        "name": "cutscene-arrival",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-first-hack",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-beacon-victory",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-data-discovery",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-loop-canyon",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-ai-awakening",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-neural-breach",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-final-approach",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-agent-creation",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      },
+      {
+        "name": "cutscene-victory",
+        "error": "DALL-E API error: Billing hard limit has been reached"
+      }
+    ]
+  }
+}

@@ -1,489 +1,296 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import CoachNova from '@/components/CoachNova'
-
-interface Dialogue {
-  character: string
-  text: string
-  image: string
-  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious'
-}
-
-interface Challenge {
-  id: number
-  instruction: string
-  hint: string
-  correctCode: string
-  explanation: string
-}
+import EnhancedLessonInterface from '@/components/EnhancedLessonInterface'
 
 export default function Lesson3() {
   const router = useRouter()
-  
-  // Cutscene & Dialogue System
-  const [showCutscene, setShowCutscene] = useState(true)
-  const [currentDialogue, setCurrentDialogue] = useState(0)
-  const [showCharacter, setShowCharacter] = useState(false)
-  
-  // Coding Challenge System
-  const [currentChallenge, setCurrentChallenge] = useState(0)
-  const [userCode, setUserCode] = useState('')
-  const [feedback, setFeedback] = useState('')
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [showHint, setShowHint] = useState(false)
-  
-  // Progress Tracking
-  const [completedChallenges, setCompletedChallenges] = useState<number[]>([])
-  const [xpEarned, setXpEarned] = useState(0)
 
-  // Opening Cutscene Dialogue
-  const introDialogue: Dialogue[] = [
-    {
-      character: "Commander Atlas",
-      text: "Agent, urgent situation! The Digital Fortress has infiltrated St. Michael's Academy. Their security system is blocking access to the chapel before morning prayer. We need immediate action!",
-      image: "/Commander Atlas.png",
-      emotion: "serious"
-    },
-    {
-      character: "Dr. Maya Nexus", 
-      text: "I've analyzed their system - it's using conditional logic to control access. We can reprogram it using Python if-statements to restore proper chapel access for the students and faculty.",
-      image: "/Dr. Maya Nexus.png",
-      emotion: "encouraging"
-    },
-    {
-      character: "Commander Atlas",
-      text: "Time is critical! Morning prayer starts in minutes. These conditional statements work like the monastery's ancient rules - if certain conditions are met, then specific actions follow.",
-      image: "/Commander Atlas.png", 
-      emotion: "confident"
-    },
-    {
-      character: "Dr. Maya Nexus",
-      text: "Think of it like the sacred schedule - if it's morning prayer time AND you're an authorized student, then access is granted. Master these logical pathways and you'll unlock their entire system!",
-      image: "/Dr. Maya Nexus.png",
-      emotion: "neutral"
-    }
-  ]
-
-  // Coding Challenges
-  const challenges: Challenge[] = [
+  // Enhanced challenges with comprehensive conditional logic coverage
+  const challenges = [
     {
       id: 1,
-      instruction: "The chapel doors are locked! Check if current_time is greater than 6, then print 'Morning prayer access granted'",
-      hint: "Use: if condition: (followed by indented print statement)",
-      correctCode: "if current_time > 6:\n    print('Morning prayer access granted')",
-      explanation: "Brilliant! Your conditional logic bypassed the first security layer. The chapel system now recognizes morning prayer hours."
+      instruction: "Check if security_level is greater than 5. If true, set access_granted to True",
+      hint: "Use an if statement: if security_level > 5: then set access_granted = True",
+      correctCode: "if security_level > 5:\n    access_granted = True",
+      explanation: "Perfect! Your AI can now make basic decisions. IF statements let your AI check conditions and take action when they're true.",
+      concepts: ["If Statements", "Conditional Logic", "Boolean Assignment"],
+      resources: [
+        {
+          title: "Python If Statements",
+          content: "If statements check a condition and execute code only when that condition is True. Essential for decision-making in AI systems.",
+          type: "reference" as const
+        },
+        {
+          title: "Decision Making",
+          content: "AI agents need to make decisions based on data. If statements are the foundation of intelligent behavior.",
+          type: "tip" as const
+        }
+      ]
     },
     {
-      id: 2, 
-      instruction: "Sacred files detected! If student_role equals 'altar_server', print 'Sacred archives unlocked', else print 'Permission required'",
-      hint: "Use: if condition: ... else: ... (remember proper indentation)",
-      correctCode: "if student_role == 'altar_server':\n    print('Sacred archives unlocked')\nelse:\n    print('Permission required')",
-      explanation: "Excellent infiltration! The system now recognizes authorized altar servers and grants access to the sacred digital archives."
+      id: 2,
+      instruction: "Check agent_status. If it equals 'ACTIVE', print 'Mission ready', otherwise print 'Standby mode'",
+      hint: "Use if-else: if agent_status == 'ACTIVE': print something, else: print something else",
+      correctCode: "if agent_status == 'ACTIVE':\n    print('Mission ready')\nelse:\n    print('Standby mode')",
+      explanation: "Excellent! Your AI now handles binary decisions. ELSE ensures your AI always takes an appropriate action, no matter the condition.",
+      concepts: ["If-Else Statements", "String Comparison", "Binary Decisions"],
+      resources: [
+        {
+          title: "If-Else Logic",
+          content: "Else provides a fallback action when the if condition is False. This ensures your AI always responds appropriately.",
+          type: "reference" as const
+        },
+        {
+          title: "String Equality",
+          content: "Use == to compare strings. Remember: assignment (=) vs comparison (==) are different operations.",
+          type: "example" as const
+        }
+      ]
     },
     {
       id: 3,
-      instruction: "Multiple access levels found! If prayer_level is 'novice' print 'Basic chapel access', if 'adept' print 'Sacristy access', else print 'Full sanctuary access'",
-      hint: "Use: if condition1: ... elif condition2: ... else: ...",
-      correctCode: "if prayer_level == 'novice':\n    print('Basic chapel access')\nelif prayer_level == 'adept':\n    print('Sacristy access')\nelse:\n    print('Full sanctuary access')",
-      explanation: "Outstanding! Your multi-level conditional unlocked the hierarchical access system used by the monastery's digital network."
+      instruction: "Check threat_level: if 'LOW' print 'Normal patrol', if 'MEDIUM' print 'Alert status', otherwise print 'Emergency protocols'",
+      hint: "Use if-elif-else: if threat_level == 'LOW': ..., elif threat_level == 'MEDIUM': ..., else: ...",
+      correctCode: "if threat_level == 'LOW':\n    print('Normal patrol')\nelif threat_level == 'MEDIUM':\n    print('Alert status')\nelse:\n    print('Emergency protocols')",
+      explanation: "Outstanding! Your AI now handles multiple scenarios. ELIF allows checking multiple conditions in sequence.",
+      concepts: ["If-Elif-Else", "Multiple Conditions", "Hierarchical Logic"],
+      resources: [
+        {
+          title: "Elif Statements",
+          content: "Elif (else if) allows checking multiple conditions in sequence. Only the first true condition executes.",
+          type: "reference" as const
+        },
+        {
+          title: "Threat Assessment",
+          content: "Real AI systems use hierarchical decision trees like this for risk assessment and response protocols.",
+          type: "tip" as const
+        }
+      ]
     },
     {
       id: 4,
-      instruction: "Final security barrier! If both confession_booth_empty is True AND evening_vespers is True, print 'Secret passage revealed'",
-      hint: "Use 'and' to combine conditions: if condition1 and condition2:",
-      correctCode: "if confession_booth_empty == True and evening_vespers == True:\n    print('Secret passage revealed')",
-      explanation: "Mission successful! You've discovered the hidden passage that leads to the next lesson's intelligence files. The monastery's secrets are now within reach!"
+      instruction: "Check if both enemy_detected is True AND ammo_count is greater than 0. If both true, set engage_target to True",
+      hint: "Use 'and' operator: if enemy_detected == True and ammo_count > 0:",
+      correctCode: "if enemy_detected == True and ammo_count > 0:\n    engage_target = True",
+      explanation: "Mission critical! Your AI now makes complex logical decisions. AND ensures all conditions are met before taking action.",
+      concepts: ["Logical AND", "Multiple Conditions", "Combat Logic"],
+      resources: [
+        {
+          title: "Logical AND",
+          content: "AND requires ALL conditions to be True. Perfect for safety checks where everything must be verified.",
+          type: "reference" as const
+        },
+        {
+          title: "Safety Protocols",
+          content: "Military AI uses AND logic for engagement rules: detect target AND have ammo AND authorization.",
+          type: "example" as const
+        }
+      ]
+    },
+    {
+      id: 5,
+      instruction: "Check if backup_power is True OR main_power is True. If either is true, set systems_online to True",
+      hint: "Use 'or' operator: if backup_power == True or main_power == True:",
+      correctCode: "if backup_power == True or main_power == True:\n    systems_online = True",
+      explanation: "Excellent redundancy! Your AI now handles failsafe logic. OR ensures systems remain operational with backup options.",
+      concepts: ["Logical OR", "Redundancy Logic", "Failsafe Systems"],
+      resources: [
+        {
+          title: "Logical OR",
+          content: "OR requires only ONE condition to be True. Essential for backup systems and redundant safety measures.",
+          type: "reference" as const
+        },
+        {
+          title: "System Redundancy",
+          content: "Critical systems use OR logic for backup power, communication links, and failsafe mechanisms.",
+          type: "tip" as const
+        }
+      ]
+    },
+    {
+      id: 6,
+      instruction: "Check if NOT stealth_mode. If stealth is off, set visibility to 'EXPOSED'",
+      hint: "Use 'not' operator: if not stealth_mode:",
+      correctCode: "if not stealth_mode:\n    visibility = 'EXPOSED'",
+      explanation: "Perfect logic inversion! Your AI can now handle negative conditions. NOT is crucial for detecting when things are disabled or false.",
+      concepts: ["Logical NOT", "Boolean Negation", "Stealth Logic"],
+      resources: [
+        {
+          title: "Logical NOT",
+          content: "NOT inverts a boolean value. True becomes False, False becomes True. Useful for detecting when something is off.",
+          type: "reference" as const
+        },
+        {
+          title: "Stealth Operations",
+          content: "Military systems use NOT logic to detect when protective measures are disabled or compromised.",
+          type: "example" as const
+        }
+      ]
+    },
+    {
+      id: 7,
+      instruction: "Check if coordinates_valid is True AND distance < 100 AND fuel_remaining >= 25. If all true, set mission_possible to True",
+      hint: "Chain multiple AND conditions: if condition1 and condition2 and condition3:",
+      correctCode: "if coordinates_valid == True and distance < 100 and fuel_remaining >= 25:\n    mission_possible = True",
+      explanation: "Advanced tactical analysis! Your AI now performs complex multi-factor assessments like real military planning systems.",
+      concepts: ["Complex Conditions", "Multi-Factor Analysis", "Mission Planning"],
+      resources: [
+        {
+          title: "Complex Conditionals",
+          content: "Real AI systems often check multiple conditions simultaneously for comprehensive decision-making.",
+          type: "reference" as const
+        },
+        {
+          title: "Mission Parameters",
+          content: "Military planning requires checking location, distance, resources, and risk factors all together.",
+          type: "tip" as const
+        }
+      ]
+    },
+    {
+      id: 8,
+      instruction: "Check temperature. If < 0, set status to 'FROZEN', if between 0-100, set to 'NORMAL', if > 100, set to 'OVERHEATED'",
+      hint: "Use ranges: if temperature < 0: ..., elif temperature <= 100: ..., else: ...",
+      correctCode: "if temperature < 0:\n    status = 'FROZEN'\nelif temperature <= 100:\n    status = 'NORMAL'\nelse:\n    status = 'OVERHEATED'",
+      explanation: "Excellent sensor logic! Your AI now handles range-based decisions, critical for monitoring and environmental systems.",
+      concepts: ["Range Conditions", "Environmental Logic", "Sensor Processing"],
+      resources: [
+        {
+          title: "Range Checking",
+          content: "AI systems often need to categorize values into ranges for appropriate responses and alerts.",
+          type: "reference" as const
+        },
+        {
+          title: "Environmental Monitoring",
+          content: "Temperature, pressure, and other sensor data require range-based logic for system protection.",
+          type: "example" as const
+        }
+      ]
+    },
+    {
+      id: 9,
+      instruction: "Complex authorization: If (clearance >= 7 AND biometric_verified) OR emergency_override, set access to 'GRANTED'",
+      hint: "Use parentheses for grouping: if (condition1 and condition2) or condition3:",
+      correctCode: "if (clearance >= 7 and biometric_verified) or emergency_override:\n    access = 'GRANTED'",
+      explanation: "Master-level logic! Your AI now handles sophisticated security protocols with grouped conditions and override systems.",
+      concepts: ["Grouped Conditions", "Security Protocols", "Override Logic"],
+      resources: [
+        {
+          title: "Boolean Grouping",
+          content: "Parentheses control the order of logical operations, just like in mathematics. Essential for complex conditions.",
+          type: "reference" as const
+        },
+        {
+          title: "Security Systems",
+          content: "High-security AI uses layered authentication: normal access (clearance AND biometric) OR emergency override.",
+          type: "tip" as const
+        }
+      ]
+    },
+    {
+      id: 10,
+      instruction: "Nested decision: If mission_active, then check if enemy_detected. If enemy found, set alert_level to 'RED', else 'GREEN'",
+      hint: "Nest if statements: if mission_active: followed by indented if-else block",
+      correctCode: "if mission_active:\n    if enemy_detected:\n        alert_level = 'RED'\n    else:\n        alert_level = 'GREEN'",
+      explanation: "AI mastery achieved! Your AI now uses nested logic for complex decision trees, the foundation of advanced autonomous systems.",
+      concepts: ["Nested Conditionals", "Decision Trees", "Hierarchical Logic"],
+      resources: [
+        {
+          title: "Nested If Statements",
+          content: "Nest if statements for complex decision trees. Each level adds more specific conditions and responses.",
+          type: "reference" as const
+        },
+        {
+          title: "AI Decision Trees",
+          content: "Advanced AI systems use nested logic to build decision trees for autonomous navigation, combat, and mission planning.",
+          type: "example" as const
+        }
+      ]
     }
   ]
 
-  // Auto-advance cutscene dialogue
-  useEffect(() => {
-    if (showCutscene && currentDialogue < introDialogue.length) {
-      const timer = setTimeout(() => {
-        setShowCharacter(true)
-        const nextTimer = setTimeout(() => {
-          if (currentDialogue < introDialogue.length - 1) {
-            setCurrentDialogue(prev => prev + 1)
-            setShowCharacter(false)
-          } else {
-            setShowCutscene(false)
-            setShowCharacter(false)
-          }
-        }, 6000) // Show dialogue for 6 seconds
-        
-        return () => clearTimeout(nextTimer)
-      }, 500) // Character fade-in delay
-      
-      return () => clearTimeout(timer)
-    }
-  }, [currentDialogue, showCutscene, introDialogue.length])
-
-  // Skip cutscene
-  const skipCutscene = () => {
-    setShowCutscene(false)
-    setShowCharacter(false)
+  const handleLessonComplete = (xpEarned: number) => {
+    // Navigate to week overview with completion
+    router.push('/mission/operation-beacon/week-1?completed=lesson-3')
   }
 
-  // Check user code
-  const checkCode = () => {
-    const trimmedCode = userCode.trim()
-    const currentChallengeData = challenges[currentChallenge]
-    
-    // More flexible checking for conditional logic
-    const codeLines = trimmedCode.split('\n').map(line => line.trim())
-    const expectedLines = currentChallengeData.correctCode.split('\n').map(line => line.trim())
-    
-    // Check if the key elements are present
-    let isValid = true
-    for (const expectedLine of expectedLines) {
-      if (expectedLine && !codeLines.some(codeLine => 
-        codeLine.includes(expectedLine.replace(/\s+/g, ' ')) || 
-        codeLine.replace(/\s+/g, ' ') === expectedLine.replace(/\s+/g, ' ')
-      )) {
-        isValid = false
-        break
-      }
+  // Opening Cutscene Dialogue - Enhanced with story continuity
+  const introDialogue = [
+    {
+      character: "Commander Atlas",
+      text: "Emergency status! The enemy AI is making decisions faster than our systems can respond. Your AI needs conditional logic - the ability to make IF-THEN decisions!",
+      image: "/Commander Atlas.png",
+      emotion: "serious" as const,
+      effect: "shake" as const
+    },
+    {
+      character: "Dr. Maya Nexus",
+      text: "Conditional statements are the decision-making core of AI systems. IF this happens, THEN do that. This is how AI agents respond intelligently to changing conditions.",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "alert" as const,
+      effect: "pulse" as const
+    },
+    {
+      character: "Tech Chief Binary",
+      text: "Every advanced AI uses conditional logic: IF enemy detected AND weapons ready, THEN engage. IF low power OR damage detected, THEN retreat. Master this now!",
+      image: "/Tech Chief Binary.png",
+      emotion: "confident" as const,
+      effect: "zoom" as const
+    },
+    {
+      character: "Dr. Maya Nexus",
+      text: "The enemy AI is already using complex conditional logic against us. Agent, your AI must learn these decision patterns or we'll be outmaneuvered in every engagement!",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "encouraging" as const,
+      effect: "glitch" as const
     }
-    
-    if (isValid || trimmedCode.replace(/\s+/g, ' ') === currentChallengeData.correctCode.replace(/\s+/g, ' ')) {
-      setIsCorrect(true)
-      setFeedback(currentChallengeData.explanation)
-      setCompletedChallenges(prev => [...prev, currentChallenge])
-      setXpEarned(prev => prev + 25)
-    } else {
-      setIsCorrect(false)
-      setFeedback("Not quite right. Check your syntax and conditional logic!")
+  ]
+
+  // Closing Cutscene - Story progression and setup for next lesson
+  const outroDialogue = [
+    {
+      character: "Tech Chief Binary",
+      text: "Incredible work, Agent! Your AI now thinks logically. It can make complex decisions using IF-THEN logic, AND/OR operations, and nested conditions.",
+      image: "/Tech Chief Binary.png",
+      emotion: "confident" as const,
+      effect: "pulse" as const
+    },
+    {
+      character: "Dr. Maya Nexus",
+      text: "Your AI's decision-making capabilities are now operational. But we're detecting massive data streams from enemy systems. We need to process repetitive patterns...",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "encouraging" as const,
+      effect: "zoom" as const
+    },
+    {
+      character: "Commander Atlas",
+      text: "Intelligence reports show the enemy is using automated systems that repeat the same operations thousands of times. We need loop technology immediately!",
+      image: "/Commander Atlas.png",
+      emotion: "serious" as const,
+      effect: "shake" as const
+    },
+    {
+      character: "Dr. Maya Nexus",
+      text: "Agent, your next mission: master Python loops. Your AI must learn to repeat tasks efficiently, or the enemy's automation will overwhelm our response capabilities!",
+      image: "/Dr. Maya Nexus.png",
+      emotion: "alert" as const,
+      effect: "glitch" as const
     }
-  }
-
-  // Next challenge
-  const nextChallenge = () => {
-    if (currentChallenge < challenges.length - 1) {
-      setCurrentChallenge(prev => prev + 1)
-      setUserCode('')
-      setFeedback('')
-      setIsCorrect(false)
-      setShowHint(false)
-    } else {
-      // Lesson complete
-      router.push('/mission/operation-beacon/week-1?completed=lesson-3')
-    }
-  }
-
-  if (showCutscene) {
-    return (
-      <div 
-        className="min-h-screen relative overflow-hidden"
-        style={{
-          backgroundImage: `url('/Mission HQ Command Center.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        
-        {/* Character Portrait */}
-        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-          showCharacter ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-        }`}>
-          {showCharacter && introDialogue[currentDialogue] && (
-            <div className="relative">
-              <img 
-                src={introDialogue[currentDialogue].image}
-                alt={introDialogue[currentDialogue].character}
-                className="max-w-md h-auto drop-shadow-2xl object-cover"
-                style={{
-                  clipPath: 'polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)',
-                  transform: 'scale(1.2)',
-                  objectPosition: 'center'
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Dialogue Box */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/90 to-transparent p-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-black/80 backdrop-blur-lg border-2 border-orange-400/60 p-6"
-                 style={{clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))'}}>
-              
-              {/* Character Name */}
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-orange-400 font-mono">
-                  🎖️ {introDialogue[currentDialogue]?.character}
-                </h3>
-                <button 
-                  onClick={skipCutscene}
-                  className="text-gray-400 hover:text-white font-mono text-sm"
-                >
-                  Skip Cutscene →
-                </button>
-              </div>
-              
-              {/* Dialogue Text */}
-              <p className="text-white font-mono text-lg leading-relaxed">
-                {introDialogue[currentDialogue]?.text}
-              </p>
-              
-              {/* Progress Indicator */}
-              <div className="flex justify-center mt-6 space-x-2">
-                {introDialogue.map((_, index) => (
-                  <div 
-                    key={index}
-                    className={`w-3 h-3 rounded-full ${
-                      index === currentDialogue ? 'bg-orange-400' : 
-                      index < currentDialogue ? 'bg-orange-600' : 'bg-gray-600'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-lg border-b border-orange-500/30 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <Link href="/mission/operation-beacon/week-1" className="text-orange-400 hover:text-orange-300 font-mono text-sm mb-2 block">
-              ← Return to Week 1
-            </Link>
-            <h1 className="text-2xl font-bold text-white font-mono">
-              <span className="text-orange-400">🤖 LESSON 3</span> - AI Decision Engine
-            </h1>
-          </div>
-          <div className="text-right max-w-md">
-            <div className="bg-red-900/30 border border-red-500/50 p-3 rounded-lg mb-2">
-              <div className="text-red-400 font-mono font-bold text-xs mb-1">🚨 URGENT MISSION</div>
-              <div className="text-red-300 text-xs font-mono leading-tight">
-                Digital Fortress security detected! Must reprogram chapel access system using conditional logic before morning prayer service begins.
-              </div>
-            </div>
-            <div className="text-yellow-400 font-mono font-bold text-sm">+{xpEarned} XP</div>
-            <div className="text-gray-300 text-xs">{completedChallenges.length}/4 Systems Bypassed</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            
-            {/* Left Column: Challenge Instructions */}
-            <div className="space-y-6">
-              {/* Current Challenge */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-blue-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-blue-400 font-mono">
-                    Challenge {currentChallenge + 1}/4
-                  </h2>
-                  <div className="text-blue-400 font-mono text-sm">Conditional Logic</div>
-                </div>
-                
-                <p className="text-white font-mono mb-4">
-                  {challenges[currentChallenge].instruction}
-                </p>
-                
-                {/* Hint Button */}
-                <button 
-                  onClick={() => setShowHint(!showHint)}
-                  className="bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-400/40 text-yellow-400 font-mono text-sm px-3 py-2 mb-4 transition-colors"
-                >
-                  💡 {showHint ? 'Hide Hint' : 'Show Hint'}
-                </button>
-                
-                {showHint && (
-                  <div className="bg-yellow-400/10 border-l-4 border-yellow-400 p-3 mb-4">
-                    <p className="text-yellow-300 font-mono text-sm">
-                      {challenges[currentChallenge].hint}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Dr. Maya Nexus Feedback */}
-              {feedback && (
-                <div className="bg-black/60 backdrop-blur-lg border-2 border-purple-400/40 p-6"
-                     style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                  
-                  <div className="flex items-start space-x-4">
-                    <img 
-                      src="/Dr. Maya Nexus_processed.png"
-                      alt="Dr. Maya Nexus"
-                      className="w-16 h-16 rounded-full border-2 border-purple-400"
-                    />
-                    <div>
-                      <h3 className="text-purple-400 font-mono font-bold mb-2">Dr. Maya Nexus</h3>
-                      <p className={`font-mono text-sm ${isCorrect ? 'text-green-300' : 'text-red-300'}`}>
-                        {feedback}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {isCorrect && (
-                    <div className="mt-4 flex justify-end">
-                      <button 
-                        onClick={nextChallenge}
-                        className="bg-green-600 hover:bg-green-500 text-white font-mono px-4 py-2 transition-colors"
-                        style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
-                      >
-                        {currentChallenge < challenges.length - 1 ? 'Next Challenge →' : 'Complete Lesson →'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Progress Tracking */}
-              <div className="bg-black/40 border border-gray-600/30 p-4">
-                <h4 className="text-white font-mono font-bold mb-3">Mission Progress</h4>
-                <div className="space-y-2">
-                  {challenges.map((_, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                        completedChallenges.includes(index) ? 'bg-green-500 text-white' :
-                        index === currentChallenge ? 'bg-yellow-500 text-black' :
-                        'bg-gray-600 text-gray-400'
-                      }`}>
-                        {index + 1}
-                      </div>
-                      <span className={`font-mono text-sm ${
-                        completedChallenges.includes(index) ? 'text-green-400' :
-                        index === currentChallenge ? 'text-yellow-400' :
-                        'text-gray-500'
-                      }`}>
-                        Challenge {index + 1}
-                        {completedChallenges.includes(index) && ' ✓'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Center Column: Code Editor (Expanded) */}
-            <div className="space-y-6">
-              <div className="bg-black/80 backdrop-blur-lg border-2 border-orange-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                
-                <h3 className="text-orange-400 font-mono font-bold mb-4">🖥️ Tactical Code Terminal</h3>
-                
-                {/* Code Input - Larger */}
-                <div className="bg-gray-900 border border-gray-600 p-4 mb-4">
-                  <textarea
-                    value={userCode}
-                    onChange={(e) => setUserCode(e.target.value)}
-                    placeholder="Type your Python conditional code here..."
-                    className="w-full h-64 bg-transparent text-orange-400 font-mono text-sm resize-none focus:outline-none"
-                  />
-                </div>
-                
-                {/* Execute Button */}
-                <div className="flex justify-between">
-                  <button 
-                    onClick={() => setUserCode('')}
-                    className="bg-gray-600 hover:bg-gray-500 text-white font-mono px-4 py-2 transition-colors"
-                  >
-                    Clear Code
-                  </button>
-                  <button 
-                    onClick={checkCode}
-                    className="bg-orange-600 hover:bg-orange-500 text-white font-mono px-6 py-2 transition-colors"
-                    style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
-                  >
-                    Execute Code
-                  </button>
-                </div>
-              </div>
-
-              {/* Code Output/Console */}
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-green-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                
-                <h4 className="text-green-400 font-mono font-bold mb-3">📟 Console Output</h4>
-                <div className="bg-gray-900 border border-gray-600 p-4 min-h-[120px]">
-                  <pre className="text-green-300 font-mono text-sm whitespace-pre-wrap">
-                    {feedback ? (
-                      isCorrect ? (
-                        `✅ Code executed successfully!\n\n${feedback}`
-                      ) : (
-                        `❌ Execution failed!\n\n${feedback}`
-                      )
-                    ) : (
-                      "Ready to execute code...\nType your Python conditional statements above and click 'Execute Code'."
-                    )}
-                  </pre>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: AI Tutor */}
-            <div className="space-y-6">
-              <div className="bg-black/60 backdrop-blur-lg border-2 border-cyan-400/40 p-6"
-                   style={{clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))'}}>
-                <h3 className="text-cyan-400 font-mono font-bold mb-4">🤖 Coach Nova AI Tutor</h3>
-                <div className="space-y-4">
-                  <CoachNova 
-                    studentName="Agent"
-                    lessonTitle="Tactical Decision Logic - Conditional Statements Training"
-                    currentChallenge={currentChallenge}
-                    totalChallenges={challenges.length}
-                    xpEarned={xpEarned}
-                    lessonContext={{
-                      type: 'lesson',
-                      difficulty: 'recruit',
-                      mission: 'Operation Beacon - Week 1'
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Quick Reference Card */}
-              <div className="bg-black/40 border border-gray-600/30 p-4">
-                <h4 className="text-white font-mono font-bold mb-3">📋 Quick Reference</h4>
-                <div className="space-y-2 text-xs font-mono">
-                  <div className="text-blue-300">
-                    <span className="text-yellow-400">if</span> condition:
-                  </div>
-                  <div className="text-blue-300 ml-4">
-                    # execute if true
-                  </div>
-                  <div className="text-blue-300">
-                    <span className="text-yellow-400">elif</span> condition2:
-                  </div>
-                  <div className="text-blue-300 ml-4">
-                    # execute if condition2 true
-                  </div>
-                  <div className="text-blue-300">
-                    <span className="text-yellow-400">else</span>:
-                  </div>
-                  <div className="text-blue-300 ml-4">
-                    # execute if all false
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-gray-600">
-                    <div className="text-gray-400">Operators:</div>
-                    <div className="text-green-300">== != &gt; &lt; &gt;= &lt;=</div>
-                    <div className="text-purple-300">and or not</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <EnhancedLessonInterface
+      lessonId={3}
+      title="AI Conditional Logic Engine"
+      description="Teach your AI to make intelligent decisions using if-then logic"
+      challenges={challenges}
+      weekNumber={1}
+      introDialogue={introDialogue}
+      outroDialogue={outroDialogue}
+      backgroundImage="/Mission HQ Command Center.png"
+      useCinematic={true}
+      onComplete={handleLessonComplete}
+    />
   )
 }

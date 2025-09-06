@@ -74,6 +74,32 @@ function checkDemoAuth(request: NextRequest) {
   return { isAuthenticated: false, user: null }
 }
 
+// Check if user has test account authentication
+function checkTestAuth(request: NextRequest) {
+  const testUser = request.cookies.get('test_user')?.value
+  const testAuth = request.cookies.get('test_authenticated')?.value
+  
+  if (testAuth === 'true' && testUser) {
+    try {
+      const user = JSON.parse(decodeURIComponent(testUser))
+      return {
+        isAuthenticated: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          full_name: user.full_name,
+          isTestUser: true
+        }
+      }
+    } catch (e) {
+      console.error('Error parsing test user:', e)
+    }
+  }
+  
+  return { isAuthenticated: false, user: null }
+}
+
 // Check if user has Supabase authentication
 function checkSupabaseAuth(request: NextRequest) {
   // Check for Supabase session tokens
@@ -158,12 +184,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Check authentication status
+  // Check authentication status (try test auth first, then demo, then supabase)
+  const testAuth = checkTestAuth(request)
   const demoAuth = checkDemoAuth(request)
   const supabaseAuth = checkSupabaseAuth(request)
   
-  const isAuthenticated = demoAuth.isAuthenticated || supabaseAuth.isAuthenticated
-  const user = demoAuth.user || supabaseAuth.user
+  const isAuthenticated = testAuth.isAuthenticated || demoAuth.isAuthenticated || supabaseAuth.isAuthenticated
+  const user = testAuth.user || demoAuth.user || supabaseAuth.user
   const userRole = getUserRole(request, user)
 
   // Handle public routes

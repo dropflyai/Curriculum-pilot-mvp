@@ -24,6 +24,7 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react'
+import CinematicCutscene from './CinematicCutscene'
 
 interface Dialogue {
   character: string
@@ -53,7 +54,9 @@ interface LessonProps {
   challenges: Challenge[]
   weekNumber: number
   introDialogue?: Dialogue[]
+  outroDialogue?: Dialogue[]
   backgroundImage?: string
+  useCinematic?: boolean
   onComplete: (xpEarned: number) => void
 }
 
@@ -64,7 +67,9 @@ export default function EnhancedLessonInterface({
   challenges, 
   weekNumber,
   introDialogue,
+  outroDialogue,
   backgroundImage,
+  useCinematic = false,
   onComplete 
 }: LessonProps) {
   const [currentChallenge, setCurrentChallenge] = useState(0)
@@ -81,6 +86,7 @@ export default function EnhancedLessonInterface({
   const [showSolution, setShowSolution] = useState(false)
   const [hintLevel, setHintLevel] = useState(0)
   const [showCutscene, setShowCutscene] = useState(!!introDialogue)
+  const [showOutroCutscene, setShowOutroCutscene] = useState(false)
   const [currentDialogue, setCurrentDialogue] = useState(0)
   const [showCharacter, setShowCharacter] = useState(false)
 
@@ -188,8 +194,13 @@ export default function EnhancedLessonInterface({
       setActiveTab('challenge')
       setNovaMessage("Let's tackle the next challenge! Take your time to read through it carefully.")
     } else {
-      // Lesson complete
-      onComplete(xpEarned)
+      // Lesson complete - show outro cutscene if available
+      if (outroDialogue && outroDialogue.length > 0) {
+        setShowOutroCutscene(true)
+        setCurrentDialogue(0)
+      } else {
+        onComplete(xpEarned)
+      }
     }
   }
 
@@ -230,8 +241,33 @@ export default function EnhancedLessonInterface({
     setShowCharacter(false)
   }
 
-  // Show cutscene first (restored original style)
-  if (showCutscene && introDialogue) {
+  // Show intro cinematic cutscene if enabled
+  if (showCutscene && introDialogue && useCinematic) {
+    return (
+      <CinematicCutscene
+        dialogues={introDialogue}
+        backgroundImage={backgroundImage}
+        onComplete={() => setShowCutscene(false)}
+      />
+    )
+  }
+  
+  // Show outro cinematic cutscene if enabled
+  if (showOutroCutscene && outroDialogue && useCinematic) {
+    return (
+      <CinematicCutscene
+        dialogues={outroDialogue}
+        backgroundImage={backgroundImage}
+        onComplete={() => {
+          setShowOutroCutscene(false)
+          onComplete(xpEarned)
+        }}
+      />
+    )
+  }
+  
+  // Show regular intro cutscene (restored original style)
+  if (showCutscene && introDialogue && !useCinematic) {
     const dialogue = introDialogue[currentDialogue]
     
     return (

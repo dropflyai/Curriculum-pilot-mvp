@@ -18,7 +18,7 @@ export async function signUp(email: string, password: string, fullName: string, 
   try {
     const supabase = getSupabase()
     
-    // First try to sign up
+    // First try to sign up - with email confirmation disabled for development
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -26,11 +26,23 @@ export async function signUp(email: string, password: string, fullName: string, 
         data: {
           full_name: fullName,
           role: role
-        }
+        },
+        emailRedirectTo: `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/auth`
       }
     })
     
-    if (authError) throw authError
+    if (authError) {
+      // Handle common Supabase errors
+      if (authError.message.includes('Error sending confirmation email')) {
+        console.warn('Email confirmation is required but email service is not configured.')
+        console.warn('Please disable email confirmation in Supabase dashboard or configure email service.')
+        throw new Error('Account created but email service is not configured. Please contact support or use demo login.')
+      }
+      if (authError.message.includes('User already registered')) {
+        throw new Error('This email is already registered. Please sign in instead.')
+      }
+      throw authError
+    }
     
     // If user needs confirmation, auto-confirm them (dev mode)
     if (authData.user && !authData.user.email_confirmed_at) {
@@ -94,9 +106,66 @@ export async function signUp(email: string, password: string, fullName: string, 
   }
 }
 
+// Hardcoded test accounts that always work
+const TEST_ACCOUNTS = [
+  {
+    email: 'student@test.com',
+    password: 'test123',
+    fullName: 'Test Student',
+    role: 'student' as const
+  },
+  {
+    email: 'teacher@test.com',
+    password: 'test123',
+    fullName: 'Test Teacher',
+    role: 'teacher' as const
+  },
+  {
+    email: 'admin@test.com',
+    password: 'test123',
+    fullName: 'Test Admin',
+    role: 'admin' as const
+  }
+]
+
 // Sign in
 export async function signIn(email: string, password: string) {
   try {
+    // First check hardcoded test accounts
+    const testAccount = TEST_ACCOUNTS.find(acc => acc.email === email && acc.password === password)
+    if (testAccount) {
+      const mockUser = {
+        id: `test-${testAccount.role}`,
+        email: testAccount.email,
+        full_name: testAccount.fullName,
+        role: testAccount.role
+      }
+      
+      // Set authentication state in localStorage/cookies for middleware
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('test_user', JSON.stringify(mockUser))
+        localStorage.setItem('test_authenticated', 'true')
+        
+        const userCookie = encodeURIComponent(JSON.stringify(mockUser))
+        document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        document.cookie = `user_role=${testAccount.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+      }
+      
+      return { user: mockUser, error: null }
+    }
+
+    // Then check demo accounts
+    const { DEMO_ACCOUNTS, demoLogin } = await import('./demo-accounts')
+    const demoAccount = DEMO_ACCOUNTS.find(acc => acc.email === email && acc.password === password)
+    
+    if (demoAccount) {
+      // Use demo login
+      const { user } = await demoLogin(demoAccount.role)
+      return { user, error: null }
+    }
+
+    // If not demo account, try Supabase
     const supabase = getSupabase()
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -104,11 +173,6 @@ export async function signIn(email: string, password: string) {
     })
 
     if (error) throw error
-
-    // Skip email verification check for now (demo mode)
-    // if (data.user && !data.user.email_confirmed_at) {
-    //   throw new Error('Please verify your email address before signing in. Check your inbox for the verification email.')
-    // }
 
     return { user: data.user, error: null }
   } catch (error) {

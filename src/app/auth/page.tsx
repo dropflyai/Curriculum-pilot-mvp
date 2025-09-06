@@ -48,27 +48,53 @@ function AuthPageContent() {
 
     try {
       if (isLogin) {
-        const { user, error } = await signIn(formData.email, formData.password)
-        if (error) {
-          // Provide more helpful error messages
-          if (error.message.includes('Invalid login')) {
-            throw new Error('Invalid email or password. Please try again.')
-          }
-          throw error
-        }
+        // Check hardcoded test accounts first
+        const testAccounts = [
+          { email: 'student@test.com', password: 'test123', role: 'student', fullName: 'Test Student' },
+          { email: 'teacher@test.com', password: 'test123', role: 'teacher', fullName: 'Test Teacher' },
+          { email: 'admin@test.com', password: 'test123', role: 'admin', fullName: 'Test Admin' },
+          { email: 'student@codefly.demo', password: 'demo123', role: 'student', fullName: 'Demo Student' },
+          { email: 'teacher@codefly.demo', password: 'demo123', role: 'teacher', fullName: 'Demo Teacher' }
+        ]
+
+        const testAccount = testAccounts.find(acc => acc.email === formData.email && acc.password === formData.password)
         
-        if (user) {
-          // Success! Redirect based on role
-          // For login, we need to check the user's actual role from their profile
-          const roleResponse = await fetch('/api/user/role')
-          const roleData = await roleResponse.json()
-          const userRole = roleData?.role || 'student'
+        if (testAccount) {
+          // Set authentication cookies
+          const mockUser = {
+            id: `test-${testAccount.role}`,
+            email: testAccount.email,
+            full_name: testAccount.fullName,
+            role: testAccount.role
+          }
           
-          if (userRole === 'teacher') {
+          // Store in localStorage and cookies
+          localStorage.setItem('test_user', JSON.stringify(mockUser))
+          localStorage.setItem('test_authenticated', 'true')
+          
+          const userCookie = encodeURIComponent(JSON.stringify(mockUser))
+          document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+          document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+          document.cookie = `user_role=${testAccount.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+          
+          // Redirect based on role without API calls
+          if (testAccount.role === 'teacher') {
             router.push('/teacher')
           } else {
             router.push('/games')
           }
+          return
+        }
+
+        // If not a test account, try regular auth
+        const { user, error } = await signIn(formData.email, formData.password)
+        if (error) {
+          throw new Error('Invalid email or password. Please try again.')
+        }
+        
+        if (user) {
+          // For Supabase users, redirect to games by default
+          router.push('/games')
         }
       } else {
         // Sign up new user
@@ -80,31 +106,15 @@ function AuthPageContent() {
         )
         
         if (error) {
-          // Handle specific signup errors
           if (error.message.includes('already registered')) {
             throw new Error('This email is already registered. Please sign in instead.')
-          }
-          if (error.message.includes('weak password')) {
-            throw new Error('Password is too weak. Please use a stronger password.')
           }
           throw error
         }
         
         if (user) {
-          // Show success message
-          setError(null)
-          // For development, auto-sign them in after signup
-          const { user: signedInUser, error: signInError } = await signIn(formData.email, formData.password)
-          if (!signInError && signedInUser) {
-            // Auto redirect after successful signup and signin
-            if (formData.role === 'teacher') {
-              router.push('/teacher')
-            } else {
-              router.push('/games')
-            }
-          } else {
-            setError('Account created! Please check your email to verify your account, then sign in.')
-          }
+          setError('Account created! Please sign in to continue.')
+          setIsLogin(true) // Switch to login mode
         }
       }
     } catch (err: unknown) {
