@@ -209,6 +209,126 @@ npx vercel --prod --yes  # Should deploy without errors
 
 ---
 
-## Last Updated: Sept 5, 2025
+## Authentication Redirect Issues
+
+### Problem: /games Page Redirects Back to Auth Page
+**Fixed on**: Sept 6, 2025
+**Symptoms**: User logs in successfully but `/games` route redirects back to `/auth`
+**Root Cause**: Cookies not set with proper security flags for HTTPS in production
+
+**SOLUTION**:
+```typescript
+// In auth page, set cookies with proper Secure flag based on protocol
+document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+document.cookie = `user_role=${role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+```
+
+**Additional Debug Fix** - Add logging to middleware:
+```typescript
+// In middleware.ts - checkTestAuth function
+console.log('Test auth cookies:', { testAuth, testUser: !!testUser })
+if (testAuth === 'true' && testUser) {
+  const user = JSON.parse(decodeURIComponent(testUser))
+  console.log('Test user parsed successfully:', user.email, user.role)
+  // ...
+}
+```
+
+**Files Affected**:
+- `src/app/auth/page.tsx` (cookie setting)
+- `src/middleware.ts` (debug logging)
+
+---
+
+## Authentication Redirect Issues (UPDATED)
+
+### Problem: /games Page Redirects Back to Auth After Login - RESOLVED
+**Updated on**: Sept 6, 2025
+**Root Cause**: The `/games` route was incorrectly configured as a protected route requiring student authentication, but the page was designed as a public game selection page.
+
+**COMPLETE SOLUTION**:
+
+1. **Updated middleware route protection** in `src/middleware.ts`:
+```typescript
+// Move /games from protected student routes to public routes
+public: [
+  '/',
+  '/auth',
+  '/auth/signup', 
+  '/signin',
+  '/games',  // <-- Moved here from student routes
+  '/api/lessons',
+  '/api/list'
+],
+
+// Remove /games from student routes
+student: [
+  '/student',
+  '/homework',
+  // ... other routes (without /games)
+],
+```
+
+2. **Enhanced /games page** in `src/app/games/page.tsx`:
+```typescript
+// Added authentication detection
+function useAuth() {
+  // Check localStorage and cookies for auth state
+  // Show different UI for authenticated vs unauthenticated users
+}
+
+// Updated game selection handler
+const handleGameSelect = (game: Game) => {
+  if (!isAuthenticated) {
+    localStorage.setItem('intended_game', game.id)
+    router.push('/auth')  // Redirect to login with intended game stored
+    return
+  }
+  // ... proceed to game for authenticated users
+}
+```
+
+3. **Improved cookie handling** in `src/app/auth/page.tsx`:
+```typescript
+// Better cookie setting with error handling and delays
+const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax${isSecure ? '; Secure' : ''}`
+
+try {
+  document.cookie = `test_user=${userCookie}; ${cookieOptions}`
+  document.cookie = `test_authenticated=true; ${cookieOptions}`
+  document.cookie = `user_role=${testAccount.role}; ${cookieOptions}`
+  
+  // Small delay to ensure cookies are set before redirect
+  await new Promise(resolve => setTimeout(resolve, 100))
+} catch (cookieError) {
+  console.error('Cookie setting error:', cookieError)
+}
+
+// Handle intended game after login
+const intendedGame = localStorage.getItem('intended_game')
+if (intendedGame) {
+  localStorage.removeItem('intended_game')
+  if (intendedGame === 'agent-academy') {
+    router.push('/mission-hq')
+    return
+  }
+}
+```
+
+**Result**: 
+- `/games` is now accessible without authentication (public landing page)
+- Authenticated users see personalized content and can access games directly
+- Unauthenticated users are redirected to login and returned to their intended game
+- Cookie handling is more robust with proper error handling
+
+**Files Modified**:
+- `src/middleware.ts` (route protection configuration)
+- `src/app/games/page.tsx` (authentication detection and UI)
+- `src/app/auth/page.tsx` (improved cookie handling and redirect logic)
+
+---
+
+## Last Updated: Sept 6, 2025
 
 **Note**: Always check this file FIRST when encountering issues. If your solution isn't here, add it after resolving!

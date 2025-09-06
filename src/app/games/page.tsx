@@ -5,6 +5,30 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ParticleEffects from '@/components/ParticleEffects'
 
+// Check if user is authenticated
+function useAuth() {
+  const [user, setUser] = useState<any>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  
+  useEffect(() => {
+    // Check for test authentication
+    const testAuth = localStorage.getItem('test_authenticated')
+    const testUser = localStorage.getItem('test_user')
+    
+    if (testAuth === 'true' && testUser) {
+      try {
+        const parsedUser = JSON.parse(testUser)
+        setUser(parsedUser)
+        setIsAuthenticated(true)
+      } catch (e) {
+        console.error('Error parsing test user:', e)
+      }
+    }
+  }, [])
+  
+  return { user, isAuthenticated }
+}
+
 interface Game {
   id: string
   title: string
@@ -88,9 +112,17 @@ export default function GamesPage() {
   const router = useRouter()
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const { user, isAuthenticated } = useAuth()
 
   const handleGameSelect = (game: Game) => {
     if (!game.available) {
+      return
+    }
+    
+    // If not authenticated, redirect to auth with game selection stored
+    if (!isAuthenticated) {
+      localStorage.setItem('intended_game', game.id)
+      router.push('/auth')
       return
     }
     
@@ -101,6 +133,15 @@ export default function GamesPage() {
     setTimeout(() => {
       router.push(game.path)
     }, 500)
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('test_user')
+    localStorage.removeItem('test_authenticated')
+    document.cookie = 'test_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    document.cookie = 'test_authenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    document.cookie = 'user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    window.location.reload()
   }
 
   return (
@@ -117,12 +158,26 @@ export default function GamesPage() {
               </h1>
               <p className="text-gray-300 mt-1">Choose Your Coding Adventure</p>
             </div>
-            <Link 
-              href="/auth"
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
-            >
-              Sign In
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-cyan-400 font-medium">
+                  Welcome, {user?.full_name || user?.email}!
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-red-500/50 hover:shadow-lg transition-all"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link 
+                href="/auth"
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>
