@@ -79,9 +79,13 @@ function checkTestAuth(request: NextRequest) {
   const testUser = request.cookies.get('test_user')?.value
   const testAuth = request.cookies.get('test_authenticated')?.value
   
+  // Debug logging for production
+  console.log('Test auth cookies:', { testAuth, testUser: !!testUser })
+  
   if (testAuth === 'true' && testUser) {
     try {
       const user = JSON.parse(decodeURIComponent(testUser))
+      console.log('Test user parsed successfully:', user.email, user.role)
       return {
         isAuthenticated: true,
         user: {

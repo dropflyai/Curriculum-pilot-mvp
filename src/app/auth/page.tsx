@@ -73,9 +73,9 @@ function AuthPageContent() {
           localStorage.setItem('test_authenticated', 'true')
           
           const userCookie = encodeURIComponent(JSON.stringify(mockUser))
-          document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-          document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-          document.cookie = `user_role=${testAccount.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+          document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+          document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+          document.cookie = `user_role=${testAccount.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
           
           // Redirect based on role without API calls
           if (testAccount.role === 'teacher') {

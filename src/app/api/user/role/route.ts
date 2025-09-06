@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 
 export async function GET() {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     
     // Check for hardcoded test account authentication
     const testUser = cookieStore.get('test_user')
