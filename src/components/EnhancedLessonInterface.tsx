@@ -53,6 +53,7 @@ interface LessonProps {
   challenges: Challenge[]
   weekNumber: number
   introDialogue?: Dialogue[]
+  backgroundImage?: string
   onComplete: (xpEarned: number) => void
 }
 
@@ -63,6 +64,7 @@ export default function EnhancedLessonInterface({
   challenges, 
   weekNumber,
   introDialogue,
+  backgroundImage,
   onComplete 
 }: LessonProps) {
   const [currentChallenge, setCurrentChallenge] = useState(0)
@@ -149,7 +151,7 @@ export default function EnhancedLessonInterface({
         setFeedback(currentChallengeData.explanation)
         setCompletedChallenges(prev => [...prev, currentChallenge])
         setXpEarned(prev => prev + 25)
-        setNovaMessage(novaResponses.success)
+        setNovaMessage(getNovaResponse('success'))
       } else {
         setIsCorrect(false)
         setFeedback("Remember: developer_name = 'Your Name' (use quotes around text)")
@@ -213,7 +215,7 @@ export default function EnhancedLessonInterface({
             setShowCutscene(false)
             setShowCharacter(false)
           }
-        }, 4000) // Show dialogue for 4 seconds
+        }, 6000) // Show dialogue for 6 seconds
         
         return () => clearTimeout(nextTimer)
       }, 500) // Character fade-in delay
@@ -233,21 +235,21 @@ export default function EnhancedLessonInterface({
     const dialogue = introDialogue[currentDialogue]
     
     return (
-      <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div 
+        className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+        style={backgroundImage ? {
+          backgroundImage: `url('${backgroundImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        } : {}}
+      >
         {/* Background particles */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delay"></div>
         </div>
 
-        {/* Skip button */}
-        <button
-          onClick={skipCutscene}
-          className="absolute top-8 right-8 flex items-center space-x-2 px-4 py-2 bg-black/50 border border-cyan-400/30 rounded-lg text-cyan-400 hover:bg-black/70 transition-all z-20"
-        >
-          <VolumeX className="h-4 w-4" />
-          <span>Skip Intro</span>
-        </button>
 
         {/* Character and dialogue */}
         <div className="relative h-full flex items-center justify-center px-8">
@@ -259,11 +261,11 @@ export default function EnhancedLessonInterface({
                 showCharacter ? 'opacity-100 scale-100' : 'opacity-70 scale-95'
               }`}>
                 <div className="relative inline-block">
-                  <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cyan-400/50 shadow-2xl">
+                  <div className="w-[700px] h-[700px] mx-auto mb-4">
                     <img 
                       src={dialogue.image} 
                       alt={dialogue.character}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         // Fallback to emoji if image fails
                         const target = e.target as HTMLImageElement
@@ -271,7 +273,7 @@ export default function EnhancedLessonInterface({
                         target.nextElementSibling?.classList.remove('hidden')
                       }}
                     />
-                    <div className="hidden w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-purple-600 to-blue-600">
+                    <div className="hidden w-full h-full flex items-center justify-center text-6xl">
                       🕵️
                     </div>
                   </div>
@@ -283,26 +285,24 @@ export default function EnhancedLessonInterface({
             )}
 
             {/* Dialogue box */}
-            <div className="bg-black/80 backdrop-blur-lg border-2 border-cyan-400/50 rounded-lg p-8 max-w-3xl mx-auto">
-              <div className="space-y-4">
+            <div className="bg-black/80 backdrop-blur-lg border-2 border-cyan-400/50 rounded-lg p-4 max-w-2xl mx-auto">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-cyan-400/70">
                   <span>SECURE TRANSMISSION</span>
-                  <span>{currentDialogue + 1}/{introDialogue.length}</span>
+                  <div className="flex items-center space-x-4">
+                    <span>{currentDialogue + 1}/{introDialogue.length}</span>
+                    <button
+                      onClick={skipCutscene}
+                      className="text-cyan-400 hover:text-cyan-300 underline text-xs transition-colors"
+                    >
+                      skip cutscene
+                    </button>
+                  </div>
                 </div>
                 
-                <p className="text-lg md:text-xl text-white leading-relaxed font-mono">
+                <p className="text-base md:text-lg text-white leading-relaxed font-mono py-2">
                   {dialogue.text}
                 </p>
-
-                <div className="flex justify-end pt-4">
-                  <button
-                    onClick={skipCutscene}
-                    className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105"
-                  >
-                    <span>{currentDialogue === introDialogue.length - 1 ? 'Start Mission' : 'Continue'}</span>
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -328,7 +328,15 @@ export default function EnhancedLessonInterface({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+      style={backgroundImage ? {
+        backgroundImage: `url('${backgroundImage}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      } : {}}
+    >
       {/* Enhanced Header */}
       <div className="bg-black/30 backdrop-blur-xl border-b border-cyan-500/30 p-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

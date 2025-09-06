@@ -125,6 +125,7 @@ export default function Lesson1() {
       challenges={challenges}
       weekNumber={1}
       introDialogue={introDialogue}
+      backgroundImage="/Mission HQ Command Center.png"
       onComplete={handleLessonComplete}
     />
   )
