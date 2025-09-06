@@ -21,63 +21,95 @@ function AuthPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Demo login function
-  const handleDemoLogin = (role: 'student' | 'teacher') => {
-    // Set demo cookies (1 hour = 3600 seconds)
-    document.cookie = `demo_auth_token=demo_access_2024; path=/; max-age=3600`
-    document.cookie = `demo_user_role=${role}; path=/; max-age=3600`
-    
-    // CRITICAL FIX: Also set localStorage for backward compatibility
-    localStorage.setItem('demo_authenticated', 'true')
-    localStorage.setItem('demo_user', JSON.stringify({
-      role: role,
-      id: 'demo_user',
-      email: `demo@codefly.com`,
-      isDemoUser: true
-    }))
-    
-    // Redirect based on role
-    if (role === 'teacher') {
-      router.push('/teacher')
-    } else {
-      router.push('/games')
-    }
-  }
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all required fields')
+      setLoading(false)
+      return
+    }
+
+    if (!isLogin && !formData.fullName) {
+      setError('Please enter your full name')
+      setLoading(false)
+      return
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long')
+      setLoading(false)
+      return
+    }
+
     try {
       if (isLogin) {
         const { user, error } = await signIn(formData.email, formData.password)
-        if (error) throw error
+        if (error) {
+          // Provide more helpful error messages
+          if (error.message.includes('Invalid login')) {
+            throw new Error('Invalid email or password. Please try again.')
+          }
+          throw error
+        }
         
         if (user) {
-          // Redirect to games selection for students, teacher dashboard for teachers
-          if (formData.role === 'teacher') {
+          // Success! Redirect based on role
+          // For login, we need to check the user's actual role from their profile
+          const roleResponse = await fetch('/api/user/role')
+          const roleData = await roleResponse.json()
+          const userRole = roleData?.role || 'student'
+          
+          if (userRole === 'teacher') {
             router.push('/teacher')
           } else {
             router.push('/games')
           }
         }
       } else {
+        // Sign up new user
         const { user, error } = await signUp(
           formData.email, 
           formData.password, 
           formData.fullName, 
           formData.role
         )
-        if (error) throw error
+        
+        if (error) {
+          // Handle specific signup errors
+          if (error.message.includes('already registered')) {
+            throw new Error('This email is already registered. Please sign in instead.')
+          }
+          if (error.message.includes('weak password')) {
+            throw new Error('Password is too weak. Please use a stronger password.')
+          }
+          throw error
+        }
         
         if (user) {
-          setError('Please check your email to confirm your account.')
+          // Show success message
+          setError(null)
+          // For development, auto-sign them in after signup
+          const { user: signedInUser, error: signInError } = await signIn(formData.email, formData.password)
+          if (!signInError && signedInUser) {
+            // Auto redirect after successful signup and signin
+            if (formData.role === 'teacher') {
+              router.push('/teacher')
+            } else {
+              router.push('/games')
+            }
+          } else {
+            setError('Account created! Please check your email to verify your account, then sign in.')
+          }
         }
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      console.error('Auth error:', err)
+      setError(err instanceof Error ? err.message : 'An error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -144,7 +176,7 @@ function AuthPageContent() {
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2">
-                  Email Address
+                  Email Address *
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -152,18 +184,20 @@ function AuthPageContent() {
                     type="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value.toLowerCase().trim() })}
                     className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
-                    placeholder="student@school.edu"
+                    placeholder="your.email@example.com"
+                    autoComplete="email"
                   />
                 </div>
+                <p className="text-xs text-gray-400 mt-1">Use a valid email - you'll need it to sign in</p>
               </div>
 
               {/* Full Name (Sign up only) */}
               {!isLogin && (
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Full Name
+                    Full Name *
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -173,9 +207,11 @@ function AuthPageContent() {
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                       className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
-                      placeholder="Your full name"
+                      placeholder="Enter your full name"
+                      autoComplete="name"
                     />
                   </div>
+                  <p className="text-xs text-gray-400 mt-1">This will be displayed on your profile</p>
                 </div>
               )}
 
@@ -217,7 +253,7 @@ function AuthPageContent() {
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2">
-                  Password
+                  Password * {!isLogin && <span className="text-xs text-gray-400">(min. 6 characters)</span>}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -227,8 +263,9 @@ function AuthPageContent() {
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
-                    placeholder="Your password"
+                    placeholder={isLogin ? "Enter your password" : "Create a secure password"}
                     minLength={6}
+                    autoComplete={isLogin ? "current-password" : "new-password"}
                   />
                   <button
                     type="button"
@@ -238,12 +275,15 @@ function AuthPageContent() {
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
+                {!isLogin && formData.password && formData.password.length < 6 && (
+                  <p className="text-xs text-red-400 mt-1">Password must be at least 6 characters</p>
+                )}
               </div>
 
-              {/* Error Message */}
+              {/* Error/Success Message */}
               {error && (
                 <div className={`p-3 rounded-lg text-sm border ${
-                  error.includes('check your email') 
+                  error.includes('check your email') || error.includes('Account created')
                     ? 'bg-green-500/20 text-green-300 border-green-500/50'
                     : 'bg-red-500/20 text-red-300 border-red-500/50'
                 }`}>
@@ -279,71 +319,6 @@ function AuthPageContent() {
             </div>
           </div>
 
-          {/* Demo Credentials Section - Only show on login */}
-          {isLogin && (
-            <div className="mt-6 bg-amber-900/30 backdrop-blur-lg rounded-2xl shadow-2xl p-6 border border-amber-400/30">
-              <div className="text-center mb-4">
-                <h3 className="text-amber-400 font-bold text-lg">🔐 Demo Access Credentials</h3>
-                <p className="text-amber-200 text-sm">For demonstration and testing purposes only</p>
-              </div>
-              
-              <div className="space-y-4">
-                {/* Student Demo */}
-                <div className="bg-blue-900/30 border border-blue-400/30 rounded-lg p-4">
-                  <h4 className="text-blue-300 font-semibold mb-2 flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    Student Demo Account
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Email:</span>
-                      <span className="text-blue-200 font-mono">student@demo.codyflyai.com</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Password:</span>
-                      <span className="text-blue-200 font-mono">demo2024</span>
-                    </div>
-                    <button
-                      onClick={() => handleDemoLogin('student')}
-                      className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-md transition-colors text-sm"
-                    >
-                      Quick Student Login
-                    </button>
-                  </div>
-                </div>
-
-                {/* Teacher Demo */}
-                <div className="bg-purple-900/30 border border-purple-400/30 rounded-lg p-4">
-                  <h4 className="text-purple-300 font-semibold mb-2 flex items-center">
-                    <GraduationCap className="w-4 h-4 mr-2" />
-                    Teacher Demo Account
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Email:</span>
-                      <span className="text-purple-200 font-mono">teacher@demo.codyflyai.com</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Password:</span>
-                      <span className="text-purple-200 font-mono">demo2024</span>
-                    </div>
-                    <button
-                      onClick={() => handleDemoLogin('teacher')}
-                      className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white py-2 px-4 rounded-md transition-colors text-sm"
-                    >
-                      Quick Teacher Login
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 text-center">
-                <p className="text-amber-300 text-xs">
-                  ⚠️ Demo accounts reset every hour • For evaluation purposes only
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
