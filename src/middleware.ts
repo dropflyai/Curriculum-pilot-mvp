@@ -174,7 +174,7 @@ function hasRequiredRole(userRole: string | null, requiredRole: string): boolean
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
-  // DEBUG: Log all middleware requests
+  // DEBUG: Log all middleware requests  
   console.log(`🔍 MIDDLEWARE DEBUG - Path: ${pathname}`)
   
   // Skip middleware for static files, API routes (except protected ones), and Next.js internals
@@ -263,7 +263,7 @@ export function middleware(request: NextRequest) {
   if (isAuthenticated && userRole) {
     const userId = user?.id || 'authenticated-user'
     response.headers.set('X-AA-User-ID', userId)
-    response.headers.set('X-AA-Role', userRole)
+    response.headers.set('X-AA-Role', userRole || 'guest')
     response.headers.set('X-AA-Timestamp', new Date().toISOString())
   }
 
