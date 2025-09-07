@@ -209,6 +209,74 @@ npx vercel --prod --yes  # Should deploy without errors
 
 ---
 
-## Last Updated: Sept 5, 2025
+---
+
+## Games Page Redirect Issue
+
+### Problem: "Start Learning" Button Redirects to /auth Instead of Working
+**Fixed on**: Sept 6, 2025, Sept 7, 2025 (RECURRING ISSUE - 3rd time!)
+**Symptoms**: Clicking "Start Learning" button on `/games` page redirects to `/auth` instead of `/mission-hq`
+
+**ROOT CAUSE**: After restoring git commits, middleware.ts reverts to protecting `/games` and `/mission-hq` routes
+
+**EXACT SOLUTION**:
+1. **Make `/games` public** (so it loads without auth)
+2. **Make `/mission-hq` public** (so "Start Learning" works)
+3. **Remove "Sign In" button** from games page header
+
+**Files to modify**:
+
+`src/middleware.ts` - Move routes from student to public:
+```typescript
+// CORRECT CONFIGURATION:
+const ROUTE_PROTECTION = {
+  public: [
+    '/',
+    '/auth',
+    '/auth/signup', 
+    '/signin',
+    '/games',        // <- MUST BE HERE
+    '/mission-hq',   // <- MUST BE HERE  
+    '/api/lessons',
+    '/api/list'
+  ],
+  
+  student: [
+    '/student',
+    '/homework',
+    '/lesson',
+    '/python-lesson',
+    '/python-lesson-direct',
+    '/mission',
+    // Remove /games and /mission-hq from here
+    '/dashboard',
+    // ... rest of student routes
+  ]
+}
+```
+
+`src/app/games/page.tsx` - Remove Sign In button:
+```typescript
+// REMOVE THIS ENTIRE BLOCK from header:
+<Link 
+  href="/auth"
+  className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
+>
+  Sign In
+</Link>
+```
+
+**Verification Commands**:
+```bash
+git add src/middleware.ts src/app/games/page.tsx
+git commit -m "🔧 KNOWN FIX: Games redirect issue - make /games and /mission-hq public"
+git push origin main
+```
+
+**WARNING**: This issue returns every time we restore git commits. ALWAYS apply this fix after git restores.
+
+---
+
+## Last Updated: Sept 7, 2025
 
 **Note**: Always check this file FIRST when encountering issues. If your solution isn't here, add it after resolving!
