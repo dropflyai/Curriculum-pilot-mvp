@@ -86,12 +86,26 @@ export default function MissionHQ() {
           return
         }
 
-        // No authentication found, redirect to auth
-        router.push('/auth')
+        // No authentication found - allow public access for demo
+        setUser({
+          role: 'student' as 'student',
+          id: 'public_user',
+          email: 'public@codefly.com',
+          isDemoUser: true
+        })
+        setCompletedMissions([])
+        setLoading(false)
       } catch (error) {
         console.error('Authentication check failed:', error)
+        // Allow public access even on auth errors
+        setUser({
+          role: 'student' as 'student',
+          id: 'public_user',
+          email: 'public@codefly.com',
+          isDemoUser: true
+        })
+        setCompletedMissions([])
         setLoading(false)
-        router.push('/auth')
       }
     }
     
