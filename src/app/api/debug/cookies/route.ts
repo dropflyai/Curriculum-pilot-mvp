@@ -15,12 +15,8 @@ export async function GET() {
     const cookieData = Object.fromEntries(
       allCookies.map(cookie => [cookie.name, {
         value: cookie.value,
-        domain: cookie.domain,
-        path: cookie.path,
-        expires: cookie.expires,
-        httpOnly: cookie.httpOnly,
-        secure: cookie.secure,
-        sameSite: cookie.sameSite
+        // Note: RequestCookie type doesn't include domain, path, expires etc
+        // Only name and value are available
       }])
     )
     
