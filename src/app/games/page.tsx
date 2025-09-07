@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ParticleEffects from '@/components/ParticleEffects'
+import { networkMonitor, monitorApiCall, logBrowserState } from '@/lib/network-monitor'
+import NetworkDebugger from '@/components/NetworkDebugger'
+import '@/lib/network-test' // Import network test utilities
 
 interface Game {
   id: string
@@ -89,15 +92,98 @@ export default function GamesPage() {
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleGameSelect = (game: Game) => {
-    if (!game.available) {
-      return
+  // AGENT 4 - Network Request Monitor initialization
+  useEffect(() => {
+    console.log('🎯 AGENT 4: GamesPage loaded - Starting comprehensive network monitoring')
+    
+    // Initialize network monitoring (replaces basic fetch logging)
+    networkMonitor.enable()
+    logBrowserState()
+    
+    // Set up specific monitoring for /api/user/role calls
+    const unsubscribe = monitorApiCall('/api/user/role', (log) => {
+      console.group('🎯 AGENT 4: /api/user/role Call Monitored')
+      console.log('🎯 Request ID:', log.id)
+      console.log('🎯 Method:', log.method)
+      console.log('🎯 Status:', log.responseStatus)
+      console.log('🎯 Duration:', log.timing.duration + 'ms')
+      console.log('🎯 Cookie changes:', log.cookiesBefore !== log.cookiesAfter)
+      if (log.cookiesBefore !== log.cookiesAfter) {
+        console.log('🎯 Before:', log.cookiesBefore)
+        console.log('🎯 After:', log.cookiesAfter)
+      }
+      if (log.error) {
+        console.error('🎯 Error:', log.error)
+      }
+      console.groupEnd()
+    })
+    
+    // Enhanced cookie monitoring with more detailed logging
+    let lastCookies = document.cookie
+    const cookieWatcher = setInterval(() => {
+      if (document.cookie !== lastCookies) {
+        console.group('🎯 AGENT 4: Cookie Change Detected')
+        console.log('🎯 Previous cookies:', lastCookies)
+        console.log('🎯 New cookies:', document.cookie)
+        console.log('🎯 Timestamp:', new Date().toISOString())
+        
+        // Parse and compare individual cookies
+        const oldCookies = lastCookies ? lastCookies.split('; ').reduce((acc, cookie) => {
+          const [key, value] = cookie.split('=')
+          acc[key] = value
+          return acc
+        }, {} as Record<string, string>) : {}
+        
+        const newCookies = document.cookie ? document.cookie.split('; ').reduce((acc, cookie) => {
+          const [key, value] = cookie.split('=')
+          acc[key] = value
+          return acc
+        }, {} as Record<string, string>) : {}
+        
+        // Log specific changes
+        Object.keys(newCookies).forEach(key => {
+          if (oldCookies[key] !== newCookies[key]) {
+            console.log(`🎯 Cookie '${key}' changed:`, { old: oldCookies[key] || 'undefined', new: newCookies[key] })
+          }
+        })
+        
+        console.groupEnd()
+        lastCookies = document.cookie
+      }
+    }, 100)
+    
+    // Performance and timing logging
+    if (performance.timing) {
+      const timing = performance.timing
+      console.log('🎯 AGENT 4: Page performance timing:', {
+        pageLoad: timing.loadEventEnd - timing.navigationStart,
+        domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+        dnsLookup: timing.domainLookupEnd - timing.domainLookupStart,
+        tcpConnect: timing.connectEnd - timing.connectStart,
+        request: timing.responseStart - timing.requestStart,
+        response: timing.responseEnd - timing.responseStart
+      })
     }
+    
+    // Cleanup function
+    return () => {
+      unsubscribe()
+      clearInterval(cookieWatcher)
+    }
+  }, [])
+
+  const handleGameSelect = (game: Game) => {
+    if (!game.available) return
     
     setSelectedGame(game.id)
     setIsLoading(true)
     
-    // Animate transition then navigate
+    // Simple client-side demo authentication
+    document.cookie = 'demo_auth_token=demo_access_2025; path=/; max-age=86400; SameSite=Lax'
+    document.cookie = 'demo_user_role=student; path=/; max-age=86400; SameSite=Lax' 
+    document.cookie = 'user_role=student; path=/; max-age=86400; SameSite=Lax'
+    
+    // Navigate after brief delay
     setTimeout(() => {
       router.push(game.path)
     }, 500)
@@ -265,6 +351,9 @@ export default function GamesPage() {
           </div>
         </div>
       </div>
+      
+      {/* AGENT 4 Network Request Monitor UI */}
+      <NetworkDebugger isVisible={false} focusUrl="/api/user/role" />
     </div>
   )
 }

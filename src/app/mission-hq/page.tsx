@@ -36,12 +36,27 @@ export default function MissionHQ() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    console.log('🏰 CHECKPOINT P1: Mission-HQ page useEffect started')
+    console.log('🏰 CHECKPOINT P1: Current timestamp:', new Date().toISOString())
+    console.log('🏰 CHECKPOINT P1: Current URL:', window.location.href)
+    console.log('🏰 CHECKPOINT P1: Document cookies (client-readable only):', document.cookie)
+    
     // Check authentication and load mission progress from Supabase
     const checkAuthAndLoadProgress = async () => {
+      console.log('🏰 CHECKPOINT P2: Starting authentication verification process...')
+      
       try {
+        console.log('🏰 CHECKPOINT P3: Checking Supabase/real user authentication first...')
         // Check real user auth first
         const { user: authUser } = await getCurrentUser()
+        console.log('🏰 CHECKPOINT P3: getCurrentUser result:', authUser ? {
+          id: authUser.id,
+          email: authUser.email,
+          role: authUser.role
+        } : 'NO SUPABASE USER')
+        
         if (authUser) {
+          console.log('🏰 CHECKPOINT P3: ✅ Supabase user found, proceeding with real auth')
           setUser(authUser)
           // Fetch completed missions from Supabase
           const completed = await getCompletedMissions(authUser.id)
@@ -50,6 +65,8 @@ export default function MissionHQ() {
           return
         }
 
+        console.log('🏰 CHECKPOINT P4: No Supabase user, checking demo authentication from cookies...')
+        
         // CRITICAL FIX: Check demo authentication from cookies first (matches middleware)
         const getCookie = (name: string) => {
           const value = `; ${document.cookie}`
@@ -58,27 +75,46 @@ export default function MissionHQ() {
           return null
         }
         
+        console.log('🏰 CHECKPOINT P5: Parsing demo authentication cookies...')
         const demoToken = getCookie('demo_auth_token')
         const demoRole = getCookie('demo_user_role')
         
-        if (demoToken === 'demo_access_2024' && demoRole) {
-          setUser({
+        console.log('🏰 CHECKPOINT P5: Cookie parsing results:')
+        console.log('🏰 CHECKPOINT P5:   demo_auth_token:', demoToken || 'NOT FOUND')
+        console.log('🏰 CHECKPOINT P5:   demo_user_role:', demoRole || 'NOT FOUND')
+        console.log('🏰 CHECKPOINT P5:   Expected token: "demo_access_2025"')
+        console.log('🏰 CHECKPOINT P5:   Token match:', demoToken === 'demo_access_2025')
+        
+        if (demoToken === 'demo_access_2025' && demoRole) {
+          console.log('🏰 CHECKPOINT P6: ✅ Demo authentication successful!')
+          const demoUser = {
             role: demoRole as 'student' | 'teacher',
             id: 'demo_user',
             email: 'demo@codefly.com',
             isDemoUser: true
-          })
+          }
+          console.log('🏰 CHECKPOINT P6: Created demo user object:', demoUser)
+          setUser(demoUser)
           setCompletedMissions([])
           setLoading(false)
+          console.log('🏰 CHECKPOINT P6: Demo user state set successfully')
           return
         }
+        
+        console.log('🏰 CHECKPOINT P7: ❌ Demo cookie authentication failed, checking localStorage fallback...')
         
         // Fallback: Check localStorage authentication 
         const demoAuthenticated = localStorage.getItem('demo_authenticated') === 'true'
         const demoUserStr = localStorage.getItem('demo_user')
         
+        console.log('🏰 CHECKPOINT P8: localStorage values:')
+        console.log('🏰 CHECKPOINT P8:   demo_authenticated:', demoAuthenticated)
+        console.log('🏰 CHECKPOINT P8:   demo_user exists:', !!demoUserStr)
+        
         if (demoAuthenticated && demoUserStr) {
+          console.log('🏰 CHECKPOINT P8: ✅ localStorage auth found as fallback')
           const demoUser = JSON.parse(demoUserStr)
+          console.log('🏰 CHECKPOINT P8: localStorage demo user:', demoUser)
           setUser(demoUser)
           // Demo users get empty mission progress for now
           setCompletedMissions([])
@@ -86,10 +122,13 @@ export default function MissionHQ() {
           return
         }
 
+        console.log('🏰 CHECKPOINT P9: ❌ No valid authentication found anywhere')
+        console.log('🏰 CHECKPOINT P9: Redirecting to /auth page...')
         // No authentication found, redirect to auth
         router.push('/auth')
       } catch (error) {
-        console.error('Authentication check failed:', error)
+        console.error('🏰 CHECKPOINT ERROR: Authentication check failed with error:', error)
+        console.error('🏰 CHECKPOINT ERROR: Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
         setLoading(false)
         router.push('/auth')
       }

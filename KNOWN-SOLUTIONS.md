@@ -1,12 +1,67 @@
 # 📚 KNOWN SOLUTIONS DATABASE - CURRICULUM MVP
 
 ## Quick Reference Index
-1. [White Screen Issues](#white-screen-issues)
-2. [500 Server Errors](#500-server-errors)
-3. [JSX Syntax Errors](#jsx-syntax-errors)
-4. [Routes Manifest Missing](#routes-manifest-missing)
-5. [Dashboard Container Issues](#dashboard-container-issues)
-6. [Database Content Mismatch](#database-content-mismatch)
+1. [Auth Redirect Issues](#auth-redirect-issues) 🆕
+2. [White Screen Issues](#white-screen-issues)
+3. [500 Server Errors](#500-server-errors)
+4. [JSX Syntax Errors](#jsx-syntax-errors)
+5. [Routes Manifest Missing](#routes-manifest-missing)
+6. [Dashboard Container Issues](#dashboard-container-issues)
+7. [Database Content Mismatch](#database-content-mismatch)
+
+---
+
+## Auth Redirect Issues
+
+### Problem: Start Learning Button Redirects to Auth Instead of Mission-HQ
+**Date Discovered**: Sept 7, 2025
+**Status**: IN PROGRESS
+**Symptoms**: 
+- Clicking "Start Learning" on `/games` redirects to `/auth`
+- Auto-authentication with demo credentials not working
+- User not authenticated despite API call succeeding
+
+**Debug Steps Taken**:
+1. Added auto-auth API call in handleGameSelect
+2. Created POST endpoint to set demo cookies
+3. Updated demo tokens from 2024 to 2025
+4. Added comprehensive debug logging
+
+**SOLUTION**: ✅ **RESOLVED** - Cookie persistence issue between client and server
+
+**Root Cause**: Browser navigation was happening before cookies were fully committed to browser storage
+
+**Fix Applied**:
+1. **Increased navigation delay** from 500ms to 1000ms in games page
+2. **Added server-side cookie verification** before navigation
+3. **Enhanced cookie options** with explicit path configuration
+4. **Added /api/user/role to public routes** in middleware
+
+**Key Files Fixed**:
+- `/src/app/games/page.tsx` - Added cookie verification loop
+- `/src/app/api/user/role/route.ts` - Enhanced cookie setting with dual methods  
+- `/src/middleware.ts` - Added API routes to public access
+
+**Prevention**: Always verify server-side cookie availability before client navigation
+
+**Debug Commands**:
+```bash
+# Monitor console for debug output with prefixes:
+# 🎯 DEBUG: Games page
+# 🔥 DEBUG API: API route
+# ⚡ DEBUG MIDDLEWARE: Middleware
+# 🏰 DEBUG MISSION-HQ: Mission HQ page
+# 🍪 DEBUG COOKIES: Cookie operations
+
+# Test API endpoint directly
+curl -X POST http://localhost:3002/api/user/role \
+  -H "Content-Type: application/json" \
+  -d '{"role":"student","demoMode":true,"gameId":"agent-academy"}' \
+  -v
+
+# Check cookies in browser console
+document.cookie
+```
 
 ---
 
