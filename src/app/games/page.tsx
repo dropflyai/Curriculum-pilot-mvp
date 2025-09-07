@@ -1,36 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ParticleEffects from '@/components/ParticleEffects'
-import { networkMonitor, monitorApiCall, logBrowserState } from '@/lib/network-monitor'
-import NetworkDebugger from '@/components/NetworkDebugger'
-import '@/lib/network-test' // Import network test utilities
-
-// Check if user is authenticated
-function useAuth() {
-  const [user, setUser] = useState<any>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  
-  useEffect(() => {
-    // Check for test authentication
-    const testAuth = localStorage.getItem('test_authenticated')
-    const testUser = localStorage.getItem('test_user')
-    
-    if (testAuth === 'true' && testUser) {
-      try {
-        const parsedUser = JSON.parse(testUser)
-        setUser(parsedUser)
-        setIsAuthenticated(true)
-      } catch (e) {
-        console.error('Error parsing test user:', e)
-      }
-    }
-  }, [])
-  
-  return { user, isAuthenticated }
-}
 
 interface Game {
   id: string
@@ -115,87 +88,6 @@ export default function GamesPage() {
   const router = useRouter()
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { user, isAuthenticated } = useAuth()
-
-  // AGENT 4 - Network Request Monitor initialization
-  useEffect(() => {
-    console.log('🎯 AGENT 4: GamesPage loaded - Starting comprehensive network monitoring')
-    
-    // Initialize network monitoring (replaces basic fetch logging)
-    networkMonitor.enable()
-    logBrowserState()
-    
-    // Set up specific monitoring for /api/user/role calls
-    const unsubscribe = monitorApiCall('/api/user/role', (log) => {
-      console.group('🎯 AGENT 4: /api/user/role Call Monitored')
-      console.log('🎯 Request ID:', log.id)
-      console.log('🎯 Method:', log.method)
-      console.log('🎯 Status:', log.responseStatus)
-      console.log('🎯 Duration:', log.timing.duration + 'ms')
-      console.log('🎯 Cookie changes:', log.cookiesBefore !== log.cookiesAfter)
-      if (log.cookiesBefore !== log.cookiesAfter) {
-        console.log('🎯 Before:', log.cookiesBefore)
-        console.log('🎯 After:', log.cookiesAfter)
-      }
-      if (log.error) {
-        console.error('🎯 Error:', log.error)
-      }
-      console.groupEnd()
-    })
-    
-    // Enhanced cookie monitoring with more detailed logging
-    let lastCookies = document.cookie
-    const cookieWatcher = setInterval(() => {
-      if (document.cookie !== lastCookies) {
-        console.group('🎯 AGENT 4: Cookie Change Detected')
-        console.log('🎯 Previous cookies:', lastCookies)
-        console.log('🎯 New cookies:', document.cookie)
-        console.log('🎯 Timestamp:', new Date().toISOString())
-        
-        // Parse and compare individual cookies
-        const oldCookies = lastCookies ? lastCookies.split('; ').reduce((acc, cookie) => {
-          const [key, value] = cookie.split('=')
-          acc[key] = value
-          return acc
-        }, {} as Record<string, string>) : {}
-        
-        const newCookies = document.cookie ? document.cookie.split('; ').reduce((acc, cookie) => {
-          const [key, value] = cookie.split('=')
-          acc[key] = value
-          return acc
-        }, {} as Record<string, string>) : {}
-        
-        // Log specific changes
-        Object.keys(newCookies).forEach(key => {
-          if (oldCookies[key] !== newCookies[key]) {
-            console.log(`🎯 Cookie '${key}' changed:`, { old: oldCookies[key] || 'undefined', new: newCookies[key] })
-          }
-        })
-        
-        console.groupEnd()
-        lastCookies = document.cookie
-      }
-    }, 100)
-    
-    // Performance and timing logging
-    if (performance.timing) {
-      const timing = performance.timing
-      console.log('🎯 AGENT 4: Page performance timing:', {
-        pageLoad: timing.loadEventEnd - timing.navigationStart,
-        domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
-        dnsLookup: timing.domainLookupEnd - timing.domainLookupStart,
-        tcpConnect: timing.connectEnd - timing.connectStart,
-        request: timing.responseStart - timing.requestStart,
-        response: timing.responseEnd - timing.responseStart
-      })
-    }
-    
-    // Cleanup function
-    return () => {
-      unsubscribe()
-      clearInterval(cookieWatcher)
-    }
-  }, [])
 
   const handleGameSelect = (game: Game) => {
     if (!game.available) return
@@ -214,15 +106,6 @@ export default function GamesPage() {
     }, 500)
   }
 
-  const handleSignOut = () => {
-    localStorage.removeItem('test_user')
-    localStorage.removeItem('test_authenticated')
-    document.cookie = 'test_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    document.cookie = 'test_authenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    document.cookie = 'user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    window.location.reload()
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
       <ParticleEffects type="ambient" count={30} />
@@ -237,26 +120,12 @@ export default function GamesPage() {
               </h1>
               <p className="text-gray-300 mt-1">Choose Your Coding Adventure</p>
             </div>
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-cyan-400 font-medium">
-                  Welcome, {user?.full_name || user?.email}!
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-red-500/50 hover:shadow-lg transition-all"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <Link 
-                href="/auth"
-                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
-              >
-                Sign In
-              </Link>
-            )}
+            <Link 
+              href="/auth"
+              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
+            >
+              Sign In
+            </Link>
           </div>
         </div>
       </div>
@@ -399,9 +268,6 @@ export default function GamesPage() {
           </div>
         </div>
       </div>
-      
-      {/* AGENT 4 Network Request Monitor UI */}
-      <NetworkDebugger isVisible={false} focusUrl="/api/user/role" />
     </div>
   )
 }
