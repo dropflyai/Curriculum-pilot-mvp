@@ -68,14 +68,36 @@ function AuthPageContent() {
             role: testAccount.role
           }
           
-          // Store in localStorage and cookies
+          // Store in localStorage and cookies with improved handling
           localStorage.setItem('test_user', JSON.stringify(mockUser))
           localStorage.setItem('test_authenticated', 'true')
           
           const userCookie = encodeURIComponent(JSON.stringify(mockUser))
-          document.cookie = `test_user=${userCookie}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
-          document.cookie = `test_authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
-          document.cookie = `user_role=${testAccount.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`
+          const isSecure = window.location.protocol === 'https:'
+          const cookieOptions = `path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax${isSecure ? '; Secure' : ''}`
+          
+          // Set cookies with proper error handling
+          try {
+            document.cookie = `test_user=${userCookie}; ${cookieOptions}`
+            document.cookie = `test_authenticated=true; ${cookieOptions}`
+            document.cookie = `user_role=${testAccount.role}; ${cookieOptions}`
+            
+            // Small delay to ensure cookies are set before redirect
+            await new Promise(resolve => setTimeout(resolve, 100))
+          } catch (cookieError) {
+            console.error('Cookie setting error:', cookieError)
+          }
+          
+          // Check if user was trying to access a specific game
+          const intendedGame = localStorage.getItem('intended_game')
+          if (intendedGame) {
+            localStorage.removeItem('intended_game')
+            // Map game to appropriate route
+            if (intendedGame === 'agent-academy') {
+              router.push('/mission-hq')
+              return
+            }
+          }
           
           // Redirect based on role without API calls
           if (testAccount.role === 'teacher') {

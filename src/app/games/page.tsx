@@ -8,6 +8,30 @@ import { networkMonitor, monitorApiCall, logBrowserState } from '@/lib/network-m
 import NetworkDebugger from '@/components/NetworkDebugger'
 import '@/lib/network-test' // Import network test utilities
 
+// Check if user is authenticated
+function useAuth() {
+  const [user, setUser] = useState<any>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  
+  useEffect(() => {
+    // Check for test authentication
+    const testAuth = localStorage.getItem('test_authenticated')
+    const testUser = localStorage.getItem('test_user')
+    
+    if (testAuth === 'true' && testUser) {
+      try {
+        const parsedUser = JSON.parse(testUser)
+        setUser(parsedUser)
+        setIsAuthenticated(true)
+      } catch (e) {
+        console.error('Error parsing test user:', e)
+      }
+    }
+  }, [])
+  
+  return { user, isAuthenticated }
+}
+
 interface Game {
   id: string
   title: string
@@ -91,6 +115,7 @@ export default function GamesPage() {
   const router = useRouter()
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const { user, isAuthenticated } = useAuth()
 
   // AGENT 4 - Network Request Monitor initialization
   useEffect(() => {
@@ -189,6 +214,15 @@ export default function GamesPage() {
     }, 500)
   }
 
+  const handleSignOut = () => {
+    localStorage.removeItem('test_user')
+    localStorage.removeItem('test_authenticated')
+    document.cookie = 'test_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    document.cookie = 'test_authenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    document.cookie = 'user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    window.location.reload()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
       <ParticleEffects type="ambient" count={30} />
@@ -203,12 +237,26 @@ export default function GamesPage() {
               </h1>
               <p className="text-gray-300 mt-1">Choose Your Coding Adventure</p>
             </div>
-            <Link 
-              href="/auth"
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
-            >
-              Sign In
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-cyan-400 font-medium">
+                  Welcome, {user?.full_name || user?.email}!
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-red-500/50 hover:shadow-lg transition-all"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link 
+                href="/auth"
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>
