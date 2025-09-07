@@ -110,19 +110,13 @@ export default function GamesPage() {
       {/* Header */}
       <div className="relative z-10">
         <div className="bg-black/50 backdrop-blur-lg border-b border-cyan-500/30 p-6">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="max-w-7xl mx-auto">
             <div>
               <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                 CodeFly ✈️
               </h1>
               <p className="text-gray-300 mt-1">Choose Your Coding Adventure</p>
             </div>
-            <Link 
-              href="/auth"
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
-            >
-              Sign In
-            </Link>
           </div>
         </div>
       </div>

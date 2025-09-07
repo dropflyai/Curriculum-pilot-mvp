@@ -10,6 +10,7 @@ const ROUTE_PROTECTION = {
     '/auth/signup', 
     '/signin',
     '/games',
+    '/mission-hq',
     '/api/lessons',
     '/api/list'
   ],
@@ -22,7 +23,6 @@ const ROUTE_PROTECTION = {
     '/python-lesson',
     '/python-lesson-direct',
     '/mission',
-    '/mission-hq',
     '/dashboard',
     '/agent-academy-lesson-dashboard',
     '/ai-literacy',
