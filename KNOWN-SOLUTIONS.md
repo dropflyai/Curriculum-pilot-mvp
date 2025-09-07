@@ -1,12 +1,17 @@
 # 📚 KNOWN SOLUTIONS DATABASE - CURRICULUM MVP
 
+## 🚨 CRITICAL ISSUES (Check First!)
+- **[Games Redirect Issue](#games-page-redirect-issue)** - RECURRING! (3rd time) → See [REDIRECT-TROUBLESHOOTING-GUIDE.md](./REDIRECT-TROUBLESHOOTING-GUIDE.md)
+
 ## Quick Reference Index
-1. [White Screen Issues](#white-screen-issues)
-2. [500 Server Errors](#500-server-errors)
-3. [JSX Syntax Errors](#jsx-syntax-errors)
-4. [Routes Manifest Missing](#routes-manifest-missing)
-5. [Dashboard Container Issues](#dashboard-container-issues)
-6. [Database Content Mismatch](#database-content-mismatch)
+1. [🚨 Games Redirect Issue](#games-page-redirect-issue) - **RECURRING CRITICAL**
+2. [White Screen Issues](#white-screen-issues)
+3. [500 Server Errors](#500-server-errors)
+4. [JSX Syntax Errors](#jsx-syntax-errors)
+5. [Routes Manifest Missing](#routes-manifest-missing)
+6. [Dashboard Container Issues](#dashboard-container-issues)
+7. [Database Content Mismatch](#database-content-mismatch)
+8. [Vercel Build Failures](#vercel-build-failures)
 
 ---
 
@@ -211,69 +216,25 @@ npx vercel --prod --yes  # Should deploy without errors
 
 ---
 
-## Games Page Redirect Issue
+## 🚨 Games Page Redirect Issue
 
 ### Problem: "Start Learning" Button Redirects to /auth Instead of Working
-**Fixed on**: Sept 6, 2025, Sept 7, 2025 (RECURRING ISSUE - 3rd time!)
+**CRITICAL RECURRING ISSUE** - Occurrence #3
+**Fixed on**: Sept 6, 2025, Sept 7, 2025 (twice), Sept 7, 2025 (created comprehensive guide)
 **Symptoms**: Clicking "Start Learning" button on `/games` page redirects to `/auth` instead of `/mission-hq`
+
+**⚡ IMMEDIATE ACTION REQUIRED**: 
+→ **See [REDIRECT-TROUBLESHOOTING-GUIDE.md](./REDIRECT-TROUBLESHOOTING-GUIDE.md) for complete fix protocol**
+→ **See [VERIFICATION-CHECKLIST.md](./VERIFICATION-CHECKLIST.md) for testing steps**
 
 **ROOT CAUSE**: After restoring git commits, middleware.ts reverts to protecting `/games` and `/mission-hq` routes
 
-**EXACT SOLUTION**:
-1. **Make `/games` public** (so it loads without auth)
-2. **Make `/mission-hq` public** (so "Start Learning" works)
-3. **Remove "Sign In" button** from games page header
+**QUICK FIX** (Full details in troubleshooting guide):
+1. Move `/games` and `/mission-hq` to public routes in middleware.ts
+2. Remove from student routes section
+3. Test immediately: games → Start Learning → should reach mission-hq
 
-**Files to modify**:
-
-`src/middleware.ts` - Move routes from student to public:
-```typescript
-// CORRECT CONFIGURATION:
-const ROUTE_PROTECTION = {
-  public: [
-    '/',
-    '/auth',
-    '/auth/signup', 
-    '/signin',
-    '/games',        // <- MUST BE HERE
-    '/mission-hq',   // <- MUST BE HERE  
-    '/api/lessons',
-    '/api/list'
-  ],
-  
-  student: [
-    '/student',
-    '/homework',
-    '/lesson',
-    '/python-lesson',
-    '/python-lesson-direct',
-    '/mission',
-    // Remove /games and /mission-hq from here
-    '/dashboard',
-    // ... rest of student routes
-  ]
-}
-```
-
-`src/app/games/page.tsx` - Remove Sign In button:
-```typescript
-// REMOVE THIS ENTIRE BLOCK from header:
-<Link 
-  href="/auth"
-  className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-cyan-500/50 hover:shadow-lg transition-all"
->
-  Sign In
-</Link>
-```
-
-**Verification Commands**:
-```bash
-git add src/middleware.ts src/app/games/page.tsx
-git commit -m "🔧 KNOWN FIX: Games redirect issue - make /games and /mission-hq public"
-git push origin main
-```
-
-**WARNING**: This issue returns every time we restore git commits. ALWAYS apply this fix after git restores.
+**⚠️ WARNING**: This issue returns after git commit restores. Check middleware after any git operations!
 
 ---
 

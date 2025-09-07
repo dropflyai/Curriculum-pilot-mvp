@@ -174,6 +174,9 @@ function hasRequiredRole(userRole: string | null, requiredRole: string): boolean
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
+  // DEBUG: Log all middleware requests
+  console.log(`🔍 MIDDLEWARE DEBUG - Path: ${pathname}`)
+  
   // Skip middleware for static files, API routes (except protected ones), and Next.js internals
   if (
     pathname.startsWith('/_next') ||
@@ -181,6 +184,7 @@ export function middleware(request: NextRequest) {
     pathname.includes('.') && !pathname.includes('/api/') ||
     pathname.startsWith('/favicon')
   ) {
+    console.log(`⏩ MIDDLEWARE DEBUG - Skipping static/internal path: ${pathname}`)
     return NextResponse.next()
   }
 
@@ -195,6 +199,7 @@ export function middleware(request: NextRequest) {
 
   // Handle public routes
   if (matchesRoutes(pathname, ROUTE_PROTECTION.public)) {
+    console.log(`✅ MIDDLEWARE DEBUG - Public route allowed: ${pathname}`)
     // Allow access to auth pages even if authenticated (so users can switch accounts)
     return NextResponse.next()
   }
@@ -211,6 +216,7 @@ export function middleware(request: NextRequest) {
 
   // All other routes require authentication
   if (!isAuthenticated) {
+    console.log(`🔐 MIDDLEWARE DEBUG - No authentication, redirecting to /auth from: ${pathname}`)
     // Store the intended destination for redirect after login
     const response = NextResponse.redirect(new URL('/auth', request.url))
     response.cookies.set('redirect_after_login', pathname, { httpOnly: true, maxAge: 600 }) // 10 minutes
