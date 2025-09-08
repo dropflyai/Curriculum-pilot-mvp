@@ -19,9 +19,9 @@ export default function TestCredentialsPage() {
     )
     
     if (account) {
-      return `✅ SUCCESS: ${email} / ${password} → ${account.role}`
+      return `✅ SUCCESS: ${email} → ${account.role}`
     } else {
-      return `❌ FAILED: ${email} / ${password}`
+      return `❌ FAILED: ${email} (invalid credentials)`
     }
   }
 
@@ -43,15 +43,20 @@ export default function TestCredentialsPage() {
         <h1 className="text-3xl font-bold mb-6 text-center">🔐 CodeFly Credential Tester</h1>
         
         <div className="bg-gray-800 p-6 rounded-lg mb-6">
-          <h2 className="text-xl font-bold mb-4">Current Test Accounts</h2>
+          <h2 className="text-xl font-bold mb-4">Available Test Accounts</h2>
           <div className="space-y-2 font-mono text-sm">
             {testAccounts.map((acc, i) => (
               <div key={i} className="bg-gray-700 p-3 rounded">
                 <div className="text-blue-300">📧 {acc.email}</div>
-                <div className="text-green-300">🔑 {acc.password}</div>
+                <div className="text-green-300">🔑 ••••••••••••••</div>
                 <div className="text-yellow-300">👤 {acc.role}</div>
               </div>
             ))}
+          </div>
+          <div className="mt-4 p-4 bg-red-900/50 border border-red-500 rounded">
+            <div className="text-red-300 text-sm">
+              🔒 <strong>Security Notice:</strong> Passwords are hidden for security. Use the credentials below for testing.
+            </div>
           </div>
         </div>
 

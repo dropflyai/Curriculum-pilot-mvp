@@ -23,11 +23,7 @@ function AuthPageContent() {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('🚨 FORM SUBMIT TRIGGERED - Handler called successfully!')
-    console.log('🔍 Form data received:', formData)
-    console.log('🔍 Email entered:', `"${formData.email}"`)
-    console.log('🔍 Password entered:', `"${formData.password}"`)
-    console.log('🔍 Password length:', formData.password.length)
+    // Security: Removed all password logging
     
     e.preventDefault()
     setLoading(true)
@@ -64,17 +60,10 @@ function AuthPageContent() {
           { email: 'teacher@codefly.demo', password: 'CodeFly2025!Teacher$', role: 'teacher', fullName: 'Demo Teacher' }
         ]
 
-        // Debug logging
-        console.log('Trying to login with:', formData.email, 'password length:', formData.password.length)
-        console.log('Password entered:', formData.password)
-        
-        const testAccount = testAccounts.find(acc => {
-          const matches = acc.email.toLowerCase() === formData.email.toLowerCase() && acc.password === formData.password
-          if (acc.email.toLowerCase() === formData.email.toLowerCase()) {
-            console.log(`Found email match: ${acc.email}, password match: ${matches}`)
-          }
-          return matches
-        })
+        // Secure authentication check - no logging of credentials
+        const testAccount = testAccounts.find(acc => 
+          acc.email.toLowerCase() === formData.email.toLowerCase() && acc.password === formData.password
+        )
         
         if (testAccount) {
           // Set authentication cookies
@@ -106,10 +95,7 @@ function AuthPageContent() {
         // If not a test account, try regular auth
         const { user, error } = await signIn(formData.email, formData.password)
         if (error) {
-          console.log('Auth failed for:', formData.email)
-          console.log('Available test accounts: student@test.com, teacher@test.com, student@codefly.demo, teacher@codefly.demo')
-          console.log('Test passwords: test123 (for test accounts) or CodeFly2025!Teacher$ (for demo accounts)')
-          throw new Error('Invalid email or password. Try: teacher@codefly.demo / CodeFly2025!Teacher$')
+          throw new Error('Invalid email or password. Please check your credentials and try again.')
         }
         
         if (user) {
