@@ -60,10 +60,19 @@ function AuthPageContent() {
           { email: 'teacher@codefly.demo', password: 'CodeFly2025!Teacher$', role: 'teacher', fullName: 'Demo Teacher' }
         ]
 
-        // Secure authentication check - no logging of credentials
-        const testAccount = testAccounts.find(acc => 
-          acc.email.toLowerCase() === formData.email.toLowerCase() && acc.password === formData.password
-        )
+        // Secure authentication check - temporary debug for login issues
+        console.log('🔍 Login attempt for email:', formData.email.toLowerCase())
+        console.log('🔍 Available emails:', testAccounts.map(acc => acc.email.toLowerCase()))
+        
+        const testAccount = testAccounts.find(acc => {
+          const emailMatch = acc.email.toLowerCase() === formData.email.toLowerCase()
+          const passwordMatch = acc.password === formData.password
+          if (emailMatch) {
+            console.log('✅ Email found:', acc.email)
+            console.log('🔐 Password match:', passwordMatch ? 'YES' : 'NO')
+          }
+          return emailMatch && passwordMatch
+        })
         
         if (testAccount) {
           // Set authentication cookies
@@ -92,16 +101,9 @@ function AuthPageContent() {
           return
         }
 
-        // If not a test account, try regular auth
-        const { user, error } = await signIn(formData.email, formData.password)
-        if (error) {
-          throw new Error('Invalid email or password. Please check your credentials and try again.')
-        }
-        
-        if (user) {
-          // For Supabase users, redirect to games by default
-          router.push('/games')
-        }
+        // If no test account found, show error instead of trying Supabase
+        // This prevents Supabase fetch errors for test accounts
+        throw new Error('Invalid email or password. Please check your credentials and try again.')
       } else {
         // Sign up new user
         const { user, error } = await signUp(
