@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn, signUp } from '@/lib/auth'
+import { signUp } from '@/lib/auth'
 import { Eye, EyeOff, User, Mail, Lock, UserCheck, Play, GraduationCap, ArrowLeft, Home, Sparkles, Rocket } from 'lucide-react'
 import Link from 'next/link'
 
@@ -101,9 +101,9 @@ function AuthPageContent() {
           return
         }
 
-        // If no test account found, show error instead of trying Supabase
-        // This prevents Supabase fetch errors for test accounts
-        throw new Error('Invalid email or password. Please check your credentials and try again.')
+        // If no test account found, show clear error message
+        console.log('❌ No matching test account found')
+        throw new Error('Invalid credentials. Please use the test accounts provided or contact support.')
       } else {
         // Sign up new user
         const { user, error } = await signUp(
