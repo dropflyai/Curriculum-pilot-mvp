@@ -139,14 +139,66 @@ export const CYBER_SECURITY_ACADEMY: GameCurriculum = {
   ]
 }
 
+// ================ AGENT ACADEMY CURRICULUM ================
+export const AGENT_ACADEMY: GameCurriculum = {
+  gameName: "Agent Academy",
+  gameDescription: "Learn AI agent development through spy-themed missions and tactical operations",
+  totalWeeks: 18,
+  stateCompliance: [
+    {
+      stateName: "California",
+      stateCode: "CA",
+      standardsBody: "California Computer Science Standards (Based on CSTA K-12)",
+      website: "https://www.cde.ca.gov/ci/cr/cf/",
+      mappings: [
+        {
+          standardCode: "9-12.IC.25",
+          standardTitle: "Impacts of Computing - AI and Society",
+          description: "Evaluate the societal impacts of artificial intelligence systems",
+          gameLocation: "AI Ethics Center",
+          gameWeeks: "Weeks 1-3",
+          gameActivities: ["AI bias analysis", "Ethical AI frameworks", "Algorithmic fairness assessment"]
+        },
+        {
+          standardCode: "9-12.AP.22",
+          standardTitle: "Algorithms and Programming - AI Integration",
+          description: "Design programs that incorporate AI and machine learning concepts",
+          gameLocation: "Agent Development Lab",
+          gameWeeks: "Weeks 4-18",
+          gameActivities: ["API integration", "Agent workflow design", "Multi-agent systems"]
+        }
+      ]
+    },
+    {
+      stateName: "Texas",
+      stateCode: "TX",
+      standardsBody: "Texas Essential Knowledge and Skills (TEKS) - Technology Applications",
+      website: "https://www.teksresourcesystem.net/",
+      mappings: [
+        {
+          standardCode: "126.44(c)(4)(A)",
+          standardTitle: "Computational Thinking - Problem Solving",
+          description: "Use computational thinking to solve complex problems",
+          gameLocation: "Mission Strategy Center",
+          gameWeeks: "Weeks 5-10",
+          gameActivities: ["Decision tree design", "Logic flow optimization", "Problem decomposition"]
+        },
+        {
+          standardCode: "126.44(c)(6)(C)",
+          standardTitle: "Programming - Advanced Applications",
+          description: "Create programs using advanced programming concepts",
+          gameLocation: "Advanced Coding Arena",
+          gameWeeks: "Weeks 11-18",
+          gameActivities: ["Function development", "Object-oriented design", "Database integration"]
+        }
+      ]
+    }
+  ]
+}
+
 // ================ EXPORT ALL CURRICULA ================
 export const ALL_CURRICULA = {
-  'agent-academy': {
-    gameName: "Agent Academy",
-    gameDescription: "Learn Python programming through spy-themed missions and tactical operations", 
-    totalWeeks: 18,
-    // Full curriculum data would be imported from StandardsCompliancePopup component
-  },
+  'agent-academy': AGENT_ACADEMY,
   'web-dev-academy': WEB_DEV_ACADEMY,
   'game-design-studio': GAME_DESIGN_STUDIO, 
   'ai-exploration-lab': AI_EXPLORATION_LAB,
