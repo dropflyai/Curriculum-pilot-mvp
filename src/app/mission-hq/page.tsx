@@ -143,55 +143,107 @@ export default function MissionHQ() {
   // Base mission data - status will be determined dynamically
   const baseMissions: Omit<Mission, 'status'>[] = [
     {
-      id: 'shadow-protocol',
-      name: 'OPERATION BEACON',
-      codename: 'OPERATION: SOLO MISSIONS',
+      id: 'binary-shores-academy',
+      name: 'BINARY SHORES ACADEMY',
+      codename: 'OPERATION: INTRODUCTION & SETUP',
       difficulty: 'BEGINNER',
-      duration: '4 WEEKS',
+      duration: '2 WEEKS',
+      xpReward: 2500,
+      progress: 0,
+      description: 'Operation 1: Introduction & Setup. Master Python basics and AI agent fundamentals. Set up your development environment and learn ethical AI guidelines.',
+      image: '/CodeFly Homepage.png',
+      route: '/mission/binary-shores-academy'
+    },
+    {
+      id: 'variable-village',
+      name: 'VARIABLE VILLAGE',
+      codename: 'OPERATION: DATA TYPES & VARIABLES',
+      difficulty: 'BEGINNER',
+      duration: '2 WEEKS',
+      xpReward: 3000,
+      progress: 0,
+      description: 'Operation 2: Data Types & Variables. Learn to handle data processing, JSON manipulation, and structured prompts with error recovery protocols.',
+      image: '/CodeFly Homepage 2.png',
+      prerequisite: 'BINARY SHORES ACADEMY',
+      route: '/mission/variable-village'
+    },
+    {
+      id: 'logic-lake-outpost',
+      name: 'LOGIC LAKE OUTPOST',
+      codename: 'OPERATION: CONDITIONALS & BOOLEAN LOGIC',
+      difficulty: 'INTERMEDIATE',
+      duration: '3 WEEKS',
+      xpReward: 4000,
+      progress: 0,
+      description: 'Operation 3: Conditionals & Boolean Logic. Build AI decision systems with ethical frameworks and explainable AI components.',
+      image: '/CodeFly Homepage 3.png',
+      prerequisite: 'VARIABLE VILLAGE',
+      route: '/mission/logic-lake-outpost'
+    },
+    {
+      id: 'loop-canyon-base',
+      name: 'LOOP CANYON BASE',
+      codename: 'OPERATION: LOOPS & ITERATION',
+      difficulty: 'INTERMEDIATE',
+      duration: '3 WEEKS',
+      xpReward: 4500,
+      progress: 0,
+      description: 'Operation 4: For/While Loops & Iteration. Master batch processing with environmental responsibility and resource optimization.',
+      image: '/CodeFly Homepage.png',
+      prerequisite: 'LOGIC LAKE OUTPOST',
+      route: '/mission/loop-canyon-base'
+    },
+    {
+      id: 'function-forest-station',
+      name: 'FUNCTION FOREST STATION',
+      codename: 'OPERATION: FUNCTIONS & PARAMETERS',
+      difficulty: 'ADVANCED',
+      duration: '3 WEEKS',
       xpReward: 5000,
       progress: 0,
-      description: 'Phase 1 of Agent Academy. Master Python fundamentals through solo infiltration missions. Learn variables, loops, and basic algorithms.',
-      image: '/CodeFly Homepage.png',
-      route: '/mission/operation-beacon'
+      description: 'Operation 5: Functions & Parameters. Create AI tool systems with safety constraints and ethical guardrails. Partner with real companies.',
+      image: '/CodeFly Homepage 2.png',
+      prerequisite: 'LOOP CANYON BASE',
+      route: '/mission/function-forest-station'
     },
     {
-      id: 'cipher-command',
-      name: 'CIPHER COMMAND',
-      codename: 'OPERATION: TEAM FORMATION',
-      difficulty: 'INTERMEDIATE',
-      duration: '4 WEEKS',
+      id: 'array-mountains-facility',
+      name: 'ARRAY MOUNTAINS FACILITY',
+      codename: 'OPERATION: LISTS & DATA STRUCTURES',
+      difficulty: 'ADVANCED',
+      duration: '2 WEEKS',
+      xpReward: 5500,
+      progress: 0,
+      description: 'Operation 6: Lists & Data Structures. Build knowledge systems with privacy-by-design using vector embeddings and RAG systems.',
+      image: '/CodeFly Homepage 3.png',
+      prerequisite: 'FUNCTION FOREST STATION',
+      route: '/mission/array-mountains-facility'
+    },
+    {
+      id: 'object-oasis-complex',
+      name: 'OBJECT OASIS COMPLEX',
+      codename: 'OPERATION: CLASSES & OOP',
+      difficulty: 'EXPERT',
+      duration: '2 WEEKS',
+      xpReward: 6000,
+      progress: 0,
+      description: 'Operation 7: Classes & OOP. Orchestrate multi-agent systems with governance frameworks and state management protocols.',
+      image: '/CodeFly Homepage.png',
+      prerequisite: 'ARRAY MOUNTAINS FACILITY',
+      route: '/mission/object-oasis-complex'
+    },
+    {
+      id: 'database-depths',
+      name: 'DATABASE DEPTHS',
+      codename: 'OPERATION: FINAL PROJECT & DATA MANAGEMENT',
+      difficulty: 'EXTREME',
+      duration: '1 WEEK',
       xpReward: 7500,
       progress: 0,
-      description: 'Phase 2 of Agent Academy. Form elite coding teams and master functions, data structures, and collaborative programming tactics.',
+      description: 'Operation 8: Final Project & Data Management. Deploy complete ethical AI systems with impact assessment and stakeholder communication.',
       image: '/CodeFly Homepage 2.png',
-      prerequisite: 'OPERATION BEACON',
-      route: '/mission/cipher-command'
-    },
-    {
-      id: 'ghost-protocol',
-      name: 'LOOP CANYON BASE',
-      codename: 'OPERATION: TEAM COLLABORATION',
-      difficulty: 'ADVANCED',
-      duration: '5 WEEKS',
-      xpReward: 10000,
-      progress: 0,
-      description: 'Phase 3 of Agent Academy. Execute complex team missions using object-oriented programming and advanced Python concepts.',
-      image: '/CodeFly Homepage 3.png',
-      prerequisite: 'CIPHER COMMAND',
-      route: '/mission/ghost-protocol'
-    },
-    {
-      id: 'quantum-breach',
-      name: 'QUANTUM BREACH',
-      codename: 'OPERATION: ADVANCED PROJECTS',
-      difficulty: 'EXPERT',
-      duration: '5 WEEKS',
-      xpReward: 15000,
-      progress: 0,
-      description: 'Phase 4 of Agent Academy. Deploy advanced team projects using APIs, databases, and real-world Python applications.',
-      image: '/CodeFly Homepage 3.png',
-      prerequisite: 'LOOP CANYON BASE',
-      route: '/mission/quantum-breach'
+      prerequisite: 'OBJECT OASIS COMPLEX',
+      route: '/mission/database-depths'
     }
   ]
 
@@ -318,8 +370,8 @@ export default function MissionHQ() {
             <div className="flex items-center gap-3">
               <Target className="w-5 h-5 text-blue-400" />
               <div>
-                <div className="text-2xl font-bold text-blue-400">3/15</div>
-                <div className="text-xs text-gray-400 font-mono">MISSIONS COMPLETE</div>
+                <div className="text-2xl font-bold text-blue-400">1/8</div>
+                <div className="text-xs text-gray-400 font-mono">OPERATIONS COMPLETE</div>
               </div>
             </div>
           </div>
@@ -359,7 +411,7 @@ export default function MissionHQ() {
             AVAILABLE OPERATIONS
           </h3>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             {missions.map((mission) => (
               <div
                 key={mission.id}
