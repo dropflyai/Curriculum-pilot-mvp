@@ -48,10 +48,10 @@ export default function AITutorKnowledgeBase() {
     {
       id: '3',
       category: 'hint',
-      title: 'Magic 8-Ball Random Responses',
+      title: 'Agent Cipher Decoder Random Responses',
       content: 'Use the random.choice() function to pick a random response from a list. Example: response = random.choice(responses)',
-      tags: ['random', 'lists', 'magic-8-ball'],
-      relatedLessons: ['Project: Magic 8-Ball'],
+      tags: ['random', 'lists', 'cipher-decoder'],
+      relatedLessons: ['Project: Agent Academy Cipher Decoder'],
       usageCount: 28,
       lastUsed: '1 day ago',
       createdAt: '2024-03-05'

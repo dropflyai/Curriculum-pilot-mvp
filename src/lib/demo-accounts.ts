@@ -11,14 +11,14 @@ export interface DemoAccount {
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     email: 'student@codefly.demo',
-    password: 'demo123',
+    password: 'CodeFly2025!Student$',
     fullName: 'Alex Demo Student',
     role: 'student',
     description: 'Demo student account with progress in lessons and homework'
   },
   {
     email: 'teacher@codefly.demo',
-    password: 'demo123',
+    password: 'CodeFly2025!Teacher$',
     fullName: 'Ms. Sarah Demo Teacher',
     role: 'teacher',
     description: 'Demo teacher account with access to full classroom management'

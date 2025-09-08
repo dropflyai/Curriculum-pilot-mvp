@@ -5,7 +5,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
  * ==================================================
  * Hand-off bundle for a senior engineer to drop into any React app.
  * Includes:
- *   • SVG quest map @ 1200×800 with 8 missions (S-curve path)
+ *   • SVG quest map @ 1200×800 with 8 Agent Academy missions (tactical path)
  *   • Status: completed ✅, current ⚡ (animated ring), locked 🔒
  *   • XP, streaks, badge system + analytics events
  *   • Progress persistence via pluggable DataAdapter (Supabase / REST)
@@ -76,16 +76,16 @@ export const COLORS = {
   sublabel: "#9ca3af",
 };
 
-// Default 8-mission S-curve (1200×800)
+// Default 8-mission Agent Academy Operations (1200×800)
 export const DEFAULT_MISSIONS: Mission[] = [
-  { id: 1, key: "academy",   name: "Operation Beacon",  x: 120,  y: 380, status: "completed", icon: "castle",   route: "/mission/operation-beacon" },
-  { id: 2, key: "variables",  name: "Cipher Command", x: 380,  y: 200, status: "completed", icon: "warehouse", route: "/mission/cipher-command" },
-  { id: 3, key: "logic",      name: "AI Command Center",      x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/mission/ai-command-center" },
-  { id: 4, key: "loops",      name: "Quantum Breach",     x: 950,  y: 180, status: "locked",    icon: "factory",  route: "/mission/quantum-breach" },
-  { id: 5, key: "functions",  name: "Function Lab",     x: 1080, y: 320, status: "locked",    icon: "lab",      route: "/course/5" },
-  { id: 6, key: "arrays",     name: "Array Center",     x: 950,  y: 620, status: "locked",    icon: "array",    route: "/course/6" },
-  { id: 7, key: "objects",    name: "Object Studio",    x: 620,  y: 660, status: "locked",    icon: "studio",   route: "/course/7" },
-  { id: 8, key: "database",   name: "Database Ops",     x: 300,  y: 600, status: "locked",    icon: "database", route: "/course/8" },
+  { id: 1, key: "binary-shores",     name: "Binary Shores Academy",    x: 120,  y: 380, status: "completed", icon: "castle",   route: "/mission/operation-beacon" },
+  { id: 2, key: "variable-village",  name: "Variable Village",          x: 380,  y: 200, status: "completed", icon: "warehouse", route: "/mission/cipher-command" },
+  { id: 3, key: "logic-lake",        name: "Logic Lake Outpost",        x: 600,  y: 180, status: "current",   icon: "tower",    progress: 0.5, route: "/mission/logic-lake" },
+  { id: 4, key: "loop-canyon",       name: "Loop Canyon Base",          x: 950,  y: 180, status: "locked",    icon: "factory",  route: "/mission/loop-canyon" },
+  { id: 5, key: "function-forest",   name: "Function Forest Station",   x: 1080, y: 320, status: "locked",    icon: "lab",      route: "/mission/function-forest" },
+  { id: 6, key: "array-mountains",   name: "Array Mountains Facility",  x: 950,  y: 620, status: "locked",    icon: "array",    route: "/mission/array-mountains" },
+  { id: 7, key: "object-oasis",      name: "Object Oasis Complex",      x: 620,  y: 660, status: "locked",    icon: "studio",   route: "/mission/object-oasis" },
+  { id: 8, key: "database-depths",   name: "Database Depths",           x: 300,  y: 600, status: "locked",    icon: "database", route: "/mission/database-depths" },
 ];
 
 export const DEFAULT_RECORD = (userId: string, courseId: string): ProgressRecord => ({

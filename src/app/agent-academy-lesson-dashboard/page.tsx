@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import StandardsCompliancePopup from '@/components/StandardsCompliancePopup'
 
 // Enhanced AAA quality 3D map with advanced rendering - YOUR CUSTOM MAP
 const AAAGameMap = dynamic(() => import('@/components/AAAGameMap'), {
@@ -60,6 +61,7 @@ export default function StudentDashboard() {
   const [isClient, setIsClient] = useState(false)
   const [currentTime, setCurrentTime] = useState<string>('')
   const [currentDate, setCurrentDate] = useState<string>('')
+  const [showStandardsPopup, setShowStandardsPopup] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -212,9 +214,17 @@ export default function StudentDashboard() {
               </span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-green-400 font-mono text-2xl">{currentAgent.xp.toLocaleString()} XP</div>
-            <div className="text-gray-300 text-sm">Intel Points</div>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setShowStandardsPopup(true)}
+              className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/50 text-blue-300 px-4 py-2 rounded-lg font-mono text-sm transition-all duration-200 flex items-center gap-2"
+            >
+              📋 Standards
+            </button>
+            <div className="text-right">
+              <div className="text-green-400 font-mono text-2xl">{currentAgent.xp.toLocaleString()} XP</div>
+              <div className="text-gray-300 text-sm">Intel Points</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1079,6 +1089,12 @@ export default function StudentDashboard() {
           </div>
         )}
       </div>
+
+      {/* Standards Compliance Popup */}
+      <StandardsCompliancePopup 
+        isOpen={showStandardsPopup}
+        onClose={() => setShowStandardsPopup(false)}
+      />
     </div>
   )
 }

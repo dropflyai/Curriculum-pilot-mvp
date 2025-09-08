@@ -1071,16 +1071,16 @@ print("\\n🎯 Your goal: Create an AI that makes school life better for everyon
       },
       {
         type: 'bonus',
-        title: 'Classic Magic 8-Ball',
+        title: 'Agent Academy Cipher Decoder',
         dataset: 'fortune-responses',
         labels: ['positive', 'negative', 'neutral', 'mysterious'],
-        learn_md: `## 🔐 Decode the Agent Academy's Fortune Protocol
+        learn_md: `## 🔐 Agent Academy Intelligence Decoder
 
-**Agent**, you've infiltrated the mysterious Agent Academy network and discovered their ancient fortune-telling protocol. The organization once used mystical 8-Ball divination to make critical decisions, but their system holds secrets far deeper than simple yes/no answers.
+**Agent**, you've infiltrated the mysterious Agent Academy network and discovered their encrypted intelligence communication system. The organization uses sophisticated cipher protocols to transmit classified mission briefings, but their system holds secrets far deeper than simple coded messages.
 
-### ⚫ The Agent Academy's Secret Arsenal
+### 🔐 The Agent Academy's Cipher Arsenal
 
-The Agent Academy didn't just predict the future - they **programmed** it. Their digital fortune protocol was a sophisticated information system disguised as a simple toy:
+The Agent Academy doesn't just send messages - they **encrypt** them. Their digital cipher protocol is a sophisticated intelligence system disguised as a simple communication tool:
 
 **🔴 Cipher Response Classifications**
 - **POSITIVE INTEL** (10 encoded messages): "Mission confirmed", "Path is clear", "Proceed as planned"
@@ -1211,13 +1211,13 @@ You're about to reverse-engineer a program that combines espionage, psychology, 
 
 **Time to infiltrate the digital shadows and unlock the cipher's secrets!** ⚫🔐`,
         code: {
-          starter: `# 🎱 Magic 8-Ball - The Classic Fortune Teller!
-# Let's recreate the nostalgic experience with Python magic!
+          starter: `# 🔐 Agent Academy Cipher Decoder - Intelligence Briefing Tool!
+# Let's create the classified intelligence communication system!
 
 import random
 import time
 
-class Magic8Ball:
+class AgentCipherDecoder:
     def __init__(self):
         # 🌟 Authentic Magic 8-Ball responses (just like the original!)
         self.positive_responses = [

@@ -23,6 +23,12 @@ function AuthPageContent() {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('🚨 FORM SUBMIT TRIGGERED - Handler called successfully!')
+    console.log('🔍 Form data received:', formData)
+    console.log('🔍 Email entered:', `"${formData.email}"`)
+    console.log('🔍 Password entered:', `"${formData.password}"`)
+    console.log('🔍 Password length:', formData.password.length)
+    
     e.preventDefault()
     setLoading(true)
     setError(null)
@@ -53,11 +59,22 @@ function AuthPageContent() {
           { email: 'student@test.com', password: 'test123', role: 'student', fullName: 'Test Student' },
           { email: 'teacher@test.com', password: 'test123', role: 'teacher', fullName: 'Test Teacher' },
           { email: 'admin@test.com', password: 'test123', role: 'admin', fullName: 'Test Admin' },
-          { email: 'student@codefly.demo', password: 'demo123', role: 'student', fullName: 'Demo Student' },
-          { email: 'teacher@codefly.demo', password: 'demo123', role: 'teacher', fullName: 'Demo Teacher' }
+          // Demo accounts - using correct passwords
+          { email: 'student@codefly.demo', password: 'CodeFly2025!Student$', role: 'student', fullName: 'Demo Student' },
+          { email: 'teacher@codefly.demo', password: 'CodeFly2025!Teacher$', role: 'teacher', fullName: 'Demo Teacher' }
         ]
 
-        const testAccount = testAccounts.find(acc => acc.email === formData.email && acc.password === formData.password)
+        // Debug logging
+        console.log('Trying to login with:', formData.email, 'password length:', formData.password.length)
+        console.log('Password entered:', formData.password)
+        
+        const testAccount = testAccounts.find(acc => {
+          const matches = acc.email.toLowerCase() === formData.email.toLowerCase() && acc.password === formData.password
+          if (acc.email.toLowerCase() === formData.email.toLowerCase()) {
+            console.log(`Found email match: ${acc.email}, password match: ${matches}`)
+          }
+          return matches
+        })
         
         if (testAccount) {
           // Set authentication cookies
@@ -89,7 +106,10 @@ function AuthPageContent() {
         // If not a test account, try regular auth
         const { user, error } = await signIn(formData.email, formData.password)
         if (error) {
-          throw new Error('Invalid email or password. Please try again.')
+          console.log('Auth failed for:', formData.email)
+          console.log('Available test accounts: student@test.com, teacher@test.com, student@codefly.demo, teacher@codefly.demo')
+          console.log('Test passwords: test123 (for test accounts) or CodeFly2025!Teacher$ (for demo accounts)')
+          throw new Error('Invalid email or password. Try: teacher@codefly.demo / CodeFly2025!Teacher$')
         }
         
         if (user) {

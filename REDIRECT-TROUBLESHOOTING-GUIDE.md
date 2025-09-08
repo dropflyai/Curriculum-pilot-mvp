@@ -40,53 +40,86 @@ User clicks "Start Learning" on /games
 
 ## Immediate Fix Protocol
 
-### Step 1: Verify Current State
+### Step 1: Check BOTH Layers (NEW DISCOVERY)
 ```bash
-# Check current middleware configuration
+# Check middleware configuration (Layer 1)
 grep -A 20 "ROUTE_PROTECTION" src/middleware.ts
-
-# Check if routes are in wrong section
 grep -n "games\|mission-hq" src/middleware.ts
+
+# Check for CLIENT-SIDE redirects (Layer 2 - THE REAL PROBLEM)
+grep -n "router.push.*auth" src/app/mission-hq/page.tsx
+grep -A 5 -B 5 "router.push" src/app/mission-hq/page.tsx
 ```
 
-### Step 2: Apply The Fix
+### Step 2: Apply The REAL Fix
+**CRITICAL DISCOVERY**: The issue was CLIENT-SIDE redirects, NOT middleware!
+
 **Files to modify**: 
-- `src/middleware.ts` 
-- `src/app/games/page.tsx` (optional - remove sign in button)
+- `src/app/mission-hq/page.tsx` (MAIN FIX)
+- `src/middleware.ts` (verify public routes exist, but likely already correct)
 
 **Exact Changes Required**:
 
-#### A. Move Routes to Public Section in middleware.ts
+#### A. Remove Client-Side Auth Redirects (THE REAL FIX)
 ```typescript
-// CORRECT CONFIGURATION:
+// In src/app/mission-hq/page.tsx
+// WRONG - Redirects users away:
+if (!isAuthenticated) {
+  router.push('/auth')  // ← REMOVE THIS
+  return
+}
+
+// CORRECT - Allow public demo access:
+if (!isAuthenticated) {
+  // Create demo user instead of redirecting
+  setUser({
+    role: 'student' as 'student',
+    id: 'public_user', 
+    email: 'public@codefly.com',
+    isDemoUser: true
+  })
+  setCompletedMissions([])
+  setLoading(false)
+  return
+}
+```
+
+#### B. Handle Auth Errors Gracefully
+```typescript
+// WRONG - Redirect on errors:
+} catch (error) {
+  console.error('Authentication check failed:', error)
+  setLoading(false)
+  router.push('/auth')  // ← REMOVE THIS
+}
+
+// CORRECT - Fall back to demo:
+} catch (error) {
+  console.error('Authentication check failed:', error)
+  setUser({
+    role: 'student' as 'student',
+    id: 'public_user',
+    email: 'public@codefly.com', 
+    isDemoUser: true
+  })
+  setCompletedMissions([])
+  setLoading(false)
+}
+```
+
+#### C. Verify Middleware (Usually Already Correct)
+```typescript
+// Middleware should have (and usually does):
 const ROUTE_PROTECTION = {
   public: [
     '/',
     '/auth',
-    '/auth/signup', 
-    '/signin',
-    '/games',        // ← MUST BE HERE
-    '/mission-hq',   // ← MUST BE HERE  
-    '/api/lessons',
-    '/api/list'
-  ],
-  
-  student: [
-    '/student',
-    '/homework',
-    '/lesson',
-    '/python-lesson',
-    '/python-lesson-direct',
-    '/mission',
-    // ❌ DO NOT PUT /games or /mission-hq here
-    '/dashboard',
-    // ... rest of student routes
+    '/games',        // Should be here
+    '/mission-hq',   // Should be here  
+    // ... other public routes
   ]
 }
 ```
-
-#### B. Remove Sign In Button (Optional but Recommended)
-In `src/app/games/page.tsx`, remove any Sign In buttons from header if present.
 
 ### Step 3: Immediate Verification
 ```bash
@@ -215,11 +248,16 @@ Every time this fix is applied:
 
 ## Occurrence Log
 
-**Occurrence #1**: Sept 6, 2025 - Initial discovery and fix
-**Occurrence #2**: Sept 7, 2025 - Reappeared after git operations  
-**Occurrence #3**: Sept 7, 2025 - Created this comprehensive guide
+**Occurrence #1**: Sept 6, 2025 - Initial discovery, middleware fix
+**Occurrence #2**: Sept 7, 2025 - Reappeared after git operations, middleware fix  
+**Occurrence #3**: Sept 7, 2025 - Created this comprehensive guide, middleware focus
+**Occurrence #4**: Sept 7, 2025 - Emergency bypasses added, temporary fix
+**Occurrence #5**: Sept 7, 2025 - More bypasses, still temporary
+**Occurrence #6**: Sept 7, 2025, 13:41:07 PST - **REAL ROOT CAUSE DISCOVERED**: Client-side auth redirects in mission-hq page
 
-**Pattern**: Issue reappears after git commit restores/reverts that reset middleware.ts to protected state
+**Pattern Evolution**: 
+- Occurrences 1-5: Focused on middleware (wrong layer)
+- Occurrence #6: Found client-side `router.push('/auth')` calls - REAL ISSUE
 
 ---
 
