@@ -11,6 +11,16 @@ const ROUTE_PROTECTION = {
     '/signin',
     '/games',
     '/mission-hq',
+    '/agent-academy-lesson-dashboard',
+    '/agent-rankings',
+    '/mission/binary-shores-academy',
+    '/mission/variable-village',
+    '/mission/logic-lake-outpost',
+    '/mission/loop-canyon-base',
+    '/mission/function-forest-station',
+    '/mission/array-mountains-facility',
+    '/mission/object-oasis-complex',
+    '/mission/database-depths',
     '/api/lessons',
     '/api/list'
   ],
@@ -24,7 +34,6 @@ const ROUTE_PROTECTION = {
     '/python-lesson-direct',
     '/mission',
     '/dashboard',
-    '/agent-academy-lesson-dashboard',
     '/ai-literacy',
     '/capstone-project',
     '/team-formation',
@@ -210,7 +219,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/auth', request.url))
     }
     
-    const dashboardPath = userRole ? getDashboardPath(userRole) : '/student/dashboard'
+    const dashboardPath = userRole ? getDashboardPath(userRole) : '/agent-academy-intel'
     return NextResponse.redirect(new URL(dashboardPath, request.url))
   }
 
@@ -249,7 +258,7 @@ export function middleware(request: NextRequest) {
 
   // If user doesn't have required role, redirect to appropriate dashboard with error
   if (!hasAccess) {
-    const dashboardPath = userRole ? getDashboardPath(userRole) : '/student/dashboard'
+    const dashboardPath = userRole ? getDashboardPath(userRole) : '/agent-academy-intel'
     const redirectUrl = new URL(dashboardPath, request.url)
     redirectUrl.searchParams.set('error', `insufficient_permissions`)
     redirectUrl.searchParams.set('required', requiredRoleMessage)
