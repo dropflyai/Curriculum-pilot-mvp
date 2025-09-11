@@ -3,7 +3,7 @@
 import { 
   Shield, CheckCircle, Award, BookOpen, GraduationCap, 
   Globe, Brain, Calculator, Microscope, Music, Palette,
-  Users, Target, Star, Trophy, Zap, ArrowRight, Code, Rocket
+  Users, Target, Star, Trophy, Zap, ArrowRight, Code2 as Code, Rocket
 } from 'lucide-react'
 import Link from 'next/link'
 import EducationalNavigation from '@/components/EducationalNavigation'

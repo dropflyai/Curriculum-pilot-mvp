@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import EnhancedLessonInterface from '@/components/EnhancedLessonInterface'
+import AgentAcademyIDE from '@/components/AgentAcademyIDE'
 
 export default function Lesson1() {
   const router = useRouter()
@@ -245,17 +245,69 @@ export default function Lesson1() {
   ]
 
   return (
-    <EnhancedLessonInterface
-      lessonId={1}
-      title="AI Memory Core Programming"
-      description="Build your counter-AI's memory system using Python variables"
-      challenges={challenges}
-      weekNumber={1}
-      introDialogue={introDialogue}
-      outroDialogue={outroDialogue}
-      backgroundImage="/Mission HQ Command Center.png"
-      useCinematic={true}
-      onComplete={handleLessonComplete}
-    />
+    <div className="h-screen">
+      <AgentAcademyIDE
+        initialCode={`# 🤖 AGENT ACADEMY - LESSON 1: AI Memory Core Programming
+# Mission: Build your counter-AI's memory system using Python variables
+# Instructor: Dr. Maya Nexus
+
+# CHALLENGE 1: Create a secret code variable called 'mission_status' and set it to 'CLASSIFIED'
+# Your code here:
+
+
+# CHALLENGE 2: Store the agent's clearance level as a number in a variable called 'clearance_level' (use any number 1-10)
+# Your code here:
+
+
+# CHALLENGE 3: Create your AI's creator signature in a variable called 'developer_name' (use your own name or codename)
+# Your code here:
+
+
+# CHALLENGE 4: Activate your AI by creating a variable called 'ai_status' and setting it to True
+# Your code here:
+
+
+# Test your variables (run this to check your work)
+print("=== AI MEMORY CORE STATUS ===")
+try:
+    print(f"Mission Status: {mission_status}")
+    print(f"Clearance Level: {clearance_level}")
+    print(f"Developer: {developer_name}")
+    print(f"AI Status: {ai_status}")
+    print("\\n🎉 AI Memory Core ONLINE! Your agent can now remember critical data!")
+except NameError as e:
+    print(f"❌ Error: {e}")
+    print("💡 Make sure you've created all required variables above!")
+`}
+        lesson={{
+          id: 1,
+          title: "AI Memory Core Programming",
+          objective: "Build your counter-AI's memory system using Python variables",
+          hints: [
+            "Variables store information: agent_name = 'Guardian'",
+            "Use quotes around text: mission_status = 'CLASSIFIED'",
+            "Numbers don't need quotes: clearance_level = 5",
+            "Boolean values: True or False (capital letters, no quotes)"
+          ]
+        }}
+        onCodeChange={(code) => {
+          // Track progress - could save to database later
+          console.log('Student progress:', code.length, 'characters')
+        }}
+        onAIGenerate={async (prompt) => {
+          // Use Dr. Maya Nexus AI (mock for now, real OpenAI integration ready)
+          const { mockMayaNexus } = await import('@/lib/mock-maya-ai')
+          return mockMayaNexus.generateResponse(prompt, {
+            currentCode: 'mission_status = "CLASSIFIED"', // current lesson code
+            lesson: {
+              id: 1,
+              title: "AI Memory Core Programming",
+              objective: "Build your counter-AI's memory system using Python variables"
+            },
+            userHistory: ['started lesson 1', 'learning variables']
+          })
+        }}
+      />
+    </div>
   )
 }

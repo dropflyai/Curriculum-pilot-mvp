@@ -8,7 +8,7 @@ export default function DashboardRedirect() {
   
   useEffect(() => {
     // Redirect to the proper student dashboard
-    router.replace('/student/dashboard')
+    router.replace('/agent-academy-intel')
   }, [router])
 
   return (

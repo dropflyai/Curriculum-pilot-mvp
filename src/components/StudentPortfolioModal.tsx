@@ -56,7 +56,7 @@ print(secret_message)`,
     {
       id: 'work-2',
       type: 'reflection',
-      title: 'Operation Beacon Reflection',
+      title: 'Binary Shores Academy Reflection',
       content: 'I learned that variables are like secret agent codenames - they store information that can be used later. The hardest part was understanding when to use quotes around text vs numbers. I got better at debugging by reading error messages carefully.',
       timestamp: '2024-01-15 11:45 AM',
       timeSpent: 8
@@ -95,7 +95,7 @@ print(f"Encoded: {encoded}")`,
     {
       id: 'work-4',
       type: 'mission',
-      title: 'Operation Beacon - Mission Complete',
+      title: 'Binary Shores Academy - Mission Complete',
       content: 'Successfully infiltrated Binary Shores Academy and mastered variable operations. Completed all training modules with 92% accuracy.',
       timestamp: '2024-01-16 03:30 PM',
       score: 92,

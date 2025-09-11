@@ -57,7 +57,7 @@ export default function DemoLesson() {
               </div>
               
               <Link
-                href="/mission/operation-beacon/week-1/lesson-1"
+                href="/mission/binary-shores-academy/week-1/lesson-1"
                 className="block w-full bg-green-600 hover:bg-green-500 text-white font-mono text-center py-3 px-6 transition-colors"
                 style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
               >
@@ -74,7 +74,7 @@ export default function DemoLesson() {
               </h2>
               
               <p className="text-gray-300 font-mono mb-6">
-                View the Operation Beacon mission briefing and week structure.
+                View the Binary Shores Academy mission briefing and week structure.
               </p>
 
               <div className="space-y-3 mb-6">
@@ -93,7 +93,7 @@ export default function DemoLesson() {
               </div>
               
               <Link
-                href="/mission/operation-beacon"
+                href="/mission/binary-shores-academy"
                 className="block w-full bg-blue-600 hover:bg-blue-500 text-white font-mono text-center py-3 px-6 transition-colors"
                 style={{clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)'}}
               >
@@ -117,14 +117,14 @@ export default function DemoLesson() {
               </Link>
               
               <Link
-                href="/student/dashboard"
+                href="/agent-academy-intel"
                 className="bg-cyan-900/20 border border-cyan-400/40 text-cyan-300 hover:text-cyan-200 font-mono text-sm px-4 py-3 text-center transition-colors"
               >
                 👤 Student Dashboard
               </Link>
               
               <Link
-                href="/mission/operation-beacon/week-1"
+                href="/mission/binary-shores-academy/week-1"
                 className="bg-orange-900/20 border border-orange-400/40 text-orange-300 hover:text-orange-200 font-mono text-sm px-4 py-3 text-center transition-colors"
               >
                 📚 Week 1 Overview

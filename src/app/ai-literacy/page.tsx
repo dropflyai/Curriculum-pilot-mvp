@@ -105,7 +105,7 @@ export default function AILiteracy() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link 
-                href="/student/dashboard"
+                href="/agent-academy-intel"
                 className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
               >
                 <ArrowLeft className="h-4 w-4" />

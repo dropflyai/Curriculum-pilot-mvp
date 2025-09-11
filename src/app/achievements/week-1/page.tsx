@@ -54,7 +54,7 @@ export default function Week1Achievements() {
     {
       id: 'week-complete',
       title: 'Shadow Protocol Initiate',
-      description: 'Completed Week 1 - Operation Beacon',
+      description: 'Completed Week 1 - Binary Shores Academy',
       xp: 300,
       icon: Trophy,
       unlocked: ['Agent Codename Badge', 'Week 2 Access', 'Special Agent Avatar']
@@ -111,7 +111,7 @@ export default function Week1Achievements() {
               MISSION COMPLETE!
             </span>
           </h1>
-          <h2 className="text-3xl font-bold text-white mb-4">Week 1 - Operation Beacon</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Week 1 - Binary Shores Academy</h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Outstanding work, Agent! You've successfully infiltrated Binary Shores Academy and mastered the fundamental protocols.
           </p>
@@ -222,7 +222,7 @@ export default function Week1Achievements() {
               </Link>
               
               <Link
-                href="/mission/operation-beacon/week-2"
+                href="/mission/binary-shores-academy/week-2"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105"
               >
                 <Zap className="h-5 w-5 mr-2" />

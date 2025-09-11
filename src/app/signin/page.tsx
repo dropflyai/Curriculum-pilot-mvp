@@ -88,7 +88,7 @@ function SignInContent() {
       
       // Redirect based on role
       if (accountType === 'student') {
-        router.push('/student/dashboard')
+        router.push('/agent-academy-intel')
       } else {
         router.push('/teacher/console')
       }

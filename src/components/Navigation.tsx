@@ -92,7 +92,7 @@ export default function Navigation() {
   if (loading || !user) return null
 
   const studentNavItems = [
-    { href: '/student/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/agent-academy-intel', label: 'Dashboard', icon: Home },
     { href: '/lesson/1', label: 'Lessons', icon: BookOpen },
     { href: '/student/tutor', label: 'AI Tutor', icon: Brain },
     { href: '/student/leaderboard', label: 'Leaderboard', icon: Trophy },

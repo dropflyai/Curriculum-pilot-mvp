@@ -72,7 +72,7 @@ export interface AILesson {
 export const aiLessons: AILesson[] = [
   {
     id: 'week-01',
-    title: 'Operation Beacon',
+    title: 'Binary Shores Academy',
     description: 'Begin your first mission! Master variables and basic data types in your initial coding operation.',
     difficulty: 'beginner',
     estimatedTime: '60 minutes - Solo Mission',
@@ -87,11 +87,11 @@ export const aiLessons: AILesson[] = [
         title: 'Shadow Protocol: Data Intelligence Training',
         dataset: 'shadow-protocol',
         labels: ['classified', 'secure', 'verified'],
-        learn_md: `## 🎯 Welcome to Operation Beacon - Your First Mission Begins
+        learn_md: `## 🎯 Welcome to Binary Shores Academy - Your First Mission Begins
 
 **CLASSIFIED TRANSMISSION - CLEARANCE LEVEL: RECRUIT**
 
-Congratulations, Agent. You've been selected for the elite **Operation Beacon** program. Your mission: master the fundamental building blocks of digital intelligence - **variables and data types** - the very foundation that elite coders use to build secure systems and analyze critical data.
+Congratulations, Agent. You've been selected for the elite **Binary Shores Academy** program. Your mission: master the fundamental building blocks of digital intelligence - **variables and data types** - the very foundation that elite coders use to build secure systems and analyze critical data.
 
 In the shadowy world of digital espionage, information is power. And the first skill every agent must master is understanding how computers store, categorize, and manipulate different types of data. Today, you'll learn to think like a machine while maintaining the strategic mind of a human operative.
 

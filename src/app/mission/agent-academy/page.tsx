@@ -92,29 +92,69 @@ export default function AgentAcademyMission() {
             🎯 OPERATION: DIGITAL FORTRESS
           </h2>
           
-          {/* Mission Brief */}
-          <div className="bg-black/80 border-2 border-amber-600/50 rounded-xl p-8 mb-8 text-left max-w-4xl mx-auto backdrop-blur-sm">
-            <div className="text-amber-300 font-mono text-lg mb-4 flex items-center">
-              <AlertTriangle className="w-5 h-5 mr-3 animate-pulse" />
-              PRIORITY ALPHA BRIEFING
-            </div>
-            <p className="text-xl text-gray-200 font-medium leading-relaxed mb-4">
-              Intelligence has discovered a rogue AI system operating from a fortified mountain facility. 
-              Your mission: infiltrate the digital fortress, decode encrypted Python protocols, 
-              and neutralize the threat through your <span className="text-red-400 font-bold">"AGENT ACADEMY"</span> training.
-            </p>
-            <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-400">87%</div>
-                <div className="text-green-300">SUCCESS PROBABILITY</div>
+          {/* Mission Brief Card - Matching Mission HQ Style */}
+          <div className="relative h-96 rounded-xl overflow-hidden border-2 border-gray-700 hover:border-green-500/50 transition-all max-w-4xl mx-auto mb-8">
+            {/* Background Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url("/CodeFly Homepage.png")`,
+                filter: 'brightness(0.5)'
+              }}
+            />
+            
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
+            
+            {/* Content */}
+            <div className="absolute inset-0 p-6 flex flex-col justify-between">
+              {/* Header */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-mono px-2 py-1 rounded bg-red-900/80 text-red-300">
+                    EXTREME
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 animate-pulse" />
+                    <span className="text-amber-300 font-mono text-sm">PRIORITY ALPHA</span>
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-1">OPERATION: DIGITAL FORTRESS</h3>
+                <p className="text-sm text-gray-400 font-mono">MISSION ID: AA-7749 | CLASSIFICATION: TOP SECRET</p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">45 MIN</div>
-                <div className="text-yellow-300">EST. DURATION</div>
+              
+              {/* Mission Description */}
+              <div className="flex-1 flex items-center">
+                <p className="text-lg text-gray-200 leading-relaxed">
+                  Intelligence has discovered a rogue AI system operating from a fortified mountain facility. 
+                  Your mission: infiltrate the digital fortress, decode encrypted Python protocols, 
+                  and neutralize the threat through your <span className="text-red-400 font-bold">AGENT ACADEMY</span> training.
+                </p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-red-400">EXTREME</div>
-                <div className="text-red-300">DIFFICULTY</div>
+              
+              {/* Footer Stats */}
+              <div>
+                <div className="grid grid-cols-3 gap-4 mb-4 text-sm">
+                  <div className="bg-black/60 rounded p-2 text-center">
+                    <div className="text-xl font-bold text-green-400">87%</div>
+                    <div className="text-xs text-green-300 font-mono">SUCCESS RATE</div>
+                  </div>
+                  <div className="bg-black/60 rounded p-2 text-center">
+                    <div className="text-xl font-bold text-yellow-400">45 MIN</div>
+                    <div className="text-xs text-yellow-300 font-mono">EST. DURATION</div>
+                  </div>
+                  <div className="bg-black/60 rounded p-2 text-center">
+                    <div className="text-xl font-bold text-red-400">7500 XP</div>
+                    <div className="text-xs text-red-300 font-mono">REWARD</div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-gray-400">DEPLOYMENT: IMMEDIATE</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-green-400">STATUS: ACTIVE</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -126,7 +166,7 @@ export default function AgentAcademyMission() {
               ACCEPT MISSION
             </button>
             
-            <Link href="/student/dashboard" className="bg-gradient-to-r from-gray-700 to-gray-900 border-2 border-gray-600/50 text-white px-12 py-6 rounded-xl text-2xl font-bold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center font-mono backdrop-blur-sm">
+            <Link href="/agent-academy-intel" className="bg-gradient-to-r from-gray-700 to-gray-900 border-2 border-gray-600/50 text-white px-12 py-6 rounded-xl text-2xl font-bold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center font-mono backdrop-blur-sm">
               <Shield className="h-8 w-8 mr-3" />
               ABORT MISSION
             </Link>
@@ -396,7 +436,7 @@ export default function AgentAcademyMission() {
                 🚀 INITIATE AGENT ACADEMY
               </button>
               
-              <Link href="/student/dashboard" className="bg-black/80 border-2 border-gray-600/50 text-gray-400 px-12 py-5 rounded-xl text-xl font-semibold hover:bg-black/90 hover:text-white transition-all duration-300 flex items-center justify-center font-mono">
+              <Link href="/agent-academy-intel" className="bg-black/80 border-2 border-gray-600/50 text-gray-400 px-12 py-5 rounded-xl text-xl font-semibold hover:bg-black/90 hover:text-white transition-all duration-300 flex items-center justify-center font-mono">
                 <Navigation className="h-6 w-6 mr-3" />
                 RETURN TO BASE
               </Link>

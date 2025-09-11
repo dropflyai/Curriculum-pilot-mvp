@@ -335,6 +335,145 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['progress']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['progress']['Insert']>
       }
+
+      // Competitive Metrics Tables
+      speed_records: {
+        Row: {
+          id: string
+          user_id: string
+          mission_id: string
+          lesson_id: string | null
+          completion_time_seconds: number
+          difficulty_level: string
+          is_personal_best: boolean
+          is_global_record: boolean
+          code_submission_id: string | null
+          created_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['speed_records']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['speed_records']['Insert']>
+      }
+
+      code_quality_metrics: {
+        Row: {
+          id: string
+          user_id: string
+          submission_id: string
+          lesson_id: string
+          clean_code_score: number
+          efficiency_score: number
+          best_practices_score: number
+          documentation_score: number
+          error_handling_score: number
+          innovation_score: number
+          lines_of_code: number
+          cyclomatic_complexity: number
+          code_reuse_percentage: number
+          test_cases_passed: number
+          test_cases_total: number
+          accuracy_percentage: number
+          created_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['code_quality_metrics']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['code_quality_metrics']['Insert']>
+      }
+
+      streak_tracking: {
+        Row: {
+          id: string
+          user_id: string
+          streak_type: string
+          current_streak: number
+          longest_streak: number
+          last_activity_date: string
+          streak_start_date: string
+          is_active: boolean
+          metadata: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['streak_tracking']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['streak_tracking']['Insert']>
+      }
+
+      community_metrics: {
+        Row: {
+          id: string
+          user_id: string
+          help_points_given: number
+          help_points_received: number
+          questions_answered: number
+          code_reviews_given: number
+          code_reviews_received: number
+          mentorship_hours: number
+          collaboration_score: number
+          weekly_help_points: number
+          weekly_collaboration_score: number
+          last_help_given: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['community_metrics']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['community_metrics']['Insert']>
+      }
+
+      discovery_metrics: {
+        Row: {
+          id: string
+          user_id: string
+          discovery_type: string
+          discovery_id: string
+          discovery_name: string
+          discovery_description: string | null
+          mission_id: string | null
+          lesson_id: string | null
+          difficulty_rating: number
+          discovery_points: number
+          discovered_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['discovery_metrics']['Row'], 'id' | 'discovered_at'>
+        Update: Partial<Database['public']['Tables']['discovery_metrics']['Insert']>
+      }
+
+      consistency_metrics: {
+        Row: {
+          id: string
+          user_id: string
+          metric_date: string
+          daily_completion_rate: number
+          lessons_completed_today: number
+          time_spent_minutes: number
+          login_streak_days: number
+          weekly_goals_met: boolean
+          weekly_completion_rate: number
+          assignment_punctuality_score: number
+          practice_consistency_score: number
+          created_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['consistency_metrics']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['consistency_metrics']['Insert']>
+      }
+
+      mission_records: {
+        Row: {
+          id: string
+          mission_id: string
+          mission_name: string
+          difficulty_level: string
+          fastest_time_seconds: number | null
+          fastest_time_holder: string | null
+          fastest_time_date: string | null
+          highest_quality_score: number | null
+          highest_quality_holder: string | null
+          highest_quality_date: string | null
+          highest_innovation_score: number | null
+          highest_innovation_holder: string | null
+          highest_innovation_date: string | null
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['mission_records']['Row'], 'id' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['mission_records']['Insert']>
+      }
     }
     Views: {
       current_leaderboard: {
@@ -368,3 +507,12 @@ export type TutorPolicy = Database['public']['Tables']['tutor_policies']['Row']
 export type TutorQuery = Database['public']['Tables']['tutor_queries']['Row']
 export type DraftEvent = Database['public']['Tables']['draft_events']['Row']
 export type LeaderboardEntry = Database['public']['Views']['current_leaderboard']['Row']
+
+// Competitive Metrics Types
+export type SpeedRecord = Database['public']['Tables']['speed_records']['Row']
+export type CodeQualityMetric = Database['public']['Tables']['code_quality_metrics']['Row']
+export type StreakRecord = Database['public']['Tables']['streak_tracking']['Row']
+export type CommunityMetric = Database['public']['Tables']['community_metrics']['Row']
+export type DiscoveryMetric = Database['public']['Tables']['discovery_metrics']['Row']
+export type ConsistencyMetric = Database['public']['Tables']['consistency_metrics']['Row']
+export type MissionRecord = Database['public']['Tables']['mission_records']['Row']

@@ -65,7 +65,7 @@ export default function PythonLessonPage() {
               </div>
             )}
             <Link 
-              href="/student/dashboard"
+              href="/agent-academy-intel"
               className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -117,7 +117,7 @@ export default function PythonLessonPage() {
                 This is a basic view. The full interactive lesson viewer will load here once we confirm the routing is working.
               </p>
               <Link 
-                href="/student/dashboard"
+                href="/agent-academy-intel"
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
               >
                 <ArrowLeft className="w-4 h-4" />

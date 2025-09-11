@@ -188,7 +188,7 @@ export default function TeamFormation() {
           </p>
           <div className="flex justify-center space-x-4">
             <Link
-              href="/student/dashboard"
+              href="/agent-academy-intel"
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105"
             >
               Return to Dashboard

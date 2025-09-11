@@ -29,8 +29,8 @@ export const mockStudents: MockStudent[] = [
     email: 'alex.thompson@school.edu',
     full_name: 'Alex Thompson',
     status: 'active',
-    lastActivity: 'Training at Operation Beacon',
-    currentLesson: 'Operation Beacon',
+    lastActivity: 'Training at Binary Shores Academy',
+    currentLesson: 'Binary Shores Academy',
     completedLessons: 2,
     averageScore: 85,
     timeSpent: 45,
@@ -54,7 +54,7 @@ export const mockStudents: MockStudent[] = [
     full_name: 'James Wilson',
     status: 'needs_help',
     lastActivity: 'Stuck on agent data encryption',
-    currentLesson: 'Operation Beacon',
+    currentLesson: 'Binary Shores Academy',
     completedLessons: 1,
     averageScore: 72,
     timeSpent: 65,
@@ -66,7 +66,7 @@ export const mockStudents: MockStudent[] = [
     full_name: 'Sarah Chen',
     status: 'active',
     lastActivity: 'Completing spy assessment',
-    currentLesson: 'Operation Beacon',
+    currentLesson: 'Binary Shores Academy',
     completedLessons: 2,
     averageScore: 88,
     timeSpent: 42,
@@ -89,7 +89,7 @@ export const mockStudents: MockStudent[] = [
 export const mockLessonProgress: MockLessonProgress[] = [
   {
     lessonId: 'week-01',
-    lessonTitle: 'Operation Beacon',
+    lessonTitle: 'Binary Shores Academy',
     studentsStarted: 5,
     studentsCompleted: 2,
     averageScore: 82,
@@ -143,21 +143,21 @@ export const mockRecentActivity = [
   {
     student: 'Sarah Chen',
     action: 'Started quiz',
-    lesson: 'Operation Beacon',
+    lesson: 'Binary Shores Academy',
     time: 'Just now',
     type: 'quiz' as const
   },
   {
     student: 'Alex Thompson',
     action: 'Submitted code',
-    lesson: 'Operation Beacon',
+    lesson: 'Binary Shores Academy',
     time: '2 minutes ago',
     type: 'code' as const
   },
   {
     student: 'James Wilson',
     action: 'Requested help',
-    lesson: 'Operation Beacon',
+    lesson: 'Binary Shores Academy',
     time: '5 minutes ago',
     type: 'help' as const
   },

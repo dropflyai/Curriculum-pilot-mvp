@@ -22,7 +22,25 @@ const ROUTE_PROTECTION = {
     '/mission/object-oasis-complex',
     '/mission/database-depths',
     '/api/lessons',
-    '/api/list'
+    '/api/list',
+    '/ide-demo',
+    // Marketing and public information pages
+    '/standards-compliance',
+    '/course-overview',
+    '/teacher-benefits',
+    '/future-of-education',
+    '/demo',
+    '/demo-lesson',
+    '/interactive-demo',
+    '/mission-objectives',
+    '/capstone-project',
+    '/team-formation',
+    '/claude-access',
+    '/test-credentials',
+    '/clear-cache',
+    '/curriculum',
+    '/achievements',
+    '/quiz'
   ],
   
   // Student-only routes
@@ -34,13 +52,7 @@ const ROUTE_PROTECTION = {
     '/python-lesson-direct',
     '/mission',
     '/dashboard',
-    '/ai-literacy',
-    '/capstone-project',
-    '/team-formation',
-    '/course-overview',
-    '/interactive-demo',
-    '/achievements',
-    '/quiz'
+    '/ai-literacy'
   ],
   
   // Teacher/Admin routes

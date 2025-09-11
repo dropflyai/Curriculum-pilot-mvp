@@ -262,7 +262,7 @@ export function getRedirectPath(user: AuthUser): string {
       return '/admin/dashboard'
     case 'student':
     default:
-      return '/student/dashboard'
+      return '/agent-academy-intel'
   }
 }
 

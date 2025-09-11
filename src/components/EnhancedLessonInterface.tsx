@@ -378,7 +378,7 @@ export default function EnhancedLessonInterface({
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <Link 
-              href={`/mission/operation-beacon/week-${weekNumber}`}
+              href={`/mission/binary-shores-academy/week-${weekNumber}`}
               className="inline-flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors font-medium"
             >
               <ArrowLeft className="h-5 w-5" />

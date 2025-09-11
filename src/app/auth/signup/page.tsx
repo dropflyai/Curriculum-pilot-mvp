@@ -179,7 +179,7 @@ export default function AgentAcademySignup() {
       
       setTimeout(() => {
         if (formData.role === 'student') {
-          router.push('/student/dashboard')
+          router.push('/agent-academy-intel')
         } else {
           router.push('/teacher/console')
         }

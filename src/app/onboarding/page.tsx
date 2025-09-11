@@ -144,7 +144,7 @@ export default function OnboardingPage() {
     
     // Redirect to appropriate starting point based on skill level
     if (skillLevel === 'beginner') {
-      router.push('/mission/operation-beacon/week-1/lesson-1')
+      router.push('/mission/binary-shores-academy/week-1/lesson-1')
     } else {
       router.push('/games')
     }

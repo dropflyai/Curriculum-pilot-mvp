@@ -1064,12 +1064,12 @@ CodeFly Computer Science Teacher
 
           {/* Assignment Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {/* Week 1: Operation Beacon */}
+            {/* Week 1: Binary Shores Academy */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <h3 className="text-lg font-bold text-white">Week 1: Operation Beacon</h3>
+                  <h3 className="text-lg font-bold text-white">Week 1: Binary Shores Academy</h3>
                 </div>
                 <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-full">Active</span>
               </div>
@@ -1352,7 +1352,7 @@ CodeFly Computer Science Teacher
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-white flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
-                  {'Operation Beacon'} Analytics 📊
+                  {'Binary Shores Academy'} Analytics 📊
                 </h3>
                 {analytics[0] && (
                   <TeacherPlaybook 
@@ -1873,7 +1873,7 @@ CodeFly Computer Science Teacher
                           {lessons.map((lesson: any, index: number) => {
                             console.log('🚨 RENDER: Displaying lesson in table header:', { id: lesson.id, title: lesson.title })
                             // FORCE CORRECT LESSON NAMES - BULLETPROOF FIX
-                            const correctTitles = ['Operation Beacon', 'Variable Village Outpost']
+                            const correctTitles = ['Binary Shores Academy', 'Variable Village Outpost']
                             const displayTitle = correctTitles[index] || lesson.title.split(':')[0]
                             console.log('🚨 FORCE OVERRIDE: Using title:', displayTitle)
                             return (

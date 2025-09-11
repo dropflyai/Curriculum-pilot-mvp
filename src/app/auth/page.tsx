@@ -23,7 +23,8 @@ function AuthPageContent() {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // Security: Removed all password logging
+    console.log('🔄 FORM SUBMISSION STARTED')
+    console.log('📝 Form data:', { email: formData.email, hasPassword: !!formData.password, isLogin })
     
     e.preventDefault()
     setLoading(true)
@@ -50,12 +51,15 @@ function AuthPageContent() {
 
     try {
       if (isLogin) {
-        // Check hardcoded test accounts first
+        // Check hardcoded test accounts first (including simple-auth credentials)
         const testAccounts = [
           { email: 'student@test.com', password: 'test123', role: 'student', fullName: 'Test Student' },
           { email: 'teacher@test.com', password: 'test123', role: 'teacher', fullName: 'Test Teacher' },
           { email: 'admin@test.com', password: 'test123', role: 'admin', fullName: 'Test Admin' },
-          // Demo accounts - using correct passwords
+          // Demo accounts - simple passwords (from simple-auth)
+          { email: 'student@codefly.demo', password: 'demo123', role: 'student', fullName: 'Demo Student' },
+          { email: 'teacher@codefly.demo', password: 'demo123', role: 'teacher', fullName: 'Demo Teacher' },
+          // Demo accounts - complex passwords  
           { email: 'student@codefly.demo', password: 'CodeFly2025!Student$', role: 'student', fullName: 'Demo Student' },
           { email: 'teacher@codefly.demo', password: 'CodeFly2025!Teacher$', role: 'teacher', fullName: 'Demo Teacher' }
         ]
@@ -101,9 +105,16 @@ function AuthPageContent() {
           return
         }
 
-        // If no test account found, show clear error message
+        // If no test account found, show clear error message with valid credentials
         console.log('❌ No matching test account found')
-        throw new Error('Invalid credentials. Please use the test accounts provided or contact support.')
+        console.log('📝 Available accounts:')
+        testAccounts.forEach(acc => console.log(`   ${acc.email} / ${acc.password}`))
+        throw new Error(`Invalid credentials. Try these test accounts:
+        
+• teacher@codefly.demo / demo123
+• student@codefly.demo / demo123
+• student@test.com / test123
+• teacher@test.com / test123`)
       } else {
         // Sign up new user
         const { user, error } = await signUp(
@@ -126,9 +137,11 @@ function AuthPageContent() {
         }
       }
     } catch (err: unknown) {
-      console.error('Auth error:', err)
+      console.error('❌ AUTH ERROR:', err)
+      console.error('❌ Error details:', err instanceof Error ? err.message : 'Unknown error')
       setError(err instanceof Error ? err.message : 'An error occurred. Please try again.')
     } finally {
+      console.log('✅ AUTH PROCESS COMPLETE - Loading:', false)
       setLoading(false)
     }
   }
@@ -305,7 +318,7 @@ function AuthPageContent() {
                     ? 'bg-green-500/20 text-green-300 border-green-500/50'
                     : 'bg-red-500/20 text-red-300 border-red-500/50'
                 }`}>
-                  {error}
+                  <div className="whitespace-pre-line">{error}</div>
                 </div>
               )}
 

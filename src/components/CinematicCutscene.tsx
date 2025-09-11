@@ -7,7 +7,7 @@ interface Dialogue {
   character: string
   text: string
   image: string
-  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious' | 'alert'
+  emotion?: 'neutral' | 'confident' | 'encouraging' | 'serious' | 'alert' | 'victory'
   effect?: 'glitch' | 'pulse' | 'shake' | 'zoom'
 }
 

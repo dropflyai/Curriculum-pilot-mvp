@@ -113,7 +113,7 @@ export default function NovaIntegrationDemo() {
       <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-lg border-b border-green-500/30 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <Link href="/mission/operation-beacon/week-1" className="text-green-400 hover:text-green-300 font-mono text-sm mb-2 block">
+            <Link href="/mission/binary-shores-academy/week-1" className="text-green-400 hover:text-green-300 font-mono text-sm mb-2 block">
               ← Return to Missions
             </Link>
             <h1 className="text-2xl font-bold text-white font-mono">

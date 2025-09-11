@@ -3,7 +3,7 @@ import { MISSION_REWARDS } from './mission-rewards'
 
 // Mission IDs match what's in mission-hq page
 const MISSION_IDS = {
-  'shadow-protocol': 'operation-beacon',
+  'shadow-protocol': 'binary-shores-academy',
   'cipher-command': 'cipher-command',
   'ghost-protocol': 'loop-canyon-base',
   'quantum-breach': 'quantum-breach'
@@ -296,7 +296,7 @@ async function logMissionCompletion(userId: string, missionId: string) {
   const supabase = createClient()
   
   const missionNames = {
-    'shadow-protocol': 'Operation Beacon',
+    'shadow-protocol': 'Binary Shores Academy',
     'cipher-command': 'Cipher Command',
     'ghost-protocol': 'Loop Canyon Base',
     'quantum-breach': 'Quantum Breach'
@@ -408,7 +408,7 @@ async function sendMissionCompletionEmail(userId: string, missionId: string, xpE
   }
 
   const missionNames = {
-    'shadow-protocol': 'Operation Beacon',
+    'shadow-protocol': 'Binary Shores Academy',
     'cipher-command': 'Cipher Command',
     'ghost-protocol': 'Loop Canyon Base',
     'quantum-breach': 'Quantum Breach'

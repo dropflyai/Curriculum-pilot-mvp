@@ -1,6 +1,6 @@
 'use client'
 
-import { Brain, Code, Globe, GamepadIcon, Rocket, Target, Calendar, Users, Award, BookOpen, Star, Heart, Crown, Zap, Shield } from 'lucide-react'
+import { Brain, Code, Globe, GamepadIcon, Rocket, Target, Calendar, Users, Award, BookOpen, Star, Heart, Crown, Zap, Shield, ChevronRight } from 'lucide-react'
 import EducationalNavigation from '@/components/EducationalNavigation'
 import Link from 'next/link'
 
@@ -241,6 +241,12 @@ export default function CourseOverviewPage() {
                     <span className="px-3 py-1 bg-green-200 text-green-800 font-semibold rounded-full">Spy theme</span>
                     <span className="px-3 py-1 bg-green-200 text-green-800 font-semibold rounded-full">Real business</span>
                   </div>
+                  <div className="mt-6">
+                    <Link href="/curriculum/agent-academy" className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors">
+                      View Detailed Curriculum
+                      <ChevronRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -339,7 +345,7 @@ export default function CourseOverviewPage() {
         {/* Key Features */}
         <div className="mb-16">
           <h2 className="text-4xl font-bold text-center text-gray-800 mb-12">
-            ⭐ What Makes CodeFly Different
+            What Makes CodeFly Different
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl p-6 shadow-lg border">

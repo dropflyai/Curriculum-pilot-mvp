@@ -31,6 +31,7 @@ export default function MissionHQ() {
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null)
+  const [showDetailedBriefing, setShowDetailedBriefing] = useState(false)
   const [systemStatus, setSystemStatus] = useState('ONLINE')
   const [completedMissions, setCompletedMissions] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
@@ -645,13 +646,13 @@ export default function MissionHQ() {
             <div className="flex gap-4">
               {selectedMission.status === 'ACTIVE' ? (
                 <>
-                  <Link
-                    href={selectedMission.route}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-green-800 text-white px-8 py-4 rounded-lg font-bold hover:from-green-500 hover:to-green-700 transition-all flex items-center justify-center gap-3"
+                  <button
+                    onClick={() => setShowDetailedBriefing(true)}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-bold hover:from-blue-500 hover:to-blue-700 transition-all flex items-center justify-center gap-3"
                   >
                     <Target className="w-5 h-5" />
                     VIEW MISSION BRIEFING
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleStartMission(selectedMission.id)}
                     className="flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-8 py-4 rounded-lg font-bold hover:from-red-500 hover:to-red-700 transition-all flex items-center justify-center gap-3"
@@ -661,30 +662,20 @@ export default function MissionHQ() {
                   </button>
                 </>
               ) : selectedMission.status === 'COMPLETED' ? (
-                <>
-                  <Link
-                    href={selectedMission.route}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg font-bold hover:from-blue-500 hover:to-blue-700 transition-all flex items-center justify-center gap-3"
-                  >
-                    <Award className="w-5 h-5" />
-                    VIEW COMPLETED MISSION
-                  </Link>
-                  <Link
-                    href="/agent-academy-lesson-dashboard"
-                    className="flex-1 bg-gradient-to-r from-gray-600 to-gray-800 text-white px-8 py-4 rounded-lg font-bold hover:from-gray-500 hover:to-gray-700 transition-all flex items-center justify-center gap-3"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                    REVIEW LESSONS
-                  </Link>
-                </>
-              ) : (
-                <button
-                  className="flex-1 bg-red-900/30 text-red-400 px-8 py-4 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-3 border border-red-600/30"
-                  disabled
+                <Link
+                  href="/agent-academy-lesson-dashboard"
+                  className="bg-gradient-to-r from-green-600 to-green-800 text-white px-12 py-4 rounded-lg text-xl font-bold hover:from-green-500 hover:to-green-700 transition-all flex items-center justify-center gap-3 shadow-lg"
                 >
-                  <Lock className="w-5 h-5" />
-                  ACCESS DENIED - SECURITY CLEARANCE LEVEL {selectedMission.difficulty === 'EXPERT' ? 'OMEGA' : selectedMission.difficulty === 'ADVANCED' ? 'DELTA' : 'CHARLIE'} REQUIRED
-                </button>
+                  <Award className="w-6 h-6" />
+                  CONTINUE TRAINING
+                </Link>
+              ) : (
+                <div
+                  className="bg-red-900/30 text-red-400 px-12 py-4 rounded-lg text-xl font-bold flex items-center justify-center gap-3 border border-red-600/30"
+                >
+                  <Lock className="w-6 h-6" />
+                  MISSION LOCKED
+                </div>
               )}
               <button
                 onClick={() => setSelectedMission(null)}
@@ -692,6 +683,155 @@ export default function MissionHQ() {
               >
                 CLOSE
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detailed Mission Briefing Modal */}
+      {showDetailedBriefing && selectedMission && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[60] flex items-center justify-center p-6">
+          <div className="bg-black/95 border-2 border-green-500/50 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header with mission image background */}
+            <div className="relative h-64 overflow-hidden">
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url("${selectedMission.image}")`,
+                  filter: 'brightness(0.3) contrast(1.2)'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black" />
+              
+              {/* Close button */}
+              <button
+                onClick={() => setShowDetailedBriefing(false)}
+                className="absolute top-6 right-6 w-10 h-10 bg-black/80 border border-red-500/50 rounded-lg flex items-center justify-center text-red-400 hover:text-white hover:bg-red-600/20 transition-all"
+              >
+                ✕
+              </button>
+              
+              {/* Mission header */}
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className={`px-3 py-1 rounded-lg text-sm font-mono ${
+                    selectedMission.difficulty === 'EXTREME' ? 'bg-red-900/80 text-red-300' :
+                    selectedMission.difficulty === 'EXPERT' ? 'bg-orange-900/80 text-orange-300' :
+                    selectedMission.difficulty === 'ADVANCED' ? 'bg-yellow-900/80 text-yellow-300' :
+                    selectedMission.difficulty === 'INTERMEDIATE' ? 'bg-blue-900/80 text-blue-300' :
+                    'bg-green-900/80 text-green-300'
+                  }`}>
+                    {selectedMission.difficulty} OPERATION
+                  </span>
+                  <span className="px-3 py-1 bg-amber-900/80 text-amber-300 rounded-lg text-sm font-mono">
+                    CLASSIFIED
+                  </span>
+                </div>
+                <h1 className="text-5xl font-bold text-white mb-2 font-mono">
+                  {selectedMission.name}
+                </h1>
+                <p className="text-xl text-gray-300 font-mono">
+                  {selectedMission.codename}
+                </p>
+              </div>
+            </div>
+
+            {/* Briefing content */}
+            <div className="p-8">
+              {/* Mission Overview */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-green-400 mb-4 font-mono flex items-center gap-3">
+                  <AlertTriangle className="w-6 h-6" />
+                  SITUATION BRIEFING
+                </h2>
+                <div className="bg-gray-900/50 border border-green-500/30 rounded-lg p-6">
+                  <p className="text-lg text-gray-200 leading-relaxed mb-4">
+                    {selectedMission.description}
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center p-3 bg-black/40 rounded-lg">
+                      <div className="text-2xl font-bold text-green-400">{selectedMission.duration}</div>
+                      <div className="text-xs text-green-300 font-mono">MISSION DURATION</div>
+                    </div>
+                    <div className="text-center p-3 bg-black/40 rounded-lg">
+                      <div className="text-2xl font-bold text-yellow-400">{selectedMission.xpReward.toLocaleString()}</div>
+                      <div className="text-xs text-yellow-300 font-mono">XP REWARD</div>
+                    </div>
+                    <div className="text-center p-3 bg-black/40 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-400">8</div>
+                      <div className="text-xs text-blue-300 font-mono">LESSONS</div>
+                    </div>
+                    <div className="text-center p-3 bg-black/40 rounded-lg">
+                      <div className="text-2xl font-bold text-purple-400">HIGH</div>
+                      <div className="text-xs text-purple-300 font-mono">SUCCESS RATE</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mission Objectives */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-blue-400 mb-4 font-mono flex items-center gap-3">
+                  <Target className="w-6 h-6" />
+                  PRIMARY OBJECTIVES
+                </h2>
+                <div className="space-y-3">
+                  {[
+                    "Master core Python programming fundamentals",
+                    "Deploy AI agents through secure communication channels", 
+                    "Implement ethical AI guidelines and safety protocols",
+                    "Complete hands-on coding challenges with real-world applications"
+                  ].map((objective, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-gray-900/50 border border-blue-500/30 rounded-lg">
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {index + 1}
+                      </div>
+                      <span className="text-gray-200">{objective}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Intelligence Report */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-red-400 mb-4 font-mono flex items-center gap-3">
+                  <Radio className="w-6 h-6" />
+                  INTELLIGENCE REPORT
+                </h2>
+                <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-lg font-bold text-red-300 mb-3">Threat Assessment</h3>
+                      <ul className="space-y-2 text-gray-300">
+                        <li>• Complex coding challenges requiring strategic thinking</li>
+                        <li>• Advanced AI integration patterns</li>
+                        <li>• Time-sensitive mission parameters</li>
+                        <li>• Ethical decision-making scenarios</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-red-300 mb-3">Resources Available</h3>
+                      <ul className="space-y-2 text-gray-300">
+                        <li>• Advanced IDE with AI assistance</li>
+                        <li>• Real-time instructor support</li>
+                        <li>• Team collaboration tools</li>
+                        <li>• Emergency debugging protocols</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setShowDetailedBriefing(false)}
+                  className="bg-gradient-to-r from-gray-600 to-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:from-gray-500 hover:to-gray-700 transition-all flex items-center gap-2"
+                >
+                  <ChevronRight className="w-5 h-5 rotate-180" />
+                  RETURN TO MISSION SELECT
+                </button>
+              </div>
             </div>
           </div>
         </div>

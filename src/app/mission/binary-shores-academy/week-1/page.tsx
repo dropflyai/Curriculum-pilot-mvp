@@ -297,6 +297,89 @@ export default function Week1() {
             ))}
           </div>
 
+          {/* Interactive Challenges Section */}
+          <div className="mb-8 bg-gradient-to-r from-purple-900/20 via-blue-900/20 to-purple-900/20 border-2 border-purple-400/40 rounded-xl p-6 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-4 right-4 w-16 h-16 border border-purple-400/30 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-4 left-4 w-8 h-8 border border-blue-400/30 rounded-full animate-ping"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="text-3xl">⚡</div>
+                <div>
+                  <h3 className="text-purple-400 font-mono font-bold text-xl">NEW: Interactive Challenge Mode</h3>
+                  <p className="text-purple-300 text-sm">Codefinity-style micro-challenges with real-time feedback</p>
+                </div>
+                <div className="flex-1"></div>
+                <div className="bg-purple-500/20 border border-purple-400/50 rounded-lg px-3 py-1">
+                  <span className="text-purple-300 text-xs font-mono">BETA</span>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Challenge Mode Info */}
+                <div>
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    Experience bite-sized coding challenges with instant validation, XP rewards, and achievements. 
+                    Perfect for learning Python fundamentals through hands-on practice.
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2 text-sm">
+                      <span className="text-green-400">✓</span>
+                      <span className="text-gray-300">Real-time code execution with Pyodide</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <span className="text-green-400">✓</span>
+                      <span className="text-gray-300">Instant feedback and validation</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <span className="text-green-400">✓</span>
+                      <span className="text-gray-300">XP system and achievements</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <span className="text-green-400">✓</span>
+                      <span className="text-gray-300">Progressive difficulty with hints</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Challenge Stats */}
+                <div className="bg-purple-900/30 border border-purple-400/30 rounded-lg p-4">
+                  <h4 className="text-purple-400 font-mono font-bold mb-3">Challenge Overview</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Total Challenges:</span>
+                      <span className="text-white">3</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Focus Area:</span>
+                      <span className="text-white">Variables & Data</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Estimated Time:</span>
+                      <span className="text-white">6-8 minutes</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Total XP:</span>
+                      <span className="text-yellow-400">180 XP</span>
+                    </div>
+                  </div>
+                  
+                  <Link href="/mission/binary-shores-academy/week-1/challenges">
+                    <button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-4 py-3 rounded-lg text-white font-bold transition-all transform hover:scale-105 flex items-center justify-center space-x-2">
+                      <span>⚡</span>
+                      <span>Start Interactive Challenges</span>
+                      <span>→</span>
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Week Progress */}
           <div className="bg-black/60 border-2 border-cyan-400/40 rounded-xl p-6">
             <h3 className="text-cyan-400 font-mono font-bold mb-4">🤖 AI AGENT DEVELOPMENT PROGRESS</h3>

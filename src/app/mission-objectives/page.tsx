@@ -9,7 +9,7 @@ interface Mission {
   id: number
   name: string
   week: number
-  phase: 'Operation Beacon' | 'Mission Atlas' | 'Code Falcon' | 'Project Vector'
+  phase: 'Binary Shores Academy' | 'Mission Atlas' | 'Code Falcon' | 'Project Vector'
   type: 'solo' | 'team' | 'assessment'
   difficulty: number
   xpReward: number
@@ -21,11 +21,11 @@ interface Mission {
 }
 
 const CURRICULUM_MISSIONS: Mission[] = [
-  // Phase 1: Operation Beacon (Weeks 1-4) - Solo Missions
-  { id: 1, name: 'Intelligence Gathering', week: 1, phase: 'Operation Beacon', type: 'solo', difficulty: 1, xpReward: 250, description: 'Master variables and data storage', unlocked: true, completed: false },
-  { id: 2, name: 'Communication Protocols', week: 2, phase: 'Operation Beacon', type: 'solo', difficulty: 1, xpReward: 300, description: 'Print statements and output mastery', unlocked: false, completed: false },
-  { id: 3, name: 'Terminal Hacking', week: 3, phase: 'Operation Beacon', type: 'solo', difficulty: 2, xpReward: 350, description: 'Input and user interaction', unlocked: false, completed: false },
-  { id: 4, name: 'Mission Calculations', week: 4, phase: 'Operation Beacon', type: 'assessment', difficulty: 2, xpReward: 400, description: 'Basic math and operations assessment', unlocked: false, completed: false, assessmentType: 'project' },
+  // Phase 1: Binary Shores Academy (Weeks 1-4) - Solo Missions
+  { id: 1, name: 'Intelligence Gathering', week: 1, phase: 'Binary Shores Academy', type: 'solo', difficulty: 1, xpReward: 250, description: 'Master variables and data storage', unlocked: true, completed: false },
+  { id: 2, name: 'Communication Protocols', week: 2, phase: 'Binary Shores Academy', type: 'solo', difficulty: 1, xpReward: 300, description: 'Print statements and output mastery', unlocked: false, completed: false },
+  { id: 3, name: 'Terminal Hacking', week: 3, phase: 'Binary Shores Academy', type: 'solo', difficulty: 2, xpReward: 350, description: 'Input and user interaction', unlocked: false, completed: false },
+  { id: 4, name: 'Mission Calculations', week: 4, phase: 'Binary Shores Academy', type: 'assessment', difficulty: 2, xpReward: 400, description: 'Basic math and operations assessment', unlocked: false, completed: false, assessmentType: 'project' },
 
   // Phase 2: Mission Atlas (Weeks 5-8) - Transition to Teams  
   { id: 5, name: 'Loop Canyon Base', week: 5, phase: 'Mission Atlas', type: 'solo', difficulty: 2, xpReward: 450, description: 'Master for and while loops', unlocked: false, completed: false },
@@ -49,14 +49,14 @@ const CURRICULUM_MISSIONS: Mission[] = [
 ]
 
 const PHASE_COLORS = {
-  'Operation Beacon': 'border-green-400/30 bg-green-400/5',
+  'Binary Shores Academy': 'border-green-400/30 bg-green-400/5',
   'Mission Atlas': 'border-cyan-400/30 bg-cyan-400/5', 
   'Code Falcon': 'border-amber-400/30 bg-amber-400/5',
   'Project Vector': 'border-red-400/30 bg-red-400/5'
 }
 
 const PHASE_ICONS = {
-  'Operation Beacon': '🎯',
+  'Binary Shores Academy': '🎯',
   'Mission Atlas': '🗺️',
   'Code Falcon': '🦅',
   'Project Vector': '⚡'
@@ -77,7 +77,7 @@ export default function MissionObjectives() {
     }
   }, [router])
 
-  const phases = ['Operation Beacon', 'Mission Atlas', 'Code Falcon', 'Project Vector']
+  const phases = ['Binary Shores Academy', 'Mission Atlas', 'Code Falcon', 'Project Vector']
 
   const getMissionsForPhase = (phase: string) => {
     return CURRICULUM_MISSIONS.filter(mission => mission.phase === phase)
@@ -171,7 +171,7 @@ export default function MissionObjectives() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link 
-                href="/student/dashboard"
+                href="/agent-academy-intel"
                 className="flex items-center space-x-2 bg-black/80 border border-green-400/50 hover:border-green-400 text-green-400 px-3 py-2 transition-all duration-300 hover:bg-green-400/10"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -303,7 +303,7 @@ export default function MissionObjectives() {
                       mission.completed ? 'text-green-400' : 
                       mission.unlocked ? 'text-cyan-400' : 'text-red-400'
                     }`}>
-                      {mission.phase === 'Operation Beacon' ? '🎯' :
+                      {mission.phase === 'Binary Shores Academy' ? '🎯' :
                        mission.phase === 'Mission Atlas' ? '🗺️' :
                        mission.phase === 'Code Falcon' ? '🦅' : '⚡'}
                     </div>

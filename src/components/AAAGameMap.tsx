@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import QuestMapDemo from './QuestMapComponent'
+import MissionMapDemo from './MissionMapComponent'
 
 // Enhanced interactive map with spy-themed overlays
 export default function AAAGameMap() {
@@ -11,17 +11,26 @@ export default function AAAGameMap() {
   const [scanActive, setScanActive] = useState(false)
   const [threatLevel, setThreatLevel] = useState(2)
   const [missionAlerts, setMissionAlerts] = useState<Array<{id: string, message: string, priority: 'low' | 'medium' | 'high'}>>([])
+  const [isClient, setIsClient] = useState(false)
+  const [alertCounter, setAlertCounter] = useState(0)
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
     // Simulate intel updates
     const interval = setInterval(() => {
       if (Math.random() < 0.3) {
         const alerts = [
-          { id: Date.now().toString(), message: 'New mission objective detected', priority: 'medium' as const },
-          { id: Date.now().toString(), message: 'Security breach in Sector 7', priority: 'high' as const },
-          { id: Date.now().toString(), message: 'Code pattern analysis complete', priority: 'low' as const }
+          { id: `alert-${alertCounter + 1}`, message: 'New mission objective detected', priority: 'medium' as const },
+          { id: `alert-${alertCounter + 2}`, message: 'Security breach in Sector 7', priority: 'high' as const },
+          { id: `alert-${alertCounter + 3}`, message: 'Code pattern analysis complete', priority: 'low' as const }
         ]
-        const newAlert = alerts[Math.floor(Math.random() * alerts.length)]
+        const randomIndex = Math.floor(Math.random() * alerts.length)
+        const newAlert = alerts[randomIndex]
+        setAlertCounter(prev => prev + 1)
         setMissionAlerts(prev => [newAlert, ...prev.slice(0, 2)])
         
         // Auto-remove after 5 seconds
@@ -32,7 +41,7 @@ export default function AAAGameMap() {
     }, 8000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isClient, alertCounter])
 
   const handleRouteNavigation = (path: string) => {
     router.push(path)
@@ -47,22 +56,21 @@ export default function AAAGameMap() {
     <div className="w-full h-full relative">
       {/* Tactical HUD Overlay */}
       <div className="absolute inset-0 pointer-events-none z-30">
-        {/* Top HUD Bar */}
-        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
-          <div className="flex items-center justify-between text-green-400 font-mono text-sm">
-            <div className="flex items-center space-x-6">
+        {/* Top HUD Bar - Reduced height and made less intrusive */}
+        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-2">
+          <div className="flex items-center justify-between text-green-400 font-mono text-xs">
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span>[MISSION HQ] BLACK CIPHER OPERATIONS</span>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs">[MISSION HQ] OPERATIONS</span>
               </div>
               <div className="text-xs">
-                THREAT LEVEL: <span className={`font-bold ${threatLevel >= 3 ? 'text-red-400' : threatLevel >= 2 ? 'text-yellow-400' : 'text-green-400'}`}>
+                THREAT: <span className={`font-bold ${threatLevel >= 3 ? 'text-red-400' : threatLevel >= 2 ? 'text-yellow-400' : 'text-green-400'}`}>
                   {threatLevel}/5
                 </span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-xs">GRID: 34°N 118°W</div>
+            <div className="flex items-center space-x-3">
               <div className="text-xs">SECURE LINK: ACTIVE</div>
             </div>
           </div>
@@ -70,7 +78,7 @@ export default function AAAGameMap() {
 
         {/* Intel Alerts */}
         {missionAlerts.length > 0 && (
-          <div className="absolute top-20 right-4 space-y-2 max-w-sm">
+          <div className="absolute top-12 right-4 space-y-2 max-w-sm">
             {missionAlerts.map((alert) => (
               <div
                 key={alert.id}
@@ -190,13 +198,13 @@ export default function AAAGameMap() {
         </div>
       </div>
 
-      {/* Enhanced Quest Map */}
+      {/* Enhanced Mission Map */}
       <div className={`w-full h-full transition-all duration-500 ${
         mapMode === 'intel' ? 'hue-rotate-180' :
         mapMode === 'stealth' ? 'saturate-50 brightness-75' :
         ''
       }`}>
-        <QuestMapDemo
+        <MissionMapDemo
           backgroundImageUrl="/black cipher map 5.png"
           routeTo={handleRouteNavigation}
           userId="demo-student"
