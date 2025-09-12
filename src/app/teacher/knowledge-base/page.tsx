@@ -48,10 +48,10 @@ export default function AITutorKnowledgeBase() {
     {
       id: '3',
       category: 'hint',
-      title: 'Magic 8-Ball Random Responses',
-      content: 'Use the random.choice() function to pick a random response from a list. Example: response = random.choice(responses)',
-      tags: ['random', 'lists', 'magic-8-ball'],
-      relatedLessons: ['Project: Magic 8-Ball'],
+      title: 'Agent Response Generator',
+      content: 'Use the random.choice() function to select random agent responses from a list. Example: response = random.choice(agent_responses)',
+      tags: ['random', 'lists', 'agent-responses'],
+      relatedLessons: ['Operation Beacon'],
       usageCount: 28,
       lastUsed: '1 day ago',
       createdAt: '2024-03-05'

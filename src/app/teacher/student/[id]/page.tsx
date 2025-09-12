@@ -206,7 +206,7 @@ export default function StudentDetailPage() {
                 </div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-medium">Magic 8-Ball Project</span>
+                    <span className="text-white font-medium">Variable Village Outpost</span>
                     <Clock className="h-5 w-5 text-yellow-400 animate-pulse" />
                   </div>
                   <div className="text-sm text-gray-400">In Progress • 65% complete</div>
@@ -223,16 +223,16 @@ export default function StudentDetailPage() {
 {`# Student's latest code submission
 import random
 
-def magic_8_ball():
+def agent_response():
     responses = [
-        "It is certain",
-        "Ask again later",
-        "Don't count on it"
+        "Mission confirmed, Agent",
+        "Access denied - clearance insufficient", 
+        "Standby for further intel"
     ]
     return random.choice(responses)
 
-answer = magic_8_ball()
-print(f"The Magic 8-Ball says: {answer}")`}
+response = agent_response()
+print(f"Command Center: {response}")`}
                 </pre>
               </div>
               <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4">

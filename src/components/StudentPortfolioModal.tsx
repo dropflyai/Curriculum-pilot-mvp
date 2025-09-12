@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Code, BookOpen, Trophy, Clock, MessageSquare, Download, Share2, CheckCircle, AlertCircle, Star } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { X, Code, BookOpen, Trophy, Clock, MessageSquare, Download, Share2, CheckCircle, AlertCircle, Star, Filter, Calendar, FileText, Mail, Printer, TrendingUp, BarChart3 } from 'lucide-react'
 
 interface StudentWork {
   id: string
@@ -32,6 +32,13 @@ interface StudentPortfolioProps {
 
 export default function StudentPortfolioModal({ student, isOpen, onClose }: StudentPortfolioProps) {
   const [activeTab, setActiveTab] = useState<'work' | 'progress' | 'analytics'>('work')
+  
+  // Enhanced filtering and export states
+  const [workFilter, setWorkFilter] = useState<'all' | 'code' | 'quiz' | 'reflection' | 'mission'>('all')
+  const [dateFilter, setDateFilter] = useState<'all' | 'week' | 'month'>('all')
+  const [scoreFilter, setScoreFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all')
+  const [showExportMenu, setShowExportMenu] = useState(false)
+  const [showShareMenu, setShowShareMenu] = useState(false)
   
   // Mock portfolio data - in real implementation, this would come from database
   const studentWork: StudentWork[] = [
@@ -145,6 +152,77 @@ print(f"Encoded: {encoded}")`,
     favoriteActivity: 'Code Challenges'
   }
 
+  // Advanced filtering logic
+  const filteredWork = useMemo(() => {
+    let filtered = [...studentWork]
+    
+    // Filter by work type
+    if (workFilter !== 'all') {
+      filtered = filtered.filter(work => work.type === workFilter)
+    }
+    
+    // Filter by date
+    if (dateFilter !== 'all') {
+      const now = new Date()
+      const filterDate = dateFilter === 'week' ? 
+        new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) :
+        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+      
+      filtered = filtered.filter(work => {
+        const workDate = new Date(work.timestamp)
+        return workDate >= filterDate
+      })
+    }
+    
+    // Filter by score
+    if (scoreFilter !== 'all' && scoreFilter !== undefined) {
+      filtered = filtered.filter(work => {
+        if (!work.score) return scoreFilter === 'low' // No score items go to low
+        if (scoreFilter === 'high') return work.score >= 85
+        if (scoreFilter === 'medium') return work.score >= 70 && work.score < 85
+        if (scoreFilter === 'low') return work.score < 70
+        return true
+      })
+    }
+    
+    return filtered.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  }, [workFilter, dateFilter, scoreFilter])
+
+  // Export functions
+  const handleExportPDF = () => {
+    // Generate comprehensive PDF report
+    console.log('Generating PDF portfolio for', student.full_name)
+    setShowExportMenu(false)
+    // Implementation would create formatted PDF
+  }
+
+  const handleExportCSV = () => {
+    // Export grades and progress data as CSV
+    const csvData = filteredWork.map(work => ({
+      timestamp: work.timestamp,
+      title: work.title,
+      type: work.type,
+      score: work.score || 'N/A',
+      timeSpent: work.timeSpent,
+      feedback: work.feedback || 'None'
+    }))
+    console.log('Exporting CSV:', csvData)
+    setShowExportMenu(false)
+  }
+
+  const handleShareParents = () => {
+    // Generate parent-friendly progress report
+    console.log('Sharing with parents for', student.full_name)
+    setShowShareMenu(false)
+    // Implementation would email or generate shareable link
+  }
+
+  const handleScheduleMeeting = () => {
+    // Open calendar to schedule parent-teacher conference
+    console.log('Scheduling meeting for', student.full_name)
+    setShowShareMenu(false)
+  }
+
   if (!isOpen) return null
 
   const renderWorkSample = (work: StudentWork) => {
@@ -225,14 +303,82 @@ print(f"Encoded: {encoded}")`,
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-              <Share2 className="h-4 w-4" />
-              Share with Parents
-            </button>
-            <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-              <Download className="h-4 w-4" />
-              Export Portfolio
-            </button>
+            {/* Share with Parents Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                <Share2 className="h-4 w-4" />
+                Share with Parents
+              </button>
+              {showShareMenu && (
+                <div className="absolute right-0 mt-2 w-56 bg-gray-700 rounded-lg shadow-lg border border-gray-600 z-10">
+                  <div className="py-1">
+                    <button 
+                      onClick={handleShareParents}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Email Progress Report
+                    </button>
+                    <button 
+                      onClick={handleScheduleMeeting}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <Calendar className="h-4 w-4" />
+                      Schedule Conference
+                    </button>
+                    <button 
+                      onClick={() => {/* Generate shareable link */}}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Create Shareable Link
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Export Portfolio Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowExportMenu(!showExportMenu)}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                <Download className="h-4 w-4" />
+                Export Portfolio
+              </button>
+              {showExportMenu && (
+                <div className="absolute right-0 mt-2 w-52 bg-gray-700 rounded-lg shadow-lg border border-gray-600 z-10">
+                  <div className="py-1">
+                    <button 
+                      onClick={handleExportPDF}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <FileText className="h-4 w-4" />
+                      PDF Portfolio Report
+                    </button>
+                    <button 
+                      onClick={handleExportCSV}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <BarChart3 className="h-4 w-4" />
+                      CSV Grade Export
+                    </button>
+                    <button 
+                      onClick={() => {/* Print friendly version */}}
+                      className="w-full text-left px-4 py-2 text-white hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <Printer className="h-4 w-4" />
+                      Print Version
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-white p-2"
@@ -279,12 +425,75 @@ print(f"Encoded: {encoded}")`,
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'work' && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold text-white">Recent Work Samples</h3>
-                <p className="text-gray-400">{studentWork.length} submissions</p>
+            <div className="space-y-6">
+              {/* Enhanced Header with Filters */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-white">Student Work Portfolio</h3>
+                  <p className="text-gray-400">{filteredWork.length} of {studentWork.length} submissions shown</p>
+                </div>
+                
+                {/* Advanced Filter Controls */}
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Work Type Filter */}
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <select 
+                      value={workFilter} 
+                      onChange={(e) => setWorkFilter(e.target.value as any)}
+                      className="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 text-sm"
+                    >
+                      <option value="all">All Work</option>
+                      <option value="code">Code Projects</option>
+                      <option value="quiz">Assessments</option>
+                      <option value="reflection">Reflections</option>
+                      <option value="mission">Missions</option>
+                    </select>
+                  </div>
+                  
+                  {/* Date Filter */}
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <select 
+                      value={dateFilter} 
+                      onChange={(e) => setDateFilter(e.target.value as any)}
+                      className="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 text-sm"
+                    >
+                      <option value="all">All Time</option>
+                      <option value="week">Past Week</option>
+                      <option value="month">Past Month</option>
+                    </select>
+                  </div>
+                  
+                  {/* Performance Filter */}
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-gray-400" />
+                    <select 
+                      value={scoreFilter} 
+                      onChange={(e) => setScoreFilter(e.target.value as any)}
+                      className="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 text-sm"
+                    >
+                      <option value="all">All Scores</option>
+                      <option value="high">High (85%+)</option>
+                      <option value="medium">Medium (70-84%)</option>
+                      <option value="low">Needs Support (<70%)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              {studentWork.map(renderWorkSample)}
+              
+              {/* Work Samples Display */}
+              <div className="space-y-4">
+                {filteredWork.length > 0 ? (
+                  filteredWork.map(renderWorkSample)
+                ) : (
+                  <div className="text-center py-8 text-gray-400">
+                    <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p>No work samples match the current filters.</p>
+                    <p className="text-sm mt-1">Try adjusting your filter criteria.</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -324,8 +533,14 @@ print(f"Encoded: {encoded}")`,
 
           {activeTab === 'analytics' && (
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white">Learning Analytics</h3>
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white">Advanced Learning Analytics</h3>
+                <div className="text-sm text-gray-400">
+                  Last updated: {new Date().toLocaleDateString()}
+                </div>
+              </div>
               
+              {/* Key Performance Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
                   <div className="flex items-center justify-between">
@@ -334,6 +549,12 @@ print(f"Encoded: {encoded}")`,
                       <p className="text-2xl font-bold text-white">
                         {analyticsData.completedMissions}/{analyticsData.totalMissions}
                       </p>
+                      <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full" 
+                          style={{width: `${(analyticsData.completedMissions / analyticsData.totalMissions) * 100}%`}}
+                        ></div>
+                      </div>
                     </div>
                     <Trophy className="h-8 w-8 text-blue-400" />
                   </div>
@@ -344,6 +565,7 @@ print(f"Encoded: {encoded}")`,
                     <div>
                       <p className="text-green-300 text-sm">Average Score</p>
                       <p className="text-2xl font-bold text-white">{analyticsData.averageScore}%</p>
+                      <p className="text-xs text-green-300 mt-1">↗ +5% this week</p>
                     </div>
                     <Star className="h-8 w-8 text-green-400" />
                   </div>
@@ -354,6 +576,7 @@ print(f"Encoded: {encoded}")`,
                     <div>
                       <p className="text-purple-300 text-sm">Time Invested</p>
                       <p className="text-2xl font-bold text-white">{analyticsData.totalTimeSpent}m</p>
+                      <p className="text-xs text-purple-300 mt-1">Peak: {analyticsData.peakLearningTime}</p>
                     </div>
                     <Clock className="h-8 w-8 text-purple-400" />
                   </div>
@@ -362,45 +585,115 @@ print(f"Encoded: {encoded}")`,
                 <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-yellow-300 text-sm">Badges Earned</p>
-                      <p className="text-2xl font-bold text-white">{analyticsData.badgesEarned}</p>
+                      <p className="text-yellow-300 text-sm">Learning Streak</p>
+                      <p className="text-2xl font-bold text-white">{analyticsData.learningStreak} days</p>
+                      <p className="text-xs text-yellow-300 mt-1">{analyticsData.badgesEarned} badges earned</p>
                     </div>
                     <Trophy className="h-8 w-8 text-yellow-400" />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                  <h4 className="text-white font-medium mb-3">Learning Insights</h4>
+              {/* Advanced Analytics Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Progress Timeline */}
+                <div className="bg-gray-700 rounded-lg p-6 border border-gray-600">
+                  <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    Weekly Progress Trend
+                  </h4>
+                  
+                  {/* Mock progress chart */}
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Peak Learning Time:</span>
-                      <span className="text-white">{analyticsData.peakLearningTime}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Current Streak:</span>
-                      <span className="text-white">{analyticsData.learningStreak} days</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Favorite Activity:</span>
-                      <span className="text-white">{analyticsData.favoriteActivity}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">Help Requests:</span>
-                      <span className="text-white">{analyticsData.helpRequests}</span>
-                    </div>
+                    {['Week 1', 'Week 2', 'Week 3', 'Current'].map((week, index) => {
+                      const scores = [75, 82, 88, 85]
+                      const score = scores[index]
+                      return (
+                        <div key={week} className="flex items-center gap-3">
+                          <div className="w-16 text-sm text-gray-300">{week}</div>
+                          <div className="flex-1 bg-gray-600 rounded-full h-4 relative">
+                            <div 
+                              className={`h-4 rounded-full ${
+                                score >= 85 ? 'bg-green-500' : 
+                                score >= 70 ? 'bg-yellow-500' : 'bg-red-500'
+                              }`}
+                              style={{width: `${score}%`}}
+                            ></div>
+                            <span className="absolute right-2 top-0 text-xs text-white leading-4">
+                              {score}%
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
 
-                <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                  <h4 className="text-white font-medium mb-3">Next Steps</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="text-gray-300">• Continue Variable Village Outpost mission</li>
-                    <li className="text-gray-300">• Practice more string method combinations</li>
-                    <li className="text-gray-300">• Focus on code documentation habits</li>
-                    <li className="text-gray-300">• Explore advanced cipher algorithms</li>
-                  </ul>
+                {/* Learning Patterns */}
+                <div className="bg-gray-700 rounded-lg p-6 border border-gray-600">
+                  <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    Learning Insights
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-white font-medium mb-2">Strongest Areas:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Variable Manipulation', 'Code Structure', 'Problem Solving'].map(skill => (
+                          <span key={skill} className="bg-green-900/30 text-green-300 px-2 py-1 rounded text-sm">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-white font-medium mb-2">Growth Areas:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Loop Logic', 'Debugging'].map(skill => (
+                          <span key={skill} className="bg-yellow-900/30 text-yellow-300 px-2 py-1 rounded text-sm">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-white font-medium mb-2">Engagement Pattern:</p>
+                      <p className="text-gray-300 text-sm">
+                        Most active during afternoon sessions. Prefers hands-on coding challenges over theoretical content.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Intervention Recommendations */}
+              <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-6">
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-amber-400" />
+                  Teacher Action Items
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h5 className="text-amber-300 font-medium mb-2">Recommended Interventions:</h5>
+                    <ul className="text-gray-300 text-sm space-y-1">
+                      <li>• Provide additional loop practice exercises</li>
+                      <li>• Schedule 1-on-1 debugging session</li>
+                      <li>• Pair with high-performing peer for collaboration</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h5 className="text-amber-300 font-medium mb-2">Predicted Outcomes:</h5>
+                    <ul className="text-gray-300 text-sm space-y-1">
+                      <li>• 90% chance of Mission 3 success with support</li>
+                      <li>• Strong candidate for advanced challenges</li>
+                      <li>• High engagement with creative projects</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

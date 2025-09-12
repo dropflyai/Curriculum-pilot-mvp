@@ -103,6 +103,20 @@ export default function TeacherDashboard() {
   const [messageText, setMessageText] = useState('')
   const [showAnnouncementModal, setShowAnnouncementModal] = useState(false)
   const [announcementText, setAnnouncementText] = useState('')
+  
+  // Enhanced Parent Communication States
+  const [showParentNotifications, setShowParentNotifications] = useState(false)
+  const [parentNotificationSettings, setParentNotificationSettings] = useState({
+    weeklyProgress: true,
+    assignmentCompletions: true,
+    strugglingAlerts: true,
+    achievementCelebrations: true,
+    parentConferenceReminders: true
+  })
+  const [scheduledReports, setScheduledReports] = useState([
+    { id: 1, studentName: 'Alex Thompson', parentEmail: 'parent@email.com', scheduledFor: '2024-01-19 3:00 PM', type: 'Weekly Progress' },
+    { id: 2, studentName: 'James Wilson', parentEmail: 'wilson@email.com', scheduledFor: '2024-01-20 10:00 AM', type: 'Support Meeting' }
+  ])
 
   // Authentication check - temporarily disabled for demo mode
   useEffect(() => {
@@ -1157,6 +1171,18 @@ CodeFly Computer Science Teacher
                   <Download className="h-4 w-4 inline mr-1" />
                   Export Grades
                 </button>
+                <button 
+                  onClick={() => setShowParentNotifications(!showParentNotifications)}
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                >
+                  <Bell className="h-4 w-4 inline mr-1" />
+                  Parent Communications
+                  {scheduledReports.length > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                      {scheduledReports.length}
+                    </span>
+                  )}
+                </button>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-400">Next deadline:</span>
@@ -1165,6 +1191,112 @@ CodeFly Computer Science Teacher
             </div>
           </div>
         </div>
+
+        {/* Parent Communication Panel */}
+        {showParentNotifications && (
+          <div className="mb-8 bg-gradient-to-r from-amber-900/20 to-orange-900/20 border border-amber-500/30 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <Bell className="h-6 w-6 text-amber-400" />
+                <h3 className="text-xl font-bold text-white">Parent Communication Center</h3>
+              </div>
+              <button
+                onClick={() => setShowParentNotifications(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Automated Notifications Settings */}
+              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Automated Notifications
+                </h4>
+                <div className="space-y-3">
+                  {Object.entries(parentNotificationSettings).map(([key, enabled]) => (
+                    <div key={key} className="flex items-center justify-between">
+                      <label className="text-gray-300 text-sm">
+                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                      </label>
+                      <button
+                        onClick={() => setParentNotificationSettings(prev => ({ ...prev, [key]: !enabled }))}
+                        className={`w-12 h-6 rounded-full transition-colors ${
+                          enabled ? 'bg-green-500' : 'bg-gray-600'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                          enabled ? 'translate-x-6' : 'translate-x-0.5'
+                        }`}></div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-700">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors">
+                    Send Test Email
+                  </button>
+                </div>
+              </div>
+
+              {/* Scheduled Reports & Communications */}
+              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Scheduled Communications
+                </h4>
+                <div className="space-y-3 max-h-40 overflow-y-auto">
+                  {scheduledReports.map((report) => (
+                    <div key={report.id} className="bg-gray-700/50 rounded p-3 border border-gray-600">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-white font-medium text-sm">{report.studentName}</p>
+                          <p className="text-gray-400 text-xs">{report.parentEmail}</p>
+                          <p className="text-amber-300 text-xs mt-1">{report.type} - {report.scheduledFor}</p>
+                        </div>
+                        <button className="text-red-400 hover:text-red-300 text-xs">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-700 flex gap-2">
+                  <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded text-sm font-medium transition-colors">
+                    Schedule Report
+                  </button>
+                  <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-3 rounded text-sm font-medium transition-colors">
+                    Bulk Email
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Templates */}
+            <div className="mt-6 bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+              <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                Quick Message Templates
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button className="text-left bg-green-900/30 border border-green-500/30 rounded p-3 hover:bg-green-900/50 transition-colors">
+                  <p className="text-green-300 font-medium text-sm">Excellent Progress</p>
+                  <p className="text-gray-400 text-xs mt-1">Celebrate student achievements</p>
+                </button>
+                <button className="text-left bg-yellow-900/30 border border-yellow-500/30 rounded p-3 hover:bg-yellow-900/50 transition-colors">
+                  <p className="text-yellow-300 font-medium text-sm">Needs Support</p>
+                  <p className="text-gray-400 text-xs mt-1">Request parent assistance</p>
+                </button>
+                <button className="text-left bg-blue-900/30 border border-blue-500/30 rounded p-3 hover:bg-blue-900/50 transition-colors">
+                  <p className="text-blue-300 font-medium text-sm">Weekly Update</p>
+                  <p className="text-gray-400 text-xs mt-1">Standard progress report</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Real-time Stats Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
